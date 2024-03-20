@@ -1,0 +1,41 @@
+#id1 {
+    background-color: aquamarine;
+}
+.myH1 {
+    background-color: lightgreen;
+}
+output{
+border: 2px solid green;
+padding: 1px;
+}
+
+.myFormLayout {
+    display: grid;
+    grid-template-columns: [labels] auto [controls] 100px [txt] 120px [rest]1fr;
+      grid-auto-flow: row;
+      grid-gap: .8em;
+}
+
+.myFormLayout> legend,  
+.myFormLayout> label  {
+    grid-column: labels;
+    grid-row: auto;
+}
+.myFormLayout>input[type=submit],
+.myFormLayout>input[type=number]{
+    grid-column: controls;
+    grid-row: auto;
+}
+.myFormLayout >input[type=text]{
+    grid-column: controls / span 2;
+    grid-row: auto;
+}
+.myFormLayout > .row {
+    grid-column: controls / span 2;
+    grid-row: auto;
+}
+.myformLayout>output {
+    grid-column: txt/span 2;
+    grid-row: auto;  
+}
+
