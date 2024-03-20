@@ -1,0 +1,16 @@
+#id1 {
+    background-color: aquamarine;
+}
+.myH1 {
+    background-color: lightgreen;
+}
+output {
+display: inline-block;
+/* display: block; */
+    width: 150px; 
+    border: 2px solid green;
+    padding: 1px;
+    border-radius: 3px;
+    padding-left: 12px;
+    margin: 1px;
+}
