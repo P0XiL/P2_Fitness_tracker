@@ -1,0 +1,54 @@
+# Possibly managed by Ansible - BEWARE OF EDITING
+#
+# Created 2019-05-03 by Jorgen Bjornstrup (jorgen@its.aau.dk)
+#
+# $Id: conf-mod_auth_cas.conf.j2,v 1.1 2020/03/25 13:59:34 jorgen Exp $
+
+# Apache configurations for using the mod_auth_cas.c module on the
+# http://cs-24-sw-2-06.p2datsw.cs.aau.dk/ website.
+
+# If this file is an example configuration file called
+# /srv/www/cs-24-sw-2-06.p2datsw.cs.aau.dk/conf-http/mod_auth_cas.conf.example
+# then it will be managed and updated by Ansible, so any modifications
+# might get overwritten at any time to ensure that the example
+# configuration file contains the most recent default configurations,
+# customized for this specific website.
+#
+# If this file is an actual configuration file called
+# /srv/www/cs-24-sw-2-06.p2datsw.cs.aau.dk/conf-http/mod_auth_cas.conf
+# or almost any other name, e.g., if the mod_auth_cas.conf.example
+# file is copied or renamed to mod_auth_cas.conf, then it will no
+# longer be managed and updated by Ansible, so it can therefore freely
+# be edited and modified, e.g., to comment in, comment out, or add
+# configuration lines.
+#
+# See the 00README.txt file for further information.
+
+# Fail-safe configuration to deny access to everything on the website
+# iff the mod_auth_cas.c module is not enabled or can not be loaded.
+# To disable use of CAS, the mod_auth_cas.c module should be disabled
+# and the mod_auth_cas.conf file should be removed or should be
+# renamed to have another extension.
+<IfModule !mod_auth_cas.c>
+    <Location />
+        Require all denied
+        Error "Required module must be enabled and loaded: mod_auth_cas.c"
+    </Location>
+</IfModule>
+	
+# Replace the "Require valid-user" line below with a "Require user ..."
+# line and replace ... with a short space separated list of users to
+# restrict access to the specified users, or use other <Location> or
+# <Directory> directive for more detailed CAS configurations.
+<IfModule mod_auth_cas.c>
+    CASLoginURL     https://signon.aau.dk/cas/login
+    CASValidateURL  https://signon.aau.dk/cas/samlValidate
+    CASValidateSAML On
+    CASIdleTimeout  28800
+    CASTimeout      54000
+    <Location />
+        Authtype CAS
+        AuthName cs-24-sw-2-06.p2datsw.cs.aau.dk
+        Require valid-user
+    </Location>
+</IfModule>
