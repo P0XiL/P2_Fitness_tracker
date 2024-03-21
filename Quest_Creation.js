@@ -1,8 +1,15 @@
-function get_preset(){
-    //Gets input from storage
-    let preset = ["run", "run", "run", "walk", "walk", "stomach", "back"];
-    return preset;
+//Returns an object with relavent user info
+function get_user_info(){
+    //get user info from database
+    return userinfo;
 }
+ //example of output
+ userinfo = {
+    rank: generate_random_number(43)+3,
+    mastery: generate_random_number(3)+3,
+    preset:  ["run", "run", "run", "walk", "walk", "stomach", "back"],
+};
+
 //Generate a random number from 0 to max
 function generate_random_number(max){
     return Math.floor(Math.random() * max);
@@ -23,7 +30,7 @@ let quest = {
         quest1: {
             target_type: "km",//minutes, km, ...
             base_target: 1, //Base target before modifiers
-            modifer_scale: 0.5, //A number to scale modifer
+            modifer: 0.5, //A number to scale modifer
             quest_text: "Run x km" //text for the quest
             },
         quest2: {
@@ -81,8 +88,20 @@ let quest = {
 }
 
 function choose_quest(quests){
-    return quests["quest" + generate_random_number(Object.keys(quests).length+1)]
+    return quests["quest" + (generate_random_number(Object.keys(quests).length)+1)]
 }
 
-let quest = choose_quest(get_quest_object(choose_quest_type(get_preset())));
+
+function modify_quest(quest, rank, difficulty, mastery){
+    //formular for scaling
+    console.log("" +quest["base_target"] + "*" + "("+ rank +"+"+ difficulty+")"+ "*"+ quest["modifer"]+ "*"+ mastery)    
+    quest["base_target"] = quest["base_target"] * (rank + difficulty) * quest["modifer"] * mastery;
+    quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
+    return quest;
+}
+
+let quest = choose_quest(get_quest_object(choose_quest_type(userinfo["preset"])));
 console.log(quest);
+console.log(userinfo["rank"] + " " + userinfo["mastery"]);
+let q = modify_quest(quest, userinfo["rank"], -3, userinfo["mastery"]);
+console.log(q);
