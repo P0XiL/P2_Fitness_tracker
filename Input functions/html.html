@@ -2,20 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0">
-    <title>Input</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Tracker</title>
 </head>
 <body>
 
-<!-- Input field for number and buttons  -->
-<input type="text" id="numberInput">
+<!-- Input field for number and buttons for operation -->
+<input type="text" id="numberInput" placeholder="Enter number">
 <button id="addButton">Add</button>
 <button id="subtractButton">Subtract</button>
 
-<!-- Result -->
-<p>Result: <class id="result">0</class></p>
+<!-- Input field and submit button for goal -->
+<input type="text" id="goalInput" placeholder="Enter goal">
+<button id="setGoalButton">Set Goal</button>
 
-<!-- Js code -->
+<!-- Result display -->
+<p>Goal: <span id="goalDisplay">-</span></p>
+<p>Result: <span id="result">0</span></p>
+
+<!-- JavaScript -->
 <script src="script.js"></script>
 
 </body>

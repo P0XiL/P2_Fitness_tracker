@@ -1,3 +1,5 @@
+let goal = 0; // Variable to store the goal
+
 // Function to handle addition
 function handleAddition() {
     let numberInput = document.getElementById("numberInput");
@@ -5,7 +7,10 @@ function handleAddition() {
 
     let inputValue = parseFloat(numberInput.value);
     if (!isNaN(inputValue)) {
-        result.textContent = parseFloat(result.textContent) + inputValue;
+        let newResult = parseFloat(result.textContent) + inputValue;
+        result.textContent = newResult;
+
+        checkGoalReached(newResult);
     } else {
         alert("Please enter a valid number!");
     }
@@ -18,12 +23,32 @@ function handleSubtraction() {
 
     let inputValue = parseFloat(numberInput.value);
     if (!isNaN(inputValue)) {
-        result.textContent = parseFloat(result.textContent) - inputValue;
+        let newResult = parseFloat(result.textContent) - inputValue;
+        result.textContent = newResult;
+
+        checkGoalReached(newResult);
     } else {
         alert("Please enter a valid number!");
     }
 }
 
-// Add event listeners to input buttons
+// Function to set the goal
+function setGoal() {
+    let goalInput = document.getElementById("goalInput");
+    goal = parseFloat(goalInput.value);
+
+    let goalDisplay = document.getElementById("goalDisplay");
+    goalDisplay.textContent = goal;
+}
+
+// Function to check if the goal is reached
+function checkGoalReached(result) {
+    if (result >= goal) {
+        alert("Congratulations! You've reached your goal!");
+    }
+}
+
+// Add event listeners to buttons
 document.getElementById("addButton").addEventListener("click", handleAddition);
 document.getElementById("subtractButton").addEventListener("click", handleSubtraction);
+document.getElementById("setGoalButton").addEventListener("click", setGoal);
