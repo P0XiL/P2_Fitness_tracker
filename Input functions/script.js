@@ -16,7 +16,7 @@ function handleAddition() {
     }
 }
 
-// Function to handle subtraction
+// Function to subtract
 function handleSubtraction() {
     let numberInput = document.getElementById("numberInput");
     let result = document.getElementById("result");
