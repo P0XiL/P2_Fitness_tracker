@@ -1,6 +1,6 @@
 let goal = 0; // Variable to store the goal
 
-// Function to handle addition
+// Function to add 
 function handleAddition() {
     let numberInput = document.getElementById("numberInput");
     let result = document.getElementById("result");
@@ -16,7 +16,7 @@ function handleAddition() {
     }
 }
 
-// Function to handle subtraction
+// Function to subtract
 function handleSubtraction() {
     let numberInput = document.getElementById("numberInput");
     let result = document.getElementById("result");
