@@ -94,8 +94,8 @@ function choose_quest(quests){
 
 function modify_quest(quest, rank, difficulty, mastery){
     //formular for scaling
-    console.log("" +quest["base_target"] + "*" + "("+ rank +"+"+ difficulty+")"+ "*"+ quest["modifer"]+ "*"+ mastery)    
-    quest["base_target"] = quest["base_target"] * (rank + difficulty) * quest["modifer"] * mastery;
+    console.log("" +quest["base_target"] + "*" + "("+ rank +"+" + difficulty + ")"+ "*"+ quest["modifer"]+ "*"+ mastery)    
+    quest["base_target"] = quest["base_target"] * ((rank + difficulty) * 0.1) * quest["modifer"] * (mastery * 0.5);
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
 }
