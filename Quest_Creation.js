@@ -88,20 +88,25 @@ let quest = {
 }
 
 function choose_quest(quests){
+    console.log(generate_random_number(Object.keys(quests).length)+1)
     return quests["quest" + (generate_random_number(Object.keys(quests).length)+1)]
 }
 
 
 function modify_quest(quest, rank, difficulty, mastery){
     //formular for scaling
-    console.log("" +quest["base_target"] + "*" + "("+ rank +"+" + difficulty + ")"+ "*"+ quest["modifer"]+ "*"+ mastery)    
+    //console.log("" +quest["base_target"] + "*" + "("+ rank +"+" + difficulty + ")"+ "*"+ quest["modifer"]+ "*"+ mastery)    
     quest["base_target"] = quest["base_target"] * ((rank + difficulty) * 0.1) * quest["modifer"] * (mastery * 0.5);
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
 }
 
 let quest = choose_quest(get_quest_object(choose_quest_type(userinfo["preset"])));
-console.log(quest);
-console.log(userinfo["rank"] + " " + userinfo["mastery"]);
+//console.log(quest);
+//console.log(userinfo["rank"] + " " + userinfo["mastery"]);
 let q = modify_quest(quest, userinfo["rank"], -3, userinfo["mastery"]);
 console.log(q);
+
+document.getElementById("quest1_type").innerText = "Type: " + choose_quest_type(userinfo["preset"])
+document.getElementById("quest2_type").innerText = "Type: " + choose_quest_type(userinfo["preset"])
+document.getElementById("quest3_type").innerText = "Type: " + choose_quest_type(userinfo["preset"])
