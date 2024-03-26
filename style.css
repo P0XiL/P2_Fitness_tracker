@@ -43,21 +43,6 @@ main {
     padding: 20px; /* Adjust padding as needed */
 }
 
-.profile {
-    display: flex; /* Use Flexbox */
-    justify-content: space-evenly; /* Distribute items evenly */
-    align-items: center;
-}
-
-.profile_layout {
-    width: calc(45%); /* Adjust width and gap as needed */
-    background-color: #fd73d6; /* Just for visualization */
-    padding: 10px; /* Adjust padding as needed */
-}
-
-
-
-
 nav {
     grid-area: n;
     background-color: red;
@@ -72,34 +57,7 @@ a   {
     text-decoration: none;
 }
 
-/* Styles for the modal */
-.modal {
-    display: none; /* Hide the modal by default */
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4); /* Overlay background */
-  }
-
-  .modal-content {
-    background-color: #1f6bb2;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-  }
-
-  /* Style for the buttons */
-  .difficulty-button {
-    margin: 5%;
-  }
-
-
-  #profile-link img {
+#profile-link img {
     width: 20%;
     height: auto;
 }
@@ -111,8 +69,9 @@ a   {
 }
 
 
+
+
+
 /* Ensures only the selected page is shown */
 .page {display: none;}
 .page.active {display: block;}
-
-
