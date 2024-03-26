@@ -1,0 +1,77 @@
+body {
+    display: grid;
+    grid-template-areas:
+        "h h"
+        "n m"
+        "f f";
+    grid-template-rows: 70px 1fr 60px;
+    grid-template-columns: 300px 1fr;
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+    height: 100vh;
+    margin: 0;
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    text-decoration: none;
+}
+
+header {
+    grid-area: h;
+    text-align: center;
+    background-color: grey;
+    font-size: 60px;
+}
+footer {grid-area: f;}
+
+main {
+    grid-area: m;
+}
+
+.heading {
+    text-align: center;
+}
+.questpage {
+    display: flex; /* Use Flexbox */
+    justify-content: space-between; /* Distribute items evenly */
+    align-items: center;
+}
+
+.quest {
+    width: calc(25% - 10px); /* Adjust width and gap as needed */
+    background-color: #ccc; /* Just for visualization */
+    padding: 20px; /* Adjust padding as needed */
+}
+
+nav {
+    grid-area: n;
+    background-color: red;
+    /* Flexbox styles for vertical centering */
+    display: flex;
+    align-items: center;
+    font-size: 3em;
+}
+a   {
+    color: white;
+    font-family: monospace;
+    text-decoration: none;
+}
+
+#profile-link img {
+    width: 20%;
+    height: auto;
+}
+
+#profile-link {
+    position: absolute;
+    top: 10px;
+    right: -225px;
+}
+
+
+
+
+
+/* Ensures only the selected page is shown */
+.page {display: none;}
+.page.active {display: block;}
