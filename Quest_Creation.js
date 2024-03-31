@@ -88,24 +88,140 @@ let quest = {
 }
 
 function choose_quest(quests){
-    console.log(generate_random_number(Object.keys(quests).length)+1)
     return quests["quest" + (generate_random_number(Object.keys(quests).length)+1)]
 }
 
 
 function modify_quest(quest, rank, difficulty, mastery){
     //formular for scaling
-    //console.log("" +quest["base_target"] + "*" + "("+ rank +"+" + difficulty + ")"+ "*"+ quest["modifer"]+ "*"+ mastery)    
     quest["base_target"] = quest["base_target"] * ((rank + difficulty) * 0.1) * quest["modifer"] * (mastery * 0.5);
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
 }
 
-let quest = choose_quest(get_quest_object(choose_quest_type(userinfo["preset"])));
-//console.log(quest);
-//console.log(userinfo["rank"] + " " + userinfo["mastery"]);
-let q = modify_quest(quest, userinfo["rank"], -3, userinfo["mastery"]);
-console.log(q);
+
+
+
+quest_log = {
+    assholeblaster69:{
+       daily:{
+        "31/3/2024": {
+           "type": "pushups",
+           "target": 100,
+           "amount": 5
+         },
+ 
+         "26/3/2024": {
+           "type": "run",
+           "target": 10,
+           "amount": 10
+         }
+       },
+ 
+       weekly:{
+          "25/3/2024":{
+             "type": "cycling",
+             "target": 40,
+             "amount": 40,
+         },
+ 
+          "22/3/2024":{
+             "type": "walk",
+             "target": 60,
+             "amount": 35,
+         }
+       },
+ 
+       monthly:{
+         "1/3/2024":{
+             "type": "crunches",
+             "target": 300,
+             "amount": 301,
+         },
+ 
+       }
+    
+     }
+ }
+
+
+function firstOwnKey(object){
+    let firstKey
+    for (let key in object) {
+        if (object.hasOwnProperty(key)) {
+            firstKey = key;
+            break;
+        }
+    }
+    return firstKey
+}
+
+
+function check_current(timespan, userID){
+    //connect database
+    current_date = new Date();
+    let lastestDate;
+    switch(timespan){
+        case 'daily':{
+            let dailies = quest_log[userID][timespan];
+            lastestDate = firstOwnKey(dailies);
+            let questDay = lastestDate.split("/")[0];
+            if (questDay == current_date.getDate()){
+                if(dailies[lastestDate]["target"] <= dailies[lastestDate]["amount"]){
+                    return "Done";
+                }
+                return "inProgress";
+            }
+            }
+            return "None";
+
+        case 'weekly':
+            let weeklies = quest_log[userID][timespan];
+            lastestDate = firstOwnKey(weeklies);
+            let questDateStr = lastestDate.split("/");
+            //Check if questDay is within 7 days of today
+            let questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
+            //Difference in milisec
+            diffInMilisec = current_date - questDateObj;
+            //Convert to day
+            let diffInDays = diffInMilisec / (1000 * 60 * 60 * 24)
+
+
+            if (Math.abs(diffInDays) <=7){
+                if(weeklies[lastestDate]["target"] <= weeklies[lastestDate]["amount"]){
+                    return "Done";
+                }
+                return "inProgress";
+            }
+            return "None"
+        case 'monthly':
+            let monthlies = quest_log[userID][timespan];
+            lastestDate = firstOwnKey(monthlies);
+            let questMonth = lastestDate.split("/")[1];
+            if (current_date.getMonth()+1 == questMonth){
+                if(monthlies[lastestDate]["target"] <= monthlies[lastestDate]["amount"]){
+                    return "Done";
+                }
+                return "inProgress";
+            }
+            return "None";
+        default:
+            return "Fail"
+
+    }
+}
+
+
+
+function add_quest(timespan){
+    //Connect to database
+} 
+
+console.log(check_current("monthly", "assholeblaster69"));
+
+
+
+
 
 document.getElementById("quest1_type").innerText = "Type: " + choose_quest_type(userinfo["preset"])
 document.getElementById("quest2_type").innerText = "Type: " + choose_quest_type(userinfo["preset"])
