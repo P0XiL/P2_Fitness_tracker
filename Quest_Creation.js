@@ -94,7 +94,7 @@ function choose_quest(quests){
 
 function modify_quest(quest, rank, difficulty, mastery){
     //formular for scaling
-    quest["base_target"] = quest["base_target"] * ((rank + difficulty) * 0.1) * quest["modifer"] * (mastery * 0.5);
+    quest["base_target"] = quest["base_target"] * ((rank + difficulty) * 0.1) * (mastery * 0.5);
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
 }
@@ -133,7 +133,7 @@ quest_log = {
        },
  
        monthly:{
-         "1/3/2024":{
+         "1/2/2024":{
              "type": "crunches",
              "target": 300,
              "amount": 301,
@@ -213,16 +213,28 @@ function check_current(timespan, userID){
 
 
 
-function add_quest(timespan){
+function add_quest(quest){
+
     //Connect to database
 } 
 
 console.log(check_current("monthly", "assholeblaster69"));
 
+choose_quest_type(userinfo["preset"])
+
+function display_quest(quest_type){
+    let timespans = ["daily", "weekly", "monthly"];
+    let quest_timespan = quest_type[5];
+    if (check_current(timespans[quest_timespan - 1], "assholeblaster69") == "inProgress"){
+        document.getElementById(quest_type).innerText = "Type: " + "Pog insert add_quest";
+    } else if (check_current(timespans[quest_timespan - 1], "assholeblaster69") == "Done" ){
+        document.getElementById(quest_type).innerText = "Done";
+    } else {
+
+    }
+}
 
 
-
-
-document.getElementById("quest1_type").innerText = "Type: " + choose_quest_type(userinfo["preset"])
-document.getElementById("quest2_type").innerText = "Type: " + choose_quest_type(userinfo["preset"])
-document.getElementById("quest3_type").innerText = "Type: " + choose_quest_type(userinfo["preset"])
+display_quest("quest1_type");
+display_quest("quest2_type");
+display_quest("quest3_type");
