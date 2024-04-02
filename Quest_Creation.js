@@ -7,7 +7,7 @@ function get_user_info(){
  userinfo = {
     rank: generate_random_number(43)+3,
     mastery: generate_random_number(3)+3,
-    preset:  ["run", "run", "run", "walk", "walk", "stomach", "back"],
+    preset:  ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
 };
 
 //Generate a random number from 0 to max
@@ -24,67 +24,18 @@ function choose_quest_type(preset){
 //Gets the object with quest for a given type
 function get_quest_object(type){
     //Connect to database
-    //Example of quest object
-let quest = {
-    run: {
-        quest1: {
-            target_type: "km",//minutes, km, ...
-            base_target: 1, //Base target before modifiers
-            modifer: 0.5, //A number to scale modifer
-            quest_text: "Run x km" //text for the quest
-            },
-        quest2: {
-            target_type: "minutes",
-            base_target: 10,
-            modifer: 0.5,
-            quest_text: "Run x minutes"
+    fetch('quest_templates.json')
+        .then(response => {
+            if (!response.ok){
+                throw new Error('Failed to fetch Quest Templates JSON');
             }
-        },
-    walk: {
-        quest1: {
-            target_type: "km",
-            base_target: 2,
-            modifer: 0.5,
-            quest_text: "Walk x km"
-            },
-        quest2: {
-            target_type: "minutes",
-            base_target: 30,
-            modifer: 0.5,
-            quest_text: "Walk x minutes"
-            }
-        },
-    stomach: {
-        quest1: {
-            target_type: "rep",
-            base_target: 10,
-            modifer: 0.5,
-            quest_text: "Do x sit ups"
-            },
-        quest2: {
-            target_type: "sec",
-            base_target: 10,
-            modifer: 0.5,
-            quest_text: "Do x secounds plank"
-            }
-        },
-    back: {
-        quest1: {
-            target_type: "rep",
-            base_target: 10,
-            modifer: 0.5,
-            quest_text: "Do x back bends"
-            },
-        quest2: {
-            target_type: "sec",
-            base_target: 10,
-            modifer: 0.5,
-            quest_text: "Do x secounds plank"
-            }
-        }    
-    };
-    //output based on example
-    return quest[type];
+            return response.json();
+        })
+        .then(data => {return data
+        })
+        .catch(error => {
+            console.error('Error', error)
+        })
 }
 
 function choose_quest(quests){
@@ -119,10 +70,10 @@ quest_log = {
        },
  
        weekly:{
-          "25/3/2024":{
+          "02/4/2024":{
              "type": "cycling",
              "target": 40,
-             "amount": 40,
+             "amount": 30,
          },
  
           "22/3/2024":{
@@ -133,7 +84,7 @@ quest_log = {
        },
  
        monthly:{
-         "1/2/2024":{
+         "1/4/2024":{
              "type": "crunches",
              "target": 300,
              "amount": 301,
@@ -214,13 +165,17 @@ function check_current(timespan, userID){
 
 
 function add_quest(quest){
-
     //Connect to database
 } 
 
 console.log(check_current("monthly", "assholeblaster69"));
 
-choose_quest_type(userinfo["preset"])
+
+
+console.log(choose_quest_type(userinfo["preset"]));
+
+
+
 
 function display_quest(quest_type){
     let timespans = ["daily", "weekly", "monthly"];
@@ -230,7 +185,7 @@ function display_quest(quest_type){
     } else if (check_current(timespans[quest_timespan - 1], "assholeblaster69") == "Done" ){
         document.getElementById(quest_type).innerText = "Done";
     } else {
-
+        document.getElementById(quest_type).innerText = "No current quest";
     }
 }
 
