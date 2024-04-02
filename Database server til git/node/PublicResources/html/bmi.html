@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>IWP Health App</title>
+    <link rel="stylesheet" type="text/css" href="css/simple.css">
+</head>
+<body>
+
+<section> 
+  <h1 id="id1"> IWP BMI-recorder </h1>
+  <form id="bmiForm_id"  action="bmi-records" method="post"> 
+    <fieldset>
+      <legend>Personal information:</legend>
+      <div class="myFormLayout"> <!-- Hmm, fieldset seems not too happy to work with grid layout used for the form??-->
+      <label for="name_id"> Name</label>
+      <input type="text"  name="userName" id="name_id" value="Mickey" required minlength="1" maxlength="30"> 
+      <label for="height_id"> Height (cm):</label> 
+      <input type="number" name="height" id="height_id" value="" min="1" max="300" required> 
+      <label for="weight_id"> Weight (kg):</label> 
+      <input type="number" name="weight" id="weight_id" value="" min="1" max="300" required>     
+ 
+  <input type="submit" id="submitBtn_id" value="Record">
+</div>
+ </fieldset> 
+</form>
+</section>
+
+<section> 
+  <h1 id="id2"> IWP BMI-Statistics-tracker</h1>
+  <form id="bmiStausForm_id"  action="bmi-records" method="get"> 
+    <fieldset>
+      <legend>Personal information:</legend>
+      <div class="myFormLayout"> <!-- Hmm, fieldset seems not too happy to work with grid layout used for the form??-->
+      <label for="tracker_name_id"> Name</label>
+      <input type="text"  name="userName" id="tracker_name_id" value="Mickey" required minlength="1" maxlength="30"> 
+  <input type="submit" id="submitTracker_id" value="Get Stats">
+</div>
+ </fieldset> 
+</form>
+</section>
+
+
+</body>
+</html>
+
