@@ -121,7 +121,7 @@ function check_current(timespan, userID){
                 if(dailies[lastestDate]["target"] <= dailies[lastestDate]["amount"]){
                     return "Done";
                 }
-                return "inProgress";
+                return lastestDate;
             }
             }
             return "None";
@@ -142,7 +142,7 @@ function check_current(timespan, userID){
                 if(weeklies[lastestDate]["target"] <= weeklies[lastestDate]["amount"]){
                     return "Done";
                 }
-                return "inProgress";
+                return lastestDate;
             }
             return "None"
         case 'monthly':
@@ -153,7 +153,7 @@ function check_current(timespan, userID){
                 if(monthlies[lastestDate]["target"] <= monthlies[lastestDate]["amount"]){
                     return "Done";
                 }
-                return "inProgress";
+                return lastestDate;
             }
             return "None";
         default:
@@ -164,11 +164,6 @@ function check_current(timespan, userID){
 
 
 
-function add_quest(quest){
-    //Connect to database
-} 
-
-console.log(check_current("monthly", "assholeblaster69"));
 
 
 
@@ -177,19 +172,31 @@ console.log(choose_quest_type(userinfo["preset"]));
 
 
 
-function display_quest(quest_type){
+function display_quest(quest, quest_log, user){
     let timespans = ["daily", "weekly", "monthly"];
-    let quest_timespan = quest_type[5];
-    if (check_current(timespans[quest_timespan - 1], "assholeblaster69") == "inProgress"){
-        document.getElementById(quest_type).innerText = "Type: " + "Pog insert add_quest";
-    } else if (check_current(timespans[quest_timespan - 1], "assholeblaster69") == "Done" ){
-        document.getElementById(quest_type).innerText = "Done";
+    let quest_timespan = timespans[quest[5] - 1];
+    let state = check_current(quest_timespan, user);
+    
+    if (state == "None"){
+        // Add ! sign
+        // Make it a button
+        // Make popup when clicked
+        // Make three buttons, to choose diffulcty
+        // Make new quest then display that
+        
+        document.getElementById(quest + "_type").innerText = "No current quest"; // create new quest then 
+    } else if (state == "Done" ){
+        document.getElementById(quest + "_type").innerText = "Quest done"; 
+        //Add progressbar
     } else {
-        document.getElementById(quest_type).innerText = "No current quest";
+        //document.getElementById(quest + "_text").innerText = quest_log[user][quest_timespan][state].quest_text;
+        document.getElementById(quest + "_type").innerText = "Type: " + quest_log[user][quest_timespan][state].type;
+        //Add progressbar
     }
 }
 
 
-display_quest("quest1_type");
-display_quest("quest2_type");
-display_quest("quest3_type");
+
+display_quest("quest1", quest_log, "assholeblaster69");
+display_quest("quest2", quest_log, "assholeblaster69");
+display_quest("quest3", quest_log, "assholeblaster69");
