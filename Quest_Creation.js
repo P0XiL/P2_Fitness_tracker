@@ -116,8 +116,8 @@ function check_current(timespan, userID){
         case 'daily':{
             let dailies = quest_log[userID][timespan];
             lastestDate = firstOwnKey(dailies);
-            let questDay = lastestDate.split("/")[0];
-            if (questDay == current_date.getDate()){
+            let questDate = lastestDate.split("/");
+            if (questDate[0] == current_date.getDate() && questDate[1] == (current_date.getMonth() + 1) && questDate[2] == current_date.getFullYear() ){
                 if(dailies[lastestDate]["target"] <= dailies[lastestDate]["amount"]){
                     return "Done";
                 }
@@ -148,8 +148,8 @@ function check_current(timespan, userID){
         case 'monthly':
             let monthlies = quest_log[userID][timespan];
             lastestDate = firstOwnKey(monthlies);
-            let questMonth = lastestDate.split("/")[1];
-            if (current_date.getMonth()+1 == questMonth){
+            let questDate = lastestDate.split("/");
+            if ((current_date.getMonth() + 1) == questDate[1] && current_date.getFullYear() == questDate[2]){
                 if(monthlies[lastestDate]["target"] <= monthlies[lastestDate]["amount"]){
                     return "Done";
                 }
