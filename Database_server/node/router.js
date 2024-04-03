@@ -39,7 +39,7 @@ startServer();
         //USE "sp" from above to get query search parameters
         switch(pathElements[1]){     
           case "": // 
-             fileResponse(res,"/html/Letsgo.html");
+             fileResponse(res,"/html/LetsGo.html");
              break;
           case "date": {// 
             let date=new Date();
