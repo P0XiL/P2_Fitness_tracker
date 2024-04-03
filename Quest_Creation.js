@@ -31,12 +31,13 @@ function get_quest_object(type){
             }
             return response.json();
         })
-        .then(data => {return data
+        .then(data => { return data[type]
         })
         .catch(error => {
-            console.error('Error', error)
+            console.error('Catched error while fetching Quest Templates JSON', error)
         })
 }
+
 
 function choose_quest(quests){
     return quests["quest" + (generate_random_number(Object.keys(quests).length)+1)]
@@ -176,24 +177,63 @@ function display_quest(quest, quest_log, user){
     let timespans = ["daily", "weekly", "monthly"];
     let quest_timespan = timespans[quest[5] - 1];
     let state = check_current(quest_timespan, user);
-    
+    //let questTemp = get_quest_object();
     if (state == "None"){
+        //TODO: Create new quest
+        
+        
+        document.getElementById(quest + "_type").innerText = "";
+        //Create button
+        let button = document.createElement("button");
+        button.textContent = "Get new Quest";
+
+        //Append button
+        document.getElementById(quest + "_type").appendChild(button)
+
+        //Add event listner to button
+        button.addEventListener("click", ()=>{
+            document.getElementById("myModal").style.display = "block";
+        });
+        //TODO: Display type
+        //let type = quest_log[user][quest_timespan][state].type;
+        document.getElementById("popupText").innerText = "Choose difficulty for " + quest_timespan + " of type:" + "type";
+
+        document.querySelectorAll(".difficulty-button").forEach(button => {
+            button.addEventListener("click", (event) => {
+                const difficulty = event.target.dataset.difficulty;
+                //TODO: MODIFY QUEST
+                document.getElementById("myModal").style.display = "none";
+            })
+        })
+
+        document.getElementById("close").addEventListener("click", () => {
+            document.getElementById("myModal").style.display = "none";
+        });
+        
+
+
+
         // Add ! sign
         // Make it a button
         // Make popup when clicked
         // Make three buttons, to choose diffulcty
         // Make new quest then display that
         
-        document.getElementById(quest + "_type").innerText = "No current quest"; // create new quest then 
+         // create new quest then 
     } else if (state == "Done" ){
         document.getElementById(quest + "_type").innerText = "Quest done"; 
-        //Add progressbar
+        //Add progressbars
     } else {
-        //document.getElementById(quest + "_text").innerText = quest_log[user][quest_timespan][state].quest_text;
-        document.getElementById(quest + "_type").innerText = "Type: " + quest_log[user][quest_timespan][state].type;
-        //Add progressbar
+        let type = quest_log[user][quest_timespan][state].type;
+        document.getElementById(quest + "_type").innerText = "Type: " + type;
+        console.log(type);
+        /*
+        document.getElementById(quest + "_text").innerText = questTemp["cardio"][type].text;*/
     }
+         
+        //Add progressbar
 }
+
 
 
 
