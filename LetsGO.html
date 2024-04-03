@@ -18,30 +18,41 @@
         </ul>
     </nav>
 
+    <!-- A popup when choosing new quest-->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p id="popupText"></p>
+            <button class="difficulty-button" data-difficulty="easy">Easy</button>
+            <button class="difficulty-button" data-difficulty="medium">Medium</button>
+            <button class="difficulty-button" data-difficulty="hard">Hard</button>
+            <button id="close">Close</button>
+        </div>
+      </div>
+      
+
     <!-- Page sections -->
     <div id="main" class="page active">
         <h2 class="heading">Quests</h2>
         <div class="questpage">
             <div id="quest1" class="quest">
                 <h2>Daily</h2>
-                <p>Quest 1 progress bars</p>
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
                 <h2>Weekly</h2>
-                <p>Quest 2 progress bars</p>
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
                 <h2>Monthly</h2>
-                <p>Quest 3 progress bars</p>
                 <p id="quest3_type"></p>
             </div>
         </div>
         <script src="Quest_Creation.js"></script>
     </div>
+
+
 
     <div id="page2" class="page">
         <h2>Friends</h2>
