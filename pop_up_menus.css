@@ -1,0 +1,38 @@
+.popup-menu {
+    background-color: white;
+    border: 1px solid black;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.popup-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.popup-menu ul li {
+    padding: 5px 0;
+}
+
+.popup-menu ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+/* Additional styling based on quest type */
+.popup-menu.run {
+    background-color: #ffcccc; /* Light red for run quests */
+}
+
+.popup-menu.walk {
+    background-color: #ccffcc; /* Light green for walk quests */
+}
+
+.popup-menu.stomach {
+    background-color: #ffffcc; /* Light yellow for stomach quests */
+}
+
+.popup-menu.back {
+    background-color: #ccccff; /* Light blue for back quests */
+}
