@@ -1,5 +1,4 @@
 
-
 let questlog = {
 assholeblaster69:{
     daily:{
@@ -60,7 +59,35 @@ fs.readFile('data.json', 'utf8', (err, data) => {
 */
 
 
-function Plot(user) {
+function Plot(user, type) {
+
+let x = [];
+
+for (let key in user.daily) {
+    x.push([key, user.daily[key]]);
+}
+
+console.log(x);
+
+let y = [];
+
+for (let date in user.daily){
+    y.push(user.daily[date].amount);
+}
+
+console.log(y);
+
+let amountsWithType = [];
+
+
+for (let date in user.daily) {
+    if (user.daily[date].type === type) {
+        amountsWithType.push(user.daily[date].amount);
+    }
+}
+console.log(amountsWithType); 
+
+
 
     new Chart("myChart", {
       type: "line",
@@ -80,30 +107,14 @@ function Plot(user) {
           yAxes: [{ticks: {min: 6, max:16}}],
         }
       }
-    });
+    }); 
 }
 
 
-let x = [];
-
-for (let key in questlog.assholeblaster69.daily) {
-    x.push([key, questlog.assholeblaster69.daily[key]]);
-}
-
-let y = [];
-
-for (let date in questlog.assholeblaster69.daily){
-    y.push(questlog.assholeblaster69.daily[date].amount);
-}
-
-console.log(y);
-
-let amountsWithRunType = [];
 
 
-for (let date in questlog.assholeblaster69.daily) {
-    if (questlog.assholeblaster69.daily[date].type === "run") {
-        amountsWithRunType.push(questlog.assholeblaster69.daily[date].amount);
-    }
-}
-console.log(amountsWithRunType); 
+Plot(questlog.assholeblaster69, "run");
+
+
+
+
