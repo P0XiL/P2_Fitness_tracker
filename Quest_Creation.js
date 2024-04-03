@@ -17,7 +17,7 @@ function generate_random_number(max){
 
 //Returns a type for the quest based on preset
 function choose_quest_type(preset){    
-    return preset[generate_random_number(preset.length+1)];
+    return preset[generate_random_number(preset.length)];
 }
 
 
@@ -40,12 +40,29 @@ function get_quest_object(type){
 
 
 function choose_quest(quests){
-    return quests["quest" + (generate_random_number(Object.keys(quests).length)+1)]
+    //TODO: TEMP FIX, NEED GET_QUEST_OBJECT TO WORK FISRT
+    quests = {
+        run: {
+            base_target: 5,
+            quest_text: "Go for a run for x minutes"
+        },
+        walk: {
+            base_target: 5,
+            quest_text: "Go for a walk for x minutes"
+        },
+        cycling: {
+            base_target: 5,
+            quest_text: "Cycle x minutes"
+        }
+    }
+
+    return quests[Object.keys(quests)[generate_random_number(Object.keys(quests).length)]]
 }
 
 
 function modify_quest(quest, rank, difficulty, mastery){
     //formular for scaling
+    console.log(quest);
     quest["base_target"] = quest["base_target"] * ((rank + difficulty) * 0.1) * (mastery * 0.5);
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
@@ -166,26 +183,20 @@ function check_current(timespan, userID){
 
 
 
-
-
-console.log(choose_quest_type(userinfo["preset"]));
-
-
-
-
-function display_quest(quest, quest_log, user){
+function display_quest(quest, quest_log, userinfox, user){
     let timespans = ["daily", "weekly", "monthly"];
     let quest_timespan = timespans[quest[5] - 1];
     let state = check_current(quest_timespan, user);
     //let questTemp = get_quest_object();
+    
     if (state == "None"){
-        //TODO: Create new quest
-        
-        
-        document.getElementById(quest + "_type").innerText = "";
+        const type = choose_quest_type(userinfo["preset"]);
+        document.getElementById(quest + "_type").innerText = "Type: " +  type;
+        //TODO: Should save this somewhere such the user can't just reload the site for new type :hmm:
+
         //Create button
         let button = document.createElement("button");
-        button.textContent = "Get new Quest";
+        button.textContent = "Get new Quest!";
 
         //Append button
         document.getElementById(quest + "_type").appendChild(button)
@@ -194,14 +205,19 @@ function display_quest(quest, quest_log, user){
         button.addEventListener("click", ()=>{
             document.getElementById("myModal").style.display = "block";
         });
-        //TODO: Display type
-        //let type = quest_log[user][quest_timespan][state].type;
-        document.getElementById("popupText").innerText = "Choose difficulty for " + quest_timespan + " of type:" + "type";
+        document.getElementById("popupText").innerText = "Choose difficulty for " + quest_timespan + " of type: " + type;
 
         document.querySelectorAll(".difficulty-button").forEach(button => {
             button.addEventListener("click", (event) => {
                 const difficulty = event.target.dataset.difficulty;
                 //TODO: MODIFY QUEST
+                /*get_quest_object(type);*/
+                let quest_Obj = choose_quest("quests");
+                //TODO: USE USERINFO TO GET RANK AND MASTERY
+                quest_Obj = modify_quest(quest_Obj, 3, difficulty, 6);
+                console.log(quest_Obj.quest_text);
+                document.getElementById(quest + "_type").innerText = "Type: " +  type + "\nQuest: " + quest_Obj.quest_text;
+
                 document.getElementById("myModal").style.display = "none";
             })
         })
@@ -211,13 +227,6 @@ function display_quest(quest, quest_log, user){
         });
         
 
-
-
-        // Add ! sign
-        // Make it a button
-        // Make popup when clicked
-        // Make three buttons, to choose diffulcty
-        // Make new quest then display that
         
          // create new quest then 
     } else if (state == "Done" ){
@@ -237,6 +246,6 @@ function display_quest(quest, quest_log, user){
 
 
 
-display_quest("quest1", quest_log, "assholeblaster69");
-display_quest("quest2", quest_log, "assholeblaster69");
-display_quest("quest3", quest_log, "assholeblaster69");
+display_quest("quest1", quest_log, "Add User Json Here", "assholeblaster69");
+display_quest("quest2", quest_log, "Add User Json Here", "assholeblaster69");
+display_quest("quest3", quest_log, "Add User Json Here", "assholeblaster69");
