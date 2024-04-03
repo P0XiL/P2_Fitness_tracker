@@ -1,6 +1,12 @@
-[
-  {
-    "username": "dwa",
-    "password": "dd"
+{
+  "obj_users": {
+    "Kage": {
+      "password": "123",
+      "id": "uAXyovVO"
+    },
+    "haha": {
+      "password": "123",
+      "id": "WubhuFZ5"
+    }
   }
-]
+}

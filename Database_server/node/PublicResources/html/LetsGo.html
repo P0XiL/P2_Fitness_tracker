@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Lets GO Fitness Tracker</title>
-    <link rel="stylesheet" href="css/simple.css">
+    <link rel="stylesheet" href="/css/simple.css">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
             <li><a href="#main">Home</a></li>
         </ul>
         <ul>
-            <li><a href="#loginpage"><img src="img\Profile_image.png" alt="Login">
+            <li><a href="#loginpage"><img src="/img/Profile_image.png" alt="Login">
                 <br>Login/signup</a></li>
         </ul>
     </nav>
@@ -62,18 +62,18 @@
 
     <div id="loginpage" class="page">
         <h2>Login</h2>
-        <form id="loginForm" action="/submitForm" method="POST"> <!-- Add form element with action and method -->
+        <form id="/submitForm" action="/submitForm" method="POST">
             <p>Username</p>
-            <input type="text" name="username"> <!-- Add name attribute for username field -->
+            <input type="text" name="username"> <!-- Add id attribute for username field -->
             <p>Password</p>
-            <input type="password" name="password"> <!-- Add name attribute for password field -->
+            <input type="password" name="password"> <!-- Add id attribute for password field -->
             <br>
             <button type="submit">Submit</button> <!-- Add submit button -->
         </form>
     </div>
 
     <!-- JavaScript to handle navigation -->
-    <script src="js/script.js"></script>
+    <script src="/js/script.js"></script>
 </body>
 
 </html>

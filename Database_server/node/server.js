@@ -220,66 +220,84 @@ function reportError(res,error){
 /* *********************************************************************
    Setup HTTP server and route handling 
    ******************************************************************** */
-   const filePath = path.join(rootFileSystem, publicResources, "json", "Users.json");
 
-   const server = http.createServer(requestHandler);
-   function requestHandler(req, res) {
-     if (req.method === 'POST' && req.url === '/submitForm') {
-         handleFormSubmission(req, res);
-     } else {
-         try {
-             processReq(req, res);
-         } catch (e) {
-             console.log(InternalError + "!!: " + e);
-             errorResponse(res, 500, "");
-         }
-     }
-   }
-   
-   function handleFormSubmission(req, res) {
-     collectPostBody(req)
-         .then(body => {
-             const parsedBody = new URLSearchParams(body);
-             const username = parsedBody.get('username');
-             const password = parsedBody.get('password');
-   
-             if (!username || !password) {
-                 errorResponse(res, 400, "Username and password are required");
-                 return;
-             }
-   
-             const userData = { username, password };
-   
-             fs.readFile(filePath, (err, data) => {
-                 let users = [];
-                 if (!err) {
-                     try {
-                         users = JSON.parse(data);
-                     } catch (parseError) {
-                         console.error("Error parsing Users.json:", parseError);
-                     }
-                 }
-   
-                 users.push(userData);
-   
-                 fs.writeFile(filePath, JSON.stringify(users, null, 2), err => {
-                     if (err) {
-                         console.error("Error writing to Users.json:", err);
-                         errorResponse(res, 500, InternalError);
-                     } else {
-                         console.log("User data written to Users.json");
-                         res.writeHead(302, { 'Location': 'html/LetsGo.html' }); 
-                         res.end();
-                     }
-                 });
-             });
-         })
-         .catch(error => {
-             console.error("Error collecting POST body:", error);
-             errorResponse(res, 500, InternalError);
-         });
-   }
+const filePath = path.join(rootFileSystem, publicResources, "json", "Users.json");
 
+function generateRandomId(length) {
+    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let randomId = '';
+    for (let i = 0; i < length; i++) {
+        randomId += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return randomId;
+}
+
+function handleFormSubmission(req, res) {
+  collectPostBody(req)
+      .then(body => {
+          const parsedBody = new URLSearchParams(body);
+          const username = parsedBody.get('username');
+          const password = parsedBody.get('password');
+
+          if (!username || !password) {
+              errorResponse(res, 400, "Username and password are required");
+              return;
+          }
+          fs.readFile(filePath, (err, data) => {
+              let users = {};
+              if (!err) {
+                  try {
+                      users = JSON.parse(data);
+                  } catch (parseError) {
+                      console.error("Error parsing Users.json:", parseError);
+                  }
+              }
+
+              if (users.obj_users && users.obj_users[username]) {
+                errorResponse(res, 400, "Username already exists");
+                return;
+            }
+
+              // Generate a random ID
+              const id = generateRandomId(8);
+
+              // Ensure the users object exists
+              users.obj_users = users.obj_users || {};
+              
+              // Add the new user data to the users object
+              users.obj_users[username] = { password, id };
+
+              fs.writeFile(filePath, JSON.stringify(users, null, 2), err => {
+                  if (err) {
+                      console.error("Error writing to Users.json:", err);
+                      errorResponse(res, 500, InternalError);
+                  } else {
+                      console.log("User data written to Users.json");
+                      res.writeHead(302, { 'Location': '/html/LetsGo.html' }); 
+                      res.end();
+                  }
+              });
+          });
+      })
+      .catch(error => {
+          console.error("Error collecting POST body:", error);
+          errorResponse(res, 500, InternalError);
+      });
+}
+
+const server = http.createServer(requestHandler);
+function requestHandler(req, res) {
+  if (req.method === 'POST' && req.url === '/submitForm') {
+      handleFormSubmission(req, res);
+  } else {
+      try {
+          processReq(req, res);
+      } catch (e) {
+          console.log(InternalError + "!!: " + e);
+          errorResponse(res, 500, "");
+      }
+  }
+}
 function startServer(){
  /* start the server */
  server.listen(port, hostname, () => {
