@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lets GO Fitness Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>Lets GO</header>
+    <!-- Navigation links -->
+    <nav>
+        <ul>
+            <li><a href="#main">Quests</a></li>
+            <li><a href="#page2">Friends</a></li>
+            <li><a href="#page3">Stats</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page sections -->
+    <div id="main" class="page active">
+        <h2 class="heading">Quests</h2>
+        <div class="questpage">
+            <div id="quest1" class="quest">
+                <h2>Daily</h2>
+                <p>Quest 1 progress bars</p>
+                <p id="quest1_type"></p>
+            </div>
+
+            <div id="quest2" class="quest">
+                <h2>Weekly</h2>
+                <p>Quest 2 progress bars</p>
+                <p id="quest2_type"></p>
+            </div>
+
+            <div id="quest3" class="quest">
+                <h2>Monthly</h2>
+                <p>Quest 3 progress bars</p>
+                <p id="quest3_type"></p>
+            </div>
+        </div>
+        <script src="Quest_Creation.js"></script>
+    </div>
+
+    <div id="page2" class="page">
+        <h2>Friends</h2>
+        <p>The friends feature goes here</p>
+    </div>
+
+    <div id="page3" class="page">
+        <h2>Stats</h2>
+        <p>The stats page feature goes here</p>
+        <div>
+            <h1>Graph</h1>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+            <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+            <script src="Graph.js"></script>
+        </div>
+    </div>
+    
+
+    <!-- JavaScript to handle navigation -->
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,3 +1,19 @@
+//make a function thats reads from json file 
+/*
+let fs = require('fs');
+
+fs.readFile('data.json', 'utf8', (err, data) => {
+    if (err) {
+        console.error('Error:', err);
+        return;
+    }
+    // Parse JSON data
+    const jsonData = JSON.parse(data);
+    // Do something with the data
+    console.log(jsonData);
+});
+*/
+
 
 let questlog = {
 assholeblaster69:{
@@ -42,23 +58,6 @@ assholeblaster69:{
 
 
 
-//make a function thats reads from json file 
-/*
-let fs = require('fs');
-
-fs.readFile('data.json', 'utf8', (err, data) => {
-    if (err) {
-        console.error('Error:', err);
-        return;
-    }
-    // Parse JSON data
-    const jsonData = JSON.parse(data);
-    // Do something with the data
-    console.log(jsonData);
-});
-*/
-
-
 function Plot(user, type) {
 
 let x = [];
@@ -87,14 +86,16 @@ for (let date in user.daily) {
 }
 console.log(amountsWithType); 
 
+let ctx = document.getElementById("myChart");
 
 
-    new Chart("myChart", {
+
+    let myChart =new Chart(ctx, {
       type: "line",
       data: {
         labels: x,
         datasets: [{
-          fill: false,
+          fill: true,
           lineTension: 0,
           backgroundColor: "rgba(0,0,255,1.0)",
           borderColor: "rgba(0,0,255,0.1)",
@@ -104,13 +105,11 @@ console.log(amountsWithType);
       options: {
         legend: {display: false},
         scales: {
-          yAxes: [{ticks: {min: 6, max:16}}],
+          yAxes: [{ticks: {min: 0, max:16}}],
         }
       }
     }); 
 }
-
-
 
 
 Plot(questlog.assholeblaster69, "run");
