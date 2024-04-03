@@ -24,6 +24,18 @@ assholeblaster69:{
         "amount": 5
       },
 
+      "31/2/2024": {
+        "type": "run",
+        "target": 100,
+        "amount": 5
+      },
+
+      "30/2/2024": {
+        "type": "pushups",
+        "target": 100,
+        "amount": 5
+      },
+
       "26/3/2024": {
         "type": "run",
         "target": 10,
@@ -63,18 +75,11 @@ function Plot(user, type) {
 let x = [];
 
 for (let key in user.daily) {
-    x.push([key, user.daily[key]]);
+  if(user.daily[key].type === type){
+    x.push(key);
+  }
 }
 
-console.log(x);
-
-let y = [];
-
-for (let date in user.daily){
-    y.push(user.daily[date].amount);
-}
-
-console.log(y);
 
 let amountsWithType = [];
 
@@ -88,29 +93,28 @@ console.log(amountsWithType);
 
 let ctx = document.getElementById("myChart");
 
-
-
     let myChart =new Chart(ctx, {
       type: "line",
+
       data: {
         labels: x,
         datasets: [{
-          fill: true,
+          fill: false,
           lineTension: 0,
-          backgroundColor: "rgba(0,0,255,1.0)",
-          borderColor: "rgba(0,0,255,0.1)",
-          data: y
+          backgroundColor: "rgba(255,255,255,1)",
+          borderColor: "rgba(0,0,255,0.5)",
+          data: amountsWithType
         }]
       },
       options: {
-        legend: {display: false},
+        
+        legend: {display: false,},
         scales: {
-          yAxes: [{ticks: {min: 0, max:16}}],
+          yAxes: [{ticks: {min: 0, max:10}}],
         }
       }
     }); 
 }
-
 
 Plot(questlog.assholeblaster69, "run");
 
