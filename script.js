@@ -31,11 +31,10 @@ document.addEventListener('DOMContentLoaded', function () {
 // Function to fetch user data and display on the profile page
 function fetchUserData() {
     // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/user_info.json')
+    fetch('http://localhost:3000/users_info')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch userinfo.json');
-                console.log(response);
             }
             return response.json();
         })
@@ -57,6 +56,9 @@ function fetchUserData() {
 }
 
 
+
+
+
 // Function to display user information
 function displayUserInfo(userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
@@ -64,6 +66,7 @@ function displayUserInfo(userInfo) {
         <h2 style="text-align: center;">User info</h2>
         <p>Height: ${userInfo.health.height}</p>
         <p>Weight: ${userInfo.health.weight}</p>
+        <p>Antal Idaer: ${userInfo.health.idaer}</p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 }
@@ -101,7 +104,7 @@ function displayUserPreferences(userInfo) {
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <p>Preset: ${userInfo.preset.name}</p>
-        <p>Exercise preferences: ${countHTML}</p>
+        <p>Conf Counts: ${countHTML}</p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 }

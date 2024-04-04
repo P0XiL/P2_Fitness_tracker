@@ -43,6 +43,21 @@ main {
     padding: 20px; /* Adjust padding as needed */
 }
 
+.profile {
+    display: flex; /* Use Flexbox */
+    justify-content: space-evenly; /* Distribute items evenly */
+    align-items: center;
+}
+
+.profile_layout {
+    width: calc(45%); /* Adjust width and gap as needed */
+    background-color: #fd73d6; /* Just for visualization */
+    padding: 10px; /* Adjust padding as needed */
+}
+
+
+
+
 nav {
     grid-area: n;
     background-color: red;

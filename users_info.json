@@ -3,12 +3,13 @@
       "idkey1": {
         "health": {
             "height": "10cm",
-            "weight": "250kg"
+            "weight": "250kg",
+            "idaer": "1"
             },
   
         "preset": {
             "name": "run",
-            "conf": "[run,run,run,run,run,walk,walk,walk,walk,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob]"
+            "conf": "[run,run,run,run,run,walk,walk,walk,walk]"
             },
   
         "mastery": {
