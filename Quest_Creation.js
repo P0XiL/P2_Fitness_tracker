@@ -1,3 +1,4 @@
+
 //Returns an object with relavent user info
 function get_user_info(){
     //get user info from database
@@ -24,38 +25,27 @@ function choose_quest_type(preset){
 //Gets the object with quest for a given type
 function get_quest_object(type){
     //Connect to database
-    fetch('quest_templates.json')
-        .then(response => {
-            if (!response.ok){
-                throw new Error('Failed to fetch Quest Templates JSON');
-            }
-            return response.json();
-        })
-        .then(data => { return data[type]
-        })
-        .catch(error => {
-            console.error('Catched error while fetching Quest Templates JSON', error)
-        })
+    //Path to JSON file
+    const filePath = '/quest_templates.json';
+    
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if(err){
+            throw new Error('Failed to read Quest Templates Json');
+        }
+    try {
+        const jsonData = JSON.parse(data);
+        return jsonData.type;
+    } catch (error) {
+        throw new Error('Error parsing json', error);
+    }
+    
+    });
 }
 
 
 function choose_quest(quests){
     //TODO: TEMP FIX, NEED GET_QUEST_OBJECT TO WORK FISRT
-    quests = {
-        run: {
-            base_target: 5,
-            quest_text: "Go for a run for x minutes"
-        },
-        walk: {
-            base_target: 5,
-            quest_text: "Go for a walk for x minutes"
-        },
-        cycling: {
-            base_target: 5,
-            quest_text: "Cycle x minutes"
-        }
-    }
-
     return quests[Object.keys(quests)[generate_random_number(Object.keys(quests).length)]]
 }
 
@@ -182,7 +172,6 @@ function check_current(timespan, userID){
 
 
 
-
 function display_quest(quest, quest_log, userinfox, user){
     let timespans = ["daily", "weekly", "monthly"];
     let quest_timespan = timespans[quest[5] - 1];
@@ -210,11 +199,13 @@ function display_quest(quest, quest_log, userinfox, user){
         document.querySelectorAll(".difficulty-button").forEach(button => {
             button.addEventListener("click", (event) => {
                 const difficulty = event.target.dataset.difficulty;
-                //TODO: MODIFY QUEST
-                /*get_quest_object(type);*/
-                let quest_Obj = choose_quest("quests");
+                
+                const obj_questOfType = get_quest_object(type);
+                let obj_quest = choose_quest("quests");
+
+
                 //TODO: USE USERINFO TO GET RANK AND MASTERY
-                quest_Obj = modify_quest(quest_Obj, 3, difficulty, 6);
+                obj_quest = modify_quest(quest_Obj, 3, difficulty, 6);
                 console.log(quest_Obj.quest_text);
                 document.getElementById(quest + "_type").innerText = "Type: " +  type + "\nQuest: " + quest_Obj.quest_text;
 
@@ -236,8 +227,8 @@ function display_quest(quest, quest_log, userinfox, user){
         let type = quest_log[user][quest_timespan][state].type;
         document.getElementById(quest + "_type").innerText = "Type: " + type;
         console.log(type);
-        /*
-        document.getElementById(quest + "_text").innerText = questTemp["cardio"][type].text;*/
+        
+        //document.getElementById(quest + "_text").innerText = questTemp["cardio"][type].text;
     }
          
         //Add progressbar
