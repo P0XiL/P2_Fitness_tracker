@@ -16,10 +16,7 @@ function showQuestMenu(questId) {
     // Append the overlay to the quest page container
     questPageContainer.appendChild(overlay);
 
-    // Call the function to show the quest menu
-    // (you can place your existing code for showing the quest menu here)
-
-    // Optionally, remove the overlay after a delay (e.g., 2 seconds)
+    // Optionally, remove the overlay after a delay (tempoary)
     setTimeout(function() {
         overlay.remove();
     }, 2000);
