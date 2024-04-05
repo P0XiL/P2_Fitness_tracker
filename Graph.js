@@ -39,7 +39,7 @@ assholeblaster69:{
       "26/3/2024": {
         "type": "run",
         "target": 10,
-        "amount": 10
+        "amount": 12
       }
     },
 
@@ -121,8 +121,28 @@ assholeblaster63:{
 
 }
 
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
 
 
+/*
 function userArrayMaker(obj){
   let userarray = [];
   for(let users in obj){
@@ -151,12 +171,13 @@ function PlotWithFriends(type, userarray){
 
 
 console.log(PlotWithFriends("run", userArrayMaker(questlog)));
-  
+*/
 
 
 function Plot(user, type) {
 
-let x = [];
+// input start dato
+let x = [ "01/1/2024",];
 
 for (let key in user.daily) {
   if(user.daily[key].type === type){
@@ -164,14 +185,24 @@ for (let key in user.daily) {
   }
 }
 
-
-let amountsWithType = [];
+//input 0 to start dato
+let amountsWithType = [0,];
 
 
 for (let date in user.daily) {
     if (user.daily[date].type === type) {
         amountsWithType.push(user.daily[date].amount);
     }
+}
+
+function MaxGraph(array){
+  let max = 0;
+  for (let number of array) {
+    if (number > max) {
+      max = number;
+    }
+  }
+  return max;
 }
 
 
@@ -196,7 +227,7 @@ let ctx = document.getElementById("myChart");
         
         legend: {display: false,},
         scales: {
-          yAxes: [{ticks: {min: 0, max:10}}],
+          yAxes: [{ticks: {min: 0, max: Math.max(...amountsWithType) + 1}}],
         }
       }
     }); 

@@ -51,12 +51,23 @@
     <div id="page3" class="page">
         <h2>Stats</h2>
         <p>The stats page feature goes here</p>
+
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn">Change type</button>
+            <div id="myDropdown" class="dropdown-content">
+              <a href="#run">Run</a>
+              <a href="#cycling">Cycling</a>
+              <a href="#pushups">Pushups</a>
+              <a href="#walk">Walk</a>
+            </div>
+          </div>
         <div>
             <h1>Graph</h1>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
             <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
             <script src="Graph.js"></script>
         </div>
+
     </div>
     
 
