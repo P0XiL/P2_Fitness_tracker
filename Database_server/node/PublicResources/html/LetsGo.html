@@ -61,12 +61,17 @@
     </div>
 
     <div id="loginpage" class="page">
-        <h2>Login</h2>
-        <form id="/submitForm" action="/submitForm" method="POST">
+        <h2>Create new account</h2>
+        <form id="submitForm" action="/submitForm" method="POST">
             <p>Username</p>
             <input type="text" name="username"> <!-- Add id attribute for username field -->
             <p>Password</p>
             <input type="password" name="password"> <!-- Add id attribute for password field -->
+            <br>
+            <p>Confirm password</p>
+            <input type="password" name="confirm_password"> <!-- Add id attribute for password field -->
+            <br>
+            <div id="errorMessage" style="color: red;"></div>
             <br>
             <button type="submit">Submit</button> <!-- Add submit button -->
         </form>
