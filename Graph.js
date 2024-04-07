@@ -139,39 +139,38 @@ window.onclick = function(event) {
       }
     }
   }
-}
+} 
 
 
-/*
+
 function userArrayMaker(obj){
   let userarray = [];
   for(let users in obj){
     userarray.push([users]);
   }
-  console.log(userarray[0]);
+  return userarray;
 }
 
 
 function PlotWithFriends(type, userarray){
   let x = [];
-  let i = 0;
-  do{
-    console.log("test2");
-    for (let key in userarray) {
-      console.log("test1");
-      if(questlog.userarray[i].daily[key].type === type){
+  for (let i = 0; i < userarray.length; i++) {
+    console.log("test");
+    for (let key in userarray[i].daily) {
+      console.log("test2");
+      if (userarray[i].daily[key].type === type) {
         x.push(key);
       }
     }
-    i++;
-  } while(i <= userarray.length);
-
-  return x;
   }
+  return x;
+}
 
 
-console.log(PlotWithFriends("run", userArrayMaker(questlog)));
-*/
+function getValue(value) {
+  Plot(questlog.assholeblaster69, value);
+  console.log(PlotWithFriends(value, userArrayMaker(questlog)));
+}
 
 
 function Plot(user, type) {
@@ -184,6 +183,7 @@ for (let key in user.daily) {
     x.push(key);
   }
 }
+
 
 //input 0 to start dato
 let amountsWithType = [0,];
@@ -233,7 +233,7 @@ let ctx = document.getElementById("myChart");
     }); 
 }
 
-Plot(questlog.assholeblaster69, "run");
+
 
 
 
