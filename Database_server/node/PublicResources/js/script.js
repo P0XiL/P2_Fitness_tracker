@@ -22,5 +22,13 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById(targetId).classList.add('active');
         });
     });
+    // Handle login link separately
+    const loginLink = document.querySelector('#top-nav a[href="C:/Users/Jacob/OneDrive/Uni/2. semester/P2/Database/PublicResources/html/Login.html"]');
+    if (loginLink) {
+        loginLink.addEventListener('click', function (e) {
+            // Allow default behavior for login link
+            return true;
+        });
+    }
 });
 

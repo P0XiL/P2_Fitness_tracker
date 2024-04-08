@@ -1,20 +1,6 @@
-{
-  "obj_users": {
-    "Kage": {
-      "password": "123",
-      "id": "uAXyovVO"
-    },
-    "haha": {
-      "password": "123",
-      "id": "WubhuFZ5"
-    },
-    "fwaf": {
-      "password": "f",
-      "id": "J0yO4MIp"
-    },
-    "fwa": {
-      "password": "f",
-      "id": "doWyHuYm"
-    }
+[
+  {
+    "username": "dwa",
+    "password": "dd"
   }
-}
+]
