@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3360;
+const port = 3364;
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -43,6 +43,58 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
+            if (queryPath === "/register_user") {
+                const rootFileSystem=process.cwd();
+                const users_filePath = path.join(rootFileSystem, publicResources, "json", "Users.json");
+                let body = '';
+                req.on('data', chunk => {
+                    body += chunk.toString(); // convert Buffer to string
+                });
+                req.on('end', () => {
+                    // Manually parse the request body
+                    const formData = {};
+                    body.split('&').forEach(keyValue => {
+                        const [key, value] = keyValue.split('=');
+                        formData[decodeURIComponent(key)] = decodeURIComponent(value);
+                    });
+        
+                    const username = formData['username'];
+                    const password = formData['password'];
+                    const confirm_password = formData['confirm_password'];
+                    
+                    if (password !== confirm_password) {
+                        errorResponse(res, 400, "Passwords do not match");
+                    } else {
+                        // Read existing user data from JSON file
+                        fs.readFile(users_filePath, 'utf8', (err, data) => {
+                            if (err && err.code !== 'ENOENT') {
+                                console.error(err);
+                                errorResponse(res, 500, String(err));
+                            } else {
+                                const users = JSON.parse(data || '{}'); // Parse existing user data or initialize empty object
+        
+                                // Add new user to the object
+                                users.obj_users = users.obj_users || {}; // Ensure users property exists
+                                users.obj_users[username] = { password };
+        
+                                // Write updated user data back to the JSON file
+                                fs.writeFile(users_filePath, JSON.stringify(users, null, 2), 'utf8', err => {
+                                    if (err) {
+                                        console.error(err);
+                                        errorResponse(res, 500, String(err));
+                                    } else {
+                                        console.log("User data written to Users.json");
+                                        res.writeHead(302, { 'Location': '/html/LetsGo.html' }); 
+                                        res.end();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else {
+                errorResponse(res, 404, "Not found");
+            }
             break;
         default:
             errorResponse(res, 405, "Method Not Allowed");

@@ -1,6 +1,7 @@
-[
-  {
-    "username": "dwa",
-    "password": "dd"
+{
+  "obj_users": {
+    "Kage": {
+      "password": "123"
+    }
   }
-]
+}
