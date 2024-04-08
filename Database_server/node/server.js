@@ -66,7 +66,7 @@ function writeUserData(req, res) {
         const userData = JSON.parse(body);
         const jsonData = JSON.stringify(userData);
         // Write the JSON data to a file
-        fs.writeFile('userData.json', jsonData, (err) => {
+        fs.writeFile('PublicResources/json/Users.json', jsonData, (err) => {
             if (err) {
                 console.error(err);
                 errorResponse(res, 500, String(err));
