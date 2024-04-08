@@ -1,5 +1,4 @@
 export {ValidationError, NoResourceError, processReq};
-import {renderHTMLBMIStatPage, renderHTMLBMIUpdatePage, recordBMI} from "./app.js";
 import {extractJSON, fileResponse, htmlResponse,extractForm,jsonResponse,errorResponse,reportError,startServer} from "./server.js";
 const ValidationError="Validation Error";
 const NoResourceError="No Such Resource";
@@ -21,12 +20,6 @@ startServer();
         let pathElements=queryPath.split("/"); 
         console.log(pathElements[1]);
          switch(pathElements[1]){
-          case "bmi-records":
-            extractForm(req)
-            .then(bmiData => validateBMIRecordForm(bmiData))
-            .then(validBmiData => htmlResponse(res, renderHTMLBMIUpdatePage(recordBMI(validBmiData))))
-            .catch(err=>reportError(res,err));
-            break;
           default: 
             console.error("Resource doesn't exist");
             reportError(res, new Error(NoResourceError)); 
@@ -47,16 +40,6 @@ startServer();
             jsonResponse(res,date);
           }
           break;
-          case "bmi-records": 
-            if(pathElements.length===2) { 
-              try{ // "/bmi-records?name=xxx"
-                let validBMIStatData=validateBMIStatForm(searchParms);
-                htmlResponse(res,renderHTMLBMIStatPage(validBMIStatData));
-              }
-              catch(err){reportError (res,err);}
-           } 
-           else reportError(res, new Error(NoResourceError)); 
-           break;
            default: //for anything else we assume it is a file to be served
              fileResponse(res, req.url);
            break;
