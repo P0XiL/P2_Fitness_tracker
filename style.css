@@ -87,9 +87,6 @@ a   {
 /* Ensures only the selected page is shown */
 .page {display: none;}
 .page.active {display: block;}
-/* Ensures only the selected page is shown */
-.page {display: none;}
-.page.active {display: block;}
 
 /* Styles for the drop-down button */
 .dropbtn {
