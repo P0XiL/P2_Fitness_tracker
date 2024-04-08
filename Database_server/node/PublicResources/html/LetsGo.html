@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Lets GO Fitness Tracker</title>
-    <link rel="stylesheet" href="/css/simple.css">
+    <link rel="stylesheet" href="css/simple.css">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
             <li><a href="#main">Home</a></li>
         </ul>
         <ul>
-            <li><a href="#loginpage"><img src="/image/Profile_image.png" alt="Login">
+            <li><a href="#loginpage"><img src="image/Profile_image.png" alt="Login">
                     <br>Login/signup</a></li>
         </ul>
     </nav>
@@ -93,7 +93,6 @@
 
     <div id="loginpage" class="page">
         <h2>Login</h2>
-        <form action="/register_user" method="POST">
             <p>Username</p>
             <input type="text" name="username"> <!-- Add name attribute for username field -->
             <p>Password</p>
@@ -102,15 +101,14 @@
             <input type="password" name="confirm_password"> <!-- Add name attribute for password field -->
             <br>
             <br>
-            <button type="submit">Submit</button> <!-- Add submit button -->
-        </form>
+            <button id="submitBtn" type="submit">Submit</button> <!-- Add submit button -->
     </div>
 
     <!-- JavaScript to handle navigation -->
-    <script src="/js/script.js"></script>
-    <script src="/js/Quest_Creation.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-    <script src="/js/Graph.js"></script>
+    <script src="js/Graph.js"></script>
 </body>
 
 </html>

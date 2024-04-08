@@ -22,12 +22,42 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById(targetId).classList.add('active');
         });
     });
-    // Handle login link separately
-    const loginLink = document.querySelector('#top-nav a[href="C:/Users/Jacob/OneDrive/Uni/2. semester/P2/Database/PublicResources/html/Login.html"]');
-    if (loginLink) {
-        loginLink.addEventListener('click', function (e) {
-            // Allow default behavior for login link
-            return true;
+    // Add event listener to the submit button
+    document.getElementById('submitBtn').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Get username and password values
+        const username = document.querySelector('input[name="username"]').value;
+        const password = document.querySelector('input[name="password"]').value;
+
+        // Create an object with username and password
+        const userData = {
+            username: username,
+            password: password
+        };
+
+        // Send the data to the server-side script for file writing
+        sendDataToServer(userData);
+    });
+
+    // Function to send data to server-side script
+    function sendDataToServer(userData) {
+        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Data successfully sent to server');
+            } else {
+                console.error('Failed to send data to server');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
     }
 });

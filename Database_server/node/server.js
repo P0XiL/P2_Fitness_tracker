@@ -43,63 +43,41 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
-            if (queryPath === "/register_user") {
-                const rootFileSystem=process.cwd();
-                const users_filePath = path.join(rootFileSystem, publicResources, "json", "Users.json");
-                let body = '';
-                req.on('data', chunk => {
-                    body += chunk.toString(); // convert Buffer to string
-                });
-                req.on('end', () => {
-                    // Manually parse the request body
-                    const formData = {};
-                    body.split('&').forEach(keyValue => {
-                        const [key, value] = keyValue.split('=');
-                        formData[decodeURIComponent(key)] = decodeURIComponent(value);
-                    });
-        
-                    const username = formData['username'];
-                    const password = formData['password'];
-                    const confirm_password = formData['confirm_password'];
-                    
-                    if (password !== confirm_password) {
-                        errorResponse(res, 400, "Passwords do not match");
-                    } else {
-                        // Read existing user data from JSON file
-                        fs.readFile(users_filePath, 'utf8', (err, data) => {
-                            if (err && err.code !== 'ENOENT') {
-                                console.error(err);
-                                errorResponse(res, 500, String(err));
-                            } else {
-                                const users = JSON.parse(data || '{}'); // Parse existing user data or initialize empty object
-        
-                                // Add new user to the object
-                                users.obj_users = users.obj_users || {}; // Ensure users property exists
-                                users.obj_users[username] = { password };
-        
-                                // Write updated user data back to the JSON file
-                                fs.writeFile(users_filePath, JSON.stringify(users, null, 2), 'utf8', err => {
-                                    if (err) {
-                                        console.error(err);
-                                        errorResponse(res, 500, String(err));
-                                    } else {
-                                        console.log("User data written to Users.json");
-                                        res.writeHead(302, { 'Location': '/html/LetsGo.html' }); 
-                                        res.end();
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+            if (req.url === "/writeUserData") {
+                // Handle the POST request to write user data to a file
+                writeUserData(req, res);
             } else {
-                errorResponse(res, 404, "Not found");
+                errorResponse(res, 404, "Not Found");
             }
             break;
         default:
             errorResponse(res, 405, "Method Not Allowed");
             break;
     }
+}
+
+// Function to handle writing user data to a JSON file
+function writeUserData(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const userData = JSON.parse(body);
+        const jsonData = JSON.stringify(userData);
+        // Write the JSON data to a file
+        fs.writeFile('userData.json', jsonData, (err) => {
+            if (err) {
+                console.error(err);
+                errorResponse(res, 500, String(err));
+            } else {
+                console.log('User data written to file');
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'text/plain');
+                res.end('User data written to file');
+            }
+        });
+    });
 }
 
 function errorResponse(res, code, reason) {
