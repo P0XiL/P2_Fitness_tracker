@@ -94,6 +94,7 @@ a   {
 }
 */
 
+
 /* Styles for the modal */
 .modal {
   display: none; /* Hide the modal by default */
@@ -172,6 +173,7 @@ a   {
 .show {
   display: block; /* Display block */
 }
+
 
 
 
