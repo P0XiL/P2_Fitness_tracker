@@ -170,6 +170,15 @@ function PlotWithFriends(type, userarray){
 function getValue(value) {
   Plot(questlog.assholeblaster69, value);
   console.log(PlotWithFriends(value, userArrayMaker(questlog)));
+  changeText(value);
+}
+
+function changeText(value) {
+  // Get the element with the id "demo"
+  var element = document.getElementById("text");
+
+  // Change the text content
+  element.innerHTML = "This Graph is based on type:  " + value;
 }
 
 
