@@ -20,7 +20,7 @@ import {processReq,ValidationError, NoResourceError} from "./router.js";
 export {startServer,extractJSON, extractForm, fileResponse, htmlResponse,jsonResponse,errorResponse,reportError};
 
 const hostname = '127.0.0.1';
-const port = 3000;
+const port = 3364;
 //const serverName="http://localhost:3000";
 
 
