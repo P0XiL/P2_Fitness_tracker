@@ -56,9 +56,6 @@ function fetchUserData() {
 }
 
 
-
-
-
 // Function to display user information
 function displayUserInfo(userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
@@ -66,7 +63,6 @@ function displayUserInfo(userInfo) {
         <h2 style="text-align: center;">User info</h2>
         <p>Height: ${userInfo.health.height}</p>
         <p>Weight: ${userInfo.health.weight}</p>
-        <p>Antal Idaer: ${userInfo.health.idaer}</p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 }
@@ -104,7 +100,7 @@ function displayUserPreferences(userInfo) {
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <p>Preset: ${userInfo.preset.name}</p>
-        <p>Conf Counts: ${countHTML}</p>
+        <p>Exercise preferences: ${countHTML}</p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 }
