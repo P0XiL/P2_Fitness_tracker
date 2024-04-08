@@ -15,7 +15,7 @@ fs.readFile('data.json', 'utf8', (err, data) => {
 */
 
 
-let questlog = {
+const obj_questLog = {
 assholeblaster69:{
     daily:{
      "31/3/2024": {
@@ -123,17 +123,16 @@ assholeblaster63:{
 
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
-function myFunction() {
+function dropdown_close() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
 
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
   if (!event.target.matches('.dropbtn')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
+    const dropdowns = document.getElementsByClassName("dropdown-content");
+    for (const i = 0; i < dropdowns.length; i++) {
+      const openDropdown = dropdowns[i];
       if (openDropdown.classList.contains('show')) {
         openDropdown.classList.remove('show');
       }
@@ -143,7 +142,7 @@ window.onclick = function(event) {
 
 
 
-function userArrayMaker(obj){
+function user_array_maker(obj){
   let userarray = [];
   for(let users in obj){
     userarray.push([users]);
@@ -152,7 +151,7 @@ function userArrayMaker(obj){
 }
 
 
-function PlotWithFriends(type, userarray){
+function plot_with_friends(type, userarray){
   let x = [];
   for (let i = 0; i < userarray.length; i++) {
     console.log("test");
@@ -167,22 +166,22 @@ function PlotWithFriends(type, userarray){
 }
 
 
-function getValue(value) {
-  Plot(questlog.assholeblaster69, value);
-  console.log(PlotWithFriends(value, userArrayMaker(questlog)));
-  changeText(value);
+function get_value(value) {
+  plot(obj_questLog.assholeblaster69, value);
+  console.log(plot_with_friends(value, user_array_maker(obj_questLog)));
+  change_text(value);
 }
 
-function changeText(value) {
+function change_text(value) {
   // Get the element with the id "demo"
-  var element = document.getElementById("text");
+  const element = document.getElementById("text");
 
   // Change the text content
   element.innerHTML = "This Graph is based on type:  " + value;
 }
 
 
-function Plot(user, type) {
+function plot(user, type) {
 
 // input start dato
 let x = [ "01/1/2024",];
@@ -204,7 +203,7 @@ for (let date in user.daily) {
     }
 }
 
-function MaxGraph(array){
+function max_graph(array){
   let max = 0;
   for (let number of array) {
     if (number > max) {
