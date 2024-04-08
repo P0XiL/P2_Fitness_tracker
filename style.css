@@ -87,3 +87,59 @@ a   {
 /* Ensures only the selected page is shown */
 .page {display: none;}
 .page.active {display: block;}
+/* Ensures only the selected page is shown */
+.page {display: none;}
+.page.active {display: block;}
+
+/* Styles for the drop-down button */
+.dropbtn {
+    background-color: rgb(69, 70, 70);/* Background color */
+    color: white; /* Text color */
+    padding: 2px; /* Padding around text */
+    font-size: 16px; /* Font size */
+    border: none; /* No border */
+    cursor: pointer; /* Cursor style */
+    margin-right: 100px;
+  }
+  
+  /* Styles for when the drop-down button is hovered or focused */
+  .dropbtn:hover, .dropbtn:focus {
+    background-color: #2980B9; /* Background color change on hover/focus */
+  }
+  
+  /* Styles for the dropdown container */
+  .dropdown {
+    position: relative; /* Positioning */
+    display: inline-block; /* Display as inline block */
+    float: right;
+  }
+  
+  /* Styles for the dropdown content */
+  .dropdown-content {
+    display: none; /* Hide dropdown content by default */
+    position: absolute; /* Positioning */
+    background-color: #f1f1f1; /* Background color */
+    min-width: 90px; /* Minimum width of dropdown content */
+    overflow: auto; /* Allow content to overflow */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Box shadow for dropdown */
+    z-index: 1; /* Z-index for stacking order */
+    right: 100px;
+  }
+  
+  /* Styles for the links within the dropdown content */
+  .dropdown-content a {
+    color: black; /* Text color */
+    padding: 12px 16px; /* Padding around text */
+    text-decoration: none; /* No underline */
+    display: block; /* Display as block element */
+  }
+  
+  /* Styles for when a link within the dropdown content is hovered */
+  .dropdown a:hover {
+    background-color: #ddd; /* Background color change on hover */
+  }
+  
+  /* Style for showing the dropdown content */
+  .show {
+    display: block; /* Display block */
+  }
