@@ -1,0 +1,18 @@
+{
+  "name": "nodeweb2-server",
+  "version": "1.0.0",
+  "description": "TestApp",
+  "main": "app.js",
+  "type": "module",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
