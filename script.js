@@ -31,10 +31,11 @@ document.addEventListener('DOMContentLoaded', function () {
 // Function to fetch user data and display on the profile page
 function fetchUserData() {
     // Fetch the JSON data
-    fetch('http://localhost:3000/users_info')
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/user_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch userinfo.json');
+                console.log(response);
             }
             return response.json();
         })
