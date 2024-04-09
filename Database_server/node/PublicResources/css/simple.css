@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
   display: grid;
   grid-template-areas:
@@ -179,4 +180,187 @@ a   {
 
 /* Ensures only the selected page is shown */
 .page {display: none;}
+=======
+body {
+  display: grid;
+  grid-template-areas:
+      "h h"
+      "n m"
+      "f f";
+  grid-template-rows: 70px 1fr 60px;
+  grid-template-columns: 300px 1fr;
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
+  height: 100vh;
+  margin: 0;
+  background-color: black;
+  color: white;
+  font-family: monospace;
+  text-decoration: none;
+}
+
+header {
+  grid-area: h;
+  text-align: center;
+  background-color: grey;
+  font-size: 60px;
+}
+footer {grid-area: f;}
+
+main {
+  grid-area: m;
+}
+
+.heading {
+  text-align: center;
+}
+.questpage {
+  display: flex; /* Use Flexbox */
+  justify-content: space-between; /* Distribute items evenly */
+  align-items: center;
+}
+
+.quest {
+  width: calc(25% - 10px); /* Adjust width and gap as needed */
+  background-color: #ccc; /* Just for visualization */
+  padding: 20px; /* Adjust padding as needed */
+}
+
+#top-nav {
+  grid-area: h;
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Spacing between the two ul elements */
+  align-items: center; /* Center items vertically */
+}
+
+#top-nav ul {
+  list-style: none;
+  margin-right: 10px;
+}
+
+#top-nav a {
+  color: black;
+  text-decoration: none;
+  font-size: 1em;
+}
+
+#side-nav {
+  grid-area: n;
+  background-color: red;
+}
+
+#side-nav ul {
+  list-style: none;
+}
+
+#side-nav a {
+  color: white;
+  font-family: monospace;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 3em;
+}
+/*
+#sidenav {
+  grid-area: n;
+  background-color: red;
+  /* Flexbox styles for vertical centering */ /*
+  display: flex;
+  align-items: center;
+  font-size: 3em;
+}
+a   {
+  color: white;
+  font-family: monospace;
+  text-decoration: none;
+}
+*/
+
+
+/* Styles for the modal */
+.modal {
+  display: none; /* Hide the modal by default */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4); /* Overlay background */
+}
+
+.modal-content {
+  background-color: #1f6bb2;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* Style for the buttons */
+.difficulty-button {
+  margin: 5%;
+}
+
+/* Styles for the drop-down button */
+.dropbtn {
+  background-color: rgb(69, 70, 70);/* Background color */
+  color: white; /* Text color */
+  padding: 2px; /* Padding around text */
+  font-size: 16px; /* Font size */
+  border: none; /* No border */
+  cursor: pointer; /* Cursor style */
+  margin-right: 100px;
+}
+
+/* Styles for when the drop-down button is hovered or focused */
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9; /* Background color change on hover/focus */
+}
+
+/* Styles for the dropdown container */
+.dropdown {
+  position: relative; /* Positioning */
+  display: inline-block; /* Display as inline block */
+  float: right;
+}
+
+/* Styles for the dropdown content */
+.dropdown-content {
+  display: none; /* Hide dropdown content by default */
+  position: absolute; /* Positioning */
+  background-color: #f1f1f1; /* Background color */
+  min-width: 90px; /* Minimum width of dropdown content */
+  overflow: auto; /* Allow content to overflow */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Box shadow for dropdown */
+  z-index: 1; /* Z-index for stacking order */
+  right: 100px;
+}
+
+/* Styles for the links within the dropdown content */
+.dropdown-content a {
+  color: black; /* Text color */
+  padding: 12px 16px; /* Padding around text */
+  text-decoration: none; /* No underline */
+  display: block; /* Display as block element */
+}
+
+/* Styles for when a link within the dropdown content is hovered */
+.dropdown a:hover {
+  background-color: #ddd; /* Background color change on hover */
+}
+
+/* Style for showing the dropdown content */
+.show {
+  display: block; /* Display block */
+}
+
+
+
+
+/* Ensures only the selected page is shown */
+.page {display: none;}
+>>>>>>> 480828e9e4f479adde5962e82825a811f5e81b86
 .page.active {display: block;}

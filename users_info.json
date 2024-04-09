@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "users_info": {
       "idkey1": {
@@ -30,4 +31,38 @@
         }
      }
     }
+=======
+{
+    "users_info": {
+      "idkey1": {
+        "health": {
+            "height": "10cm",
+            "weight": "250kg"
+            },
+  
+        "preset": {
+            "name": "run",
+            "conf": "[run,run,run,run,run,walk,walk,walk,walk,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob]"
+            },
+  
+        "mastery": {
+            "run": {
+                "level": 69,
+                "elo": 10
+                },
+          
+            "walk": {
+                "level": 420,
+                "elo": 69
+                }
+            },
+  
+        "hidden rank": {
+            "daily": 23,
+            "weekly": 30,
+            "monthly": 16
+        }
+     }
+    }
+>>>>>>> 480828e9e4f479adde5962e82825a811f5e81b86
 }
