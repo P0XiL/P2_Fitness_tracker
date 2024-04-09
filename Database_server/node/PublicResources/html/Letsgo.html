@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lets GO Fitness Tracker</title>
+    <link rel="stylesheet" href="../css/simple.css">
+</head>
+
+<body>
+    <header>Lets GO</header>
+    <!-- Navigation links -->
+    <nav id="side-nav">
+        <ul>
+            <li><a href="#main">Quests</a></li>
+            <li><a href="#page2">Friends</a></li>
+            <li><a href="#page3">Stats</a></li>
+        </ul>
+    </nav>
+
+    <nav id="top-nav">
+        <ul>
+            <li><a href="#main">Home</a></li>
+        </ul>
+        <ul>
+            <li><a href="#loginpage"><img src="../image/Profile_image.png" alt="Login">
+                    <br>Login/signup</a></li>
+        </ul>
+    </nav>
+
+    <!-- A popup when choosing new quest-->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p id="popupText"></p>
+            <button class="difficulty-button" data-difficulty=-3>Easy</button>
+            <button class="difficulty-button" data-difficulty=0>Medium</button>
+            <button class="difficulty-button" data-difficulty=3>Hard</button>
+            <button id="close">Close</button>
+        </div>
+    </div>
+
+    <!-- Page sections -->
+    <div id="main" class="page active">
+        <h2 class="heading">Quests</h2>
+        <div class="questpage">
+            <div id="quest1" class="quest">
+                <h2>Daily</h2>
+                <p>Quest 1 progress bars</p>
+                <p id="quest1_type"></p>
+            </div>
+
+            <div id="quest2" class="quest">
+                <h2>Weekly</h2>
+                <p>Quest 2 progress bars</p>
+                <p id="quest2_type"></p>
+            </div>
+
+            <div id="quest3" class="quest">
+                <h2>Monthly</h2>
+                <p>Quest 3 progress bars</p>
+                <p id="quest3_type"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="page2" class="page">
+        <h2>Friends</h2>
+        <p>The friends feature goes here</p>
+    </div>
+
+    <div id="page3" class="page">
+        <h2>Stats</h2>
+        <p id="text"> </p>
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close()" class="dropbtn">Change type</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="#" onclick="get_value('run')">Run</a>
+                    <a href="#" onclick="get_value('cycling')">Cycling</a>
+                    <a href="#" onclick="get_value('pushups')">Pushups</a>
+                    <a href="#" onclick="get_value('walk')">Walk</a>
+                </div>
+            </div>
+
+            <div>
+                <h1>Graph</h1>
+                <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="loginpage" class="page">
+        <h2>Login</h2>
+        <form id="loginForm" action="/submitForm" method="POST"> <!-- Add form element with action and method -->
+            <p>Username</p>
+            <input type="text" name="username"> <!-- Add name attribute for username field -->
+            <p>Password</p>
+            <input type="password" name="password"> <!-- Add name attribute for password field -->
+            <br>
+            <button type="submit">Submit</button> <!-- Add submit button -->
+        </form>
+    </div>
+
+    <!-- JavaScript to handle navigation -->
+    <script src="../js/script.js"></script>
+    <script src="../js/Quest_Creation.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="../js/Graph.js"></script>
+</body>
+
+</html>
