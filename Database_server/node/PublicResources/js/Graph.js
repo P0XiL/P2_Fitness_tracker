@@ -245,6 +245,3 @@ let ctx = document.getElementById("myChart");
 
 
 
-
-
-

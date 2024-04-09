@@ -78,22 +78,6 @@ main {
   align-items: center;
   font-size: 3em;
 }
-/*
-#sidenav {
-  grid-area: n;
-  background-color: red;
-  /* Flexbox styles for vertical centering */ /*
-  display: flex;
-  align-items: center;
-  font-size: 3em;
-}
-a   {
-  color: white;
-  font-family: monospace;
-  text-decoration: none;
-}
-*/
-
 
 /* Styles for the modal */
 .modal {
@@ -173,9 +157,6 @@ a   {
 .show {
   display: block; /* Display block */
 }
-
-
-
 
 /* Ensures only the selected page is shown */
 .page {display: none;}

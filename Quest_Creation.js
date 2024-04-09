@@ -1,4 +1,3 @@
-
 //Returns an object with relavent user info
 function get_user_info(){
     //get user info from database
@@ -240,3 +239,4 @@ function display_quest(quest, quest_log, userinfox, user){
 display_quest("quest1", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest2", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest3", quest_log, "Add User Json Here", "assholeblaster69");
+
