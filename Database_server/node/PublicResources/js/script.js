@@ -22,35 +22,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
-                fetchUserData();
+                fetchUserData('idkey1');
             }
         });
     });
 });
 
 // Function to fetch user data and display on the profile page
-function fetchUserData() {
+// Function to fetch user data and display on the profile page
+function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/user_info.json')
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch userinfo.json');
-                console.log(response);
             }
             return response.json();
         })
         .then(data => {
             console.log(data);
-            // Check if idkey1 exists
-            if (data.idkey1) {
-                // Extract user information
-                const userInfo = data.idkey1;
+            // Check if users_info exists in data
+            if (data.users_info) {
+                // Check if idkey1 exists
+                if (username && data.users_info[username]) {
+                    // Extract user information
+                    const userInfo = data.users_info[username];
 
-                // Display the user information
-                displayUserInfo(userInfo);
-                displayUserPreferences(userInfo);
+                    // Display the user information
+                    displayUserInfo(userInfo);
+                    displayUserPreferences(userInfo);
+                } else {
+                    console.error(`${username} not found in JSON data`);
+                }
             } else {
-                console.error('idkey1 not found in JSON data');
+                console.error('users_info not found in JSON data');
             }
         })
         .catch(error => console.error('Error fetching JSON:', error));
