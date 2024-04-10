@@ -1,10 +1,11 @@
 import http from 'http';
 import fs from "fs";
 import path from "path";
+import process from "process";
 
 const hostname = '127.0.0.1';
 const port = 3364;
-const publicResources = "PublicResources/";
+const publicResources = "node/PublicResources/";
 
 const server = http.createServer((req, res) => {
     try {
@@ -64,21 +65,50 @@ function writeUserData(req, res) {
     });
     req.on('end', () => {
         const userData = JSON.parse(body);
-        const jsonData = JSON.stringify(userData);
-        // Write the JSON data to a file
-        fs.writeFile('PublicResources/json/Users.json', jsonData, (err) => {
-            if (err) {
-                console.error(err);
-                errorResponse(res, 500, String(err));
+
+        // Read existing data from the file
+        fs.readFile('node/PublicResources/json/Users.json', (err, data) => {
+            let users = {}; // Initialize users object
+
+            if (!err) {
+                try {
+                    users = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing user data:", parseError);
+                }
             } else {
-                console.log('User data written to file');
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'text/plain');
-                res.end('User data written to file');
+                // Handle file not found or empty
+                console.error("Error reading existing user data:", err);
             }
+
+            // Create obj_users object if not exists
+            if (!users.hasOwnProperty('obj_users')) {
+                users['obj_users'] = {};
+            }
+
+            // Append new user data
+            users['obj_users'][userData.username] = {
+                password: userData.password
+            };
+
+            // Write updated data back to the file
+            fs.writeFile('node/PublicResources/json/Users.json', JSON.stringify(users, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User data appended to file');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
         });
     });
 }
+
+
+
 
 function errorResponse(res, code, reason) {
     res.statusCode = code;

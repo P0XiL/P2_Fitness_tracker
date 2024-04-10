@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to send data to server-side script
     function sendDataToServer(userData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        fetch('http://127.0.0.1:3364/writeUserData', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
