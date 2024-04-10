@@ -22,10 +22,10 @@ function choose_quest_type(preset){
 
 
 //Gets the object with quest for a given type
-function get_quest_object(type){
+function get_object(json){
     //Connect to database
     //Path to JSON file
-    fetch('json/quest_log.json')
+    fetch('json/' + json)
         .then(response => {
         // Check if the request was successful
         if (!response.ok) {
@@ -239,4 +239,4 @@ function display_quest(quest, quest_log, userInfox, user){
 display_quest("quest1", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest2", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest3", quest_log, "Add User Json Here", "assholeblaster69");
-console.log(get_quest_object("cardio"));
+console.log(get_object("quest_template.json"));
