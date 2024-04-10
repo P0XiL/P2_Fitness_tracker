@@ -145,6 +145,10 @@ const obj_questLog = {
       }
     }
   } 
+
+  function dropdown_close1() {
+    document.getElementById("myDropdown1").classList.toggle("show");
+  }
   
   
   
@@ -200,58 +204,55 @@ const obj_questLog = {
   
   
   
-  
-  
-  function get_value(value) {
-    plot(obj_questLog.assholeblaster69, value);
-    console.log(plot_with_friends(value, user_array_maker(obj_questLog)));
-    change_text(value);
+    function update_graph(value, period){
+      let preValue = 0;
+      let preperiod = period;
+      if(value === null && period === null){
+        plot("assholeblaster69", prevalue, preperiod);
+        change_text(prevalue, preperiod);
+      } 
+      else if(value === null && period !== null){
+        plot("assholeblaster69", prevalue, period);
+        change_text(prevalue, period);
+        preperiod = period;
+      }
+      else if(value !== null && period === null){
+        plot("assholeblaster69", value, preperiod);
+        change_text(value, preperiod);
+        prevalue = value;
+      } else {
+        plot("assholeblaster69", prevalue, preperiod);
+        change_text(value, period);
+      }
   }
   
-  function change_text(value) {
+  function change_text(value, period) {
     // Get the element with the id "demo"
     const element = document.getElementById("text");
-  
     // Change the text content
-    element.innerHTML = "This Graph is based on type:  " + value;
+    element.innerHTML = "This Graph is based on type:  " + value + " in period: " + period;
   }
   
-  
-  function plot(user, type) {
-  
+  function plot(user, type, period) {
+    console.log(period);
   // input start dato
   let x = [ "01/1/2024",];
   
-  for (let key in user.daily) {
-    if(user.daily[key].type === type){
+  for (let key in obj_questLog[user][period]) {
+    if(obj_questLog[user][period][key].type === type){
       x.push(key);
     }
   }
-  
-  
+    
   //input 0 to start dato
   let amountsWithType = [0,];
-  
-  
-  for (let date in user.daily) {
-      if (user.daily[date].type === type) {
-          amountsWithType.push(user.daily[date].amount);
+    
+  for (let date in obj_questLog[user][period]) {
+      if (obj_questLog[user][period][date].type === type) {
+          amountsWithType.push(obj_questLog[user][period][date].amount);
       }
   }
-  
-  function max_graph(array){
-    let max = 0;
-    for (let number of array) {
-      if (number > max) {
-        max = number;
-      }
-    }
-    return max;
-  }
-  
-  
   // ploting with data.
-  
   let ctx = document.getElementById("myChart");
   
       let myChart =new Chart(ctx, {

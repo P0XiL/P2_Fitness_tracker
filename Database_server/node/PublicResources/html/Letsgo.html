@@ -82,18 +82,27 @@
             <div class="dropdown">
                 <button onclick="dropdown_close()" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" onclick="get_value('run')">Run</a>
-                    <a href="#" onclick="get_value('cycling')">Cycling</a>
-                    <a href="#" onclick="get_value('pushups')">Pushups</a>
-                    <a href="#" onclick="get_value('walk')">Walk</a>
+                    <a href="#" onclick="update_graph('run', null)">Run</a>
+                    <a href="#" onclick="update_graph('cycling', null)">Cycling</a>
+                    <a href="#" onclick="update_graph('pushups', null)">Pushups</a>
+                    <a href="#" onclick="update_graph('walk', null)">Walk</a>
                 </div>
             </div>
-
+        </div>
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close1()" class="dropbtn">Change period</button>
+                <div id="myDropdown1" class="dropdown-content">
+                    <a href="#" onclick="update_graph(null, 'daily')">Daily</a>
+                    <a href="#" onclick="update_graph(null, 'weekly')">Weekly</a>
+                    <a href="#" onclick="update_graph(null, 'monthly')">Monthly</a>
+                </div>
+            </div>
+        </div>
             <div>
                 <h1>Graph</h1>
                 <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
             </div>
-        </div>
     </div>
 
 
