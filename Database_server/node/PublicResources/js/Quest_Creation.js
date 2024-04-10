@@ -195,7 +195,16 @@ function display_quest(quest, quest_log, userInfox, user){
             button.addEventListener("click", (event) => {
                 const difficulty = event.target.dataset.difficulty;
                 //TODO: WHAT IS EVEN HAPPINING HERE
-                get_object("quest_templates.json")
+                
+                return fetch('json/quest_templates.json')
+                    .then(response => {
+                    // Check if the request was successful
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch JSON');
+                        }
+                        // Parse the JSON response
+                        return response.json();
+                    })
                     .then(data => {
                         let obj_quest = choose_quest(data[type]);
                         console.log(data[type]);
@@ -207,9 +216,8 @@ function display_quest(quest, quest_log, userInfox, user){
                         document.getElementById("myModal").style.display = "none";
                     })
                     .catch(error => {
-                        throw new Error('Failed handle data');
-                    })
-                
+                        console.error('Error fetching or parsing JSON:', error);
+                    });              
 
 
                 
