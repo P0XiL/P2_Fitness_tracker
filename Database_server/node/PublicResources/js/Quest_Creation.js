@@ -195,8 +195,7 @@ function display_quest(quest, quest_log, userInfox, user){
             button.addEventListener("click", (event) => {
                 const difficulty = event.target.dataset.difficulty;
                 //TODO: WHAT IS EVEN HAPPINING HERE
-                
-                return fetch('json/quest_templates.json')
+                fetch('json/quest_templates.json')
                     .then(response => {
                     // Check if the request was successful
                         if (!response.ok) {
