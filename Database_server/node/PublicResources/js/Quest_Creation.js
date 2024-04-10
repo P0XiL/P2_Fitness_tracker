@@ -35,7 +35,8 @@ function get_object(json){
         return response.json();
         })
         .then(data => {
-            return data;
+            const jsonData = data
+            return jsonData;
         })
         .catch(error => {
             console.error('Error fetching or parsing JSON:', error);
@@ -199,7 +200,7 @@ function display_quest(quest, quest_log, userInfox, user){
             button.addEventListener("click", (event) => {
                 const difficulty = event.target.dataset.difficulty;
                 
-                const obj_questOfType = get_quest_object(type);
+                const obj_questOfType = get_quest("quest_templates.json");
                 let obj_quest = choose_quest("quests");
 
 
