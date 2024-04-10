@@ -35,7 +35,8 @@ function get_object(json){
         return response.json();
         })
         .then(data => {
-            const jsonData = data
+            const jsonData = data;
+            console.log(jsonData);
             return jsonData;
         })
         .catch(error => {
