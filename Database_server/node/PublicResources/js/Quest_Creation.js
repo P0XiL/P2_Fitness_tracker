@@ -25,7 +25,7 @@ function choose_quest_type(preset){
 function get_quest_object(type){
     //Connect to database
     //Path to JSON file
-    fetch('your_file.json')
+    fetch('quest_log.json')
         .then(response => {
         // Check if the request was successful
         if (!response.ok) {
