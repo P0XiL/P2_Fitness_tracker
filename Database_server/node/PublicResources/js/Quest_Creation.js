@@ -25,21 +25,21 @@ function choose_quest_type(preset){
 function get_quest_object(type){
     //Connect to database
     //Path to JSON file
-    const filePath = '/quest_templates.json';
-    
-
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if(err){
-            throw new Error('Failed to read Quest Templates Json');
+    fetch('your_file.json')
+        .then(response => {
+        // Check if the request was successful
+        if (!response.ok) {
+            throw new Error('Failed to fetch JSON');
         }
-    try {
-        const jsonData = JSON.parse(data);
-        return jsonData.type;
-    } catch (error) {
-        throw new Error('Error parsing json', error);
-    }
-    
-    });
+        // Parse the JSON response
+        return response.json();
+        })
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.error('Error fetching or parsing JSON:', error);
+        });
 }
 
 
@@ -239,3 +239,4 @@ function display_quest(quest, quest_log, userInfox, user){
 display_quest("quest1", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest2", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest3", quest_log, "Add User Json Here", "assholeblaster69");
+console.log(get_quest_object("cardio"));
