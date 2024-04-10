@@ -194,10 +194,11 @@ function display_quest(quest, quest_log, userInfox, user){
         document.querySelectorAll(".difficulty-button").forEach(button => {
             button.addEventListener("click", (event) => {
                 const difficulty = event.target.dataset.difficulty;
-                
+                //TODO: WHAT IS EVEN HAPPINING HERE
                 get_object("quest_templates.json")
                     .then(data => {
                         let obj_quest = choose_quest(data[type]);
+                        console.log(data[type]);
                         //TODO: USE userInfo TO GET RANK AND MASTERY
                         obj_quest = modify_quest(quest_Obj, 3, difficulty, 6);
                         console.log(quest_Obj.quest_text);
