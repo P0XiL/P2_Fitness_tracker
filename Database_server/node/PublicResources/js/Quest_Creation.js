@@ -239,4 +239,4 @@ function display_quest(quest, quest_log, userInfox, user){
 display_quest("quest1", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest2", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest3", quest_log, "Add User Json Here", "assholeblaster69");
-console.log(get_object("quest_template.json"));
+console.log(get_object("quest_templates.json"));
