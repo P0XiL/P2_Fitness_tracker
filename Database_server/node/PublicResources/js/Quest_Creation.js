@@ -23,9 +23,8 @@ function choose_quest_type(preset){
 
 //Gets the object with quest for a given type
 function get_object(json){
-    //Connect to database
     //Path to JSON file
-    fetch('json/' + json)
+    return fetch('json/' + json)
         .then(response => {
         // Check if the request was successful
         if (!response.ok) {
@@ -33,11 +32,6 @@ function get_object(json){
         }
         // Parse the JSON response
         return response.json();
-        })
-        .then(data => {
-            const jsonData = data;
-            console.log(jsonData);
-            return jsonData;
         })
         .catch(error => {
             console.error('Error fetching or parsing JSON:', error);
@@ -241,4 +235,5 @@ function display_quest(quest, quest_log, userInfox, user){
 display_quest("quest1", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest2", quest_log, "Add User Json Here", "assholeblaster69");
 display_quest("quest3", quest_log, "Add User Json Here", "assholeblaster69");
-console.log(get_object("quest_templates.json"));
+const data =get_object("quest_templates.json"); 
+console.log(data);
