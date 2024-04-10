@@ -26,13 +26,13 @@ function get_object(json){
     //Path to JSON file
     return fetch('json/' + json)
         .then(response => {
-        // Check if the request was successful
-        if (!response.ok) {
-            throw new Error('Failed to fetch JSON');
-        }
-        // Parse the JSON response
-        return response.json();
-        })
+            // Check if the request was successful
+            if (!response.ok) {
+             throw new Error('Failed to fetch JSON');
+            }
+            // Parse the JSON response
+            return response.json();
+            })
         .catch(error => {
             console.error('Error fetching or parsing JSON:', error);
         });
@@ -195,16 +195,23 @@ function display_quest(quest, quest_log, userInfox, user){
             button.addEventListener("click", (event) => {
                 const difficulty = event.target.dataset.difficulty;
                 
-                const obj_questOfType = get_quest("quest_templates.json");
-                let obj_quest = choose_quest("quests");
+                get_quest("quest_templates.json")
+                    .then(data => {
+                        let obj_quest = choose_quest(data);
+                        //TODO: USE userInfo TO GET RANK AND MASTERY
+                        obj_quest = modify_quest(quest_Obj, 3, difficulty, 6);
+                        console.log(quest_Obj.quest_text);
+                        document.getElementById(quest + "_type").innerText = "Type: " +  type + "\nQuest: " + quest_Obj.quest_text;
+
+                        document.getElementById("myModal").style.display = "none";
+                    })
+                    .catch(error => {
+
+                    })
+                
 
 
-                //TODO: USE userInfo TO GET RANK AND MASTERY
-                obj_quest = modify_quest(quest_Obj, 3, difficulty, 6);
-                console.log(quest_Obj.quest_text);
-                document.getElementById(quest + "_type").innerText = "Type: " +  type + "\nQuest: " + quest_Obj.quest_text;
-
-                document.getElementById("myModal").style.display = "none";
+                
             })
         })
 
