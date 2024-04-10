@@ -207,10 +207,10 @@ function display_quest(quest, quest_log, userInfox, user){
                     .then(data => {
                         console.log(data);
                         console.log(data.quest_templates[type]);
-                        let obj_quest = choose_quest(data.quest_templates[type]);
+                        let quest_Obj = choose_quest(data.quest_templates[type]);
                         
                         //TODO: USE userInfo TO GET RANK AND MASTERY
-                        obj_quest = modify_quest(quest_Obj, 3, difficulty, 6);
+                        quest_Obj = modify_quest(quest_Obj, 3, difficulty, 6);
                         console.log(quest_Obj.quest_text);
                         document.getElementById(quest + "_type").innerText = "Type: " +  type + "\nQuest: " + quest_Obj.quest_text;
 
