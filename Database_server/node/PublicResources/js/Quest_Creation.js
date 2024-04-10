@@ -207,7 +207,7 @@ function display_quest(quest, quest_log, userInfox, user){
                     .then(data => {
                         console.log(data);
                         console.log(data.quest_templates[type]);
-                        let obj_quest = choose_quest(data[type]);
+                        let obj_quest = choose_quest(data.quest_templates[type]);
                         
                         //TODO: USE userInfo TO GET RANK AND MASTERY
                         obj_quest = modify_quest(quest_Obj, 3, difficulty, 6);
