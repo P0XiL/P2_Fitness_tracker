@@ -64,6 +64,12 @@ assholeblaster69:{
           "amount": 301,
       },
 
+      "1/3/2024":{
+        "type": "crunches",
+        "target": 300,
+        "amount": 2,
+    },
+
     }
 
 },
@@ -152,18 +158,47 @@ function user_array_maker(obj){
 
 
 function plot_with_friends(type, userarray){
-  let x = [];
-  for (let i = 0; i < userarray.length; i++) {
-    console.log("test");
-    for (let key in userarray[i].daily) {
-      console.log("test2");
-      if (userarray[i].daily[key].type === type) {
-        x.push(key);
+  for(let users in userarray){
+    
+  }
+}
+
+function individual_stats(user, type, processedTypes) {
+  let amount = 0;
+  for (let period in user) {
+    for (let key in user[period]) {
+      if (user[period][key].type === type) {
+        amount += user[period][key].amount;
+        processedTypes[type] = true; // Mark type as processed
       }
     }
   }
-  return x;
+  return amount;
 }
+
+function individual_type(user) {
+  let text = ""; // Initialize text variable
+  let processedTypes = {}; // Object to keep track of processed types
+
+  for (let period in user) {
+    for (let key in user[period]) {
+      let type = user[period][key].type;
+      if (!processedTypes[type]) { // Check if type has already been processed
+        let amount = individual_stats(user, type, processedTypes); // Calculate stats for each type
+        text += "Amount of " + type + " = " + amount + "\n"; // Append stats to text
+        processedTypes[type] = true; // Mark type as processed
+      }
+    }
+  }
+
+  const element = document.getElementById("statsText");
+  element.textContent = text; // Use textContent to set text with new lines
+}
+
+individual_type(obj_questLog.assholeblaster69);
+
+
+
 
 
 function get_value(value) {
