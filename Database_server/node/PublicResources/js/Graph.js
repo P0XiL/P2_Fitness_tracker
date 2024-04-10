@@ -185,14 +185,15 @@ function individual_type(user) {
       let type = user[period][key].type;
       if (!processedTypes[type]) { // Check if type has already been processed
         let amount = individual_stats(user, type, processedTypes); // Calculate stats for each type
-        text += "Amount of " + type + " = " + amount + "\n"; // Append stats to text
+        text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+        console.log(text);
         processedTypes[type] = true; // Mark type as processed
       }
     }
   }
 
   const element = document.getElementById("statsText");
-  element.textContent = text; // Use textContent to set text with new lines
+  element.innerHTML = "<pre>" + text + "</pre>" ; // Use textContent to set text with new lines
 }
 
 individual_type(obj_questLog.assholeblaster69);
