@@ -195,7 +195,6 @@ const obj_questLog = {
         }
       }
     }
-  
     const element = document.getElementById("statsText");
     element.innerHTML = "<pre>" + text + "</pre>" ; // Use textContent to set text with new lines
   }
@@ -205,9 +204,9 @@ const obj_questLog = {
   
   
   let prePeriod = null; // declare prePeriod outside the function
+  let preValue = "run";
 
   function update_graph(value, period){
-      let preValue = 0;
       if(value === null && period !== null){
           plot("assholeblaster69", preValue, period);
           change_text(preValue, period);
