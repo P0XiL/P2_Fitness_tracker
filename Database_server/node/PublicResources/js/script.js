@@ -3,6 +3,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Assigns all tabs to an array called links
     const links = document.querySelectorAll('nav a');
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('#side-nav a');
 
     // Add click event listener to all buttons for tabs
     links.forEach(function (link) {
@@ -20,8 +22,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Add 'active' class to tab which has been clicked
             document.getElementById(targetId).classList.add('active');
+            highlightNavLink(targetId);
         });
     });
+
+    //Function which highlights the link of the currently selected tab
+    function highlightNavLink(pageId) {
+        // Remove 'active' class from all navigation links
+        var navLinks = document.querySelectorAll('#side-nav a');
+        navLinks.forEach(function(link) {
+          link.classList.remove('active');
+        });
+      
+        // Add 'active' class to the corresponding navigation link
+        var activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        activeLink.classList.add('active');
+      }
+    
     // Handle login link separately
     const loginLink = document.querySelector('#top-nav a[href="C:/Users/Jacob/OneDrive/Uni/2. semester/P2/Database/PublicResources/html/Login.html"]');
     if (loginLink) {
