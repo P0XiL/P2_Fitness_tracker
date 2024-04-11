@@ -178,8 +178,9 @@ function display_quest(quest, quest_log, userInfox, user){
         //TODO: Should save this somewhere such the user can't just reload the site for new type :hmm:
 
         //Create button
-        const button = document.createElement("button");
+        let button = document.createElement("button");
         button.textContent = "Get new Quest!";
+        button.id = questTimespan;
 
         //Append button
         document.getElementById(quest + "_type").appendChild(button)
