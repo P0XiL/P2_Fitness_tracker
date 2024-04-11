@@ -163,7 +163,7 @@ function openModalForQuest(quest, questTimespan, type) {
                 .then(data => {
                     let obj_newQuest = choose_quest(data.quest_templates[type]);
                     obj_newQuest = modify_quest(obj_newQuest, 3, difficulty, 6);
-                    obj_newQuest.amount = 0;
+                    obj_newQuest.amount = 1;
                     document.getElementById(quest + "_type").innerText = "Type: " + type + "\nQuest: " + obj_newQuest.quest_text;
                     document.getElementById("myModal").style.display = "none";
 
