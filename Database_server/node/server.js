@@ -5,7 +5,7 @@ import process from "process";
 
 const hostname = '127.0.0.1';
 const port = 3364;
-const publicResources = "node/PublicResources/";
+const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
     try {
