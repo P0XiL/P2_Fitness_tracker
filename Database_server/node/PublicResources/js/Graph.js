@@ -190,7 +190,6 @@ const obj_questLog = {
         if (!processedTypes[type]) { // Check if type has already been processed
           let amount = individual_stats(user, type, processedTypes); // Calculate stats for each type
           text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
-          console.log(text);
           processedTypes[type] = true; // Mark type as processed
         }
       }
