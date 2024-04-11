@@ -167,16 +167,50 @@ function openModalForQuest(quest, questTimespan, type) {
                     document.getElementById(quest + "_type").innerText = "Type: " + type + "\nQuest: " + obj_newQuest.quest_text;
                     document.getElementById("myModal").style.display = "none";
 
+                    fetch('json/quest_log.json')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch JSON');
+                            }
+                            return response.json();
+                        })
+
+                        .then(data => {
+                            data.user = obj_newQuest;
+                            const modifiedJson = JSON.stringify(data);
+                            fetch('json/quest_log.json', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: modifiedJson
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Failed to fetch second endpoint');
+                                    }
+                                    return response.json();
+                                })
+                                .then(dataFromSecondEndpoint => {
 
 
-                })
-                .catch(error => {
-                    console.error('Error fetching or parsing JSON:', error);
+                                    // Use data from the second endpoint
+                                    console.log('Data from second endpoint:', dataFromSecondEndpoint);
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching second endpoint:', error);
+                                });
+
+                        })
+                        .catch(error => {
+                            console.error('Error fetching or parsing JSON:', error);
+                        });
+
                 });
 
-
         });
-    });
+    })
+    
 }
 
 function display_quest(quest, quest_log, userInfox, user) {
@@ -209,29 +243,7 @@ function display_quest(quest, quest_log, userInfox, user) {
 
         document.getElementById("close").addEventListener("click", () => {
             document.getElementById("myModal").style.display = "none";
-            fetch('json/quest_log.json', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: "pog"//JSON.stringify(obj_newQuest)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch second endpoint');
-                    }
-                    return response.json();
-                })
-                .then(dataFromSecondEndpoint => {
-        
-        
-                    // Use data from the second endpoint
-                    console.log('Data from second endpoint:', dataFromSecondEndpoint);
-                })
-                .catch(error => {
-                    console.error('Error fetching second endpoint:', error);
-                });
-        
+
         });
 
 
