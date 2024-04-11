@@ -193,7 +193,7 @@ function openModalForQuest(quest, questTimespan, type, user) {
                             })
                                 .then(response => {
                                     if (!response.ok) {
-                                        throw new Error('Failed to fetch second endpoint');
+                                        throw new Error('Failed to fetch POST');
                                     }
                                     return response.json();
                                 })
@@ -202,7 +202,7 @@ function openModalForQuest(quest, questTimespan, type, user) {
                                     console.log('Data from second endpoint:', dataFromSecondEndpoint);
                                 })*/
                                 .catch(error => {
-                                    console.error('Error fetching second endpoint:', error);
+                                    console.error('Error fetch Post Questlog:', error);
                                 });
 
                         })
