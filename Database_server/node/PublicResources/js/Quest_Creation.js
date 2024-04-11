@@ -146,7 +146,7 @@ function check_current(timespan, userID) {
     }
 }
 
-function openModalForQuest(quest, questTimespan, type) {
+function openModalForQuest(quest, questTimespan, type, user) {
     document.getElementById("myModal").style.display = "block";
     document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
 
@@ -161,9 +161,14 @@ function openModalForQuest(quest, questTimespan, type) {
                     return response.json();
                 })
                 .then(data => {
-                    let obj_newQuest = choose_quest(data.quest_templates[type]);
-                    obj_newQuest = modify_quest(obj_newQuest, 3, difficulty, 6);
+                    let obj_Quest = choose_quest(data.quest_templates[type]);
+                    obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6);
+                    
+                    obj_newQuest = new Object;
+                    obj_Quest.type = type;
+                    obj_newQuest.target = obj_Quest["base_target"];
                     obj_newQuest.amount = 1;
+                    obj_newQuest.state = "incomplete"
                     document.getElementById(quest + "_type").innerText = "Type: " + type + "\nQuest: " + obj_newQuest.quest_text;
                     document.getElementById("myModal").style.display = "none";
 
@@ -176,7 +181,9 @@ function openModalForQuest(quest, questTimespan, type) {
                         })
 
                         .then(data => {
-                            data.user = obj_newQuest;
+                            data[user][questTimespan].Date = obj_newQuest;
+                            console.log(data);
+                            document.getElementById(quest + "_type").innerText = data;
                             const modifiedJson = JSON.stringify(data);
                             fetch('json/quest_log.json', {
                                 method: 'POST',
@@ -234,7 +241,7 @@ function display_quest(quest, quest_log, userInfox, user) {
         //Add event listner to button
 
         button.addEventListener("click", () => {
-            const obj_newQuest = openModalForQuest(quest, questTimespan, type);
+            const obj_newQuest = openModalForQuest(quest, questTimespan, type, user);
 
 
 
