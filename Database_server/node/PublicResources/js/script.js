@@ -29,15 +29,22 @@ document.addEventListener('DOMContentLoaded', function () {
         // Get username and password values
         const username = document.querySelector('input[name="username"]').value;
         const password = document.querySelector('input[name="password"]').value;
+        const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
 
-        // Create an object with username and password
-        const userData = {
-            username: username,
-            password: password
-        };
+        if (password !== confirmPassword) {
+            displayErrorMessage("Passwords do not match");
+        } else {
+            clearErrorMessage();
 
-        // Send the data to the server-side script for file writing
-        sendDataToServer(userData);
+            // Create an object with username and password
+            const userData = {
+                username: username,
+                password: password
+            };
+
+            // Send the data to the server-side script for file writing
+            sendDataToServer(userData);
+        }
     });
 
     // Function to send data to server-side script
@@ -49,16 +56,33 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(userData)
         })
-        .then(response => {
-            if (response.ok) {
-                console.log('Data successfully sent to server');
-            } else {
-                console.error('Failed to send data to server');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    console.log('Data successfully sent to server');
+                    // Reset input fields
+                    document.querySelector('input[name="username"]').value = '';
+                    document.querySelector('input[name="password"]').value = '';
+                    document.querySelector('input[name="confirm_password"]').value = '';
+
+                    clearErrorMessage();
+                } else {
+                    console.error('Failed to send data to server');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function displayErrorMessage(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = message;
+        errorMessage.style.color = 'red';
+    }
+
+    function clearErrorMessage() {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = '';
     }
 });
 

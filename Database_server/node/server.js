@@ -5,7 +5,7 @@ import process from "process";
 
 const hostname = '127.0.0.1';
 const port = 3364;
-const publicResources = "PublicResources/";
+const publicResources = "node/PublicResources/";
 
 const server = http.createServer((req, res) => {
     try {
@@ -84,6 +84,12 @@ function writeUserData(req, res) {
             // Create obj_users object if not exists
             if (!users.hasOwnProperty('obj_users')) {
                 users['obj_users'] = {};
+            }
+
+            // Check if the username already exists
+            if (users['obj_users'].hasOwnProperty(userData.username)) {
+                errorResponse(res, 400, "Username already exists");
+                return;
             }
 
             // Append new user data
