@@ -47,7 +47,6 @@ function choose_quest(quests){
 
 function modify_quest(quest, rank, difficulty, mastery){
     //formular for scaling
-    console.log(quest);
     quest["base_target"] = quest["base_target"] * ((rank + difficulty) * 0.1) * (mastery * 0.5);
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
@@ -205,13 +204,10 @@ function display_quest(quest, quest_log, userInfox, user){
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data);
-                        console.log(data.quest_templates[type]);
                         let quest_Obj = choose_quest(data.quest_templates[type]);
                         
                         //TODO: USE userInfo TO GET RANK AND MASTERY
                         quest_Obj = modify_quest(quest_Obj, 3, difficulty, 6);
-                        console.log(quest_Obj.quest_text);
                         document.getElementById(quest + "_type").innerText = "Type: " +  type + "\nQuest: " + quest_Obj.quest_text;
 
                         document.getElementById("myModal").style.display = "none";
@@ -238,7 +234,6 @@ function display_quest(quest, quest_log, userInfox, user){
     } else {
         let type = quest_log[user][questTimespan][state].type;
         document.getElementById(quest + "_type").innerText = "Type: " + type;
-        console.log(type);
         
         //document.getElementById(quest + "_text").innerText = questTemp["cardio"][type].text;
     }
