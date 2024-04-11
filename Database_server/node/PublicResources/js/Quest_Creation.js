@@ -207,12 +207,31 @@ function display_quest(quest, quest_log, userInfox, user) {
         });
 
 
-
-
-
-
         document.getElementById("close").addEventListener("click", () => {
             document.getElementById("myModal").style.display = "none";
+            fetch('json/quest_log.json', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: "pog"//JSON.stringify(obj_newQuest)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch second endpoint');
+                    }
+                    return response.json();
+                })
+                .then(dataFromSecondEndpoint => {
+        
+        
+                    // Use data from the second endpoint
+                    console.log('Data from second endpoint:', dataFromSecondEndpoint);
+                })
+                .catch(error => {
+                    console.error('Error fetching second endpoint:', error);
+                });
+        
         });
 
 
