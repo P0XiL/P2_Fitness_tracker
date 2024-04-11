@@ -164,7 +164,32 @@ function check_current(timespan, userID){
     }
 }
 
+function openModalForQuest(quest, questTimespan, type) {
+    document.getElementById("myModal").style.display = "block";
+    document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
 
+    document.querySelectorAll(".difficulty-button").forEach(difficultyButton => {
+        difficultyButton.addEventListener("click", (event) => {
+            const difficulty = event.target.dataset.difficulty;
+            fetch('json/quest_templates.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch JSON');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let quest_Obj = choose_quest(data.quest_templates[type]);
+                    quest_Obj = modify_quest(quest_Obj, 3, difficulty, 6);
+                    document.getElementById(quest + "_type").innerText = "Type: " +  type + "\nQuest: " + quest_Obj.quest_text;
+                    document.getElementById("myModal").style.display = "none";
+                })
+                .catch(error => {
+                    console.error('Error fetching or parsing JSON:', error);
+                });
+        });
+    });
+}
 
 function display_quest(quest, quest_log, userInfox, user){
     const timespans = ["daily", "weekly", "monthly"];
@@ -187,40 +212,9 @@ function display_quest(quest, quest_log, userInfox, user){
 
         //Add event listner to button
         button.addEventListener("click", ()=>{
-            document.getElementById("myModal").style.display = "block";
+            openModalForQuest(quest, questTimespan, type);
         });
-        document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
-
-        document.querySelectorAll(".difficulty-button").forEach(button => {
-            button.addEventListener("click", (event) => {
-                const difficulty = event.target.dataset.difficulty;
-                //TODO: WHAT IS EVEN HAPPINING HERE
-                fetch('json/quest_templates.json')
-                    .then(response => {
-                    // Check if the request was successful
-                        if (!response.ok) {
-                            throw new Error('Failed to fetch JSON');
-                        }
-                        // Parse the JSON response
-                        return response.json();
-                    })
-                    .then(data => {
-                        let quest_Obj = choose_quest(data.quest_templates[type]);
-                        
-                        //TODO: USE userInfo TO GET RANK AND MASTERY
-                        quest_Obj = modify_quest(quest_Obj, 3, difficulty, 6);
-                        document.getElementById(quest + "_type").innerText = "Type: " +  type + "\nQuest: " + quest_Obj.quest_text;
-
-                        document.getElementById("myModal").style.display = "none";
-                    })
-                    .catch(error => {
-                        console.error('Error fetching or parsing JSON:', error);
-                    });              
-
-
-                
-            })
-        })
+        
 
         document.getElementById("close").addEventListener("click", () => {
             document.getElementById("myModal").style.display = "none";
