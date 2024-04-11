@@ -90,23 +90,76 @@ function displayUserPreferences(userInfo) {
         }
     });
 
-    // Construct HTML to display count of elements
-    let countHTML = '';
-    let isFirst = true; // Flag to check if it's the first entry
-    for (const [key, value] of Object.entries(countMap)) {
-        if (!isFirst) {
-            countHTML += ', ';
-        }
-        countHTML += `${key}: ${value}`;
-        isFirst = false;
-    }
-
-    // Display user preferences with count of elements
+    // Generate sliders for exercise preferences
     const userInfoDiv = document.getElementById('userPreferences');
+    const slidersHTML = generateSliders(countMap);
+    
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <p>Preset: ${userInfo.preset.name}</p>
-        <p>Exercise preferences: ${countHTML}</p>
+        <p>Exercise preferences:</p>
+        ${slidersHTML}
+        <label for="presetDropdown">Choose a preset:</label>
+        <select id="presetDropdown" onchange="updatePreset(this.value)">
+            <option value="run">Run</option>
+            <option value="walk">Walk</option>
+        </select>
+        <button id="customPresetBtn">Custom Preset</button>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
+}
+
+// Function to generate sliders for exercise preferences
+function generateSliders(countMap) {
+    return Object.entries(countMap).map(([exercise, count]) => `
+        <div>
+            <label for="${exercise}">${exercise}</label>
+            <input type="range" id="${exercise}" name="${exercise}" min="1" max="10" value="${count}" disabled>
+            <span>${count}</span>
+        </div>
+    `).join('');
+}
+
+function updatePreset(preset) {
+    let conf = '';
+    if (preset === 'run') {
+        conf = '[run,run,run,run,run,run,run,run,run,run,walk,walk,walk,walk,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob]';
+    } else if (preset === 'walk') {
+        conf = '[run,run,run,run,walk,walk,walk,walk,walk,walk,walk,walk,walk,walk,walk,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob]';
+    }
+    // Fetch the JSON data
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch users_info.json');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Check if the data structure is as expected
+            if (data.users_info && data.users_info.idkey1 && data.users_info.idkey1.preset) {
+                // Update the preset within idkey1
+                data.users_info.idkey1.preset.name = preset;
+                data.users_info.idkey1.preset.conf = conf;
+                // Send the updated data to the server
+                fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update preset on server');
+                    }
+                    console.log('Preset updated successfully');
+                })
+                .catch(error => console.error('Error updating preset:', error));
+                console.log('hej');
+            } else {
+                console.error('Unexpected JSON structure:', data);
+            }
+        })
+        .catch(error => console.error('Error fetching JSON:', error));
 }
