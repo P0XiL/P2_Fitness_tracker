@@ -165,7 +165,7 @@ function openModalForQuest(quest, questTimespan, type, user) {
                     obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6);
                     
                     obj_newQuest = new Object;
-                    obj_Quest.type = type;
+                    obj_newQuest.type = type;
                     obj_newQuest.target = obj_Quest["base_target"];
                     obj_newQuest.amount = 1;
                     obj_newQuest.state = "incomplete"
@@ -184,13 +184,12 @@ function openModalForQuest(quest, questTimespan, type, user) {
                             data[user][questTimespan].Date = obj_newQuest;
                             console.log(data);
                             document.getElementById(quest + "_type").innerText = data;
-                            const modifiedJson = JSON.stringify(data);
                             fetch('json/quest_log.json', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: modifiedJson
+                                body: JSON.stringify(data)
                             })
                                 .then(response => {
                                     if (!response.ok) {
@@ -198,12 +197,10 @@ function openModalForQuest(quest, questTimespan, type, user) {
                                     }
                                     return response.json();
                                 })
-                                .then(dataFromSecondEndpoint => {
-
-
+                                /*.then(dataFromSecondEndpoint => {
                                     // Use data from the second endpoint
                                     console.log('Data from second endpoint:', dataFromSecondEndpoint);
-                                })
+                                })*/
                                 .catch(error => {
                                     console.error('Error fetching second endpoint:', error);
                                 });
