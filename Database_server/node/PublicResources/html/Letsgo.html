@@ -15,6 +15,7 @@
             <li><a href="#main" class="active"><img src="../image/quest_marker.png" class="nav-img">Quests</a></li><br>
             <li><a href="#friends"><img src="../image/friends.png" class="nav-img">Friends</a></li><br>
             <li><a href="#stats"><img src="../image/stats.png" class="nav-img">Stats</a></li>
+            <li><a href="#page4">Exercise</a></li>
         </ul>
     </nav>
 
@@ -76,19 +77,37 @@
             <div class="dropdown">
                 <button onclick="dropdown_close()" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" onclick="get_value('run')">Run</a>
-                    <a href="#" onclick="get_value('cycling')">Cycling</a>
-                    <a href="#" onclick="get_value('pushups')">Pushups</a>
-                    <a href="#" onclick="get_value('walk')">Walk</a>
+                    <a href="#" onclick="update_graph('run', null)">Run</a>
+                    <a href="#" onclick="update_graph('cycling', null)">Cycling</a>
+                    <a href="#" onclick="update_graph('pushups', null)">Pushups</a>
+                    <a href="#" onclick="update_graph('walk', null)">Walk</a>
                 </div>
             </div>
+        </div>
 
-            <div>
-                <h1>Graph</h1>
-                <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
+    
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close1()" class="dropbtn">Change period</button>
+                <div id="myDropdown1" class="dropdown-content">
+                    <a href="#" onclick="update_graph(null, 'daily')">Daily</a>
+                    <a href="#" onclick="update_graph(null, 'weekly')">Weekly</a>
+                    <a href="#" onclick="update_graph(null, 'monthly')">Monthly</a>
+                </div>
             </div>
         </div>
+
+        <div>
+            <h1>Graph</h1>
+            <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
+        </div>
     </div>
+
+    <div id =page4 class="page">
+            <h2>Stats Exercise</h2>
+            <p id="statsText"></p>
+    </div>
+    
 
 
     <div id="loginpage" class="page">
