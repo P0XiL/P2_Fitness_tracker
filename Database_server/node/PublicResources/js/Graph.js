@@ -198,13 +198,35 @@ const obj_questLog = {
     const element = document.getElementById("statsText");
     element.innerHTML = "<pre>" + text + "</pre>" ; // Use textContent to set text with new lines
   }
+
+
+  //using json with friends
+  function friends_stats(user, friend){
+    for(let key in user_friend){
+      for(let key1 in user_friend[key]){
+        if(key1 === friend){
+          individual_stats(friend);
+        }
+        else{
+          prompt("typed person is not your friend");
+        }
+      }
+    }
+  }
   
   individual_type(obj_questLog.assholeblaster69);
   
+
+  // Make so function returns users id for questlog json.
+  function user(){
+    return username;
+  }
   
   
-  let prePeriod = null; // declare prePeriod outside the function
+  let prePeriod = "daily"; // declare prePeriod outside the function
   let preValue = "run";
+
+  update_graph(preValue, prePeriod);
 
   function update_graph(value, period){
       if(value === null && period !== null){
@@ -223,7 +245,7 @@ const obj_questLog = {
   }
   
   function change_text(value, period) {
-    // Get the element with the id "demo"
+    // Get the element with the id "text"
     const element = document.getElementById("text");
     // Change the text content
     element.innerHTML = "This Graph is based on type:  " + value + " in period: " + period;
