@@ -92,17 +92,21 @@
 
 
     <div id="loginpage" class="page">
-        <h2>Create user</h2>
+        <h2 id="formTitle">Create account</h2>
             <p>Username</p>
             <input type="text" name="username"> <!-- Add name attribute for username field -->
             <p>Password</p>
             <input type="password" name="password"> <!-- Add name attribute for password field -->
-            <p>Confirm password</p>
-            <input type="password" name="confirm_password"> <!-- Add name attribute for password field -->
+            <div id="confirmPassword">
+                <p id="confirmPasswordText">Confirm password</p>
+                <input type="password" name="confirm_password">
+            </div>
             <br>
             <span id="errorMessage"></span> <!-- Error message placeholder -->
             <br>
-            <button id="submitBtn" type="submit">Submit</button> <!-- Add submit button -->
+            <a href="#" id="toggleFormLink">Already have an account? Login here</a>
+            <br><br>
+            <button id="submitBtn" type="submit">Create user</button> <!-- Add submit button -->
     </div>
 
     <!-- JavaScript to handle navigation -->

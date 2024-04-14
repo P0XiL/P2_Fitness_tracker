@@ -22,6 +22,29 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById(targetId).classList.add('active');
         });
     });
+
+    document.getElementById('toggleFormLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+        
+        const formTitle = document.getElementById('formTitle');
+        const confirmPasswordText = document.getElementById('confirmPasswordText');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (formTitle.textContent === "Create account") {
+            formTitle.textContent = "Login";
+            confirmPassword.style.display = 'none';
+            submitBtn.textContent = "Login";
+            this.textContent = "Don't have an account? Create one here";
+        } else {
+            formTitle.textContent = "Create account";
+            confirmPassword.style.display = 'block';
+            submitBtn.textContent = "Create user";
+            this.textContent = "Already have an account? Login here";
+        }
+
+    });
+
+
     // Add event listener to the submit button
     document.getElementById('submitBtn').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default form submission
@@ -33,7 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (password !== confirmPassword) {
             displayErrorMessage("Passwords do not match");
-        } else {
+        }
+        else {
             clearErrorMessage();
 
             // Create an object with username and password
@@ -65,8 +89,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.querySelector('input[name="confirm_password"]').value = '';
 
                     clearErrorMessage();
+
+                    // Redirect to home page
+                    document.getElementById('main').classList.add('active');
+                    document.getElementById('loginpage').classList.remove('active');
                 } else {
-                    console.error('Failed to send data to server');
+                    response.text().then(errorMessage => {
+                        displayErrorMessage(errorMessage);
+                    });
                 }
             })
             .catch(error => {
