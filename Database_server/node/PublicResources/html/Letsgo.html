@@ -4,19 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Lets GO Fitness Tracker</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/simple.css">
 </head>
 
 <body>
     <header>Lets GO</header>
     <!-- Navigation links -->
-    <nav>
-        <ul>
-            <li><a href="#main">Quests</a></li>
-            <li><a href="#page2">Friends</a></li>
-            <li><a href="#page3">Stats</a></li>
+    <nav id="side-nav">
+        <ul><br>
+            <li><a href="#main" class="active"><img src="../image/quest_marker.png" class="nav-img">Quests</a></li><br>
+            <li><a href="#friends"><img src="../image/friends.png" class="nav-img">Friends</a></li><br>
+            <li><a href="#stats"><img src="../image/stats.png" class="nav-img">Stats</a></li>
+            <li><a href="#page4">Exercise</a></li>
+            <li><a href="#profilepage" id="profile-link">Profile</a></li>
         </ul>
-        <a href="#profilepage" id="profile-link"><img src="../image/profile_image.png" alt="Profile"></a>
+    </nav>
+
+    <nav id="top-nav">
+        <ul>
+            <li><a href="#main"><img src="../image/home.png" alt="Home" class="top-img"></a></li>
+        </ul>
+        <ul>
+            <li><a href="#loginpage"><img src="../image/Profile_image.png" alt="Profile" class="top-img">
+                    <br><div class="login"></div></a></li>
+        </ul>
     </nav>
 
     <!-- A popup when choosing new quest-->
@@ -34,37 +45,82 @@
     <!-- Page sections -->
     <div id="main" class="page active">
         <h2 class="heading">Quests</h2>
-        <div class="questpage" id="questPageContainer"> 
+        <div class="questpage">
             <div id="quest1" class="quest">
-                <h2>Quest 1</h2>
+                <h2>Daily</h2>
                 <p>Quest 1 progress bars</p>
                 <p id="quest1_type"></p>
             </div>
-    
-            <div id="quest2" class="quest" >
-                <h2>Quest 2</h2>
+
+            <div id="quest2" class="quest">
+                <h2>Weekly</h2>
                 <p>Quest 2 progress bars</p>
                 <p id="quest2_type"></p>
             </div>
-    
+
             <div id="quest3" class="quest">
-                <h2>Quest 3</h2>
+                <h2>Monthly</h2>
                 <p>Quest 3 progress bars</p>
                 <p id="quest3_type"></p>
             </div>
         </div>
-        <script src="../js/Quest_Creation.js"></script>
     </div>
     
 
-    <div id="page2" class="page">
+    <div id="friends" class="page">
         <h2>Friends</h2>
         <p>The friends feature goes here</p>
     </div>
 
-    <div id="page3" class="page">
+    <div id="stats" class="page">
         <h2>Stats</h2>
-        <p>The stats page feature goes here</p>
+        <p id="text"> </p>
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close()" class="dropbtn">Change type</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="#" onclick="update_graph('run', null)">Run</a>
+                    <a href="#" onclick="update_graph('cycling', null)">Cycling</a>
+                    <a href="#" onclick="update_graph('pushups', null)">Pushups</a>
+                    <a href="#" onclick="update_graph('walk', null)">Walk</a>
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close1()" class="dropbtn">Change period</button>
+                <div id="myDropdown1" class="dropdown-content">
+                    <a href="#" onclick="update_graph(null, 'daily')">Daily</a>
+                    <a href="#" onclick="update_graph(null, 'weekly')">Weekly</a>
+                    <a href="#" onclick="update_graph(null, 'monthly')">Monthly</a>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h1>Graph</h1>
+            <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
+        </div>
+    </div>
+
+    <div id =page4 class="page">
+            <h2>Stats Exercise</h2>
+            <p id="statsText"></p>
+    </div>
+    
+    <div id="loginpage" class="page">
+        <h2>Login</h2>
+        <form id="loginForm" action="/submitForm" method="POST"> <!-- Add form element with action and method -->
+            <p>Username</p>
+            <input type="text" name="username"> <!-- Add name attribute for username field -->
+            <p>Password</p>
+            <input type="password" name="password"> <!-- Add name attribute for password field -->
+            <br>
+            <button type="submit">Submit</button> <!-- Add submit button -->
+        </form>
     </div>
 
     <div id="profilepage" class="page">
@@ -86,6 +142,10 @@
 
     <!-- JavaScript to handle navigation -->
     <script src="../js/script.js"></script>
+    <script src="../js/Quest_Creation.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="../js/Graph.js"></script>
+    
 </body>
 
 </html>
