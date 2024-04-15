@@ -155,6 +155,14 @@ const obj_questLog = {
   function dropdown_close1() {
     document.getElementById("myDropdown1").classList.toggle("show");
   }
+
+  function dropdown_close2() {
+    document.getElementById("myDropdown2").classList.toggle("show");
+  }
+
+  function dropdown_close3() {
+    document.getElementById("myDropdown3").classList.toggle("show");
+  }
   
   
   
@@ -342,6 +350,33 @@ const obj_questLog = {
             }
         }
     });
+}
+
+
+let prePeriodFriend = "daily"; 
+let pretypeFriend = "run";
+  
+function update_graph_friend(type, period){
+  if(type === null && period !== null){
+      plot_with_friends("assholeblaster69","assholeblaster63", pretypeFriend, period);
+      change_text_friend(pretypeFriend, period);
+      prePeriodFriend = period; 
+  }
+  else if(type !== null && period === null){
+      plot_with_friends("assholeblaster69","assholeblaster63", type, prePeriodFriend);
+      change_text_friend(type, prePeriodFriend); 
+      pretypeFriend = type; 
+  } else {
+      plot_with_friends("assholeblaster69","assholeblaster63", pretypeFriend, prePeriodFriend);
+      change_text_friend(type, period);
+  }
+}
+
+function change_text_friend(value, period) {
+  // Get the element with the id "text"
+  const element = document.getElementById("textfriend");
+  // Change the text content
+  element.innerHTML = "This Graph is based on type:  " + value + " in period: " + period;
 }
 
 plot_with_friends("assholeblaster69", "assholeblaster63", "run", "daily");
