@@ -25,6 +25,10 @@ function choose_quest(quests) {
     return quests[Object.keys(quests)[generate_random_number(Object.keys(quests).length)]]
 }
 
+function is_empty_object(obj) {
+    return Object.keys(obj).length === 0;
+}
+
 
 function modify_quest(quest, rank, difficulty, mastery, timespan) {
     //formular for scaling
@@ -70,6 +74,9 @@ function check_current(timespan, quest_log, userID) {
     switch (timespan) {
         case 'daily': {
             const obj_dailies = quest_log[userID][timespan];
+            if (is_empty_object(obj_dailies)){
+                return "None"
+            }
             lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
             const questDate = lastestDate.split("/");
             if (questDate[0] == obj_currentDate.getDate() && questDate[1] == (obj_currentDate.getMonth() + 1) && questDate[2] == obj_currentDate.getFullYear()) {
@@ -83,6 +90,9 @@ function check_current(timespan, quest_log, userID) {
 
         case 'weekly':
             const obj_weeklies = quest_log[userID][timespan];
+            if (is_empty_object(obj_weeklies)){
+                return "None"
+            }
             lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
             const questDateStr = lastestDate.split("/");
             //Check if questDay is within 7 days of today
@@ -102,6 +112,9 @@ function check_current(timespan, quest_log, userID) {
             return "None"
         case 'monthly':
             const obj_monthlies = quest_log[userID][timespan];
+            if (is_empty_object(obj_monthlies)){
+                return "None"
+            }
             lastestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
             const questDate = lastestDate.split("/");
             if ((obj_currentDate.getMonth() + 1) == questDate[1] && obj_currentDate.getFullYear() == questDate[2]) {
