@@ -43,7 +43,7 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
-            if (req.url === "/write_quest_json"){
+            if (queryPath === "/write_quest_json"){
                 write_quest_json(req, res);
             } else {
                 errorResponse(res, 404, "not found")

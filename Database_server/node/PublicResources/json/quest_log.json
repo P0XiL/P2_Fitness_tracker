@@ -1,13 +1,21 @@
 {
     "assholeblaster69": {
         "daily": {
-            
+            "15/4/2024": {
+                "type": "cardio",
+                "target": 45,
+                "amount": 1,
+                "state": "incomplete"
+            }
         },
         "weekly": {
-            
+            "15/4/2024": {
+                "type": "upperbody",
+                "target": 27,
+                "amount": 1,
+                "state": "incomplete"
+            }
         },
-        "monthly": {
-            
-        }
+        "monthly": {}
     }
 }

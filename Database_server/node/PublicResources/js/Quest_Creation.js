@@ -35,7 +35,18 @@ function modify_quest(quest, rank, difficulty, mastery) {
 }
 
 
-
+async function fetchJSON(url) {
+    try{
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Failed to fetch JSON');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching JSON', error);
+        return null;
+    }
+}
 
 quest_log = {
     assholeblaster69: {
@@ -181,13 +192,7 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
     document.querySelectorAll(".difficulty-button").forEach(difficultyButton => {
         difficultyButton.addEventListener("click", (event) => {
             const difficulty = event.target.dataset.difficulty;
-            fetch('json/quest_templates.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch JSON');
-                    }
-                    return response.json();
-                })
+            fetchJSON('json/quest_templates.json')
                 .then(data => {
                     let obj_Quest = choose_quest(data.quest_templates[type]);
                     obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6);
