@@ -1,7 +1,10 @@
 {
   "obj_users": {
-    "Kage": {
+    "Username1": {
       "password": "123"
+    },
+    "Username2": {
+      "password": "1234"
     }
   }
 }
