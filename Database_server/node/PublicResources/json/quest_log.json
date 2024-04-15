@@ -10,6 +10,12 @@
                 "type": "run",
                 "target": 10,
                 "amount": 10
+            },
+            "15/3/2024": {
+                "type": "core",
+                "target": 27,
+                "amount": 1,
+                "state": "incomplete"
             }
         },
         "weekly": {

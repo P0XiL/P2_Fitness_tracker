@@ -146,7 +146,35 @@ function check_current(timespan, userID) {
     }
 }
 
-function openModalForQuest(quest, questTimespan, type, user) {
+
+
+function add_quest_json(quest){
+    console.log("Hey");
+    fetch('http://127.0.0.1:3366/write_quest_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(quest)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch POST');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("pog");
+
+        })
+        .catch(error => {
+            console.error('Error fetch Post quest_log:', error);
+        });
+}
+
+
+
+function open_modal_for_quest(quest, questTimespan, type, user) {
     document.getElementById("myModal").style.display = "block";
     document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
 
@@ -165,50 +193,24 @@ function openModalForQuest(quest, questTimespan, type, user) {
                     obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6);
                     
                     obj_newQuest = new Object;
-                    obj_newQuest.type = type;
-                    obj_newQuest.target = obj_Quest["base_target"];
-                    obj_newQuest.amount = 1;
-                    obj_newQuest.state = "incomplete"
-                    document.getElementById(quest + "_type").innerText = "Type: " + type + "\nQuest: " + obj_newQuest.quest_text;
+                    obj_currentDate = new Date;
+                    const date = obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
+
+                    obj_newQuest[date] = {};
+                    obj_newQuest[date].type = type;
+                    obj_newQuest[date].target = obj_Quest["base_target"];
+                    obj_newQuest[date].amount = 1;
+                    obj_newQuest[date].state = "incomplete";
+                    obj_newQuest.timespan = questTimespan;
+                    console.log(obj_newQuest);
+
+                    add_quest_json(obj_newQuest);
+
+                    document.getElementById(quest + "_type").innerText = "Type: " + type + "\nQuest: " + obj_Quest.quest_text;
                     document.getElementById("myModal").style.display = "none";
+                    
+                    //addQuestJson(obj_newQuest);
 
-                    fetch('json/quest_log.json')
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch JSON');
-                            }
-                            return response.json();
-                        })
-
-                        .then(data => {
-                            data[user][questTimespan].Date = obj_newQuest;
-                            console.log(data);
-                            document.getElementById(quest + "_type").innerText = data;
-                            fetch('json/quest_log.json', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(data)
-                            })
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Failed to fetch POST');
-                                    }
-                                    return response.json();
-                                })
-                                /*.then(dataFromSecondEndpoint => {
-                                    // Use data from the second endpoint
-                                    console.log('Data from second endpoint:', dataFromSecondEndpoint);
-                                })*/
-                                .catch(error => {
-                                    console.error('Error fetch Post Questlog:', error);
-                                });
-
-                        })
-                        .catch(error => {
-                            console.error('Error fetching or parsing JSON:', error);
-                        });
 
                 });
 
@@ -238,7 +240,7 @@ function display_quest(quest, quest_log, userInfox, user) {
         //Add event listner to button
 
         button.addEventListener("click", () => {
-            const obj_newQuest = openModalForQuest(quest, questTimespan, type, user);
+            const obj_newQuest = open_modal_for_quest(quest, questTimespan, type, user);
 
 
 
