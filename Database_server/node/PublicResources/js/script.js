@@ -159,7 +159,6 @@ function updatePreset(username, preset) { // Accept username as parameter
                     fetchUserData(username);
                 })
                 .catch(error => console.error('Error updating preset:', error));
-                console.log('hej');
             } else {
                 console.error('Unexpected JSON structure or username not found:', data);
             }
