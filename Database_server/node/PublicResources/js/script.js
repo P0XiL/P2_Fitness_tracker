@@ -23,25 +23,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.getElementById('toggleFormLink').addEventListener('click', function (e) {
+    document.getElementById('toggleCreatePageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
-        
-        const formTitle = document.getElementById('formTitle');
-        const confirmPasswordText = document.getElementById('confirmPasswordText');
-        const submitBtn = document.getElementById('submitBtn');
 
-        if (formTitle.textContent === "Create account") {
-            formTitle.textContent = "Login";
-            confirmPassword.style.display = 'none';
-            submitBtn.textContent = "Login";
-            this.textContent = "Don't have an account? Create one here";
-        } else {
-            formTitle.textContent = "Create account";
-            confirmPassword.style.display = 'block';
-            submitBtn.textContent = "Create user";
-            this.textContent = "Already have an account? Login here";
-        }
+        const createAccountPage = document.getElementById('createAccount');
+        const loginPage = document.getElementById('loginPage');
 
+        createAccountPage.classList.remove('active');
+        loginPage.classList.add('active');
+        clearCreateErrorMessage();
+        document.querySelector('input[name="create_username"]').value = '';
+        document.querySelector('input[name="create_password"]').value = '';
+        document.querySelector('input[name="create_confirm_password"]').value = '';
+    });
+
+    document.getElementById('toggleLoginPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('createAccount');
+        const loginPage = document.getElementById('loginPage');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+        clearLoginErrorMessage();
+        document.querySelector('input[name="login_username"]').value = '';
+        document.querySelector('input[name="login_password"]').value = '';
     });
 
 
@@ -50,15 +56,15 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault(); // Prevent default form submission
 
         // Get username and password values
-        const username = document.querySelector('input[name="username"]').value;
-        const password = document.querySelector('input[name="password"]').value;
-        const confirmPassword = document.querySelector('input[name="confirm_password"]').value;
+        const username = document.querySelector('input[name="create_username"]').value;
+        const password = document.querySelector('input[name="create_password"]').value;
+        const confirmPassword = document.querySelector('input[name="create_confirm_password"]').value;
 
         if (password !== confirmPassword) {
-            displayErrorMessage("Passwords do not match");
+            displayCreateErrorMessage("Passwords do not match");
         }
         else {
-            clearErrorMessage();
+            clearCreateErrorMessage();
 
             // Create an object with username and password
             const userData = {
@@ -67,13 +73,61 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Send the data to the server-side script for file writing
-            sendDataToServer(userData);
+            createUser(userData);
         }
     });
 
+    document.getElementById('loginBtn').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+    
+        // Get username and password values
+        const username = document.querySelector('input[name="login_username"]').value;
+        const password = document.querySelector('input[name="login_password"]').value;
+    
+        // Create an object with username and password
+        const loginData = {
+            username: username,
+            password: password
+        };
+    
+        // Send the data to the server-side script for login authentication
+        loginUser(loginData);
+    });
+    
+    
+    function loginUser(loginData) {
+        fetch('http://127.0.0.1:3364/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(loginData)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('User successfully logged in');
+                // Reset input fields
+                document.querySelector('input[name="login_username"]').value = '';
+                document.querySelector('input[name="login_password"]').value = '';
+    
+                clearLoginErrorMessage();
+    
+                // Update UI to reflect logged-in status (e.g., display username in the top right)
+                // Redirect to home page or perform other actions as needed
+            } else {
+                response.text().then(errorMessage => {
+                    displayLoginErrorMessage(errorMessage);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
     // Function to send data to server-side script
-    function sendDataToServer(userData) {
-        fetch('http://127.0.0.1:3364/writeUserData', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    function createUser(userData) {
+        fetch('http://127.0.0.1:3364/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -84,18 +138,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     console.log('Data successfully sent to server');
                     // Reset input fields
-                    document.querySelector('input[name="username"]').value = '';
-                    document.querySelector('input[name="password"]').value = '';
-                    document.querySelector('input[name="confirm_password"]').value = '';
+                    document.querySelector('input[name="create_username"]').value = '';
+                    document.querySelector('input[name="create_password"]').value = '';
+                    document.querySelector('input[name="create_confirm_password"]').value = '';
 
-                    clearErrorMessage();
+                    clearCreateErrorMessage();
 
                     // Redirect to home page
                     document.getElementById('main').classList.add('active');
                     document.getElementById('loginpage').classList.remove('active');
                 } else {
                     response.text().then(errorMessage => {
-                        displayErrorMessage(errorMessage);
+                        displayCreateErrorMessage(errorMessage);
                     });
                 }
             })
@@ -104,15 +158,27 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    function displayErrorMessage(message) {
-        const errorMessage = document.getElementById('errorMessage');
+    function displayCreateErrorMessage(message) {
+        const errorMessage = document.getElementById('createErrorMessage');
         errorMessage.textContent = message;
         errorMessage.style.color = 'red';
     }
 
-    function clearErrorMessage() {
-        const errorMessage = document.getElementById('errorMessage');
+    function clearCreateErrorMessage() {
+        const errorMessage = document.getElementById('createErrorMessage');
         errorMessage.textContent = '';
     }
 });
 
+// Function to display login error message
+function displayLoginErrorMessage(message) {
+    const loginErrorMessage = document.getElementById('loginErrorMessage');
+    loginErrorMessage.textContent = message;
+    loginErrorMessage.style.color = 'red';
+}
+
+// Function to clear login error message
+function clearLoginErrorMessage() {
+    const loginErrorMessage = document.getElementById('loginErrorMessage');
+    loginErrorMessage.textContent = '';
+}

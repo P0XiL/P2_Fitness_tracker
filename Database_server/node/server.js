@@ -44,9 +44,11 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
-            if (req.url === "/writeUserData") {
+            if (req.url === "/createUser") {
                 // Handle the POST request to write user data to a file
-                writeUserData(req, res);
+                createUser(req, res);
+            } else if (req.url === "/login") {
+                loginUser(req, res);
             } else {
                 errorResponse(res, 404, "Not Found");
             }
@@ -57,8 +59,46 @@ function processReq(req, res) {
     }
 }
 
+
+// Function to handle user login
+function loginUser(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const loginData = JSON.parse(body);
+
+        // Read existing user data from the file
+        fs.readFile('node/PublicResources/json/Users.json', (err, data) => {
+            if (err) {
+                console.error("Error reading user data:", err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            try {
+                const users = JSON.parse(data);
+
+                // Check if the username exists and password matches
+                if (users['obj_users'][loginData.username] && users['obj_users'][loginData.username].password === loginData.password) {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ success: true, username: loginData.username }));
+                } else {
+                    errorResponse(res, 401, "Invalid username or password");
+                }
+            } catch (parseError) {
+                console.error("Error parsing user data:", parseError);
+                errorResponse(res, 500, String(parseError));
+            }
+        });
+    });
+}
+
+
 // Function to handle writing user data to a JSON file
-function writeUserData(req, res) {
+function createUser(req, res) {
     let body = '';
     req.on('data', (chunk) => {
         body += chunk.toString();
