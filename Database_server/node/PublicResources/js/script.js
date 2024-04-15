@@ -75,7 +75,7 @@ function displayUserInfo(userInfo) {
 }
 
 // Function to display user preferences
-function displayUserPreferences(username, userInfo) { // Accept username as parameter
+function displayUserPreferences(username, userInfo) { 
     const confArray = userInfo.preset.conf.replace('[', '').replace(']', '').split(',');
     const countMap = {};
     
