@@ -92,6 +92,12 @@ const obj_questLog = {
         "target": 100,
         "amount": 5
       },
+
+      "22/2/2024": {
+        "type": "run",
+        "target": 100,
+        "amount": 50
+      },
   
       "21/3/2024": {
         "type": "run",
@@ -160,13 +166,6 @@ const obj_questLog = {
     return userarray;
   }
   
-  
-  function plot_with_friends(type, userarray){
-    for(let users in userarray){
-      
-    }
-  }
-  
   function individual_stats(user, type, processedTypes) {
     let amount = 0;
     for (let period in user) {
@@ -190,7 +189,6 @@ const obj_questLog = {
         if (!processedTypes[type]) { // Check if type has already been processed
           let amount = individual_stats(user, type, processedTypes); // Calculate stats for each type
           text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
-          console.log(text);
           processedTypes[type] = true; // Mark type as processed
         }
       }
@@ -198,7 +196,7 @@ const obj_questLog = {
     const element = document.getElementById("statsText");
     element.innerHTML = "<pre>" + text + "</pre>" ; // Use textContent to set text with new lines
   }
-
+  
 
   //using json with friends
   function friends_stats(user, friend){
@@ -216,19 +214,13 @@ const obj_questLog = {
   
   individual_type(obj_questLog.assholeblaster69);
   
-
-  // Make so function returns users id for questlog json.
-  function user(){
-    return username;
-  }
-  
   
   let prePeriod = "daily"; // declare prePeriod outside the function
   let preValue = "run";
 
   update_graph(preValue, prePeriod);
-
-  function update_graph(value, period){
+  
+    function update_graph(value, period){
       if(value === null && period !== null){
           plot("assholeblaster69", preValue, period);
           change_text(preValue, period);
@@ -240,7 +232,7 @@ const obj_questLog = {
           preValue = value; // Assign value to preValue
       } else {
           plot("assholeblaster69", preValue, prePeriod); // Use preValue and prePeriod here
-          change_text(value, period);
+        change_text(value, period);
       }
   }
   
@@ -252,24 +244,6 @@ const obj_questLog = {
   }
   
   function plot(user, type, period) {
-    console.log(period);
-  // input start dato
-  let x = [ "01/1/2024",];
-  
-  for (let key in obj_questLog[user][period]) {
-    if(obj_questLog[user][period][key].type === type){
-      x.push(key);
-    }
-  }
-    
-  //input 0 to start dato
-  let amountsWithType = [0,];
-    
-  for (let date in obj_questLog[user][period]) {
-      if (obj_questLog[user][period][date].type === type) {
-          amountsWithType.push(obj_questLog[user][period][date].amount);
-      }
-  }
   // ploting with data.
   let ctx = document.getElementById("myChart");
   
@@ -277,21 +251,97 @@ const obj_questLog = {
         type: "line",
   
         data: {
-          labels: x,
+          labels: user_data_x(user, type, period),
           datasets: [{
             fill: false,
             lineTension: 0,
             backgroundColor: "rgba(255,255,255,1)",
             borderColor: "rgba(0,0,255,0.5)",
-            data: amountsWithType
+            data: user_data_y(user, type, period),
           }]
         },
         options: {
           
           legend: {display: false,},
           scales: {
-            yAxes: [{ticks: {min: 0, max: Math.max(...amountsWithType) + 1}}],
+            yAxes: [{ticks: {min: 0, max: Math.max(...user_data_y(user, type, period)) + 1}}],
           }
         }
       }); 
   }
+
+  function user_data_x(user, type, period){
+    let x = [ "01/1/2024",];
+    for (let key in obj_questLog[user][period]) {
+      if(obj_questLog[user][period][key].type === type){
+        x.push(key);
+      }
+    }
+    return x;
+  }
+
+  function user_data_y(user, type, period){
+    let amountsWithType = [0,];
+    
+  for (let date in obj_questLog[user][period]) {
+      if (obj_questLog[user][period][date].type === type) {
+          amountsWithType.push(obj_questLog[user][period][date].amount);
+      }
+  }
+  return amountsWithType;
+  }
+
+  function plot_with_friends(user, user2, type, period) {
+    // Get the canvas element
+    let ctx = document.getElementById("myChart2").getContext("2d");
+
+
+    let labels_user1 = user_data_x(user, type, period);
+    let labels_user2 = user_data_x(user2, type, period);
+
+    //sort the two x data
+    let all_labels = [...new Set([...labels_user1, ...labels_user2])].sort();
+
+  
+    let dataset_user1 = {
+        label: user,
+        fill: false,
+        lineTension: 0,
+        backgroundColor: "rgba(255,255,255,1)",
+        borderColor: "rgba(0,0,255,0.5)",
+        data: [],
+    };
+    let dataset_user2 = {
+        label: user2,
+        fill: false,
+        lineTension: 0,
+        backgroundColor: "rgba(255,255,255,1)",
+        borderColor: "rgba(245, 27, 19, 0.8)",
+        data: [],
+    };
+
+    //push data into datasets and if no data then set to 0
+    all_labels.forEach(label => {
+        dataset_user1.data.push(labels_user1.includes(label) ? user_data_y(user, type, period)[labels_user1.indexOf(label)] : 0);
+        dataset_user2.data.push(labels_user2.includes(label) ? user_data_y(user2, type, period)[labels_user2.indexOf(label)] : 0);
+    });
+
+    //creat the chart
+    let myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: all_labels,
+            datasets: [dataset_user1, dataset_user2]
+        },
+        options: {
+            legend: { display: true },
+            scales: {
+                yAxes: [{
+                    ticks: { min: 0, max: Math.max(...dataset_user1.data.concat(dataset_user2.data)) + 1 }
+                }]
+            }
+        }
+    });
+}
+
+plot_with_friends("assholeblaster69", "assholeblaster63", "run", "daily");
