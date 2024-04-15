@@ -215,24 +215,24 @@ const obj_questLog = {
   individual_type(obj_questLog.assholeblaster69);
   
   
-  let prePeriod = "daily"; // declare prePeriod outside the function
-  let preValue = "run";
+  let prePeriod = "daily"; 
+  let pretype = "run";
 
-  update_graph(preValue, prePeriod);
+  update_graph(pretype, prePeriod);
   
-    function update_graph(value, period){
-      if(value === null && period !== null){
-          plot("assholeblaster69", preValue, period);
-          change_text(preValue, period);
-          prePeriod = period; // Update prePeriod after each call
+    function update_graph(type, period){
+      if(type === null && period !== null){
+          plot("assholeblaster69", pretype, period);
+          change_text(pretype, period);
+          prePeriod = period; 
       }
-      else if(value !== null && period === null){
-          plot("assholeblaster69", value, prePeriod); // Use prePeriod here
-          change_text(value, prePeriod); // Use prePeriod here
-          preValue = value; // Assign value to preValue
+      else if(type !== null && period === null){
+          plot("assholeblaster69", type, prePeriod);
+          change_text(type, prePeriod); 
+          pretype = type; 
       } else {
-          plot("assholeblaster69", preValue, prePeriod); // Use preValue and prePeriod here
-        change_text(value, period);
+          plot("assholeblaster69", pretype, prePeriod);
+        change_text(type, period);
       }
   }
   
