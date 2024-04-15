@@ -1,47 +1,13 @@
 {
     "assholeblaster69": {
         "daily": {
-            "31/3/2024": {
-                "type": "pushups",
-                "target": 100,
-                "amount": 5
-            },
-            "26/3/2024": {
-                "type": "run",
-                "target": 10,
-                "amount": 10
-            },
-            "15/3/2024": {
-                "type": "core",
-                "target": 27,
-                "amount": 1,
-                "state": "incomplete"
-            },
-            "15/4/2024": {
-                "type": "cardio",
-                "target": 45,
-                "amount": 1,
-                "state": "incomplete"
-            }
+            
         },
         "weekly": {
-            "02/4/2024": {
-                "type": "cycling",
-                "target": 40,
-                "amount": 30
-            },
-            "22/3/2024": {
-                "type": "walk",
-                "target": 60,
-                "amount": 35
-            }
+            
         },
         "monthly": {
-            "1/4/2024": {
-                "type": "crunches",
-                "target": 300,
-                "amount": 301
-            }
+            
         }
     }
 }
