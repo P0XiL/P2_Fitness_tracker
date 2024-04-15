@@ -1,31 +1,13 @@
 {
     "assholeblaster69": {
         "daily": {
-            "15/4/2024": {
-                "type": "core",
-                "target": 3,
-                "amount": 0,
-                "text": "Do 3 situps",
-                "state": "incomplete"
-            }
+            
         },
         "weekly": {
-            "15/4/2024": {
-                "type": "core",
-                "target": 10,
-                "amount": 0,
-                "text": "Do 10 situps",
-                "state": "incomplete"
-            }
+           
         },
         "monthly": {
-            "15/4/2024": {
-                "type": "core",
-                "target": 3,
-                "amount": 0,
-                "text": "Do 3 situps",
-                "state": "incomplete"
-            }
+            
         }
     }
 }
