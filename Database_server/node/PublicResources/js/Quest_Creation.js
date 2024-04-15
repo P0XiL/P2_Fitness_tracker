@@ -5,8 +5,8 @@ function get_user_info() {
 }
 //example of output
 userInfo = {
-    rank: generate_random_number(43) + 3,
-    mastery: generate_random_number(3) + 3,
+    rank: generate_random_number(43),
+    mastery: generate_random_number(3),
     preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
 };
 
@@ -36,7 +36,7 @@ function modify_quest(quest, rank, difficulty, mastery) {
 
 
 async function fetchJSON(url) {
-    try{
+    try {
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error('Failed to fetch JSON');
@@ -48,70 +48,16 @@ async function fetchJSON(url) {
     }
 }
 
-quest_log = {
-    assholeblaster69: {
-        daily: {
-            "31/3/2024": {
-                "type": "pushups",
-                "target": 100,
-                "amount": 5
-            },
 
-            "26/3/2024": {
-                "type": "run",
-                "target": 10,
-                "amount": 10
-            }
-        },
-
-        weekly: {
-            "02/4/2024": {
-                "type": "cycling",
-                "target": 40,
-                "amount": 30,
-            },
-
-            "22/3/2024": {
-                "type": "walk",
-                "target": 60,
-                "amount": 35,
-            }
-        },
-
-        monthly: {
-            "1/4/2024": {
-                "type": "crunches",
-                "target": 300,
-                "amount": 301,
-            },
-
-        }
-
-    }
-}
-
-
-function first_own_key(object) {
-    let firstKey
-    for (let key in object) {
-        if (object.hasOwnProperty(key)) {
-            firstKey = key;
-            break;
-        }
-    }
-    return firstKey
-}
-
-
-function check_current(timespan, userID) {
-    //connect database
+function check_current(timespan, quest_log, userID) {
     const obj_currentDate = new Date();
     let lastestDate;
     switch (timespan) {
         case 'daily': {
             const obj_dailies = quest_log[userID][timespan];
-            lastestDate = first_own_key(obj_dailies);
+            lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
             const questDate = lastestDate.split("/");
+            console.log(questDate)
             if (questDate[0] == obj_currentDate.getDate() && questDate[1] == (obj_currentDate.getMonth() + 1) && questDate[2] == obj_currentDate.getFullYear()) {
                 if (obj_dailies[lastestDate]["target"] <= obj_dailies[lastestDate]["amount"]) {
                     return "Done";
@@ -123,7 +69,7 @@ function check_current(timespan, userID) {
 
         case 'weekly':
             const obj_weeklies = quest_log[userID][timespan];
-            lastestDate = first_own_key(obj_weeklies);
+            lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
             const questDateStr = lastestDate.split("/");
             //Check if questDay is within 7 days of today
             const questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
@@ -142,7 +88,7 @@ function check_current(timespan, userID) {
             return "None"
         case 'monthly':
             const obj_monthlies = quest_log[userID][timespan];
-            lastestDate = first_own_key(obj_monthlies);
+            lastestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
             const questDate = lastestDate.split("/");
             if ((obj_currentDate.getMonth() + 1) == questDate[1] && obj_currentDate.getFullYear() == questDate[2]) {
                 if (obj_monthlies[lastestDate]["target"] <= obj_monthlies[lastestDate]["amount"]) {
@@ -154,14 +100,17 @@ function check_current(timespan, userID) {
         default:
             return "Fail"
 
+
     }
+
+
 }
 
 
 
-function add_quest_json(quest){
+function add_quest_json(quest) {
     console.log("Hey");
-    fetch('http://127.0.0.1:3366/write_quest_json', {
+    fetch('http://127.0.0.1:3366/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -196,7 +145,7 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
                 .then(data => {
                     let obj_Quest = choose_quest(data.quest_templates[type]);
                     obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6);
-                    
+
                     obj_newQuest = new Object;
                     obj_currentDate = new Date;
                     const date = obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
@@ -205,79 +154,72 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
                     obj_newQuest[date].type = type;
                     obj_newQuest[date].target = obj_Quest["base_target"];
                     obj_newQuest[date].amount = 1;
+                    obj_newQuest[date].text = obj_Quest.quest_text;
                     obj_newQuest[date].state = "incomplete";
                     obj_newQuest.timespan = questTimespan;
                     console.log(obj_newQuest);
 
                     add_quest_json(obj_newQuest);
-
-                    document.getElementById(quest + "_type").innerText = "Type: " + type + "\nQuest: " + obj_Quest.quest_text;
                     document.getElementById("myModal").style.display = "none";
-                    
-                    //addQuestJson(obj_newQuest);
-
-
+                    location.reload();        
                 });
 
         });
     })
-    
+
 }
 
-function display_quest(quest, quest_log, userInfox, user) {
+function display_quest(quest, userInfox, user) {
     const timespans = ["daily", "weekly", "monthly"];
     let questTimespan = timespans[quest[5] - 1];
-    let state = check_current(questTimespan, user);
+    fetchJSON('json/quest_log.json')
+        .then(quest_log => {
+            const stateQuest = check_current(questTimespan, quest_log, user);
+            console.log(stateQuest);
+            if (stateQuest == "None") {
+                const type = choose_quest_type(userInfo["preset"]);
+                document.getElementById(quest + "_type").innerText = "Type: " + type;
+                //TODO: Should save this somewhere such the user can't just reload the site for new type :hmm:
 
-    if (state == "None") {
-        const type = choose_quest_type(userInfo["preset"]);
-        document.getElementById(quest + "_type").innerText = "Type: " + type;
-        //TODO: Should save this somewhere such the user can't just reload the site for new type :hmm:
+                //Create button
+                let button = document.createElement("button");
+                button.textContent = "Get new Quest!";
+                button.id = questTimespan;
 
-        //Create button
-        let button = document.createElement("button");
-        button.textContent = "Get new Quest!";
-        button.id = questTimespan;
+                //Append button
+                document.getElementById(quest + "_type").appendChild(button)
 
-        //Append button
-        document.getElementById(quest + "_type").appendChild(button)
+                //Add event listner to button
 
-        //Add event listner to button
+                button.addEventListener("click", () => {
+                    const obj_newQuest = open_modal_for_quest(quest, questTimespan, type, user);
+                });
 
-        button.addEventListener("click", () => {
-            const obj_newQuest = open_modal_for_quest(quest, questTimespan, type, user);
+                document.getElementById("close").addEventListener("click", () => {
+                    document.getElementById("myModal").style.display = "none";
 
+                });
+                
 
+            } else if (stateQuest == "Done") {
+                document.getElementById(quest + "_type").innerText = "Quest done";
+                //Add progressbars
+            } else {
+                const vaules = quest_log[user][questTimespan][stateQuest];
+                document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
+            }
 
-        });
+            //Add progressbar
 
+        })
 
-        document.getElementById("close").addEventListener("click", () => {
-            document.getElementById("myModal").style.display = "none";
-
-        });
-
-
-
-        // create new quest then 
-    } else if (state == "Done") {
-        document.getElementById(quest + "_type").innerText = "Quest done";
-        //Add progressbars
-    } else {
-        let type = quest_log[user][questTimespan][state].type;
-        document.getElementById(quest + "_type").innerText = "Type: " + type;
-
-        //document.getElementById(quest + "_text").innerText = questTemp["cardio"][type].text;
-    }
-
-    //Add progressbar
 }
 
 
 
 
-display_quest("quest1", quest_log, "Add User Json Here", "assholeblaster69");
-display_quest("quest2", quest_log, "Add User Json Here", "assholeblaster69");
-display_quest("quest3", quest_log, "Add User Json Here", "assholeblaster69");
+display_quest("quest1", "Add User Json Here", "assholeblaster69");
+display_quest("quest2", "Add User Json Here", "assholeblaster69");
+display_quest("quest3", "Add User Json Here", "assholeblaster69");
 
 

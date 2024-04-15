@@ -1,21 +1,65 @@
 {
     "assholeblaster69": {
         "daily": {
-            "15/4/2024": {
-                "type": "cardio",
-                "target": 45,
+            "11/4/2024": {
+                "type": "core",
+                "target": 29.700000000000003,
                 "amount": 1,
+                "text": "Do 29.700000000000003 backextentions",
+                "state": "incomplete"
+            },
+            "15/1/2024": {
+                "type": "core",
+                "target": 90,
+                "amount": 1,
+                "text": "Do the plank for 90 seconds",
+                "state": "incomplete"
+            },
+            "15/4/2024": {
+                "type": "upperbody",
+                "target": 90,
+                "amount": 1,
+                "text": "Do arm circles for 90 seconds",
                 "state": "incomplete"
             }
         },
         "weekly": {
-            "15/4/2024": {
-                "type": "upperbody",
-                "target": 27,
+            "15/3/2024": {
+                "type": "cardio",
+                "target": 49.5,
                 "amount": 1,
+                "state": "incomplete"
+            },
+            "15/2/2024": {
+                "type": "cardio",
+                "target": 49.5,
+                "amount": 1,
+                "text": "Go for a run for 49.5 minutes",
+                "state": "incomplete"
+            },
+            "15/4/2024": {
+                "type": "lowerbody",
+                "target": 29.700000000000003,
+                "amount": 1,
+                "text": "Do 29.700000000000003 lunges",
                 "state": "incomplete"
             }
         },
-        "monthly": {}
+        "monthly": {
+            "15/3/2024": {
+                "type": "core",
+                "target": 29.700000000000003,
+                "amount": 1,
+                "text": "Do 29.700000000000003 backextentions",
+                "state": "incomplete"
+            },
+            "15/4/2024": {
+                "type": "core",
+                "target": null,
+                "amount": 1,
+                "text": "Do NaN backextentions",
+                "state": "incomplete"
+            }
+        }
     }
 }
