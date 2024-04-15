@@ -117,7 +117,6 @@ function write_quest_json(req, res){
     });
     req.on('end', () => {
         let obj_quest = JSON.parse(body);
-        console.log(obj_quest);
 
         // Read existing data from the file
         fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
@@ -133,8 +132,6 @@ function write_quest_json(req, res){
                 // Handle file not found or empty
                 console.error("Error reading existing quest_log:", err);
             }
-
-            console.log(obj_questLog);
 
             const timespan = obj_quest.timespan;
             delete obj_quest.timespan;

@@ -22,14 +22,29 @@ function choose_quest_type(preset) {
 
 
 function choose_quest(quests) {
-    //TODO: TEMP FIX, NEED GET_QUEST_OBJECT TO WORK FISRT
     return quests[Object.keys(quests)[generate_random_number(Object.keys(quests).length)]]
 }
 
 
-function modify_quest(quest, rank, difficulty, mastery) {
+function modify_quest(quest, rank, difficulty, mastery, timespan) {
     //formular for scaling
-    quest["base_target"] = quest["base_target"] * ((rank + difficulty) * 0.1) * (mastery * 0.5);
+    const min = quest["base_target"];
+    switch (timespan) {
+        case 'daily':
+            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.1) * (mastery * 0.5) * 1);
+            break;
+        case 'weekly':
+            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.1) * (mastery * 0.5) * 4);
+            break;
+        case 'monthly':
+            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.1) * (mastery * 0.5) * 13);
+            break;
+    }
+    
+    if (quest["base_target"] < min){
+        quest["base_target"] = min
+        quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
+    }
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
 }
@@ -57,7 +72,6 @@ function check_current(timespan, quest_log, userID) {
             const obj_dailies = quest_log[userID][timespan];
             lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
             const questDate = lastestDate.split("/");
-            console.log(questDate)
             if (questDate[0] == obj_currentDate.getDate() && questDate[1] == (obj_currentDate.getMonth() + 1) && questDate[2] == obj_currentDate.getFullYear()) {
                 if (obj_dailies[lastestDate]["target"] <= obj_dailies[lastestDate]["amount"]) {
                     return "Done";
@@ -109,7 +123,6 @@ function check_current(timespan, quest_log, userID) {
 
 
 function add_quest_json(quest) {
-    console.log("Hey");
     fetch('http://127.0.0.1:3366/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
@@ -122,10 +135,6 @@ function add_quest_json(quest) {
                 throw new Error('Failed to fetch POST');
             }
             return response.json();
-        })
-        .then(data => {
-            console.log("pog");
-
         })
         .catch(error => {
             console.error('Error fetch Post quest_log:', error);
@@ -144,8 +153,7 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
             fetchJSON('json/quest_templates.json')
                 .then(data => {
                     let obj_Quest = choose_quest(data.quest_templates[type]);
-                    obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6);
-
+                    obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6, questTimespan);
                     obj_newQuest = new Object;
                     obj_currentDate = new Date;
                     const date = obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
@@ -153,15 +161,14 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
                     obj_newQuest[date] = {};
                     obj_newQuest[date].type = type;
                     obj_newQuest[date].target = obj_Quest["base_target"];
-                    obj_newQuest[date].amount = 1;
+                    obj_newQuest[date].amount = 0;
                     obj_newQuest[date].text = obj_Quest.quest_text;
                     obj_newQuest[date].state = "incomplete";
                     obj_newQuest.timespan = questTimespan;
-                    console.log(obj_newQuest);
 
                     add_quest_json(obj_newQuest);
                     document.getElementById("myModal").style.display = "none";
-                    location.reload();        
+                    location.reload();
                 });
 
         });
@@ -175,7 +182,6 @@ function display_quest(quest, userInfox, user) {
     fetchJSON('json/quest_log.json')
         .then(quest_log => {
             const stateQuest = check_current(questTimespan, quest_log, user);
-            console.log(stateQuest);
             if (stateQuest == "None") {
                 const type = choose_quest_type(userInfo["preset"]);
                 document.getElementById(quest + "_type").innerText = "Type: " + type;
@@ -199,7 +205,7 @@ function display_quest(quest, userInfox, user) {
                     document.getElementById("myModal").style.display = "none";
 
                 });
-                
+
 
             } else if (stateQuest == "Done") {
                 document.getElementById(quest + "_type").innerText = "Quest done";
