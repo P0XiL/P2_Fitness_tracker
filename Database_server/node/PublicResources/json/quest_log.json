@@ -16,6 +16,12 @@
                 "target": 27,
                 "amount": 1,
                 "state": "incomplete"
+            },
+            "15/4/2024": {
+                "type": "cardio",
+                "target": 45,
+                "amount": 1,
+                "state": "incomplete"
             }
         },
         "weekly": {
