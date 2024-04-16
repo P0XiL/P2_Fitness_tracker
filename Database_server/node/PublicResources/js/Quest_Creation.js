@@ -1,10 +1,11 @@
+
 //Returns an object with relavent user info
 function get_user_info(){
     //get user info from database
-    return userInfo;
+    return userinfo;
 }
  //example of output
- userInfo = {
+ userinfo = {
     rank: generate_random_number(43)+3,
     mastery: generate_random_number(3)+3,
     preset:  ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
@@ -103,7 +104,7 @@ quest_log = {
  }
 
 
-function first_own_key(object){
+function firstOwnKey(object){
     let firstKey
     for (let key in object) {
         if (object.hasOwnProperty(key)) {
@@ -117,15 +118,15 @@ function first_own_key(object){
 
 function check_current(timespan, userID){
     //connect database
-    const obj_currentDate = new Date();
+    current_date = new Date();
     let lastestDate;
     switch(timespan){
         case 'daily':{
-            const obj_dailies = quest_log[userID][timespan];
-            lastestDate = first_own_key(obj_dailies);
-            const questDate = lastestDate.split("/");
-            if (questDate[0] == obj_currentDate.getDate() && questDate[1] == (obj_currentDate.getMonth() + 1) && questDate[2] == obj_currentDate.getFullYear() ){
-                if(obj_dailies[lastestDate]["target"] <= obj_dailies[lastestDate]["amount"]){
+            let dailies = quest_log[userID][timespan];
+            lastestDate = firstOwnKey(dailies);
+            let questDate = lastestDate.split("/");
+            if (questDate[0] == current_date.getDate() && questDate[1] == (current_date.getMonth() + 1) && questDate[2] == current_date.getFullYear() ){
+                if(dailies[lastestDate]["target"] <= dailies[lastestDate]["amount"]){
                     return "Done";
                 }
                 return lastestDate;
@@ -134,30 +135,30 @@ function check_current(timespan, userID){
             return "None";
 
         case 'weekly':
-            const obj_weeklies = quest_log[userID][timespan];
-            lastestDate = first_own_key(obj_weeklies);
-            const questDateStr = lastestDate.split("/");
+            let weeklies = quest_log[userID][timespan];
+            lastestDate = firstOwnKey(weeklies);
+            let questDateStr = lastestDate.split("/");
             //Check if questDay is within 7 days of today
-            const questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
+            let questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
             //Difference in milisec
-            const diffInMilisec = obj_currentDate - questDateObj;
+            diffInMilisec = current_date - questDateObj;
             //Convert to day
-            const diffInDays = diffInMilisec / (1000 * 60 * 60 * 24)
+            let diffInDays = diffInMilisec / (1000 * 60 * 60 * 24)
 
 
             if (Math.abs(diffInDays) <=7){
-                if(obj_weeklies[lastestDate]["target"] <= obj_weeklies[lastestDate]["amount"]){
+                if(weeklies[lastestDate]["target"] <= weeklies[lastestDate]["amount"]){
                     return "Done";
                 }
                 return lastestDate;
             }
             return "None"
         case 'monthly':
-            const obj_monthlies = quest_log[userID][timespan];
-            lastestDate = first_own_key(obj_monthlies);
-            const questDate = lastestDate.split("/");
-            if ((obj_currentDate.getMonth() + 1) == questDate[1] && obj_currentDate.getFullYear() == questDate[2]){
-                if(obj_monthlies[lastestDate]["target"] <= obj_monthlies[lastestDate]["amount"]){
+            let monthlies = quest_log[userID][timespan];
+            lastestDate = firstOwnKey(monthlies);
+            let questDate = lastestDate.split("/");
+            if ((current_date.getMonth() + 1) == questDate[1] && current_date.getFullYear() == questDate[2]){
+                if(monthlies[lastestDate]["target"] <= monthlies[lastestDate]["amount"]){
                     return "Done";
                 }
                 return lastestDate;
@@ -171,19 +172,19 @@ function check_current(timespan, userID){
 
 
 
-function display_quest(quest, quest_log, userInfox, user){
-    const timespans = ["daily", "weekly", "monthly"];
-    let questTimespan = timespans[quest[5] - 1];
-    let state = check_current(questTimespan, user);
+function display_quest(quest, quest_log, userinfox, user){
+    let timespans = ["daily", "weekly", "monthly"];
+    let quest_timespan = timespans[quest[5] - 1];
+    let state = check_current(quest_timespan, user);
     //let questTemp = get_quest_object();
     
     if (state == "None"){
-        const type = choose_quest_type(userInfo["preset"]);
+        const type = choose_quest_type(userinfo["preset"]);
         document.getElementById(quest + "_type").innerText = "Type: " +  type;
         //TODO: Should save this somewhere such the user can't just reload the site for new type :hmm:
 
         //Create button
-        const button = document.createElement("button");
+        let button = document.createElement("button");
         button.textContent = "Get new Quest!";
 
         //Append button
@@ -193,7 +194,7 @@ function display_quest(quest, quest_log, userInfox, user){
         button.addEventListener("click", ()=>{
             document.getElementById("myModal").style.display = "block";
         });
-        document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
+        document.getElementById("popupText").innerText = "Choose difficulty for " + quest_timespan + " of type: " + type;
 
         document.querySelectorAll(".difficulty-button").forEach(button => {
             button.addEventListener("click", (event) => {
@@ -203,7 +204,7 @@ function display_quest(quest, quest_log, userInfox, user){
                 let obj_quest = choose_quest("quests");
 
 
-                //TODO: USE userInfo TO GET RANK AND MASTERY
+                //TODO: USE USERINFO TO GET RANK AND MASTERY
                 obj_quest = modify_quest(quest_Obj, 3, difficulty, 6);
                 console.log(quest_Obj.quest_text);
                 document.getElementById(quest + "_type").innerText = "Type: " +  type + "\nQuest: " + quest_Obj.quest_text;
@@ -223,7 +224,7 @@ function display_quest(quest, quest_log, userInfox, user){
         document.getElementById(quest + "_type").innerText = "Quest done"; 
         //Add progressbars
     } else {
-        let type = quest_log[user][questTimespan][state].type;
+        let type = quest_log[user][quest_timespan][state].type;
         document.getElementById(quest + "_type").innerText = "Type: " + type;
         console.log(type);
         
