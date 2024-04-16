@@ -34,9 +34,9 @@
     <div id="myModal" class="modal">
         <div class="modal-content">
             <p id="popupText"></p>
-            <button class="difficulty-button" data-difficulty=-3>Easy</button>
-            <button class="difficulty-button" data-difficulty=0>Medium</button>
-            <button class="difficulty-button" data-difficulty=3>Hard</button>
+            <button class="difficulty-button" data-difficulty="-3">Easy</button>
+            <button class="difficulty-button" data-difficulty="0">Medium</button>
+            <button class="difficulty-button" data-difficulty="3">Hard</button>
             <button id="close">Close</button>
         </div>
       </div>
@@ -70,6 +70,40 @@
     <div id="friends" class="page">
         <h2>Friends</h2>
         <p>The friends feature goes here</p>
+
+
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
+                <div id="myDropdown2" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend('run', null)">Run</a>
+                    <a href="#" onclick="update_graph_friend('cycling', null)">Cycling</a>
+                    <a href="#" onclick="update_graph_friend('pushups', null)">Pushups</a>
+                    <a href="#" onclick="update_graph_friend('walk', null)">Walk</a>
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
+                <div id="myDropdown3" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
+                    <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
+                    <a href="#" onclick="update_graph_friend(null, 'monthly')">Monthly</a>
+                </div>
+            </div>
+        </div>
+
+
+        <p id="textfriend"> </p>
+
+        <div>
+            <h1>Graph with friends</h1>
+            <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
+        </div>
     </div>
 
     <div id="stats" class="page">
