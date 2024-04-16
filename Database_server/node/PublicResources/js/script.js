@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     function loginUser(loginData) {
-        fetch('http://127.0.0.1:3364/login', {
+        fetch('http://127.0.0.1:3360/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to send data to server-side script
     function createUser(userData) {
-        fetch('http://127.0.0.1:3364/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
