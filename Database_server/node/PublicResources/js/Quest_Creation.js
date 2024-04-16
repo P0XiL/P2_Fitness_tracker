@@ -99,7 +99,7 @@ function check_current(timespan, quest_log, userID) {
             //Check if questDay is within 7 days of today
             let questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
             //Difference in milisec
-            diffInMilisec = current_date - questDateObj;
+            diffInMilisec = obj_currentDate - questDateObj;
             //Convert to day
             let diffInDays = diffInMilisec / (1000 * 60 * 60 * 24)
 
