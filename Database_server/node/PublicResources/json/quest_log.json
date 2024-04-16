@@ -1,0 +1,59 @@
+{
+    "assholeblaster69": {
+        "daily": {
+            "14/4/2024": {
+                "type": "cardio",
+                "target": 5,
+                "amount": 0,
+                "text": "Cycle 5 minutes",
+                "state": "incomplete"
+            },
+            "15/4/2024": {
+                "type": "cardio",
+                "target": 5,
+                "amount": 0,
+                "text": "Go for a run for 5 minutes",
+                "state": "incomplete"
+            },
+            "16/4/2024": {
+                "type": "cardio",
+                "target": 5,
+                "amount": 0,
+                "text": "Cycle 5 minutes",
+                "state": "incomplete"
+            }
+        },
+        "weekly": {
+            "16/2/2024": {
+                "type": "core",
+                "target": 21,
+                "amount": 0,
+                "text": "Do 21 backextentions",
+                "state": "incomplete"
+            },
+            "16/4/2024": {
+                "type": "core",
+                "target": 3,
+                "amount": 0,
+                "text": "Do 3 situps",
+                "state": "incomplete"
+            }
+        },
+        "monthly": {
+            "16/1/2024": {
+                "type": "lowerbody",
+                "target": 10,
+                "amount": 0,
+                "text": "Do the wallsit for 10 seconds",
+                "state": "incomplete"
+            },
+            "16/4/2024": {
+                "type": "cardio",
+                "target": 117,
+                "amount": 0,
+                "text": "Go for a walk for 117 minutes",
+                "state": "incomplete"
+            }
+        }
+    }
+}
