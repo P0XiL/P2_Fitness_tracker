@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3360;
+const port = 3369; // Changed port to 3369
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -51,6 +51,9 @@ function processReq(req, res) {
             }
             else if (queryPath === "/write_quest_json"){
                 write_quest_json(req, res);
+
+            } else if (queryPath === "/write_user_info_json") { // Add new route for writing user info
+                write_user_info_json(req, res);
             } else {
                 errorResponse(res, 404, "not found")
             }
@@ -212,8 +215,7 @@ function guessMimeType(fileName) {
 }
 
 
-
-function write_quest_json(req, res){
+function write_quest_json(req, res) {
     let body = '';
     req.on('data', (chunk) => {
         body += chunk.toString();
@@ -241,7 +243,6 @@ function write_quest_json(req, res){
 
             obj_questLog["assholeblaster69"][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
 
-
             // Write updated data back to the file
             fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
                 if (err) {
@@ -257,6 +258,47 @@ function write_quest_json(req, res){
         });
     });
 }
+
+function write_user_info_json(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let user_info = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error(err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            let existingData = JSON.parse(data);
+            existingData.users_info[user_info.username].preset = user_info.preset;
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User info written to file');
+                    // Send a JSON response confirming the success of the operation
+                    const jsonResponse = {
+                        success: true,
+                        message: 'User info updated successfully'
+                    };
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(jsonResponse));
+                }
+            });
+        });
+    });
+}
+
 
 
 startServer();
