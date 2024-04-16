@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3366;
+const port = 3360;
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -43,7 +43,13 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
-            if (queryPath === "/write_quest_json"){
+            if (req.url === "/createUser") {
+                // Handle the POST request to write user data to a file
+                createUser(req, res);
+            } else if (req.url === "/login") {
+                loginUser(req, res);
+            }
+            else if (queryPath === "/write_quest_json"){
                 write_quest_json(req, res);
             } else {
                 errorResponse(res, 404, "not found")
@@ -54,6 +60,103 @@ function processReq(req, res) {
             break;
     }
 }
+
+
+// Function to handle user login
+function loginUser(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const loginData = JSON.parse(body);
+
+        // Read existing user data from the file
+        fs.readFile('node/PublicResources/json/Users.json', (err, data) => {
+            if (err) {
+                console.error("Error reading user data:", err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            try {
+                const users = JSON.parse(data);
+
+                // Check if the username exists and password matches
+                if (users['obj_users'][loginData.username] && users['obj_users'][loginData.username].password === loginData.password) {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ success: true, username: loginData.username }));
+                } else {
+                    errorResponse(res, 401, "Invalid username or password");
+                }
+            } catch (parseError) {
+                console.error("Error parsing user data:", parseError);
+                errorResponse(res, 500, String(parseError));
+            }
+        });
+    });
+}
+
+
+// Function to handle writing user data to a JSON file
+function createUser(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const userData = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('node/PublicResources/json/Users.json', (err, data) => {
+            let users = {}; // Initialize users object
+
+            if (!err) {
+                try {
+                    users = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing user data:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing user data:", err);
+            }
+
+            // Create obj_users object if not exists
+            if (!users.hasOwnProperty('obj_users')) {
+                users['obj_users'] = {};
+            }
+
+            // Check if the username already exists
+            if (users['obj_users'].hasOwnProperty(userData.username)) {
+                errorResponse(res, 400, "Username already exists");
+                return;
+            }
+
+            // Append new user data
+            users['obj_users'][userData.username] = {
+                password: userData.password
+            };
+
+            // Write updated data back to the file
+            fs.writeFile('node/PublicResources/json/Users.json', JSON.stringify(users, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User data appended to file');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
+        });
+    });
+}
+
+
+
 
 function errorResponse(res, code, reason) {
     res.statusCode = code;
