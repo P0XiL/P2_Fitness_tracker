@@ -1,7 +1,8 @@
+
 //Returns an object with relavent user info
 function get_user_info() {
     //get user info from database
-    return userInfo;
+    return userinfo;
 }
 //example of output
 userInfo = {
@@ -96,11 +97,11 @@ function check_current(timespan, quest_log, userID) {
             lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
             const questDateStr = lastestDate.split("/");
             //Check if questDay is within 7 days of today
-            const questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
+            let questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
             //Difference in milisec
-            const diffInMilisec = obj_currentDate - questDateObj;
+            diffInMilisec = current_date - questDateObj;
             //Convert to day
-            const diffInDays = diffInMilisec / (1000 * 60 * 60 * 24)
+            let diffInDays = diffInMilisec / (1000 * 60 * 60 * 24)
 
 
             if (Math.abs(diffInDays) <= 7) {
