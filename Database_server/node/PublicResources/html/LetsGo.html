@@ -25,7 +25,7 @@
             <li><a href="#main"><img src="../image/home.png" alt="Home" class="top-img"></a></li>
         </ul>
         <ul>
-            <li><a href="#loginpage"><img src="../image/Profile_image.png" alt="Profile" class="top-img">
+            <li><a href="#createAccount"><img src="../image/Profile_image.png" alt="Profile" class="top-img">
                     <br><div class="login"></div></a></li>
         </ul>
     </nav>
@@ -144,19 +144,36 @@
             <h2>Stats Exercise</h2>
             <p id="statsText"></p>
     </div>
-    
 
+    <div id="createAccount" class="page">
+        <h2>Create account</h2>
+        <p>Username</p>
+        <input type="text" name="create_username"> <!-- Add name attribute for username field -->
+        <p>Password</p>
+        <input type="password" name="create_password"> <!-- Add name attribute for password field -->
+        <p>Confirm password</p>
+        <input type="password" name="create_confirm_password">
+        <br>
+        <span id="createErrorMessage"></span> <!-- Error message placeholder -->
+        <br>
+        <a href="#" id="toggleCreatePageLink">Already have an account? Login here</a>
+        <br><br>
+        <button id="submitBtn" type="submit">Create user</button> <!-- Add submit button -->
+    </div>
 
-    <div id="loginpage" class="page">
+    <!-- Login Form -->
+    <div id="loginPage" class="page">
         <h2>Login</h2>
-        <form id="loginForm" action="/submitForm" method="POST"> <!-- Add form element with action and method -->
-            <p>Username</p>
-            <input type="text" name="username"> <!-- Add name attribute for username field -->
-            <p>Password</p>
-            <input type="password" name="password"> <!-- Add name attribute for password field -->
-            <br>
-            <button type="submit">Submit</button> <!-- Add submit button -->
-        </form>
+        <p>Username</p>
+        <input type="text" name="login_username">
+        <p>Password</p>
+        <input type="password" name="login_password">
+        <br>
+        <span id="loginErrorMessage"></span>
+        <br>
+        <a href="#" id="toggleLoginPageLink">Don't have an account? Create one here</a>
+        <br><br>
+        <button id="loginBtn" type="submit">Login</button>
     </div>
 
     <div id="profilepage" class="page">
