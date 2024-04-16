@@ -48,8 +48,11 @@ function processReq(req, res) {
                 createUser(req, res);
             } else if (req.url === "/login") {
                 loginUser(req, res);
+            }
+            else if (queryPath === "/write_quest_json"){
+                write_quest_json(req, res);
             } else {
-                errorResponse(res, 404, "Not Found");
+                errorResponse(res, 404, "not found")
             }
             break;
         default:
@@ -207,5 +210,53 @@ function guessMimeType(fileName) {
     };
     return ext2Mime[fileExtension] || undefined;
 }
+
+
+
+function write_quest_json(req, res){
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_quest = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+            let obj_questLog = {}; // Initialize quest_log object
+
+            if (!err) {
+                try {
+                    obj_questLog = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing quest_log:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing quest_log:", err);
+            }
+
+            const timespan = obj_quest.timespan;
+            delete obj_quest.timespan;
+
+            obj_questLog["assholeblaster69"][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
+
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User data appended to file');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
+        });
+    });
+}
+
 
 startServer();
