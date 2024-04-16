@@ -15,8 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        const jsonData = JSON.stringify({ survey: data });
-        console.log(jsonData);
+        const preferences = JSON.stringify({ survey: data });
+        localStorage.setItem("preferences", preferences);
+        console.log(preferences);
     });
 });
 
