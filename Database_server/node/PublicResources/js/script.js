@@ -110,6 +110,7 @@ function displayUserInfo(userInfo) {
 }
 
 function displayUserPreferences(username, userInfo) {
+    const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
     
@@ -127,7 +128,28 @@ function displayUserPreferences(username, userInfo) {
 
     // Generate sliders for exercise preferences
     const userInfoDiv = document.getElementById('userPreferences');
-    const slidersHTML = generateSliders(countMap);
+    let slidersHTML = '';
+
+    if (preset === 'custom') {
+        slidersHTML = `
+            <div>
+                <label for="pushups">Pushups</label>
+                <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" oninput="updateCounter('pushups', this.value)">
+                <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
+            </div>
+            <div>
+                <label for="run">Run</label>
+                <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" oninput="updateCounter('run', this.value)">
+                <span id="runCounter">${countMap.run || 1}</span>
+            </div>
+            <div>
+                <label for="walk">Walk</label>
+                <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" oninput="updateCounter('walk', this.value)">
+                <span id="walkCounter">${countMap.walk || 1}</span>
+            </div>
+            <button onclick="postCustomData('${username}')">Save</button>
+        `;
+    }
     
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
@@ -135,13 +157,38 @@ function displayUserPreferences(username, userInfo) {
         <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
             <option value="run">Run</option>
             <option value="walk">Walk</option>
-            <option value="crunches">Crunches</option>
+            <option value="strength">Strength</option>
+            <option value="custom">Custom</option>
         </select>
-        <button id="customPresetBtn">Custom Preset</button>
         <p>Exercise preferences:</p>
         ${slidersHTML}
     `;
     userInfoDiv.innerHTML = userInfoHTML;
+}
+
+function updateCounter(exercise, value) {
+    document.getElementById(`${exercise}Counter`).textContent = value;
+}
+
+
+function postCustomData(username) {
+    const pushupsValue = document.getElementById('pushups').value;
+    const runValue = document.getElementById('run').value;
+    const walkValue = document.getElementById('walk').value;
+
+    const newUserInfo = {
+        username: username,
+        preset: {
+            name: 'custom',
+            conf: [
+                ...Array(Number(pushupsValue)).fill('push-ups'),
+                ...Array(Number(runValue)).fill('run'),
+                ...Array(Number(walkValue)).fill('walk')
+            ]
+        }
+    };
+
+    update_users_info(newUserInfo);
 }
 
 
@@ -159,9 +206,30 @@ function generateSliders(countMap) {
 function updatePreset(username, preset) {
     let conf = [];
     if (preset === 'run') {
-        conf = ['run','run','run','run','run','run','run','run','run','run','walk','walk','walk','walk','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','crunches','crunches','crunches'];
-    } else if (preset === 'walk') {
-        conf = ['run','run','run','run','walk','walk','walk','walk','walk','walk','walk','walk','walk','walk','crunches','crunches','crunches','crunches','crunches','crunches'];
+        conf = ['run','run','run','run','run','run','run','run','run','run',
+        'walk','walk','walk','walk',
+        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob',
+        'crunches','crunches','crunches'];
+    } 
+    else if (preset === 'walk') {
+        conf = ['run','run','run','run',
+        'walk','walk','walk','walk','walk','walk','walk','walk','walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches'];
+    }
+
+    else if (preset === 'strength') {
+        conf = ['run','run',
+        'walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches',
+        'push-ups','push-ups','push-ups','push-ups',];
+    }
+
+    else if (preset === 'custom') {
+        conf = ['run','run',
+        'walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches',
+        'push-ups','push-ups','push-ups','push-ups',
+        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob'];
     }
 
     // Define the new user info object
