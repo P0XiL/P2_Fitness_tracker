@@ -43,10 +43,10 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
-            if (req.url === "/createUser") {
+            if (queryPath === "/createUser") {
                 // Handle the POST request to write user data to a file
                 createUser(req, res);
-            } else if (req.url === "/login") {
+            } else if (queryPath === "/login") {
                 loginUser(req, res);
             }
             else if (queryPath === "/write_quest_json"){
