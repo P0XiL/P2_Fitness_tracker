@@ -58,6 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('input[name="login_password"]').value = '';
     });
 
+    
+
 
     // Add event listener to the submit button
     document.getElementById('submitBtn').addEventListener('click', function (e) {
@@ -102,6 +104,25 @@ document.addEventListener('DOMContentLoaded', function () {
         loginUser(loginData);
     });
     
+    document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userstats');
+        const loginPage = document.getElementById('stats');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('FriendsPlot');
+        const loginPage = document.getElementById('friends');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
     
     function loginUser(loginData) {
         fetch('http://127.0.0.1:3360/login', {

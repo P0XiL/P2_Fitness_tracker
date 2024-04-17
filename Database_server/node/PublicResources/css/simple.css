@@ -162,7 +162,7 @@ a   {
   font-size: 16px; /* Font size */
   border: none; /* No border */
   cursor: pointer; /* Cursor style */
-  margin-right: 100px;
+  margin-right: 20px;
 }
 
 /* Styles for when the drop-down button is hovered or focused */
@@ -186,7 +186,6 @@ a   {
   overflow: auto; /* Allow content to overflow */
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Box shadow for dropdown */
   z-index: 1; /* Z-index for stacking order */
-  right: 100px;
 }
 
 /* Styles for the links within the dropdown content */
@@ -213,3 +212,20 @@ a   {
 /* Ensures only the selected page is shown */
 .page {display: none;}
 .page.active {display: block;}
+
+.button {
+  font: bold 20px Arial;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  padding: 2px 6px 2px 6px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+}
+
+.center {
+  width: 1200px;
+  margin: 15px 15px; 
+}
