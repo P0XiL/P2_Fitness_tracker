@@ -40,6 +40,16 @@
         </div>
       </div>
 
+    <div id="inputModal" class="modal">
+        <div class="modal-content">
+            <h2 id="InputHeader"></h2>
+            <p id="InputPopupText"></p>
+            <input type="text" id="InputInputfield" name="InputInputfield" placeholder="Enter amount here" value="">
+            <button id="add">add</button>
+            <button id="subtract">subtract</button>
+            <button id="close_input">Close</button>
+        </div>
+    </div>
       
     <!-- Page sections -->
     <div id="main" class="page active">
@@ -47,19 +57,19 @@
         <div class="questpage">
             <div id="quest1" class="quest">
                 <h2>Daily</h2>
-                <p>Quest 1 progress bars</p>
+                <meter id="meter1" value="0" min="0" max="1"></meter> 
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
                 <h2>Weekly</h2>
-                <p>Quest 2 progress bars</p>
+                <meter id="meter2" value="0" min="0" max="1"></meter> 
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
                 <h2>Monthly</h2>
-                <p>Quest 3 progress bars</p>
+                <meter id="meter3" value="0" min="0" max="1"></meter> 
                 <p id="quest3_type"></p>
             </div>
         </div>
