@@ -146,7 +146,16 @@ a   {
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: calc(30% - 10px);;
+}
+
+
+meter {
+  display: none;
+  width: 100%; /* Set desired width */
+  height: 12%; /* Set desired height */
+  font-size: 18px; /* Set desired font size */
+  /* Add any other styling properties as needed */
 }
 
 /* Style for the buttons */

@@ -1,16 +1,3 @@
-
-//Returns an object with relavent user info
-function get_user_info() {
-    //get user info from database
-    return userinfo;
-}
-//example of output
-userInfo = {
-    rank: generate_random_number(43),
-    mastery: generate_random_number(3),
-    preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
-};
-
 //Generate a random number from 0 to max
 function generate_random_number(max) {
     return Math.floor(Math.random() * max);
@@ -45,8 +32,8 @@ function modify_quest(quest, rank, difficulty, mastery, timespan) {
             quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.1) * (mastery * 0.5) * 13);
             break;
     }
-    
-    if (quest["base_target"] < min){
+
+    if (quest["base_target"] < min) {
         quest["base_target"] = min
         quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     }
@@ -75,7 +62,7 @@ function check_current(timespan, quest_log, userID) {
     switch (timespan) {
         case 'daily': {
             const obj_dailies = quest_log[userID][timespan];
-            if (is_empty_object(obj_dailies)){
+            if (is_empty_object(obj_dailies)) {
                 return "None"
             }
             lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
@@ -91,7 +78,7 @@ function check_current(timespan, quest_log, userID) {
 
         case 'weekly':
             const obj_weeklies = quest_log[userID][timespan];
-            if (is_empty_object(obj_weeklies)){
+            if (is_empty_object(obj_weeklies)) {
                 return "None"
             }
             lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
@@ -113,7 +100,7 @@ function check_current(timespan, quest_log, userID) {
             return "None"
         case 'monthly':
             const obj_monthlies = quest_log[userID][timespan];
-            if (is_empty_object(obj_monthlies)){
+            if (is_empty_object(obj_monthlies)) {
                 return "None"
             }
             lastestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
@@ -190,9 +177,118 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
 
 }
 
+
+function change_amount(obj_para){
+    fetch('http://127.0.0.1:3360/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj_para)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No response fetch POST amount');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error fetch Post (change amount):', error);
+        });
+}
+
+
+
+
+
+//validates a value such that the vaule is a posetiv number
+function validate_input(value) {
+    //insures the input is a string only containg numbers
+    if (/^\d+$/.test(value) && parseFloat(value) > 0) {
+        return true
+    } else if (parseFloat(value) <= 0) {
+        alert("Please enter a posetiv number");
+        return false
+    } else {
+        alert("Please enter a valid number");
+        return false
+    }
+}
+
+function input_data(obj_para) {
+    document.getElementById("inputModal").style.display = "block";
+    const inputField = document.getElementById("InputInputfield");
+    document.getElementById("InputHeader").innerText = obj_para["timespan"].charAt(0).toUpperCase() + obj_para["timespan"].slice(1);
+    document.getElementById("InputPopupText").innerText = "Enter a number below to change the amount done";
+
+    //Functions for add button
+    document.getElementById("add").addEventListener("click", () => {
+        if (validate_input(inputField.value)) {
+            obj_para.amount = parseInt(inputField.value);
+            obj_para.mode = "add";            
+            change_amount(obj_para);
+
+            inputField.value =""
+            document.getElementById("inputModal").style.display = "none";
+            location.reload();
+        }
+        inputField.value =""
+    });
+
+    //Functions for subtract button
+    document.getElementById("subtract").addEventListener("click", () => {
+        if (validate_input(inputField.value)) {
+            obj_para.amount = parseInt(inputField.value);
+            obj_para.mode = "sub";            
+            change_amount(obj_para);
+
+            inputField.value =""
+            document.getElementById("inputModal").style.display = "none";
+            location.reload();
+        }
+        inputField.value =""
+    });
+
+    //Functions for close button
+    document.getElementById("close_input").addEventListener("click", () => {
+        inputField.value =""
+        document.getElementById("inputModal").style.display = "none";
+    });
+
+
+}
+
+function add_edit_button(obj_para) {
+    //obj_quest.timespanID = questID;
+
+    const image = document.createElement("img");
+    image.src = "image/edit_button.png";
+    image.width = 50;
+    image.height = 50;
+    image.style.position = 'absolute';
+    image.style.bottom = '10px';
+    image.style.right = '10px';
+
+    image.addEventListener('click', input_data.bind(null, obj_para));
+
+    const questContainer = document.getElementById(obj_para["questID"]);
+    questContainer.style.position = 'relative';
+    questContainer.appendChild(image);
+
+}
+
+
+function update_meter(ID, obj_quest){
+    const meter = document.getElementById("meter" + ID);
+    meter.max = obj_quest.target;
+    meter.value = obj_quest.amount;
+    
+}
+
+
 function display_quest(quest, userInfox, user) {
     const timespans = ["daily", "weekly", "monthly"];
-    let questTimespan = timespans[quest[5] - 1];
+    const questTimespan = timespans[quest[5] - 1];
     fetchJSON('json/quest_log.json')
         .then(quest_log => {
             const stateQuest = check_current(questTimespan, quest_log, user);
@@ -210,7 +306,6 @@ function display_quest(quest, userInfox, user) {
                 document.getElementById(quest + "_type").appendChild(button)
 
                 //Add event listner to button
-
                 button.addEventListener("click", () => {
                     const obj_newQuest = open_modal_for_quest(quest, questTimespan, type, user);
                 });
@@ -225,16 +320,41 @@ function display_quest(quest, userInfox, user) {
                 document.getElementById(quest + "_type").innerText = "Quest done";
                 //Add progressbars
             } else {
+                const obj_para = {
+                    questID: quest,
+                    timespan: questTimespan,
+                    date: stateQuest
+                }
+
+                add_edit_button(obj_para);
                 const vaules = quest_log[user][questTimespan][stateQuest];
                 document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
+                
+                document.getElementById("meter" + quest[5]).style.display = "block"
+                update_meter(quest[5], quest_log[user][questTimespan][stateQuest]);
+
             }
 
-            //Add progressbar
+            
 
         })
 
 }
 
+
+
+//TODO: Progress bar
+//TODO: Prettiere popus
+//TODO: Comments
+//TODO: Add new user to quest_log
+
+
+//example of output
+userInfo = {
+    rank: generate_random_number(43),
+    mastery: generate_random_number(3),
+    preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
+};
 
 
 
