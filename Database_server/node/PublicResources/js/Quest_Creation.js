@@ -45,8 +45,8 @@ function modify_quest(quest, rank, difficulty, mastery, timespan) {
             quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.1) * (mastery * 0.5) * 13);
             break;
     }
-    
-    if (quest["base_target"] < min){
+
+    if (quest["base_target"] < min) {
         quest["base_target"] = min
         quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     }
@@ -75,7 +75,7 @@ function check_current(timespan, quest_log, userID) {
     switch (timespan) {
         case 'daily': {
             const obj_dailies = quest_log[userID][timespan];
-            if (is_empty_object(obj_dailies)){
+            if (is_empty_object(obj_dailies)) {
                 return "None"
             }
             lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
@@ -91,7 +91,7 @@ function check_current(timespan, quest_log, userID) {
 
         case 'weekly':
             const obj_weeklies = quest_log[userID][timespan];
-            if (is_empty_object(obj_weeklies)){
+            if (is_empty_object(obj_weeklies)) {
                 return "None"
             }
             lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
@@ -113,7 +113,7 @@ function check_current(timespan, quest_log, userID) {
             return "None"
         case 'monthly':
             const obj_monthlies = quest_log[userID][timespan];
-            if (is_empty_object(obj_monthlies)){
+            if (is_empty_object(obj_monthlies)) {
                 return "None"
             }
             lastestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
@@ -190,6 +190,34 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
 
 }
 
+
+
+
+function input_data() {
+    console.log('Image clicked!');
+
+
+}
+
+function add_edit_button(questID) {
+    const image = document.createElement("img");
+    image.src = "image/edit_button.png";
+    image.width = 50;
+    image.height = 50;
+    image.style.position = 'absolute';
+    image.style.bottom = '10px';
+    image.style.right = '10px';
+
+    image.addEventListener('click', input_data);
+
+    const questContainer = document.getElementById(questID);
+    questContainer
+    questContainer.style.position = 'relative';
+    questContainer.appendChild(image);
+
+}
+
+
 function display_quest(quest, userInfox, user) {
     const timespans = ["daily", "weekly", "monthly"];
     let questTimespan = timespans[quest[5] - 1];
@@ -225,6 +253,7 @@ function display_quest(quest, userInfox, user) {
                 document.getElementById(quest + "_type").innerText = "Quest done";
                 //Add progressbars
             } else {
+                add_edit_button(quest);
                 const vaules = quest_log[user][questTimespan][stateQuest];
                 document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
             }
@@ -236,6 +265,10 @@ function display_quest(quest, userInfox, user) {
 }
 
 
+//TODO: Input data to quest
+//TODO: Progress bar
+//TODO: Prettiere buttons
+//TODO: Comments
 
 
 display_quest("quest1", "Add User Json Here", "assholeblaster69");
