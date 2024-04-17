@@ -1,16 +1,3 @@
-
-//Returns an object with relavent user info
-function get_user_info() {
-    //get user info from database
-    return userinfo;
-}
-//example of output
-userInfo = {
-    rank: generate_random_number(43),
-    mastery: generate_random_number(3),
-    preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
-};
-
 //Generate a random number from 0 to max
 function generate_random_number(max) {
     return Math.floor(Math.random() * max);
@@ -231,7 +218,9 @@ function validate_input(value) {
 function input_data(obj_para) {
     document.getElementById("inputModal").style.display = "block";
     const inputField = document.getElementById("InputInputfield");
-    
+    document.getElementById("InputHeader").innerText = obj_para["timespan"].charAt(0).toUpperCase() + obj_para["timespan"].slice(1);
+    document.getElementById("InputPopupText").innerText = "Enter a number below to change the amount done";
+
     //Functions for add button
     document.getElementById("add").addEventListener("click", () => {
         if (validate_input(inputField.value)) {
@@ -358,6 +347,15 @@ function display_quest(quest, userInfox, user) {
 //TODO: Prettiere popus
 //TODO: Comments
 //TODO: Add new user to quest_log
+
+
+//example of output
+userInfo = {
+    rank: generate_random_number(43),
+    mastery: generate_random_number(3),
+    preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
+};
+
 
 
 display_quest("quest1", "Add User Json Here", "assholeblaster69");
