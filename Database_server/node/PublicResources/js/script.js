@@ -190,15 +190,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
         activeLink.classList.add('active');
         }
-    
-    // Handle login link separately
-    const loginLink = document.querySelector('#top-nav a[href="C:/Users/Jacob/OneDrive/Uni/2. semester/P2/Database/PublicResources/html/Login.html"]');
-    if (loginLink) {
-        loginLink.addEventListener('click', function (e) {
-            // Allow default behavior for login link
-            return true;
-        });
-    }
 });
 
 // Function to display login error message
@@ -216,38 +207,45 @@ function clearLoginErrorMessage() {
 
 function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
+    fetch('http://127.0.0.3360/users_info.json')
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to fetch userinfo.json');
+                throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
             }
-            return response.json();
+            return response.json(); // Parse response body as JSON
         })
         .then(data => {
             console.log(data);
-            // Check if users_info exists in data
-            if (data.users_info) {
-                // Check if the specified username exists
-                if (username && data.users_info[username]) {
-                    // Extract user information
-                    const userInfo = data.users_info[username];
-
-                    // Display the user information
-                    displayUserInfo(userInfo);
-                    displayUserPreferences(username, userInfo); // Pass username to displayUserPreferences
-                    
-                    // Update the dropdown menu with the current preset
-                    const presetDropdown = document.getElementById('presetDropdown');
-                    presetDropdown.value = userInfo.preset.name; // Assuming preset.name holds the current preset value
-                } else {
-                    console.error(`${username} not found in JSON data`);
-                }
-            } else {
-                console.error('users_info not found in JSON data');
-            }
+            // Process the JSON data here
+            processData(data, username);
         })
         .catch(error => console.error('Error fetching JSON:', error));
 }
+
+
+function processData(data, username) {
+    // Check if users_info exists in data
+    if (data.users_info) {
+        // Check if the specified username exists
+        if (username && data.users_info[username]) {
+            // Extract user information
+            const userInfo = data.users_info[username];
+
+            // Display the user information
+            displayUserInfo(userInfo);
+            displayUserPreferences(username, userInfo); // Pass username to displayUserPreferences
+                    
+            // Update the dropdown menu with the current preset
+            const presetDropdown = document.getElementById('presetDropdown');
+            presetDropdown.value = userInfo.preset.name; // Assuming preset.name holds the current preset value
+        } else {
+            console.error(`${username} not found in JSON data`);
+        }
+    } else {
+        console.error('users_info not found in JSON data');
+    }
+}
+
 
 // Function to display user information
 function displayUserInfo(userInfo) {
@@ -260,12 +258,11 @@ function displayUserInfo(userInfo) {
     userInfoDiv.innerHTML = userInfoHTML;
 }
 
-// Function to display user preferences
-function displayUserPreferences(username, userInfo) { 
-    const confArray = userInfo.preset.conf.replace('[', '').replace(']', '').split(',');
+function displayUserPreferences(username, userInfo) {
+    const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
     
-    // Filter out empty strings or undefined values
+    // Filter out empty strings or undefined values (if any)
     const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
     
     // Count occurrences of each element in the filtered array
@@ -296,6 +293,7 @@ function displayUserPreferences(username, userInfo) {
     userInfoDiv.innerHTML = userInfoHTML;
 }
 
+
 // Function to generate sliders for exercise preferences
 function generateSliders(countMap) {
     return Object.entries(countMap).map(([exercise, count]) => `
@@ -307,49 +305,56 @@ function generateSliders(countMap) {
     `).join('');
 }
 
-function updatePreset(username, preset) { // Accept username as parameter
-    let conf = '';
+function updatePreset(username, preset) {
+    let conf = [];
     if (preset === 'run') {
-        conf = '[run,run,run,run,run,run,run,run,run,run,walk,walk,walk,walk,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob,hip-thrust-into-jacob,crunches,crunches,crunches]';
+        conf = ['run','run','run','run','run','run','run','run','run','run','walk','walk','walk','walk','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','crunches','crunches','crunches'];
     } else if (preset === 'walk') {
-        conf = '[run,run,run,run,walk,walk,walk,walk,walk,walk,walk,walk,walk,walk,crunches,crunches,crunches,crunches,crunches,crunches]';
+        conf = ['run','run','run','run','walk','walk','walk','walk','walk','walk','walk','walk','walk','walk','crunches','crunches','crunches','crunches','crunches','crunches'];
     }
-    // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
+
+    // Define the new user info object
+    const newUserInfo = {
+        username: username,
+        preset: {
+            name: preset,
+            conf: conf
+        }
+    };
+
+    // Update the user info on the server
+    update_users_info(newUserInfo);
+}
+
+
+
+function update_users_info(newUserInfo) {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newUserInfo)
+    })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to fetch users_info.json');
+                throw new Error('Failed to fetch POST');
             }
-            return response.json();
+            return response.json(); // Read response JSON
         })
-        .then(data => {
-            // Check if the data structure is as expected
-            if (data.users_info && data.users_info[username] && data.users_info[username].preset) { // Use username parameter
-                // Update the preset for the specified username
-                data.users_info[username].preset.name = preset;
-                data.users_info[username].preset.conf = conf;
-                // Send the updated data to the server
-                fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to update preset on server');
-                    }
-                    console.log('Preset updated successfully');
-                    // Fetch user data again after the POST promise has been fulfilled
-                    fetchUserData(username);
-                })
-                .catch(error => console.error('Error updating preset:', error));
+        .then(responseJson => {
+            console.log('Response from POST:', responseJson);
+            if (responseJson.success) {
+                console.log('User info updated successfully');
+                // Fetch user data again after successful update
+                fetchUserData(newUserInfo.username);
             } else {
-                console.error('Unexpected JSON structure or username not found:', data);
+                console.error('User info update failed:', responseJson.message);
             }
         })
-        .catch(error => console.error('Error fetching JSON:', error));
+        .catch(error => {
+            console.error('Error fetching POST users_info:', error);
+        });
 }
 
 
