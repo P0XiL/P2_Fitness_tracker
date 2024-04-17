@@ -26,7 +26,9 @@
         </ul>
         <ul>
             <li><a href="#loginpage"><img src="image/profile_image.png" alt="Profile" class="top-img">
-                    <br><div class="login"></div></a></li>
+                    <br>
+                    <div class="login"></div>
+                </a></li>
         </ul>
     </nav>
 
@@ -39,9 +41,21 @@
             <button class="difficulty-button" data-difficulty="3">Hard</button>
             <button id="close">Close</button>
         </div>
-      </div>
+    </div>
 
-      
+    <div id="inputModal" class="modal">
+        <div class="modal-content">
+            <p id="popupText"></p>
+            <input type="text" id="InputInputfield" name="InputInputfield" placeholder="Enter amount here" value="">
+            
+            <button id="add">add</button>
+            <button id="subtract">subtract</button>
+            <button id="close_input">Close</button>
+        </div>
+    </div>
+
+
+
     <!-- Page sections -->
     <div id="main" class="page active">
         <h2 class="heading">Quests</h2>
@@ -65,7 +79,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <div id="friends" class="page">
         <h2>Friends</h2>
@@ -85,7 +99,7 @@
             </div>
         </div>
 
-    
+
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
@@ -122,7 +136,7 @@
             </div>
         </div>
 
-    
+
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close1()" class="dropbtn">Change period</button>
@@ -140,9 +154,9 @@
         </div>
     </div>
 
-    <div id =page4 class="page">
-            <h2>Stats Exercise</h2>
-            <p id="statsText"></p>
+    <div id=page4 class="page">
+        <h2>Stats Exercise</h2>
+        <p id="statsText"></p>
     </div>
 
     <div id="createAccount" class="page">
@@ -179,15 +193,15 @@
     <div id="profilepage" class="page">
         <h2 class="heading">Profile</h2>
 
-        <div id="profilePageContainer" class="profile"> 
+        <div id="profilePageContainer" class="profile">
 
             <div id="userInfo" class="profile_layout">
-                <h2 style= "text-align: center">User info</h2>
+                <h2 style="text-align: center">User info</h2>
                 <p>User goes here</p>
             </div>
 
             <div id="userPreferences" class="profile_layout">
-                <h2 style= "text-align: center">Preferences</h2>
+                <h2 style="text-align: center">Preferences</h2>
                 <p>Preferences goes here</p>
             </div>
         </div>
@@ -198,7 +212,7 @@
     <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/Graph.js"></script>
-    
+
 </body>
 
 </html>

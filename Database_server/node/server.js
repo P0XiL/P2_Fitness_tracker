@@ -22,15 +22,15 @@ function startServer() {
 }
 
 function processReq(req, res) {
-    const baseURL = 'http://' + req.headers.host + '/';    
+    const baseURL = 'http://' + req.headers.host + '/';
     const url = new URL(req.url, baseURL);
     const searchParams = new URLSearchParams(url.search);
     const queryPath = decodeURIComponent(url.pathname);
 
-    switch(req.method) {
+    switch (req.method) {
         case "GET":
             // Handle GET requests
-            switch(queryPath) {
+            switch (queryPath) {
                 case "/":
                     fileResponse(res, "html/Letsgo.html");
                     break;
@@ -49,11 +49,15 @@ function processReq(req, res) {
             } else if (queryPath === "/login") {
                 loginUser(req, res);
             }
-            else if (queryPath === "/write_quest_json"){
+            else if (queryPath === "/write_quest_json") {
                 write_quest_json(req, res);
+
+            } else if (queryPath === "/change_amount") { // Add new route for writing user info
+                change_amount(req, res);
 
             } else if (queryPath === "/write_user_info_json") { // Add new route for writing user info
                 write_user_info_json(req, res);
+
             } else {
                 errorResponse(res, 404, "not found")
             }
@@ -214,7 +218,7 @@ function guessMimeType(fileName) {
     return ext2Mime[fileExtension] || undefined;
 }
 
-
+//Function for adding a quest to the quest_log json file
 function write_quest_json(req, res) {
     let body = '';
     req.on('data', (chunk) => {
@@ -258,6 +262,62 @@ function write_quest_json(req, res) {
         });
     });
 }
+
+//Function that changes amount of completion
+function change_amount(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_amountInfo = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+            let obj_questLog = {}; // Initialize quest_log object
+
+            if (!err) {
+                try {
+                    obj_questLog = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing quest_log:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing quest_log:", err);
+            }
+
+            const quest = obj_questLog["assholeblaster69"][obj_amountInfo.timespan][obj_amountInfo.date];
+            if (obj_amountInfo["mode"] === "add") {
+                quest.amount += obj_amountInfo.amount;
+            } else {
+                quest.amount -= obj_amountInfo.amount;
+                if (quest.amount < 0) {
+                    quest.amount = 0;
+                }
+            }
+
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User data appended to file');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
+        });
+    });
+}
+
+
+
+
+
 
 function write_user_info_json(req, res) {
     let body = '';

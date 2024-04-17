@@ -191,15 +191,87 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
 }
 
 
+function change_amount(obj_para){
+    fetch('http://127.0.0.1:3360/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj_para)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No response fetch POST amount');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error fetch Post (change amount):', error);
+        });
+}
 
 
-function input_data() {
-    console.log('Image clicked!');
+
+
+
+//validates a value such that the vaule is a posetiv number
+function validate_input(value) {
+    //insures the input is a string only containg numbers
+    if (/^\d+$/.test(value) && parseFloat(value) > 0) {
+        return true
+    } else if (parseFloat(value) <= 0) {
+        alert("Please enter a posetiv number");
+        return false
+    } else {
+        alert("Please enter a valid number");
+        return false
+    }
+}
+
+function input_data(obj_para) {
+    document.getElementById("inputModal").style.display = "block";
+    const inputField = document.getElementById("InputInputfield");
+    
+    //Functions for add button
+    document.getElementById("add").addEventListener("click", () => {
+        if (validate_input(inputField.value)) {
+            obj_para.amount = parseInt(inputField.value);
+            obj_para.mode = "add";            
+            change_amount(obj_para);
+
+            inputField.value =""
+            document.getElementById("inputModal").style.display = "none";
+            location.reload();
+        }
+        inputField.value =""
+    });
+
+    //Functions for subtract button
+    document.getElementById("subtract").addEventListener("click", () => {
+        if (validate_input(inputField.value)) {
+            obj_para.amount = parseInt(inputField.value);
+            obj_para.mode = "sub";            
+            change_amount(obj_para);
+
+            inputField.value =""
+            document.getElementById("inputModal").style.display = "none";
+            location.reload();
+        }
+        inputField.value =""
+    });
+
+    //Functions for close button
+    document.getElementById("close_input").addEventListener("click", () => {
+        inputField.value =""
+        document.getElementById("inputModal").style.display = "none";
+    });
 
 
 }
 
-function add_edit_button(questID) {
+function add_edit_button(obj_para) {
+    //obj_quest.timespanID = questID;
+
     const image = document.createElement("img");
     image.src = "image/edit_button.png";
     image.width = 50;
@@ -208,10 +280,9 @@ function add_edit_button(questID) {
     image.style.bottom = '10px';
     image.style.right = '10px';
 
-    image.addEventListener('click', input_data);
+    image.addEventListener('click', input_data.bind(null, obj_para));
 
-    const questContainer = document.getElementById(questID);
-    questContainer
+    const questContainer = document.getElementById(obj_para["questID"]);
     questContainer.style.position = 'relative';
     questContainer.appendChild(image);
 
@@ -220,7 +291,7 @@ function add_edit_button(questID) {
 
 function display_quest(quest, userInfox, user) {
     const timespans = ["daily", "weekly", "monthly"];
-    let questTimespan = timespans[quest[5] - 1];
+    const questTimespan = timespans[quest[5] - 1];
     fetchJSON('json/quest_log.json')
         .then(quest_log => {
             const stateQuest = check_current(questTimespan, quest_log, user);
@@ -238,7 +309,6 @@ function display_quest(quest, userInfox, user) {
                 document.getElementById(quest + "_type").appendChild(button)
 
                 //Add event listner to button
-
                 button.addEventListener("click", () => {
                     const obj_newQuest = open_modal_for_quest(quest, questTimespan, type, user);
                 });
@@ -253,7 +323,13 @@ function display_quest(quest, userInfox, user) {
                 document.getElementById(quest + "_type").innerText = "Quest done";
                 //Add progressbars
             } else {
-                add_edit_button(quest);
+                const obj_para = {
+                    questID: quest,
+                    timespan: questTimespan,
+                    date: stateQuest
+                }
+
+                add_edit_button(obj_para);
                 const vaules = quest_log[user][questTimespan][stateQuest];
                 document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
             }
@@ -269,6 +345,7 @@ function display_quest(quest, userInfox, user) {
 //TODO: Progress bar
 //TODO: Prettiere buttons
 //TODO: Comments
+//TODO: Add new user to quest_log
 
 
 display_quest("quest1", "Add User Json Here", "assholeblaster69");
