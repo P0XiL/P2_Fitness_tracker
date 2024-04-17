@@ -341,7 +341,7 @@ function display_quest(quest, userInfox, user) {
 }
 
 
-//TODO: Input data to quest
+
 //TODO: Progress bar
 //TODO: Prettiere buttons
 //TODO: Comments

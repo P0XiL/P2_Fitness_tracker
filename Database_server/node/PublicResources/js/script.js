@@ -207,7 +207,7 @@ function clearLoginErrorMessage() {
 
 function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
+    fetch('http://127.0.0.3360/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -329,7 +329,7 @@ function updatePreset(username, preset) {
 
 
 function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

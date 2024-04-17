@@ -158,6 +158,7 @@ function createUser(req, res) {
                     res.end('User data appended to file');
                 }
             });
+            
         });
     });
 }
