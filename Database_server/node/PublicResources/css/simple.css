@@ -149,6 +149,15 @@ a   {
   width: 80%;
 }
 
+
+meter {
+  display: none;
+  width: 300px; /* Set desired width */
+  height: 30px; /* Set desired height */
+  font-size: 18px; /* Set desired font size */
+  /* Add any other styling properties as needed */
+}
+
 /* Style for the buttons */
 .difficulty-button {
   margin: 5%;

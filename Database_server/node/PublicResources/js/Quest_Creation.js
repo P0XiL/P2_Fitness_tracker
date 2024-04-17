@@ -289,6 +289,14 @@ function add_edit_button(obj_para) {
 }
 
 
+function update_meter(ID, obj_quest){
+    const meter = document.getElementById("meter" + ID);
+    meter.max = obj_quest.target;
+    meter.value = obj_quest.amount;
+    
+}
+
+
 function display_quest(quest, userInfox, user) {
     const timespans = ["daily", "weekly", "monthly"];
     const questTimespan = timespans[quest[5] - 1];
@@ -332,9 +340,13 @@ function display_quest(quest, userInfox, user) {
                 add_edit_button(obj_para);
                 const vaules = quest_log[user][questTimespan][stateQuest];
                 document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
+                
+                document.getElementById("meter" + quest[5]).style.display = "block"
+                update_meter(quest[5], quest_log[user][questTimespan][stateQuest]);
+
             }
 
-            //Add progressbar
+            
 
         })
 
@@ -343,7 +355,7 @@ function display_quest(quest, userInfox, user) {
 
 
 //TODO: Progress bar
-//TODO: Prettiere buttons
+//TODO: Prettiere popus
 //TODO: Comments
 //TODO: Add new user to quest_log
 
