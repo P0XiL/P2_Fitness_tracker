@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const targetId = this.getAttribute('href').substring(1);
 
             // Add 'active' class to tab which has been clicked
-            console.log((targetId))
             document.getElementById(targetId).classList.add('active');
 
             // Fetch and display user information on the profile page
