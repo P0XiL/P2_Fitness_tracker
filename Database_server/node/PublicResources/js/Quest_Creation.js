@@ -334,9 +334,9 @@ function display_quest(quest, userInfox, user) {
 
 
             } else if (obj_stateQuest["state"] == "Done") {
-                
+
                 document.getElementById(quest + "_type").innerText = "Quest done";
-                //Add progressbars
+
             } else {
                 const obj_para = {
                     questID: quest,
@@ -361,7 +361,7 @@ function display_quest(quest, userInfox, user) {
 
 
 
-//TODO: Progress bar
+
 //TODO: Prettiere popus
 //TODO: Comments
 //TODO: Add new user to quest_log
