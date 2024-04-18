@@ -185,7 +185,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Redirect to home page
                     document.getElementById('main').classList.add('active');
-                    document.getElementById('loginpage').classList.remove('active');
+                    highlightNavLink('main');
+                    document.getElementById('loginPage').classList.remove('active');
                 } else {
                     response.text().then(errorMessage => {
                         displayCreateErrorMessage(errorMessage);
@@ -212,13 +213,15 @@ document.addEventListener('DOMContentLoaded', function () {
     //Function which highlights the link of the currently selected tab
     function highlightNavLink(pageId) {
         // Remove 'active' class from all navigation links
-        var navLinks = document.querySelectorAll('#side-nav a');
+        const navLinks = document.querySelectorAll('#side-nav a');
         navLinks.forEach(function(link) {
             link.classList.remove('active');
         });
-        
+        if (pageId == "loginPage"){
+            return;
+        }
         // Add 'active' class to the corresponding navigation link
-        var activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
         activeLink.classList.add('active');
         }
 });
@@ -238,7 +241,7 @@ function clearLoginErrorMessage() {
 
 function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('http://127.0.0.3360/users_info.json')
+    fetch('http://127.0.0.1:3360/json/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -265,10 +268,6 @@ function processData(data, username) {
             // Display the user information
             displayUserInfo(userInfo);
             displayUserPreferences(username, userInfo); // Pass username to displayUserPreferences
-                    
-            // Update the dropdown menu with the current preset
-            const presetDropdown = document.getElementById('presetDropdown');
-            presetDropdown.value = userInfo.preset.name; // Assuming preset.name holds the current preset value
         } else {
             console.error(`${username} not found in JSON data`);
         }
@@ -276,7 +275,6 @@ function processData(data, username) {
         console.error('users_info not found in JSON data');
     }
 }
-
 
 // Function to display user information
 function displayUserInfo(userInfo) {
@@ -290,6 +288,7 @@ function displayUserInfo(userInfo) {
 }
 
 function displayUserPreferences(username, userInfo) {
+    const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
     
@@ -307,21 +306,74 @@ function displayUserPreferences(username, userInfo) {
 
     // Generate sliders for exercise preferences
     const userInfoDiv = document.getElementById('userPreferences');
-    const slidersHTML = generateSliders(countMap);
+    let slidersHTML = '';
+
+    slidersHTML = `
+        <div>
+            <label for="pushups">Pushups</label>
+            <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
+            <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
+        </div>
+        <div>
+            <label for="run">Run</label>
+            <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
+            <span id="runCounter">${countMap.run || 1}</span>
+        </div>
+        <div>
+            <label for="walk">Walk</label>
+            <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
+            <span id="walkCounter">${countMap.walk || 1}</span>
+        </div>
+    `;
     
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
         <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
-            <option value="run">Run</option>
-            <option value="walk">Walk</option>
-            <option value="crunches">Crunches</option>
+            <option value="run" ${preset === 'run' ? 'selected' : ''}>Run</option>
+            <option value="walk" ${preset === 'walk' ? 'selected' : ''}>Walk</option>
+            <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
+            <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
         </select>
-        <button id="customPresetBtn">Custom Preset</button>
         <p>Exercise preferences:</p>
         ${slidersHTML}
+        ${preset === 'custom' ? '<button onclick="postCustomData(\'' + username + '\')">Save Preset</button>' : ''}
     `;
     userInfoDiv.innerHTML = userInfoHTML;
+
+    // Update counter values for custom preset
+    if (preset === 'custom') {
+        updateCounter('pushups', countMap['push-ups'] || 1);
+        updateCounter('run', countMap.run || 1);
+        updateCounter('walk', countMap.walk || 1);
+    }
+}
+
+
+
+function updateCounter(exercise, value) {
+    document.getElementById(`${exercise}Counter`).textContent = value;
+}
+
+
+function postCustomData(username) {
+    const pushupsValue = document.getElementById('pushups').value;
+    const runValue = document.getElementById('run').value;
+    const walkValue = document.getElementById('walk').value;
+
+    const newUserInfo = {
+        username: username,
+        preset: {
+            name: 'custom',
+            conf: [
+                ...Array(Number(pushupsValue)).fill('push-ups'),
+                ...Array(Number(runValue)).fill('run'),
+                ...Array(Number(walkValue)).fill('walk')
+            ]
+        }
+    };
+
+    update_users_info(newUserInfo);
 }
 
 
@@ -339,9 +391,29 @@ function generateSliders(countMap) {
 function updatePreset(username, preset) {
     let conf = [];
     if (preset === 'run') {
-        conf = ['run','run','run','run','run','run','run','run','run','run','walk','walk','walk','walk','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','crunches','crunches','crunches'];
-    } else if (preset === 'walk') {
-        conf = ['run','run','run','run','walk','walk','walk','walk','walk','walk','walk','walk','walk','walk','crunches','crunches','crunches','crunches','crunches','crunches'];
+        conf = ['run','run','run','run','run','run','run','run','run','run',
+        'walk','walk','walk','walk',
+        'crunches','crunches','crunches'];
+    } 
+    else if (preset === 'walk') {
+        conf = ['run','run','run','run',
+        'walk','walk','walk','walk','walk','walk','walk','walk','walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches'];
+    }
+
+    else if (preset === 'strength') {
+        conf = ['run','run',
+        'walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches',
+        'push-ups','push-ups','push-ups','push-ups',];
+    }
+
+    else if (preset === 'custom') {
+        conf = ['run','run',
+        'walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches',
+        'push-ups','push-ups','push-ups','push-ups',
+        ];
     }
 
     // Define the new user info object
