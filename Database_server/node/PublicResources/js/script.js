@@ -58,6 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('input[name="login_password"]').value = '';
     });
 
+    
+
 
     // Add event listener to the submit button
     document.getElementById('submitBtn').addEventListener('click', function (e) {
@@ -102,9 +104,38 @@ document.addEventListener('DOMContentLoaded', function () {
         loginUser(loginData);
     });
     
+    document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userstats');
+        const loginPage = document.getElementById('stats');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPlotPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('FriendsPlot');
+        const loginPage = document.getElementById('userfriend');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userfriend');
+        const loginPage = document.getElementById('friends');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
     
     function loginUser(loginData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/login', {
+        fetch('http://127.0.0.1:3360/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -135,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to send data to server-side script
     function createUser(userData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -154,7 +185,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Redirect to home page
                     document.getElementById('main').classList.add('active');
-                    document.getElementById('loginpage').classList.remove('active');
+                    highlightNavLink('main');
+                    document.getElementById('loginPage').classList.remove('active');
                 } else {
                     response.text().then(errorMessage => {
                         displayCreateErrorMessage(errorMessage);
@@ -181,13 +213,15 @@ document.addEventListener('DOMContentLoaded', function () {
     //Function which highlights the link of the currently selected tab
     function highlightNavLink(pageId) {
         // Remove 'active' class from all navigation links
-        var navLinks = document.querySelectorAll('#side-nav a');
+        const navLinks = document.querySelectorAll('#side-nav a');
         navLinks.forEach(function(link) {
             link.classList.remove('active');
         });
-        
+        if (pageId == "loginPage"){
+            return;
+        }
         // Add 'active' class to the corresponding navigation link
-        var activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
         activeLink.classList.add('active');
         }
 });
@@ -207,7 +241,7 @@ function clearLoginErrorMessage() {
 
 function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json')
+    fetch('http://127.0.0.1:3360/json/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -453,7 +487,7 @@ function updatePreset(username, preset) {
 
 
 function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/write_user_info_json', {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
