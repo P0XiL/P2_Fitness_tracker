@@ -234,10 +234,6 @@ function processData(data, username) {
             // Display the user information
             displayUserInfo(userInfo);
             displayUserPreferences(username, userInfo); // Pass username to displayUserPreferences
-                    
-            // Update the dropdown menu with the current preset
-            const presetDropdown = document.getElementById('presetDropdown');
-            presetDropdown.value = userInfo.preset.name; // Assuming preset.name holds the current preset value
         } else {
             console.error(`${username} not found in JSON data`);
         }
@@ -245,7 +241,6 @@ function processData(data, username) {
         console.error('users_info not found in JSON data');
     }
 }
-
 
 // Function to display user information
 function displayUserInfo(userInfo) {
@@ -301,10 +296,10 @@ function displayUserPreferences(username, userInfo) {
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
         <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
-            <option value="run">Run</option>
-            <option value="walk">Walk</option>
-            <option value="strength">Strength</option>
-            <option value="custom">Custom</option>
+            <option value="run" ${preset === 'run' ? 'selected' : ''}>Run</option>
+            <option value="walk" ${preset === 'walk' ? 'selected' : ''}>Walk</option>
+            <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
+            <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
         </select>
         <p>Exercise preferences:</p>
         ${slidersHTML}
@@ -364,7 +359,6 @@ function updatePreset(username, preset) {
     if (preset === 'run') {
         conf = ['run','run','run','run','run','run','run','run','run','run',
         'walk','walk','walk','walk',
-        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob',
         'crunches','crunches','crunches'];
     } 
     else if (preset === 'walk') {
@@ -385,7 +379,7 @@ function updatePreset(username, preset) {
         'walk','walk',
         'crunches','crunches','crunches','crunches','crunches','crunches',
         'push-ups','push-ups','push-ups','push-ups',
-        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob'];
+        ];
     }
 
     // Define the new user info object
