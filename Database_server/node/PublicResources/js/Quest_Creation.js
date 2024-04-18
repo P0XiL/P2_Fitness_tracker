@@ -59,27 +59,34 @@ async function fetchJSON(url) {
 function check_current(timespan, quest_log, userID) {
     const obj_currentDate = new Date();
     let lastestDate;
+    let obj_state = {}
     switch (timespan) {
         case 'daily': {
             const obj_dailies = quest_log[userID][timespan];
             if (is_empty_object(obj_dailies)) {
-                return "None"
+                obj_state.state = "None";
+                return obj_state;
             }
             lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
             const questDate = lastestDate.split("/");
             if (questDate[0] == obj_currentDate.getDate() && questDate[1] == (obj_currentDate.getMonth() + 1) && questDate[2] == obj_currentDate.getFullYear()) {
                 if (obj_dailies[lastestDate]["target"] <= obj_dailies[lastestDate]["amount"]) {
-                    return "Done";
+                    obj_state.state = "Done";
+                    obj_state.date = lastestDate;
+                    return obj_state;
                 }
-                return lastestDate;
+                obj_state.date = lastestDate;
+                return obj_state;
             }
         }
-            return "None";
+            obj_state.state = "None";
+            return obj_state;
 
         case 'weekly':
             const obj_weeklies = quest_log[userID][timespan];
             if (is_empty_object(obj_weeklies)) {
-                return "None"
+                obj_state.state = "None";
+                return obj_state;
             }
             lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
             const questDateStr = lastestDate.split("/");
@@ -93,25 +100,35 @@ function check_current(timespan, quest_log, userID) {
 
             if (Math.abs(diffInDays) <= 7) {
                 if (obj_weeklies[lastestDate]["target"] <= obj_weeklies[lastestDate]["amount"]) {
-                    return "Done";
+                    obj_state.state = "Done";
+                    obj_state.date = lastestDate;
+                    return obj_state;
                 }
-                return lastestDate;
+                obj_state.date = lastestDate;
+                return obj_state;
             }
-            return "None"
+            obj_state.state = "None";
+            return obj_state;
+
         case 'monthly':
             const obj_monthlies = quest_log[userID][timespan];
             if (is_empty_object(obj_monthlies)) {
-                return "None"
+                obj_state.state = "None";
+                return obj_state;
             }
             lastestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
             const questDate = lastestDate.split("/");
             if ((obj_currentDate.getMonth() + 1) == questDate[1] && obj_currentDate.getFullYear() == questDate[2]) {
                 if (obj_monthlies[lastestDate]["target"] <= obj_monthlies[lastestDate]["amount"]) {
-                    return "Done";
+                    obj_state.state = "Done";
+                    obj_state.date = lastestDate;
+                    return obj_state;
                 }
-                return lastestDate;
+                obj_state.date = lastestDate;
+                return obj_state;
             }
-            return "None";
+            obj_state.state = "None";
+            return obj_state;
         default:
             return "Fail"
 
@@ -178,7 +195,7 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
 }
 
 
-function change_amount(obj_para){
+function change_amount(obj_para) {
     fetch('http://127.0.0.1:3360/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
@@ -225,33 +242,33 @@ function input_data(obj_para) {
     document.getElementById("add").addEventListener("click", () => {
         if (validate_input(inputField.value)) {
             obj_para.amount = parseInt(inputField.value);
-            obj_para.mode = "add";            
+            obj_para.mode = "add";
             change_amount(obj_para);
 
-            inputField.value =""
+            inputField.value = ""
             document.getElementById("inputModal").style.display = "none";
             location.reload();
         }
-        inputField.value =""
+        inputField.value = ""
     });
 
     //Functions for subtract button
     document.getElementById("subtract").addEventListener("click", () => {
         if (validate_input(inputField.value)) {
             obj_para.amount = parseInt(inputField.value);
-            obj_para.mode = "sub";            
+            obj_para.mode = "sub";
             change_amount(obj_para);
 
-            inputField.value =""
+            inputField.value = ""
             document.getElementById("inputModal").style.display = "none";
             location.reload();
         }
-        inputField.value =""
+        inputField.value = ""
     });
 
     //Functions for close button
     document.getElementById("close_input").addEventListener("click", () => {
-        inputField.value =""
+        inputField.value = ""
         document.getElementById("inputModal").style.display = "none";
     });
 
@@ -278,11 +295,11 @@ function add_edit_button(obj_para) {
 }
 
 
-function update_meter(ID, obj_quest){
+function update_meter(ID, obj_quest) {
     const meter = document.getElementById("meter" + ID);
     meter.max = obj_quest.target;
     meter.value = obj_quest.amount;
-    
+
 }
 
 
@@ -291,8 +308,8 @@ function display_quest(quest, userInfox, user) {
     const questTimespan = timespans[quest[5] - 1];
     fetchJSON('json/quest_log.json')
         .then(quest_log => {
-            const stateQuest = check_current(questTimespan, quest_log, user);
-            if (stateQuest == "None") {
+            const obj_stateQuest = check_current(questTimespan, quest_log, user);
+            if (obj_stateQuest["state"] == "None") {
                 const type = choose_quest_type(userInfo["preset"]);
                 document.getElementById(quest + "_type").innerText = "Type: " + type;
                 //TODO: Should save this somewhere such the user can't just reload the site for new type :hmm:
@@ -316,26 +333,27 @@ function display_quest(quest, userInfox, user) {
                 });
 
 
-            } else if (stateQuest == "Done") {
+            } else if (obj_stateQuest["state"] == "Done") {
+
                 document.getElementById(quest + "_type").innerText = "Quest done";
                 //Add progressbars
             } else {
                 const obj_para = {
                     questID: quest,
                     timespan: questTimespan,
-                    date: stateQuest
+                    date: obj_stateQuest["date"]
                 }
 
                 add_edit_button(obj_para);
-                const vaules = quest_log[user][questTimespan][stateQuest];
+                const vaules = quest_log[user][questTimespan][obj_stateQuest["date"]];
                 document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
-                
+
                 document.getElementById("meter" + quest[5]).style.display = "block"
-                update_meter(quest[5], quest_log[user][questTimespan][stateQuest]);
+                update_meter(quest[5], quest_log[user][questTimespan][obj_stateQuest["date"]]);
 
             }
 
-            
+
 
         })
 

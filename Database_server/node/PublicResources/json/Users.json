@@ -3,14 +3,8 @@
     "123": {
       "password": "123"
     },
-    "321": {
-      "password": "321"
-    },
-    "4141": {
-      "password": "4141"
-    },
-    "321321": {
-      "password": "321321"
+    "1234": {
+      "password": "1"
     },
     "Username1": {
       "password": "123"
@@ -30,14 +24,8 @@
     "Kage": {
       "password": "123"
     },
-    "maggi": {
+    "mik": {
       "password": "123"
-    },
-    "Magtest": {
-      "password": "321"
-    },
-    "dada": {
-      "password": "dadad"
     }
   }
 }

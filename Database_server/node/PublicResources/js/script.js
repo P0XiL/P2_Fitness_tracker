@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const targetId = this.getAttribute('href').substring(1);
 
             // Add 'active' class to tab which has been clicked
-            console.log((targetId))
             document.getElementById(targetId).classList.add('active');
 
             // Fetch and display user information on the profile page
@@ -58,6 +57,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('input[name="login_username"]').value = '';
         document.querySelector('input[name="login_password"]').value = '';
     });
+
+    
 
 
     // Add event listener to the submit button
@@ -103,6 +104,35 @@ document.addEventListener('DOMContentLoaded', function () {
         loginUser(loginData);
     });
     
+    document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userstats');
+        const loginPage = document.getElementById('stats');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPlotPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('FriendsPlot');
+        const loginPage = document.getElementById('userfriend');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userfriend');
+        const loginPage = document.getElementById('friends');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
     
     function loginUser(loginData) {
         fetch('http://127.0.0.1:3360/login', {
@@ -237,10 +267,6 @@ function processData(data, username) {
             // Display the user information
             displayUserInfo(userInfo);
             displayUserPreferences(username, userInfo); // Pass username to displayUserPreferences
-                    
-            // Update the dropdown menu with the current preset
-            const presetDropdown = document.getElementById('presetDropdown');
-            presetDropdown.value = userInfo.preset.name; // Assuming preset.name holds the current preset value
         } else {
             console.error(`${username} not found in JSON data`);
         }
@@ -248,7 +274,6 @@ function processData(data, username) {
         console.error('users_info not found in JSON data');
     }
 }
-
 
 // Function to display user information
 function displayUserInfo(userInfo) {
@@ -282,32 +307,52 @@ function displayUserPreferences(username, userInfo) {
     const userInfoDiv = document.getElementById('userPreferences');
     let slidersHTML = '';
 
-    slidersHTML = `
-        <div>
-            <label for="pushups">Pushups</label>
-            <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
-            <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
-        </div>
-        <div>
-            <label for="run">Run</label>
-            <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
-            <span id="runCounter">${countMap.run || 1}</span>
-        </div>
-        <div>
-            <label for="walk">Walk</label>
-            <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
-            <span id="walkCounter">${countMap.walk || 1}</span>
-        </div>
-    `;
+    // Check if countMap for each exercise is greater than 0, then include the slider
+    if (countMap['push-ups'] > 0 || preset=='custom') {
+        slidersHTML += `
+            <div>
+                <label for="pushups">Pushups</label>
+                <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
+                <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
+            </div>
+        `;
+    }
+    if (countMap.run > 0 || preset=='custom') {
+        slidersHTML += `
+            <div>
+                <label for="run">Run</label>
+                <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
+                <span id="runCounter">${countMap.run || 1}</span>
+            </div>
+        `;
+    }
+    if (countMap.walk > 0 || preset=='custom') {
+        slidersHTML += `
+            <div>
+                <label for="walk">Walk</label>
+                <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
+                <span id="walkCounter">${countMap.walk || 1}</span>
+            </div>
+        `;
+    }
+    if (countMap.crunches >= 0 || preset=='custom') { // Updated condition for crunches
+        slidersHTML += `
+            <div>
+                <label for="crunches">Crunches</label>
+                <input type="range" id="crunches" name="crunches" min="1" max="10" value="${countMap.crunches || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('crunches', this.value)">
+                <span id="crunchesCounter">${countMap.crunches || 1}</span>
+            </div>
+        `;
+    }
     
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
         <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
-            <option value="run">Run</option>
-            <option value="walk">Walk</option>
-            <option value="strength">Strength</option>
-            <option value="custom">Custom</option>
+            <option value="run" ${preset === 'run' ? 'selected' : ''}>Run</option>
+            <option value="walk" ${preset === 'walk' ? 'selected' : ''}>Walk</option>
+            <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
+            <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
         </select>
         <p>Exercise preferences:</p>
         ${slidersHTML}
@@ -320,8 +365,12 @@ function displayUserPreferences(username, userInfo) {
         updateCounter('pushups', countMap['push-ups'] || 1);
         updateCounter('run', countMap.run || 1);
         updateCounter('walk', countMap.walk || 1);
+        updateCounter('crunches', countMap.crunches || 0); // Set crunches count to 0 if not found
     }
 }
+
+
+
 
 
 
@@ -334,6 +383,7 @@ function postCustomData(username) {
     const pushupsValue = document.getElementById('pushups').value;
     const runValue = document.getElementById('run').value;
     const walkValue = document.getElementById('walk').value;
+    const crunchesValue = document.getElementById('crunches').value; // Define crunchesValue here
 
     const newUserInfo = {
         username: username,
@@ -342,7 +392,8 @@ function postCustomData(username) {
             conf: [
                 ...Array(Number(pushupsValue)).fill('push-ups'),
                 ...Array(Number(runValue)).fill('run'),
-                ...Array(Number(walkValue)).fill('walk')
+                ...Array(Number(walkValue)).fill('walk'),
+                ...Array(Number(crunchesValue)).fill('crunches')
             ]
         }
     };
@@ -351,12 +402,13 @@ function postCustomData(username) {
 }
 
 
+
 // Function to generate sliders for exercise preferences
 function generateSliders(countMap) {
     return Object.entries(countMap).map(([exercise, count]) => `
         <div>
             <label for="${exercise}">${exercise}</label>
-            <input type="range" id="${exercise}" name="${exercise}" min="1" max="10" value="${count}" disabled>
+            <input type="range" id="${exercise}" name="${exercise}" min="0" max="10" value="${count}" disabled>
             <span>${count}</span>
         </div>
     `).join('');
@@ -364,32 +416,59 @@ function generateSliders(countMap) {
 
 function updatePreset(username, preset) {
     let conf = [];
-    if (preset === 'run') {
-        conf = ['run','run','run','run','run','run','run','run','run','run',
-        'walk','walk','walk','walk',
-        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob',
-        'crunches','crunches','crunches'];
-    } 
-    else if (preset === 'walk') {
-        conf = ['run','run','run','run',
-        'walk','walk','walk','walk','walk','walk','walk','walk','walk','walk',
-        'crunches','crunches','crunches','crunches','crunches','crunches'];
-    }
+    let run = 10;
+    let walk = 4;
+    let crunches = 3;
 
-    else if (preset === 'strength') {
-        conf = ['run','run',
-        'walk','walk',
-        'crunches','crunches','crunches','crunches','crunches','crunches',
-        'push-ups','push-ups','push-ups','push-ups',];
+    switch (preset) {
+        case 'run':
+            conf = [
+                ...Array(Number(run)).fill('run'),
+                ...Array(Number(walk)).fill('walk'),
+                ...Array(Number(crunches)).fill('crunches')
+            ];
+            break;
+        case 'walk':
+            run = 4;
+            walk = 10;
+            crunches = 3;
+    
+            conf = [
+                ...Array(Number(run)).fill('run'),
+                ...Array(Number(walk)).fill('walk'),
+                ...Array(Number(crunches)).fill('crunches')
+            ];
+            break;
+        case 'strength':
+            run = 2;
+            walk = 2;
+            crunches = 6;
+            pushUps = 4;
+    
+            conf = [
+                ...Array(Number(run)).fill('run'),
+                ...Array(Number(walk)).fill('walk'),
+                ...Array(Number(crunches)).fill('crunches'),
+                ...Array(Number(pushUps)).fill('push-ups')
+            ];
+            break;
+        case 'custom':
+            run = 1;
+            walk = 1;
+            crunches = 1;
+            pushUps = 1;
+    
+            conf = [
+                ...Array(Number(run)).fill('run'),
+                ...Array(Number(walk)).fill('walk'),
+                ...Array(Number(crunches)).fill('crunches'),
+                ...Array(Number(pushUps)).fill('push-ups')
+            ];
+            break;
+        default:
+            console.error(`Invalid preset: ${preset}`);
     }
-
-    else if (preset === 'custom') {
-        conf = ['run','run',
-        'walk','walk',
-        'crunches','crunches','crunches','crunches','crunches','crunches',
-        'push-ups','push-ups','push-ups','push-ups',
-        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob'];
-    }
+    
 
     // Define the new user info object
     const newUserInfo = {
