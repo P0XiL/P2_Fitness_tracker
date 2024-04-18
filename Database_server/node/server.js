@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3369; // Changed port to 3369
+const port = 3360; // Changed port to 3369
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -22,15 +22,15 @@ function startServer() {
 }
 
 function processReq(req, res) {
-    const baseURL = 'http://' + req.headers.host + '/';    
+    const baseURL = 'http://' + req.headers.host + '/';
     const url = new URL(req.url, baseURL);
     const searchParams = new URLSearchParams(url.search);
     const queryPath = decodeURIComponent(url.pathname);
 
-    switch(req.method) {
+    switch (req.method) {
         case "GET":
             // Handle GET requests
-            switch(queryPath) {
+            switch (queryPath) {
                 case "/":
                     fileResponse(res, "html/Letsgo.html");
                     break;
@@ -43,10 +43,21 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
-            if (queryPath === "/write_quest_json") {
+            if (queryPath === "/createUser") {
+                // Handle the POST request to write user data to a file
+                createUser(req, res);
+            } else if (queryPath === "/login") {
+                loginUser(req, res);
+            }
+            else if (queryPath === "/write_quest_json") {
                 write_quest_json(req, res);
+
+            } else if (queryPath === "/change_amount") { // Add new route for writing user info
+                change_amount(req, res);
+
             } else if (queryPath === "/write_user_info_json") { // Add new route for writing user info
                 write_user_info_json(req, res);
+
             } else {
                 errorResponse(res, 404, "not found")
             }
@@ -56,6 +67,104 @@ function processReq(req, res) {
             break;
     }
 }
+
+
+// Function to handle user login
+function loginUser(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const loginData = JSON.parse(body);
+
+        // Read existing user data from the file
+        fs.readFile('PublicResources/json/Users.json', (err, data) => {
+            if (err) {
+                console.error("Error reading user data:", err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            try {
+                const users = JSON.parse(data);
+
+                // Check if the username exists and password matches
+                if (users['obj_users'][loginData.username] && users['obj_users'][loginData.username].password === loginData.password) {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ success: true, username: loginData.username }));
+                } else {
+                    errorResponse(res, 401, "Invalid username or password");
+                }
+            } catch (parseError) {
+                console.error("Error parsing user data:", parseError);
+                errorResponse(res, 500, String(parseError));
+            }
+        });
+    });
+}
+
+
+// Function to handle writing user data to a JSON file
+function createUser(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const userData = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/Users.json', (err, data) => {
+            let users = {}; // Initialize users object
+
+            if (!err) {
+                try {
+                    users = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing user data:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing user data:", err);
+            }
+
+            // Create obj_users object if not exists
+            if (!users.hasOwnProperty('obj_users')) {
+                users['obj_users'] = {};
+            }
+
+            // Check if the username already exists
+            if (users['obj_users'].hasOwnProperty(userData.username)) {
+                errorResponse(res, 400, "Username already exists");
+                return;
+            }
+
+            // Append new user data
+            users['obj_users'][userData.username] = {
+                password: userData.password
+            };
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/Users.json', JSON.stringify(users, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User data appended to file');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
+            
+        });
+    });
+}
+
+
+
 
 function errorResponse(res, code, reason) {
     res.statusCode = code;
@@ -110,6 +219,7 @@ function guessMimeType(fileName) {
     return ext2Mime[fileExtension] || undefined;
 }
 
+//Function for adding a quest to the quest_log json file
 function write_quest_json(req, res) {
     let body = '';
     req.on('data', (chunk) => {
@@ -153,6 +263,62 @@ function write_quest_json(req, res) {
         });
     });
 }
+
+//Function that changes amount of completion
+function change_amount(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_amountInfo = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+            let obj_questLog = {}; // Initialize quest_log object
+
+            if (!err) {
+                try {
+                    obj_questLog = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing quest_log:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing quest_log:", err);
+            }
+
+            const quest = obj_questLog["assholeblaster69"][obj_amountInfo.timespan][obj_amountInfo.date];
+            if (obj_amountInfo["mode"] === "add") {
+                quest.amount += obj_amountInfo.amount;
+            } else {
+                quest.amount -= obj_amountInfo.amount;
+                if (quest.amount < 0) {
+                    quest.amount = 0;
+                }
+            }
+
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User data appended to file');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
+        });
+    });
+}
+
+
+
+
+
 
 function write_user_info_json(req, res) {
     let body = '';

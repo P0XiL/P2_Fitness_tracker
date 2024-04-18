@@ -34,13 +34,23 @@
     <div id="myModal" class="modal">
         <div class="modal-content">
             <p id="popupText"></p>
-            <button class="difficulty-button" data-difficulty=-3>Easy</button>
-            <button class="difficulty-button" data-difficulty=0>Medium</button>
-            <button class="difficulty-button" data-difficulty=3>Hard</button>
+            <button class="difficulty-button" data-difficulty="-3">Easy</button>
+            <button class="difficulty-button" data-difficulty="0">Medium</button>
+            <button class="difficulty-button" data-difficulty="3">Hard</button>
             <button id="close">Close</button>
         </div>
       </div>
 
+    <div id="inputModal" class="modal">
+        <div class="modal-content">
+            <h2 id="InputHeader"></h2>
+            <p id="InputPopupText"></p>
+            <input type="text" id="InputInputfield" name="InputInputfield" placeholder="Enter amount here" value="">
+            <button id="add">add</button>
+            <button id="subtract">subtract</button>
+            <button id="close_input">Close</button>
+        </div>
+    </div>
       
     <!-- Page sections -->
     <div id="main" class="page active">
@@ -48,19 +58,19 @@
         <div class="questpage">
             <div id="quest1" class="quest">
                 <h2>Daily</h2>
-                <p>Quest 1 progress bars</p>
+                <meter id="meter1" value="0" min="0" max="1"></meter> 
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
                 <h2>Weekly</h2>
-                <p>Quest 2 progress bars</p>
+                <meter id="meter2" value="0" min="0" max="1"></meter> 
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
                 <h2>Monthly</h2>
-                <p>Quest 3 progress bars</p>
+                <meter id="meter3" value="0" min="0" max="1"></meter> 
                 <p id="quest3_type"></p>
             </div>
         </div>
@@ -70,6 +80,40 @@
     <div id="friends" class="page">
         <h2>Friends</h2>
         <p>The friends feature goes here</p>
+
+
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
+                <div id="myDropdown2" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend('run', null)">Run</a>
+                    <a href="#" onclick="update_graph_friend('cycling', null)">Cycling</a>
+                    <a href="#" onclick="update_graph_friend('pushups', null)">Pushups</a>
+                    <a href="#" onclick="update_graph_friend('walk', null)">Walk</a>
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
+                <div id="myDropdown3" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
+                    <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
+                    <a href="#" onclick="update_graph_friend(null, 'monthly')">Monthly</a>
+                </div>
+            </div>
+        </div>
+
+
+        <p id="textfriend"> </p>
+
+        <div>
+            <h1>Graph with friends</h1>
+            <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
+        </div>
     </div>
 
     <div id="stats" class="page">
@@ -110,19 +154,36 @@
             <h2>Stats Exercise</h2>
             <p id="statsText"></p>
     </div>
-    
 
+    <div id="createAccount" class="page">
+        <h2>Create account</h2>
+        <p>Username</p>
+        <input type="text" name="create_username"> <!-- Add name attribute for username field -->
+        <p>Password</p>
+        <input type="password" name="create_password"> <!-- Add name attribute for password field -->
+        <p>Confirm password</p>
+        <input type="password" name="create_confirm_password">
+        <br>
+        <span id="createErrorMessage"></span> <!-- Error message placeholder -->
+        <br>
+        <a href="#" id="toggleCreatePageLink">Already have an account? Login here</a>
+        <br><br>
+        <button id="submitBtn" type="submit">Create user</button> <!-- Add submit button -->
+    </div>
 
-    <div id="loginpage" class="page">
+    <!-- Login Form -->
+    <div id="loginPage" class="page">
         <h2>Login</h2>
-        <form id="loginForm" action="/submitForm" method="POST"> <!-- Add form element with action and method -->
-            <p>Username</p>
-            <input type="text" name="username"> <!-- Add name attribute for username field -->
-            <p>Password</p>
-            <input type="password" name="password"> <!-- Add name attribute for password field -->
-            <br>
-            <button type="submit">Submit</button> <!-- Add submit button -->
-        </form>
+        <p>Username</p>
+        <input type="text" name="login_username">
+        <p>Password</p>
+        <input type="password" name="login_password">
+        <br>
+        <span id="loginErrorMessage"></span>
+        <br>
+        <a href="#" id="toggleLoginPageLink">Don't have an account? Create one here</a>
+        <br><br>
+        <button id="loginBtn" type="submit">Login</button>
     </div>
 
     <div id="profilepage" class="page">
