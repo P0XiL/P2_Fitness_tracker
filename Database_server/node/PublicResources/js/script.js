@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const targetId = this.getAttribute('href').substring(1);
 
             // Add 'active' class to tab which has been clicked
+            console.log((targetId))
             document.getElementById(targetId).classList.add('active');
 
             // Fetch and display user information on the profile page
@@ -181,13 +182,15 @@ document.addEventListener('DOMContentLoaded', function () {
     //Function which highlights the link of the currently selected tab
     function highlightNavLink(pageId) {
         // Remove 'active' class from all navigation links
-        var navLinks = document.querySelectorAll('#side-nav a');
+        const navLinks = document.querySelectorAll('#side-nav a');
         navLinks.forEach(function(link) {
             link.classList.remove('active');
         });
-        
+        if (pageId == "loginPage"){
+            return;
+        }
         // Add 'active' class to the corresponding navigation link
-        var activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
         activeLink.classList.add('active');
         }
 });
