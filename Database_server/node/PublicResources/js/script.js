@@ -130,26 +130,23 @@ function displayUserPreferences(username, userInfo) {
     const userInfoDiv = document.getElementById('userPreferences');
     let slidersHTML = '';
 
-    if (preset === 'custom') {
-        slidersHTML = `
-            <div>
-                <label for="pushups">Pushups</label>
-                <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" oninput="updateCounter('pushups', this.value)">
-                <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
-            </div>
-            <div>
-                <label for="run">Run</label>
-                <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" oninput="updateCounter('run', this.value)">
-                <span id="runCounter">${countMap.run || 1}</span>
-            </div>
-            <div>
-                <label for="walk">Walk</label>
-                <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" oninput="updateCounter('walk', this.value)">
-                <span id="walkCounter">${countMap.walk || 1}</span>
-            </div>
-            <button onclick="postCustomData('${username}')">Save</button>
-        `;
-    }
+    slidersHTML = `
+        <div>
+            <label for="pushups">Pushups</label>
+            <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
+            <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
+        </div>
+        <div>
+            <label for="run">Run</label>
+            <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
+            <span id="runCounter">${countMap.run || 1}</span>
+        </div>
+        <div>
+            <label for="walk">Walk</label>
+            <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
+            <span id="walkCounter">${countMap.walk || 1}</span>
+        </div>
+    `;
     
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
@@ -162,9 +159,19 @@ function displayUserPreferences(username, userInfo) {
         </select>
         <p>Exercise preferences:</p>
         ${slidersHTML}
+        ${preset === 'custom' ? '<button onclick="postCustomData(\'' + username + '\')">Save Preset</button>' : ''}
     `;
     userInfoDiv.innerHTML = userInfoHTML;
+
+    // Update counter values for custom preset
+    if (preset === 'custom') {
+        updateCounter('pushups', countMap['push-ups'] || 1);
+        updateCounter('run', countMap.run || 1);
+        updateCounter('walk', countMap.walk || 1);
+    }
 }
+
+
 
 function updateCounter(exercise, value) {
     document.getElementById(`${exercise}Counter`).textContent = value;
