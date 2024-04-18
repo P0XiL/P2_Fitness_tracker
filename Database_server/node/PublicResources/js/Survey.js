@@ -14,37 +14,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 data[key] = value;
             }
         }
-        
-        const userPreferences = JSON.stringify({ survey: data });
-        localStorage.setItem("preferences", userPreferences);
-        console.log(userPreferences);
 
-        function sendPreferences(userPreferences) {
-            fetch('http://127.0.0.1:3360/userPreferences', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        function sendPreferences(data) {
+            fetch('http://127.0.0.1:3360/json/userPreferences.json', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(userPreferences)
+                body: JSON.stringify(data)
             })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Data successfully sent to server');
-
-                        // Hide the form
-                        document.getElementById("surveyContainer").style.display = "none";
-
-                        // Display the submission message
-                        document.getElementById("submissionMessage").style.display = "block";
-
-                        document.getElementById('main').classList.add('active');
-                        document.getElementById('surveyForm').classList.remove('active');
-                    }
-                });
+            .then(response => {
+                if (response.ok) {
+                    console.log('Data successfully sent to server');
+                    const userPreferences = {
+                        Name: Name,
+                        Age: age,
+                        Height: height,
+                        Weight: weight,
+                        Goals: goals,
+                        Activity: activity
+                    };
+                    sendPreferences(userPreferences);
+        
+                    // Display the submission message
+                    document.getElementById("submissionMessage").style.display = "block";
+        
+                    document.getElementById('main').classList.add('active');
+                    document.getElementById('surveyForm').classList.remove('active');
+                } else {
+                    console.error('Failed to send data to server');
+                }
+            })
+            .catch(error => {
+                console.error('Error occurred while sending data to server:', error);
+            });
         }
-
-        sendPreferences(userPreferences);
     });
 });
-
-

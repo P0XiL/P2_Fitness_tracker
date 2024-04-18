@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     function loginUser(loginData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/login', {
+        fetch('http://127.0.0.1:3360/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to send data to server-side script
     function createUser(userData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -154,8 +154,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     clearCreateErrorMessage();
 
                     // Redirect to home page
-                    document.getElementById('surveyform').classList.add('active');
-                    document.getElementById('loginpage').classList.remove('active');
+                    document.getElementById('surveyForm').classList.add('active');
+                    document.getElementById('createAccount').classList.remove('active');
                 } else {
                     response.text().then(errorMessage => {
                         displayCreateErrorMessage(errorMessage);
@@ -210,7 +210,7 @@ function clearLoginErrorMessage() {
 
 function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
+    fetch('http://127.0.0.1:3360/json/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -407,7 +407,7 @@ function updatePreset(username, preset) {
 
 
 function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -419,7 +419,7 @@ function update_users_info(newUserInfo) {
                 throw new Error('Failed to fetch POST');
             }
             return response.json(); // Read response JSON
-        })
+        })2
         .then(responseJson => {
             console.log('Response from POST:', responseJson);
             if (responseJson.success) {
