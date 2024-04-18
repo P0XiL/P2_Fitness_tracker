@@ -15,7 +15,6 @@
             <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
             <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
             <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
-            <li><a href="#page4">Exercise</a></li>
             <li><a href="#profilepage" id="profile-link">Profile</a></li>
         </ul>
     </nav>
@@ -77,11 +76,17 @@
     </div>
     
 
-    <div id="friends" class="page">
+    <div id="friends" class="page center">
         <h2>Friends</h2>
         <p>The friends feature goes here</p>
 
+        <a href="#" id="toggleFriendPageLink" class="dropbtn">Show friends</a>
 
+    </div>
+
+    <div id="FriendsPlot" class="page center">
+
+        <h2>Friends</h2>
 
         <div class="dropdown-container">
             <div class="dropdown">
@@ -111,14 +116,20 @@
         <p id="textfriend"> </p>
 
         <div>
-            <h1>Graph with friends</h1>
+            <h1>Graph with friends </h1>
             <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
         </div>
     </div>
 
-    <div id="stats" class="page">
+    <div id="stats" class="page center">
         <h2>Stats</h2>
-        <p id="text"> </p>
+        <a href="#" id="toggleStatsPageLink" class="dropbtn">User plot</a>
+        <p id="statsText"></p>
+    </div>
+
+
+    <div id="userstats" class="page center">
+        <h2>Stats Exercise</h2>
 
         <div class="dropdown-container">
             <div class="dropdown">
@@ -144,15 +155,12 @@
             </div>
         </div>
 
+        <p id="text"> </p>
+
         <div>
             <h1>Graph</h1>
             <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
         </div>
-    </div>
-
-    <div id =page4 class="page">
-            <h2>Stats Exercise</h2>
-            <p id="statsText"></p>
     </div>
 
     <div id="createAccount" class="page">
@@ -203,8 +211,15 @@
         </div>
     </div>
 
+    <div id="userfriend" class="page center">
+        <h2>User friend</h2>
+        <a href="#" id="toggleFriendPlotPageLink" class="dropbtn">Show friends plot</a>
+        <p id="statsText1"></p>
+
+    </div>
+
     <!-- JavaScript to handle navigation -->
-    <script src="js/script.js"></script>
+    <script src="js/script.js"></script>    
     <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/Graph.js"></script>
