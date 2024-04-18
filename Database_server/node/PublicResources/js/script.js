@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     function loginUser(loginData) {
-        fetch('http://127.0.0.1:3360/login', {
+        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to send data to server-side script
     function createUser(userData) {
-        fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -207,7 +207,7 @@ function clearLoginErrorMessage() {
 
 function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('http://127.0.0.3360/users_info.json')
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -259,6 +259,7 @@ function displayUserInfo(userInfo) {
 }
 
 function displayUserPreferences(username, userInfo) {
+    const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
     
@@ -276,7 +277,25 @@ function displayUserPreferences(username, userInfo) {
 
     // Generate sliders for exercise preferences
     const userInfoDiv = document.getElementById('userPreferences');
-    const slidersHTML = generateSliders(countMap);
+    let slidersHTML = '';
+
+    slidersHTML = `
+        <div>
+            <label for="pushups">Pushups</label>
+            <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
+            <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
+        </div>
+        <div>
+            <label for="run">Run</label>
+            <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
+            <span id="runCounter">${countMap.run || 1}</span>
+        </div>
+        <div>
+            <label for="walk">Walk</label>
+            <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
+            <span id="walkCounter">${countMap.walk || 1}</span>
+        </div>
+    `;
     
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
@@ -284,13 +303,48 @@ function displayUserPreferences(username, userInfo) {
         <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
             <option value="run">Run</option>
             <option value="walk">Walk</option>
-            <option value="crunches">Crunches</option>
+            <option value="strength">Strength</option>
+            <option value="custom">Custom</option>
         </select>
-        <button id="customPresetBtn">Custom Preset</button>
         <p>Exercise preferences:</p>
         ${slidersHTML}
+        ${preset === 'custom' ? '<button onclick="postCustomData(\'' + username + '\')">Save Preset</button>' : ''}
     `;
     userInfoDiv.innerHTML = userInfoHTML;
+
+    // Update counter values for custom preset
+    if (preset === 'custom') {
+        updateCounter('pushups', countMap['push-ups'] || 1);
+        updateCounter('run', countMap.run || 1);
+        updateCounter('walk', countMap.walk || 1);
+    }
+}
+
+
+
+function updateCounter(exercise, value) {
+    document.getElementById(`${exercise}Counter`).textContent = value;
+}
+
+
+function postCustomData(username) {
+    const pushupsValue = document.getElementById('pushups').value;
+    const runValue = document.getElementById('run').value;
+    const walkValue = document.getElementById('walk').value;
+
+    const newUserInfo = {
+        username: username,
+        preset: {
+            name: 'custom',
+            conf: [
+                ...Array(Number(pushupsValue)).fill('push-ups'),
+                ...Array(Number(runValue)).fill('run'),
+                ...Array(Number(walkValue)).fill('walk')
+            ]
+        }
+    };
+
+    update_users_info(newUserInfo);
 }
 
 
@@ -308,9 +362,30 @@ function generateSliders(countMap) {
 function updatePreset(username, preset) {
     let conf = [];
     if (preset === 'run') {
-        conf = ['run','run','run','run','run','run','run','run','run','run','walk','walk','walk','walk','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','crunches','crunches','crunches'];
-    } else if (preset === 'walk') {
-        conf = ['run','run','run','run','walk','walk','walk','walk','walk','walk','walk','walk','walk','walk','crunches','crunches','crunches','crunches','crunches','crunches'];
+        conf = ['run','run','run','run','run','run','run','run','run','run',
+        'walk','walk','walk','walk',
+        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob',
+        'crunches','crunches','crunches'];
+    } 
+    else if (preset === 'walk') {
+        conf = ['run','run','run','run',
+        'walk','walk','walk','walk','walk','walk','walk','walk','walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches'];
+    }
+
+    else if (preset === 'strength') {
+        conf = ['run','run',
+        'walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches',
+        'push-ups','push-ups','push-ups','push-ups',];
+    }
+
+    else if (preset === 'custom') {
+        conf = ['run','run',
+        'walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches',
+        'push-ups','push-ups','push-ups','push-ups',
+        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob'];
     }
 
     // Define the new user info object
@@ -329,7 +404,7 @@ function updatePreset(username, preset) {
 
 
 function update_users_info(newUserInfo) {
-    fetch('http://127.0.0.1:3360/write_user_info_json', {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
