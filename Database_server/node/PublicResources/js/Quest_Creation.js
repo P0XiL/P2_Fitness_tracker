@@ -334,7 +334,7 @@ function display_quest(quest, userInfox, user) {
 
 
             } else if (obj_stateQuest["state"] == "Done") {
-
+                
                 document.getElementById(quest + "_type").innerText = "Quest done";
                 //Add progressbars
             } else {
