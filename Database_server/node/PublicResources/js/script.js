@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     clearCreateErrorMessage();
 
                     // Redirect to home page
-                    document.getElementById('main').classList.add('active');
+                    document.getElementById('surveyform').classList.add('active');
                     document.getElementById('loginpage').classList.remove('active');
                 } else {
                     response.text().then(errorMessage => {
