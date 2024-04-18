@@ -114,10 +114,20 @@ document.addEventListener('DOMContentLoaded', function () {
         createAccountPage.classList.add('active');
     });
 
-    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
+    document.getElementById('toggleFriendPlotPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
 
         const createAccountPage = document.getElementById('FriendsPlot');
+        const loginPage = document.getElementById('userfriend');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userfriend');
         const loginPage = document.getElementById('friends');
 
         loginPage.classList.remove('active');

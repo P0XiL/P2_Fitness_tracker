@@ -80,9 +80,7 @@
         <h2>Friends</h2>
         <p>The friends feature goes here</p>
 
-        <a href="#" id="toggleFriendPageLink" class="dropbtn">Show friends plot</a>
-
-
+        <a href="#" id="toggleFriendPageLink" class="dropbtn">Show friends</a>
 
     </div>
 
@@ -125,10 +123,13 @@
 
     <div id="stats" class="page center">
         <h2>Stats</h2>
+        <a href="#" id="toggleStatsPageLink" class="dropbtn">User plot</a>
+        <p id="statsText"></p>
+    </div>
 
 
-
-
+    <div id="userstats" class="page center">
+        <h2>Stats Exercise</h2>
 
         <div class="dropdown-container">
             <div class="dropdown">
@@ -154,20 +155,12 @@
             </div>
         </div>
 
-        <a href="#" id="toggleStatsPageLink" class="dropbtn">All user stats</a>
-
         <p id="text"> </p>
 
         <div>
             <h1>Graph</h1>
             <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
         </div>
-    </div>
-
-
-    <div id="userstats" class="page center">
-        <h2>Stats Exercise</h2>
-        <p id="statsText"></p>
     </div>
 
     <div id="createAccount" class="page">
@@ -218,8 +211,15 @@
         </div>
     </div>
 
+    <div id="userfriend" class="page center">
+        <h2>User friend</h2>
+        <a href="#" id="toggleFriendPlotPageLink" class="dropbtn">Show friends plot</a>
+        <p id="statsText1"></p>
+
+    </div>
+
     <!-- JavaScript to handle navigation -->
-    <script src="js/script.js"></script>
+    <script src="js/script.js"></script>    
     <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/Graph.js"></script>

@@ -235,6 +235,6 @@ meter {
 }
 
 .center {
-  width: 1200px;
+  width: auto;
   margin: 15px 15px; 
 }

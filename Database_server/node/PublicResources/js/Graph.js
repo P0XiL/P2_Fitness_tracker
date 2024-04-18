@@ -194,7 +194,9 @@ function individual_type() {
         }
       }
       const element = document.getElementById("statsText");
+      const element1 = document.getElementById("statsText1");
       element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
+      element1.innerHTML = "<pre>" + text + "</pre>";
     })
 }
 
