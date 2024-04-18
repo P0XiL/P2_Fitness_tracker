@@ -26,6 +26,8 @@ function processReq(req, res) {
     const url = new URL(req.url, baseURL);
     const searchParams = new URLSearchParams(url.search);
     const queryPath = decodeURIComponent(url.pathname);
+    const cookies = parseCookies(req.headers.cookie || '');
+    const username = cookies.username || 'Unknown';
 
     switch (req.method) {
         case "GET":
@@ -68,6 +70,17 @@ function processReq(req, res) {
     }
 }
 
+// Function to parse cookies from the Cookie header
+function parseCookies(cookieHeader) {
+    const cookies = {};
+    if (cookieHeader) {
+        cookieHeader.split(';').forEach(cookie => {
+            const [name, value] = cookie.split('=').map(c => c.trim());
+            cookies[name] = value;
+        });
+    }
+    return cookies;
+}
 
 // Function to handle user login
 function loginUser(req, res) {
@@ -91,6 +104,7 @@ function loginUser(req, res) {
 
                 // Check if the username exists and password matches
                 if (users['obj_users'][loginData.username] && users['obj_users'][loginData.username].password === loginData.password) {
+                    setCookie(res, loginData.username);
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify({ success: true, username: loginData.username }));
@@ -164,6 +178,11 @@ function createUser(req, res) {
 }
 
 
+// Setting a cookie
+function setCookie(res, username) {
+    const cookie = `username=${username}; Expires=Sat, 18 Apr 2024 23:59:59 GMT; Path=/; Secure; HttpOnly`;
+    res.setHeader('Set-Cookie', cookie);
+}
 
 
 function errorResponse(res, code, reason) {
