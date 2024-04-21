@@ -414,12 +414,13 @@ function generateSliders(countMap) {
     `).join('');
 }
 
-function updatePreset(username, preset) {
+function updatePresetAndPreferences(username, preset, surveyData) {
     let conf = [];
     let run = 10;
     let walk = 4;
     let crunches = 3;
 
+    // Update preset based on selected option
     switch (preset) {
         case 'run':
             conf = [
@@ -432,7 +433,6 @@ function updatePreset(username, preset) {
             run = 4;
             walk = 10;
             crunches = 3;
-    
             conf = [
                 ...Array(Number(run)).fill('run'),
                 ...Array(Number(walk)).fill('walk'),
@@ -444,7 +444,6 @@ function updatePreset(username, preset) {
             walk = 2;
             crunches = 6;
             pushUps = 4;
-    
             conf = [
                 ...Array(Number(run)).fill('run'),
                 ...Array(Number(walk)).fill('walk'),
@@ -457,7 +456,6 @@ function updatePreset(username, preset) {
             walk = 1;
             crunches = 1;
             pushUps = 1;
-    
             conf = [
                 ...Array(Number(run)).fill('run'),
                 ...Array(Number(walk)).fill('walk'),
@@ -468,7 +466,6 @@ function updatePreset(username, preset) {
         default:
             console.error(`Invalid preset: ${preset}`);
     }
-    
 
     // Define the new user info object
     const newUserInfo = {
@@ -476,14 +473,13 @@ function updatePreset(username, preset) {
         preset: {
             name: preset,
             conf: conf
-        }
+        },
+        surveyData: surveyData
     };
 
-    // Update the user info on the server
+    // Update user info and preferences on the server
     update_users_info(newUserInfo);
 }
-
-
 
 function update_users_info(newUserInfo) {
     fetch('http://127.0.0.1:3360/write_user_info_json', {
@@ -493,25 +489,47 @@ function update_users_info(newUserInfo) {
         },
         body: JSON.stringify(newUserInfo)
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch POST');
-            }
-            return response.json(); // Read response JSON
-        })2
-        .then(responseJson => {
-            console.log('Response from POST:', responseJson);
-            if (responseJson.success) {
-                console.log('User info updated successfully');
-                // Fetch user data again after successful update
-                fetchUserData(newUserInfo.username);
-            } else {
-                console.error('User info update failed:', responseJson.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching POST users_info:', error);
-        });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch POST');
+        }
+        return response.json();
+    })
+    .then(responseJson => {
+        console.log('Response from POST:', responseJson);
+        if (responseJson.success) {
+            console.log('User info updated successfully');
+            // Fetch user data again after successful update
+            fetchUserData(newUserInfo.username);
+        } else {
+            console.error('User info update failed:', responseJson.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching POST users_info:', error);
+    });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('surveyForm');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const surveyData = {};
+        for (const [key, value] of formData.entries()) {
+            if (surveyData[key]) {
+                if (!Array.isArray(surveyData[key])) {
+                    surveyData[key] = [surveyData[key]];
+                }
+                surveyData[key].push(value);
+            } else {
+                surveyData[key] = value;
+            }
+        }
 
+        // Call updatePresetAndPreferences with the necessary parameters
+        const username = ''; // Provide the username
+        const preset = ''; // Provide the selected preset
+        updatePresetAndPreferences(username, preset, surveyData);
+    });
+});
