@@ -15,12 +15,15 @@
         "text": "Go for a run for 5 minutes",
         "state": "incomplete"
       },
-      "22/4/2024": {
+      "21/4/2024": {
         "type": "core",
         "target": 3,
         "amount": 1,
         "text": "Do 3 burpees",
         "state": "incomplete"
+      },
+      "22/4/2024": {
+        "type": "cardio"
       }
     },
     "weekly": {
@@ -57,6 +60,16 @@
     }
   },
   "poggo2": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "poggo3": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "sejt": {
     "daily": {},
     "weekly": {},
     "monthly": {}

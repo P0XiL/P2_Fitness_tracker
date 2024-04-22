@@ -2,6 +2,12 @@
   "obj_users": {
     "poggo2": {
       "password": "123"
+    },
+    "poggo3": {
+      "password": "poggo"
+    },
+    "sejt": {
+      "password": "2"
     }
   }
 }
