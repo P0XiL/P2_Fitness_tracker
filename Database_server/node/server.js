@@ -255,10 +255,10 @@ function write_quest_json(req, res) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
                 } else {
-                    console.log('User data appended to file');
+                    console.log('Quest added');
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
-                    res.end('User data appended to file');
+                    res.end('Quest added');
                 }
             });
         });
@@ -306,10 +306,10 @@ function change_amount(req, res) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
                 } else {
-                    console.log('User data appended to file');
+                    console.log('Amount Changed');
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
-                    res.end('User data appended to file');
+                    res.end('Amount Changed');
                 }
             });
         });
