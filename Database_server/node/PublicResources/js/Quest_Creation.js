@@ -311,6 +311,8 @@ function display_quest(quest, userInfox, user) {
                 const type = choose_quest_type(userInfo["preset"]);
                 document.getElementById(quest + "_type").innerText = "Type: " + type;
                 //TODO: Should save this somewhere such the user can't just reload the site for new type :hmm:
+                
+
 
                 //Create button
                 let button = document.createElement("button");
