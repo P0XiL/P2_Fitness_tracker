@@ -5,7 +5,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 
 const hostname = '127.0.0.1';
-const port = 3360; 
+const port = 3361; 
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -116,15 +116,14 @@ app.get('/', (req, res) => {
         console.log('Existing username cookie found:', usernameCookie);
         setCookie(res, 'username', usernameCookie, expiryDate());
     } else {
-        const username = 'JohnDoe'; // Example username
         setCookie(res, 'username', username, expiryDate());
         console.log('New username cookie set with value:', username, 'and expiry date:', expiryDate());
     }
     res.send('Cookie handling example');
 });
 
-app.listen(3360, () => {
-    console.log('Server is running on port 3360');
+app.listen(port, () => {
+    console.log('Server is running on port ' + port);
 });
 
 // Function to handle user login
