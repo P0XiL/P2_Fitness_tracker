@@ -185,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Redirect to home page
                     document.getElementById('surveyForm').classList.add('active');
+                    highlightNavLink('main');
                     document.getElementById('createAccount').classList.remove('active');
                 } else {
                     response.text().then(errorMessage => {
@@ -280,8 +281,8 @@ function displayUserInfo(userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
     const userInfoHTML = `
         <h2 style="text-align: center;">User info</h2>
-        <p>Height: ${userInfo.health.height}</p>
-        <p>Weight: ${userInfo.health.weight}</p>
+        <p>Height: ${userInfo[idkey].surveyData.height}</p>
+        <p>Weight: ${userInfo[idkey].surveyData.weight}</p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 }
@@ -414,13 +415,12 @@ function generateSliders(countMap) {
     `).join('');
 }
 
-function updatePresetAndPreferences(username, preset, surveyData) {
+function updatePreset(username, preset) {
     let conf = [];
     let run = 10;
     let walk = 4;
     let crunches = 3;
 
-    // Update preset based on selected option
     switch (preset) {
         case 'run':
             conf = [
@@ -433,6 +433,7 @@ function updatePresetAndPreferences(username, preset, surveyData) {
             run = 4;
             walk = 10;
             crunches = 3;
+    
             conf = [
                 ...Array(Number(run)).fill('run'),
                 ...Array(Number(walk)).fill('walk'),
@@ -444,6 +445,7 @@ function updatePresetAndPreferences(username, preset, surveyData) {
             walk = 2;
             crunches = 6;
             pushUps = 4;
+    
             conf = [
                 ...Array(Number(run)).fill('run'),
                 ...Array(Number(walk)).fill('walk'),
@@ -456,6 +458,7 @@ function updatePresetAndPreferences(username, preset, surveyData) {
             walk = 1;
             crunches = 1;
             pushUps = 1;
+    
             conf = [
                 ...Array(Number(run)).fill('run'),
                 ...Array(Number(walk)).fill('walk'),
@@ -466,6 +469,7 @@ function updatePresetAndPreferences(username, preset, surveyData) {
         default:
             console.error(`Invalid preset: ${preset}`);
     }
+    
 
     // Define the new user info object
     const newUserInfo = {
@@ -473,13 +477,14 @@ function updatePresetAndPreferences(username, preset, surveyData) {
         preset: {
             name: preset,
             conf: conf
-        },
-        surveyData: surveyData
+        }
     };
 
-    // Update user info and preferences on the server
+    // Update the user info on the server
     update_users_info(newUserInfo);
 }
+
+
 
 function update_users_info(newUserInfo) {
     fetch('http://127.0.0.1:3360/write_user_info_json', {
@@ -488,6 +493,66 @@ function update_users_info(newUserInfo) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(newUserInfo)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch POST');
+            }
+            return response.json(); // Read response JSON
+        })
+        .then(responseJson => {
+            console.log('Response from POST:', responseJson);
+            if (responseJson.success) {
+                console.log('User info updated successfully');
+                // Fetch user data again after successful update
+                fetchUserData(newUserInfo.username);
+            } else {
+                console.error('User info update failed:', responseJson.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching POST users_info:', error);
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    function handleSurveyFormSubmit() {
+        const form = document.getElementById('surveyForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Extracting specific parameters from form data
+            const formData = new FormData(form);
+            const surveyData = {};
+            for (const [key, value] of formData.entries()) {
+                if (surveyData[key]) {
+                    if (!Array.isArray(surveyData[key])) {
+                        surveyData[key] = [surveyData[key]];
+                    }
+                    surveyData[key].push(value);
+                } else {
+                    surveyData[key] = value;
+                }
+            }
+            console.log(surveyData);
+            sendSurveyData(surveyData);
+
+            document.getElementById('main').classList.add('active');
+            document.getElementById('surveyForm').classList.remove('active')
+        });
+    }
+
+    // Call the function to attach the event listener
+    handleSurveyFormSubmit();
+});
+
+function sendSurveyData(surveyData) {
+    fetch('http://127.0.0.1:3360/write_survey_data_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(surveyData)
     })
     .then(response => {
         if (!response.ok) {
@@ -498,38 +563,12 @@ function update_users_info(newUserInfo) {
     .then(responseJson => {
         console.log('Response from POST:', responseJson);
         if (responseJson.success) {
-            console.log('User info updated successfully');
-            // Fetch user data again after successful update
-            fetchUserData(newUserInfo.username);
+            console.log('Survey data sent successfully');
         } else {
-            console.error('User info update failed:', responseJson.message);
+            console.error('Failed to send survey data:', responseJson.message);
         }
     })
     .catch(error => {
-        console.error('Error fetching POST users_info:', error);
+        console.error('Error sending survey data:', error);
     });
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('surveyForm');
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData(form);
-        const surveyData = {};
-        for (const [key, value] of formData.entries()) {
-            if (surveyData[key]) {
-                if (!Array.isArray(surveyData[key])) {
-                    surveyData[key] = [surveyData[key]];
-                }
-                surveyData[key].push(value);
-            } else {
-                surveyData[key] = value;
-            }
-        }
-
-        // Call updatePresetAndPreferences with the necessary parameters
-        const username = ''; // Provide the username
-        const preset = ''; // Provide the selected preset
-        updatePresetAndPreferences(username, preset, surveyData);
-    });
-});
