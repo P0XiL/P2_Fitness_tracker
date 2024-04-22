@@ -255,10 +255,14 @@ function write_quest_json(req, res) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
                 } else {
-                    console.log('Quest added');
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'text/plain');
-                    res.end('Quest added');
+                    if (!res.headersSent) { // Check if headers have been sent
+                        console.log('Quest added');
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'text/plain');
+                        res.end('Quest added');
+                    } else {
+                        console.log('Headers already sent, cannot send response again.');
+                    }
                 }
             });
         });
