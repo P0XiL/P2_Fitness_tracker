@@ -159,7 +159,7 @@ function add_quest_json(quest) {
 
 
 
-function open_modal_for_quest(quest, questTimespan, type, user) {
+function open_modal_for_quest(questTimespan, type) {
     document.getElementById("myModal").style.display = "block";
     document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
 
@@ -175,7 +175,7 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
                     const date = obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
 
                     obj_newQuest[date] = {};
-                    obj_newQuest[date].type = type;
+                    //obj_newQuest[date].type = type;
                     obj_newQuest[date].target = obj_Quest["base_target"];
                     obj_newQuest[date].amount = 0;
                     obj_newQuest[date].text = obj_Quest.quest_text;
@@ -189,6 +189,9 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
 
         });
     })
+    document.getElementById("close").addEventListener("click", () => {
+        document.getElementById("myModal").style.display = "none";
+    });
 
 }
 
@@ -304,6 +307,23 @@ function update_meter(ID, obj_quest) {
 function display_quest(quest, userInfox, user) {
     const timespans = ["daily", "weekly", "monthly"];
     const questTimespan = timespans[quest[5] - 1];
+
+
+    function new_quest(type) {
+        //Create button
+        const button = document.createElement("button");
+        button.textContent = "Get new Quest!";
+        button.id = questTimespan;
+
+        //Append button
+        document.getElementById(quest + "_type").appendChild(button)
+
+        //Add event listner to button
+        button.addEventListener("click", () => {
+            open_modal_for_quest(questTimespan, type);
+        });
+    }
+
     fetchJSON('json/quest_log.json')
         .then(quest_log => {
             const obj_stateQuest = check_current(questTimespan, quest_log, user);
@@ -311,51 +331,53 @@ function display_quest(quest, userInfox, user) {
                 const type = choose_quest_type(userInfo["preset"]);
                 document.getElementById(quest + "_type").innerText = "Type: " + type;
                 //TODO: Should save this somewhere such the user can't just reload the site for new type :hmm:
-                
+                const obj_type = {
+                    date: obj_stateQuest["date"],
+                    type: type
+                };
+                fetch('http://127.0.0.1:3360/add_type', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(obj_type)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('No response fetch POST add type');
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.error('Error fetch Post add type:', error);
+                    });
+
+            new_quest(type);
+        
+
+        } else if (obj_stateQuest["state"] == "Done") {
+
+            document.getElementById(quest + "_type").innerText = "Quest done";
+
+        } else {
+        const obj_para = {
+            questID: quest,
+            timespan: questTimespan,
+            date: obj_stateQuest["date"]
+        }
+
+        add_edit_button(obj_para);
+        const vaules = quest_log[user][questTimespan][obj_stateQuest["date"]];
+        document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
+
+        document.getElementById("meter" + quest[5]).style.display = "block"
+        update_meter(quest[5], quest_log[user][questTimespan][obj_stateQuest["date"]]);
+
+    }
 
 
-                //Create button
-                let button = document.createElement("button");
-                button.textContent = "Get new Quest!";
-                button.id = questTimespan;
 
-                //Append button
-                document.getElementById(quest + "_type").appendChild(button)
-
-                //Add event listner to button
-                button.addEventListener("click", () => {
-                    const obj_newQuest = open_modal_for_quest(quest, questTimespan, type, user);
-                });
-
-                document.getElementById("close").addEventListener("click", () => {
-                    document.getElementById("myModal").style.display = "none";
-
-                });
-
-
-            } else if (obj_stateQuest["state"] == "Done") {
-
-                document.getElementById(quest + "_type").innerText = "Quest done";
-
-            } else {
-                const obj_para = {
-                    questID: quest,
-                    timespan: questTimespan,
-                    date: obj_stateQuest["date"]
-                }
-
-                add_edit_button(obj_para);
-                const vaules = quest_log[user][questTimespan][obj_stateQuest["date"]];
-                document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
-
-                document.getElementById("meter" + quest[5]).style.display = "block"
-                update_meter(quest[5], quest_log[user][questTimespan][obj_stateQuest["date"]]);
-
-            }
-
-
-
-        })
+})
 
 }
 
