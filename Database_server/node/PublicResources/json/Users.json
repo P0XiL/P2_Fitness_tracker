@@ -32,6 +32,9 @@
     },
     "champ": {
       "password": "pog"
+    },
+    "champpog": {
+      "password": "123"
     }
   }
 }

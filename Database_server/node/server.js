@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3360;
+const port = 3360; 
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -43,26 +43,25 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
-            switch (queryPath) {
-                case "/createUser":
-                    createUser(req, res);
-                    break;
-                case "/login":
-                    loginUser(req, res);
-                    break;
-                case "/write_quest_json":
-                    write_quest_json(req, res);
-                    break;
-                case "/change_amount":
-                    change_amount(req, res);
-                    break;
-                case "/write_user_info_json":
-                    write_user_info_json(req, res);
-                    break;
-                default:
-                    errorResponse(res, 404, "not found");
-                    break;
+            if (queryPath === "/createUser") {
+                // Handle the POST request to write user data to a file
+                createUser(req, res);
+            } else if (queryPath === "/login") {
+                loginUser(req, res);
             }
+            else if (queryPath === "/write_quest_json") {
+                write_quest_json(req, res);
+
+            } else if (queryPath === "/change_amount") { // Add new route for writing user info
+                change_amount(req, res);
+
+            } else if (queryPath === "/write_user_info_json") { // Add new route for writing user info
+                write_user_info_json(req, res);
+
+            } else {
+                errorResponse(res, 404, "not found")
+            }
+            break;
         default:
             errorResponse(res, 405, "Method Not Allowed");
             break;
@@ -159,7 +158,7 @@ function createUser(req, res) {
                     res.end('User data appended to file');
                 }
             });
-
+            
         });
     });
 }
@@ -255,14 +254,10 @@ function write_quest_json(req, res) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
                 } else {
-                    if (!res.headersSent) { // Check if headers have been sent
-                        console.log('Quest added');
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'text/plain');
-                        res.end('Quest added');
-                    } else {
-                        console.log('Headers already sent, cannot send response again.');
-                    }
+                    console.log('Added new quest');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('Added new quest');
                 }
             });
         });
@@ -365,38 +360,6 @@ function write_user_info_json(req, res) {
     });
 }
 
-
-function add_type(req, res){
-    let body = '';
-    req.on('data', (chunk) => {
-        body += chunk.toString();
-    });
-    req.on('end', () => {
-        let obj_type = JSON.parse(body);
-
-        // Read existing data from the file
-        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
-            if (err) {
-                console.error(err);
-                errorResponse(res, 500, String(err));
-                return;
-            }
-
-            let obj_questLog = JSON.parse(data);
-            obj_questLog[obj_type["date"]].type = obj_type["type"];
-
-            // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
-                if (err) {
-                    console.error(err);
-                    errorResponse(res, 500, String(err));
-                } else {
-                    console.log('Added type to JSON');
-                }
-            });
-        });
-    });
-}
 
 
 startServer();
