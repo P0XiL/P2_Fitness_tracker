@@ -1,6 +1,8 @@
 import http from 'http';
 import fs from "fs";
 import path from "path";
+import express from 'express';
+import cookieParser from 'cookie-parser';
 
 const hostname = '127.0.0.1';
 const port = 3360; 
@@ -70,55 +72,60 @@ function processReq(req, res) {
     }
 }
 
-// Function to check if a cookie with a given name exists
-function cookieExists(cookieName) {
-    return document.cookie.split(';').some((item) => item.trim().startsWith(cookieName + '='));
+// Function to parse cookies from request headers
+function parseCookies(cookieHeader) {
+    const cookies = {};
+    cookieHeader.split(';').forEach(cookie => {
+        const parts = cookie.split('=');
+        const name = parts.shift().trim();
+        const value = decodeURI(parts.join('='));
+        cookies[name] = value;
+    });
+    return cookies;
 }
 
-//Function to make a cookie thats are safed in one week
-function expiryDate(){
+const app = express();
+app.use(cookieParser());
+
+// Function to check if a cookie with a given name exists
+function cookieExists(req, cookieName) {
+    return req.cookies && req.cookies[cookieName];
+}
+
+// Function to make a cookie that's saved for one week
+function expiryDate() {
     let expiryData = new Date();
     expiryData.setDate(expiryData.getDate() + 7);
     return expiryData;
 }
 
 // Function to set a cookie with a given name and expiration date
-function setCookie(cookieName, expiryDate) {
-    document.cookie = 'username=' + cookieName + '; expires=' + expiryDate.toUTCString() + '; path=/';
+function setCookie(res, cookieName, cookieValue, expiryDate) {
+    res.cookie(cookieName, cookieValue, { expires: expiryDate, httpOnly: true });
 }
 
 // Function to get the value of a cookie by name
-function getCookieValue(cookieName) {
-    const cookieArray = document.cookie.split(';');
-    for (let i = 0; i < cookieArray.length; i++) {
-        const cookiePair = cookieArray[i].split('=');
-        if (cookiePair[0].trim() === cookieName) {
-            return cookiePair[1];
-        }
-    }
-    return null;
+function getCookieValue(req, cookieName) {
+    return req.cookies && req.cookies[cookieName];
 }
 
-//Function to check if cookie already exists and if not makeing a new cookie with username.
-function checkCookie(username1){
-    if (cookieExists(username1)) {
-        // If the cookie exists, check if it has expired
-        var storedUsername = getCookieValue(username1);
-        if (storedUsername) {
-            console.log('Existing username cookie found:', storedUsername);
-            setCookie(username1, expiryDate);            
-        } else {
-            console.log('Error: Username cookie exists but is empty.');
-        }
+// Route to handle cookie creation and retrieval
+app.get('/', (req, res) => {
+    const usernameCookie = getCookieValue(req, 'username');
+    if (cookieExists(req, 'username')) {
+        console.log('Existing username cookie found:', usernameCookie);
+        setCookie(res, 'username', usernameCookie, expiryDate());
     } else {
-        // If the cookie doesn't exist, create a new one
-        var username = getUsername();
-        var expiryDate = calculateExpiryDate();
-        setCookie(username, expiryDate);
-        console.log('New username cookie set with value:', username, 'and expiry date:', expiryDate);
+        const username = 'JohnDoe'; // Example username
+        setCookie(res, 'username', username, expiryDate());
+        console.log('New username cookie set with value:', username, 'and expiry date:', expiryDate());
     }
+    res.send('Cookie handling example');
+});
 
-}
+app.listen(3360, () => {
+    console.log('Server is running on port 3360');
+});
 
 // Function to handle user login
 function loginUser(req, res) {
