@@ -360,7 +360,7 @@ function display_quest(quest, userInfox, user) {
                     questID: quest,
                     timespan: questTimespan,
                     date: obj_stateQuest["date"]
-                }
+                };
 
                 add_edit_button(obj_para);
                 const vaules = quest_log[user][questTimespan][obj_stateQuest["date"]];

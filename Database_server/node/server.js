@@ -158,9 +158,41 @@ function createUser(req, res) {
                     res.end('User data appended to file');
                 }
             });
+            fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+                let obj_questLog = {}; // Initialize questLog object
+                if (!err) {
+                    try {
+                        obj_questLog = JSON.parse(data);
+                    } catch (parseError) {
+                        console.error("Error parsing existing quests:", parseError);
+                    }
+                } else {
+                    // Handle file not found or empty
+                    console.error("Error reading existing quest_log:", err);
+                }
+                obj_questLog[userData.username] = {
+                    daily: {},
+                    weekly: {},
+                    monthly: {}
+                };
             
+                fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
+                    if (err) {
+                        console.error(err);
+                        errorResponse(res, 500, String(err));
+                    } else {
+                        console.log('User added to quest_log');
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'text/plain');
+                        res.end('User added to quest_log');
+                    }
+                });
+                
+            });
         });
+    
     });
+    
 }
 
 
@@ -248,7 +280,7 @@ function write_quest_json(req, res) {
             obj_questLog["assholeblaster69"][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
@@ -299,7 +331,7 @@ function change_amount(req, res) {
 
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
