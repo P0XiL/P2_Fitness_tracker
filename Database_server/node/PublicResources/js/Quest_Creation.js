@@ -134,8 +134,6 @@ function check_current(timespan, quest_log, userID) {
 
 
     }
-
-
 }
 
 
@@ -361,7 +359,7 @@ function display_quest(quest, userInfox, user) {
 
 
 
-
+//TODO: Save type
 //TODO: Prettiere popus
 //TODO: Comments
 //TODO: Add new user to quest_log
