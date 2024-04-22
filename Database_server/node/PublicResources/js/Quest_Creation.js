@@ -65,17 +65,17 @@ function check_current(timespan, quest_log, userID) {
             const obj_dailies = quest_log[userID][timespan];
             if (is_empty_object(obj_dailies)) {
                 obj_state.state = "None";
+                obj_state.date = get_current_date_format();
                 return obj_state;
             }
             lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
+            obj_state.date = lastestDate;
             const questDate = lastestDate.split("/");
             if (questDate[0] == obj_currentDate.getDate() && questDate[1] == (obj_currentDate.getMonth() + 1) && questDate[2] == obj_currentDate.getFullYear()) {
                 if (obj_dailies[lastestDate]["target"] <= obj_dailies[lastestDate]["amount"]) {
                     obj_state.state = "Done";
-                    obj_state.date = lastestDate;
                     return obj_state;
                 }
-                obj_state.date = lastestDate;
                 return obj_state;
             }
         }
@@ -86,9 +86,11 @@ function check_current(timespan, quest_log, userID) {
             const obj_weeklies = quest_log[userID][timespan];
             if (is_empty_object(obj_weeklies)) {
                 obj_state.state = "None";
+                obj_state.date = get_current_date_format();
                 return obj_state;
             }
             lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
+            obj_state.date = lastestDate;
             const questDateStr = lastestDate.split("/");
             //Check if questDay is within 7 days of today
             let questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
@@ -101,10 +103,8 @@ function check_current(timespan, quest_log, userID) {
             if (Math.abs(diffInDays) <= 7) {
                 if (obj_weeklies[lastestDate]["target"] <= obj_weeklies[lastestDate]["amount"]) {
                     obj_state.state = "Done";
-                    obj_state.date = lastestDate;
                     return obj_state;
                 }
-                obj_state.date = lastestDate;
                 return obj_state;
             }
             obj_state.state = "None";
@@ -114,17 +114,17 @@ function check_current(timespan, quest_log, userID) {
             const obj_monthlies = quest_log[userID][timespan];
             if (is_empty_object(obj_monthlies)) {
                 obj_state.state = "None";
+                obj_state.date = get_current_date_format();
                 return obj_state;
             }
             lastestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
+            obj_state.date = lastestDate;
             const questDate = lastestDate.split("/");
             if ((obj_currentDate.getMonth() + 1) == questDate[1] && obj_currentDate.getFullYear() == questDate[2]) {
                 if (obj_monthlies[lastestDate]["target"] <= obj_monthlies[lastestDate]["amount"]) {
                     obj_state.state = "Done";
-                    obj_state.date = lastestDate;
                     return obj_state;
                 }
-                obj_state.date = lastestDate;
                 return obj_state;
             }
             obj_state.state = "None";
@@ -150,14 +150,17 @@ function add_quest_json(quest) {
             if (!response.ok) {
                 throw new Error('Failed to fetch POST');
             }
-            return response.json();
+            return response.text();
         })
         .catch(error => {
             console.error('Error fetch Post quest_log:', error);
         });
 }
 
-
+function get_current_date_format(){
+    obj_currentDate = new Date;
+    return obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
+}
 
 function open_modal_for_quest(questTimespan, type) {
     document.getElementById("myModal").style.display = "block";
@@ -171,11 +174,10 @@ function open_modal_for_quest(questTimespan, type) {
                     let obj_Quest = choose_quest(data.quest_templates[type]);
                     obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6, questTimespan);
                     obj_newQuest = new Object;
-                    obj_currentDate = new Date;
-                    const date = obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
+                    const date = get_current_date_format();
 
                     obj_newQuest[date] = {};
-                    //obj_newQuest[date].type = type;
+                    obj_newQuest[date].type = type;
                     obj_newQuest[date].target = obj_Quest["base_target"];
                     obj_newQuest[date].amount = 0;
                     obj_newQuest[date].text = obj_Quest.quest_text;
@@ -310,6 +312,9 @@ function display_quest(quest, userInfox, user) {
 
 
     function new_quest(type) {
+        document.getElementById(quest + "_type").innerText = "Type: " + type;
+
+
         //Create button
         const button = document.createElement("button");
         button.textContent = "Get new Quest!";
@@ -329,26 +334,16 @@ function display_quest(quest, userInfox, user) {
             const obj_stateQuest = check_current(questTimespan, quest_log, user);
             if (obj_stateQuest["state"] == "None") {
                 const type = choose_quest_type(userInfo["preset"]);
-                document.getElementById(quest + "_type").innerText = "Type: " + type;
+                
                 //TODO: Should save this somewhere such the user can't just reload the site for new type :hmm:
-                const obj_newQuest = {
-                    date: obj_stateQuest["date"],
-                    type: type,
-                    timespan: questTimespan
-                };
-                //add_quest_json(obj_newQuest);
-                //Create button
-                const button = document.createElement("button");
-                button.textContent = "Get new Quest!";
-                button.id = questTimespan;
-
-                //Append button
-                document.getElementById(quest + "_type").appendChild(button)
-
-                //Add event listner to button
-                button.addEventListener("click", () => {
-                    open_modal_for_quest(questTimespan, type);
-                });
+                const date = get_current_date_format();
+                let obj_newQuest = {};
+                obj_newQuest[date] = {};
+                obj_newQuest[date].type = type;
+                obj_newQuest.timespan = questTimespan;
+                add_quest_json(obj_newQuest);
+                new_quest(type);
+                
 
 
             } else if (obj_stateQuest["state"] == "Done") {
@@ -356,6 +351,11 @@ function display_quest(quest, userInfox, user) {
                 document.getElementById(quest + "_type").innerText = "Quest done";
 
             } else {
+                if (Object.keys(quest_log[user][questTimespan][obj_stateQuest["date"]]).length < 2){
+                    new_quest(quest_log[user][questTimespan][obj_stateQuest["date"]]["type"]);
+                    return;
+                } 
+                
                 const obj_para = {
                     questID: quest,
                     timespan: questTimespan,

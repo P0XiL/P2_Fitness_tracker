@@ -245,7 +245,6 @@ function write_quest_json(req, res) {
 
             const timespan = obj_quest.timespan;
             delete obj_quest.timespan;
-
             obj_questLog["assholeblaster69"][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
 
             // Write updated data back to the file
