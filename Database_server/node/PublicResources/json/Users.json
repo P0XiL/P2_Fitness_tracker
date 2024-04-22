@@ -29,6 +29,9 @@
     },
     "pog": {
       "password": "champ"
+    },
+    "champ": {
+      "password": "pog"
     }
   }
 }
