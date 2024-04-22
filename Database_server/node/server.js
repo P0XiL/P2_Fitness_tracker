@@ -70,16 +70,54 @@ function processReq(req, res) {
     }
 }
 
-// Function to parse cookies from the Cookie header
-function parseCookies(cookieHeader) {
-    const cookies = {};
-    if (cookieHeader) {
-        cookieHeader.split(';').forEach(cookie => {
-            const [name, value] = cookie.split('=').map(c => c.trim());
-            cookies[name] = value;
-        });
+// Function to check if a cookie with a given name exists
+function cookieExists(cookieName) {
+    return document.cookie.split(';').some((item) => item.trim().startsWith(cookieName + '='));
+}
+
+//Function to make a cookie thats are safed in one week
+function expiryDate(){
+    let expiryData = new Date();
+    expiryData.setDate(expiryData.getDate() + 7);
+    return expiryData;
+}
+
+// Function to set a cookie with a given name and expiration date
+function setCookie(cookieName, expiryDate) {
+    document.cookie = 'username=' + cookieName + '; expires=' + expiryDate.toUTCString() + '; path=/';
+}
+
+// Function to get the value of a cookie by name
+function getCookieValue(cookieName) {
+    const cookieArray = document.cookie.split(';');
+    for (let i = 0; i < cookieArray.length; i++) {
+        const cookiePair = cookieArray[i].split('=');
+        if (cookiePair[0].trim() === cookieName) {
+            return cookiePair[1];
+        }
     }
-    return cookies;
+    return null;
+}
+
+//Function to check if cookie already exists and if not makeing a new cookie with username.
+function checkCookie(username1){
+    if (cookieExists(username1)) {
+        // If the cookie exists, check if it has expired
+        var storedUsername = getCookieValue(username1);
+        if (storedUsername) {
+            console.log('Existing username cookie found:', storedUsername);
+            setCookie(username1, expiryDate);            
+        } else {
+            console.log('Error: Username cookie exists but is empty.');
+        }
+    } else {
+        // If the cookie doesn't exist, create a new one
+        var username = getUsername();
+        var expiryDate = calculateExpiryDate();
+        setCookie(username, expiryDate);
+        console.log('New username cookie set with value:', username, 'and expiry date:', expiryDate);
+    }
+
 }
 
 // Function to handle user login
@@ -104,7 +142,7 @@ function loginUser(req, res) {
 
                 // Check if the username exists and password matches
                 if (users['obj_users'][loginData.username] && users['obj_users'][loginData.username].password === loginData.password) {
-                    setCookie(res, loginData.username);
+                    console.log(loginData.username);
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify({ success: true, username: loginData.username }));
@@ -175,13 +213,6 @@ function createUser(req, res) {
             
         });
     });
-}
-
-
-// Setting a cookie
-function setCookie(res, username) {
-    const cookie = `username=${username}; Expires=Sat, 18 Apr 2024 23:59:59 GMT; Path=/; Secure; HttpOnly`;
-    res.setHeader('Set-Cookie', cookie);
 }
 
 
