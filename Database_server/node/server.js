@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3361; 
+const port = 3369; 
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -337,7 +337,7 @@ function write_user_info_json(req, res) {
             }
 
             let existingData = JSON.parse(data);
-            existingData.users_info[user_info.username].preset = user_info.preset;
+            existingData.users_info[user_info.username] = user_info; // Update entire user info
 
             // Write updated data back to the file
             fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {

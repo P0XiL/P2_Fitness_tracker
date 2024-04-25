@@ -199,9 +199,36 @@
 
         <div id="profilePageContainer" class="profile"> 
 
+            <div id="userTiers" class="profile_layout">
+                <h2 style="text-align: center;">Tiers</h2>
+                <div class="tiers">
+                    <div id="dailyTier" class="tier">
+                        <h2>Daily <span id="dailyTierInfo">Tier</span></h2>
+                        <meter id="meter1" value="0" min="0" max="1"></meter> 
+                        <img id="dailyTierImage" src="image/bronzeTier.png" alt="Daily Tier Image">
+                    </div>
+            
+                    <div id="weeklyTier" class="tier">
+                        <h2>Weekly <span id="weeklyTierInfo">Tier</span></h2>
+                        <meter id="meter2" value="0" min="0" max="1"></meter> 
+                        <img id="weeklyTierImage" src="image/silverTier.png" alt="Weekly Tier Image">
+                    </div>
+            
+                    <div id="monthlyTier" class="Tier">
+                        <h2>Monthly <span id="monthlyTierInfo">Tier</span></h2>
+                        <meter id="meter3" value="0" min="0" max="1"></meter> 
+                        <img id="monthlyTierImage" src="image/goldTier.png" alt="Monthly Tier Image">
+                    </div>
+                </div>
+            </div>
+            
+
             <div id="userInfo" class="profile_layout">
-                <h2 style= "text-align: center">User info</h2>
-                <p>User goes here</p>
+                <h2 style="text-align: center;">User info</h2>
+                <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
+                <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
+                <button onclick="postUserInfo('${username}')">Save User Info</button>
+                <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
             </div>
 
             <div id="userPreferences" class="profile_layout">
