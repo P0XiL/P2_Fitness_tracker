@@ -178,7 +178,8 @@ function individual_stats(user, type, processedTypes) {
 function individual_type() {
   fetchJSON("json/quest_log.json")
     .then(data => {
-      userx = "assholeblaster69";
+      userx = sessionStorage.getItem("username");
+      console.log(userx);
       user = data[userx];
       let text = ""; // Initialize text variable
       let processedTypes = {}; // Object to keep track of processed types
@@ -214,8 +215,6 @@ function friends_stats(user, friend) {
     }
   }
 }
-
-individual_type();
 
 
 let prePeriod = "daily";

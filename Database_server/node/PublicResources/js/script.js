@@ -145,6 +145,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => {
             if (response.ok) {
                 console.log('User successfully logged in');
+                localStorage.setItem("username", loginData.username);
+                sessionStorage.setItem("username", loginData.username);
+                sessionStorage.setItem("password", loginData.password);
                 // Reset input fields
                 document.querySelector('input[name="login_username"]').value = '';
                 document.querySelector('input[name="login_password"]').value = '';
