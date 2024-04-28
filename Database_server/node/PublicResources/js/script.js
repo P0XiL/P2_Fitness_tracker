@@ -71,28 +71,6 @@ async function setupProfilePage(username) {
     }
 }
 
-async function setupTiersForQuestPage(username) {
-    console.log('hej');
-    try {
-        // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
-
-        // Log the JSON object fetched to the console
-        console.log('Fetched JSON data:', data);
-        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
-        
-
-        return data.users_info[username]; // Return the user info
-    } catch (error) {
-        console.error('Error fetching JSON:', error);
-        throw error; // Re-throw the error for handling by the caller
-    }
-}
-
 function processData(data, username) {
     // Check if users_info exists in data
     if (data.users_info) {
@@ -101,8 +79,18 @@ function processData(data, username) {
             // Extract user information
             const userInfo = data.users_info[username];
 
-            displayUserTiers(userInfo, 'dailyTier', 'weeklyTier', 'monthlyTier');
 
+            if (userInfo.tier) {
+                displayUserTiers(userInfo, 'dailyTier', 'weeklyTier', 'monthlyTier');
+            } else {
+                console.error(`'tiers' property not found in ${username}'s information`);
+            }
+
+            if (userInfo.mastery) {
+                displayUserMasteries(userInfo.mastery);
+            } else {
+                console.error(`'mastery' property not found in ${username}'s information`);
+            }
 
             // Display the user information
             displayUserInfo(username, userInfo);
@@ -114,11 +102,6 @@ function processData(data, username) {
                 console.error(`'preset' property not found in ${username}'s information`);
             }
 
-            if (userInfo.mastery) {
-                displayUserMasteries(userInfo.mastery);
-            } else {
-                console.error(`'mastery' property not found in ${username}'s information`);
-            }
         } else {
             console.error(`${username} not found in JSON data`);
         }
@@ -126,50 +109,6 @@ function processData(data, username) {
         console.error('users_info not found in JSON data');
     }
 }
-
-function displayUserInfo(username, userInfo) {
-    const userInfoDiv = document.getElementById('userInfo');
-    let userInfoHTML = `
-        <h2 style="text-align: center;">User info</h2>
-        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
-        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
-        <button onclick="postUserInfo('${username}')">Save User Info</button>
-        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
-    `;
-    userInfoDiv.innerHTML = userInfoHTML;
-
-    // Calculate and display initial BMI if height and weight are present
-    const height = parseFloat(userInfo.health.height);
-    const weight = parseFloat(userInfo.health.weight);
-    if (!isNaN(height) && !isNaN(weight)) {
-        updateBMI(height, weight);
-    }
-}
-
-const tierImages = {
-    '1-15': 'image/bronzeTier.png',
-    '16-30': 'image/silverTier.png',
-    '31-45': 'image/goldTier.png',
-    // Add more mappings as needed
-};
-
-const tierNames = {
-    '1-3': 'Bronze 5',
-    '4-6': 'Bronze 4',
-    '7-9': 'Bronze 3',
-    '10-12': 'Bronze 2',
-    '13-15': 'Bronze 1',
-    '16-18': 'Silver 5',
-    '19-21': 'Silver 4',
-    '22-24': 'Silver 3',
-    '25-27': 'Silver 2',
-    '28-30': 'Silver 1',
-    '31-33': 'Gold 5',
-    '34-36': 'Gold 4',
-    '37-39': 'Gold 3',
-    '40-42': 'Gold 2',
-    '43-45': 'Gold 1',
-};
 
 function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     // Map tier ranges to corresponding tier names
@@ -247,6 +186,85 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
 }
 
+// Function to get the tier range
+function getTierRange(rank) {
+    if (rank >= 1 && rank <= 15) {
+        return '1-15';
+    } else if (rank >= 16 && rank <= 30) {
+        return '16-30';
+    } else if (rank >= 31 && rank <= 45) {
+        return '31-45';
+    }
+    // Add more ranges as needed
+}
+
+const tierImages = {
+    '1-15': 'image/bronzeTier.png',
+    '16-30': 'image/silverTier.png',
+    '31-45': 'image/goldTier.png',
+    // Add more mappings as needed
+};
+
+const tierNames = {
+    '1-3': 'Bronze 5',
+    '4-6': 'Bronze 4',
+    '7-9': 'Bronze 3',
+    '10-12': 'Bronze 2',
+    '13-15': 'Bronze 1',
+    '16-18': 'Silver 5',
+    '19-21': 'Silver 4',
+    '22-24': 'Silver 3',
+    '25-27': 'Silver 2',
+    '28-30': 'Silver 1',
+    '31-33': 'Gold 5',
+    '34-36': 'Gold 4',
+    '37-39': 'Gold 3',
+    '40-42': 'Gold 2',
+    '43-45': 'Gold 1',
+};
+
+
+async function setupTiersForQuestPage(username) {
+    console.log('hej');
+    try {
+        // Fetch the JSON data
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
+        }
+        const data = await response.json(); // Parse response body as JSON
+
+        // Log the JSON object fetched to the console
+        console.log('Fetched JSON data:', data);
+        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
+        
+
+        return data.users_info[username]; // Return the user info
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Re-throw the error for handling by the caller
+    }
+}
+
+
+function displayUserInfo(username, userInfo) {
+    const userInfoDiv = document.getElementById('userInfo');
+    let userInfoHTML = `
+        <h2 style="text-align: center;">User info</h2>
+        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
+        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
+        <button onclick="postUserInfo('${username}')">Save User Info</button>
+        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
+    `;
+    userInfoDiv.innerHTML = userInfoHTML;
+
+    // Calculate and display initial BMI if height and weight are present
+    const height = parseFloat(userInfo.health.height);
+    const weight = parseFloat(userInfo.health.weight);
+    if (!isNaN(height) && !isNaN(weight)) {
+        updateBMI(height, weight);
+    }
+}
 
 
 function displayUserMasteries(masteryInfo) {
@@ -382,17 +400,6 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Function to get the tier range
-function getTierRange(rank) {
-    if (rank >= 1 && rank <= 15) {
-        return '1-15';
-    } else if (rank >= 16 && rank <= 30) {
-        return '16-30';
-    } else if (rank >= 31 && rank <= 45) {
-        return '31-45';
-    }
-    // Add more ranges as needed
-}
 
 // Function to get the sub-tier range
 function getSubTierRange(rank) {
