@@ -572,3 +572,35 @@ function sendSurveyData(surveyData) {
         console.error('Error sending survey data:', error);
     });
 }
+
+let lastActiveDates = {};
+
+function updateStreak(userId) {
+  const currentDate = new Date().toDateString();
+  
+  if (!lastActiveDates[userId]) {
+    lastActiveDates[userId] = null;
+  }
+  
+  if (currentDate === lastActiveDates[userId]) {
+    return; // Already active today
+  }
+  
+  const lastDate = new Date();
+  lastDate.setDate(lastDate.getDate() - 1);
+  
+  const lastDateString = lastDate.toDateString();
+  
+  if (currentDate === lastDateString) {
+    if (lastActiveDates[userId] !== currentDate) {
+      lastActiveDates[userId] = currentDate;
+    }
+  } else {
+    lastActiveDates[userId] = currentDate;
+  }
+}
+
+// Example of using the function
+const userId = "exampleUserId";
+updateStreak(userId); // Call this function whenever user is active
+console.log("Current streak for user", userId + ":", streakCount);
