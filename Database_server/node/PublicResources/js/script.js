@@ -24,206 +24,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
-                fetchUserData('idkey1');
+                setupProfilePage('idkey1');
+            } else if (targetId === 'main') { // Check if the clicked tab is the quest page
+                setupTiersForQuestPage('idkey1'); // Call setupTiersForQuestPage with the appropriate username
             }
 
             highlightNavLink(targetId);
         });
     });
 
-    document.getElementById('toggleCreatePageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const createAccountPage = document.getElementById('createAccount');
-        const loginPage = document.getElementById('loginPage');
-
-        createAccountPage.classList.remove('active');
-        loginPage.classList.add('active');
-        clearCreateErrorMessage();
-        document.querySelector('input[name="create_username"]').value = '';
-        document.querySelector('input[name="create_password"]').value = '';
-        document.querySelector('input[name="create_confirm_password"]').value = '';
-    });
-
-    document.getElementById('toggleLoginPageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const createAccountPage = document.getElementById('createAccount');
-        const loginPage = document.getElementById('loginPage');
-
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
-        clearLoginErrorMessage();
-        document.querySelector('input[name="login_username"]').value = '';
-        document.querySelector('input[name="login_password"]').value = '';
-    });
-
-    
-
-
-    // Add event listener to the submit button
-    document.getElementById('submitBtn').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default form submission
-
-        // Get username and password values
-        const username = document.querySelector('input[name="create_username"]').value;
-        const password = document.querySelector('input[name="create_password"]').value;
-        const confirmPassword = document.querySelector('input[name="create_confirm_password"]').value;
-
-        if (password !== confirmPassword) {
-            displayCreateErrorMessage("Passwords do not match");
-        }
-        else {
-            clearCreateErrorMessage();
-
-            // Create an object with username and password
-            const userData = {
-                username: username,
-                password: password
-            };
-
-            // Send the data to the server-side script for file writing
-            createUser(userData);
-        }
-    });
-
-    document.getElementById('loginBtn').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default form submission
-    
-        // Get username and password values
-        const username = document.querySelector('input[name="login_username"]').value;
-        const password = document.querySelector('input[name="login_password"]').value;
-    
-        // Create an object with username and password
-        const loginData = {
-            username: username,
-            password: password
-        };
-    
-        // Send the data to the server-side script for login authentication
-        loginUser(loginData);
-    });
-    
-    document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const createAccountPage = document.getElementById('userstats');
-        const loginPage = document.getElementById('stats');
-
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
-    });
-
-    document.getElementById('toggleFriendPlotPageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const createAccountPage = document.getElementById('FriendsPlot');
-        const loginPage = document.getElementById('userfriend');
-
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
-    });
-
-    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const createAccountPage = document.getElementById('userfriend');
-        const loginPage = document.getElementById('friends');
-
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
-    });
-    
-    function loginUser(loginData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(loginData)
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('User successfully logged in');
-                // Reset input fields
-                document.querySelector('input[name="login_username"]').value = '';
-                document.querySelector('input[name="login_password"]').value = '';
-    
-                clearLoginErrorMessage();
-    
-                // Update UI to reflect logged-in status (e.g., display username in the top right)
-                // Redirect to home page or perform other actions as needed
-            } else {
-                response.text().then(errorMessage => {
-                    displayLoginErrorMessage(errorMessage);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-
-    // Function to send data to server-side script
-    function createUser(userData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Data successfully sent to server');
-                    // Reset input fields
-                    document.querySelector('input[name="create_username"]').value = '';
-                    document.querySelector('input[name="create_password"]').value = '';
-                    document.querySelector('input[name="create_confirm_password"]').value = '';
-
-                    clearCreateErrorMessage();
-
-                    // Redirect to home page
-                    document.getElementById('main').classList.add('active');
-                    highlightNavLink('main');
-                    document.getElementById('loginPage').classList.remove('active');
-                } else {
-                    response.text().then(errorMessage => {
-                        displayCreateErrorMessage(errorMessage);
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-
-    function displayCreateErrorMessage(message) {
-        const errorMessage = document.getElementById('createErrorMessage');
-        errorMessage.textContent = message;
-        errorMessage.style.color = 'red';
-    }
-
-    function clearCreateErrorMessage() {
-        const errorMessage = document.getElementById('createErrorMessage');
-        errorMessage.textContent = '';
-    }
-
-
-    //Function which highlights the link of the currently selected tab
-    function highlightNavLink(pageId) {
-        // Remove 'active' class from all navigation links
-        const navLinks = document.querySelectorAll('#side-nav a');
-        navLinks.forEach(function(link) {
-            link.classList.remove('active');
-        });
-        if (pageId == "loginPage"){
-            return;
-        }
-        // Add 'active' class to the corresponding navigation link
-        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
-        activeLink.classList.add('active');
-        }
+    // Add other event listeners and functions here...
 });
 
 // Function to display login error message
@@ -239,7 +49,7 @@ function clearLoginErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
-async function fetchUserData(username) {
+async function setupProfilePage(username) {
     try {
         // Fetch the JSON data
         const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
@@ -261,6 +71,28 @@ async function fetchUserData(username) {
     }
 }
 
+async function setupTiersForQuestPage(username) {
+    console.log('hej');
+    try {
+        // Fetch the JSON data
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
+        }
+        const data = await response.json(); // Parse response body as JSON
+
+        // Log the JSON object fetched to the console
+        console.log('Fetched JSON data:', data);
+        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
+        
+
+        return data.users_info[username]; // Return the user info
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Re-throw the error for handling by the caller
+    }
+}
+
 function processData(data, username) {
     // Check if users_info exists in data
     if (data.users_info) {
@@ -269,7 +101,8 @@ function processData(data, username) {
             // Extract user information
             const userInfo = data.users_info[username];
 
-            displayUserTiers(userInfo);
+            displayUserTiers(userInfo, 'dailyTier', 'weeklyTier', 'monthlyTier');
+
 
             // Display the user information
             displayUserInfo(username, userInfo);
@@ -279,6 +112,12 @@ function processData(data, username) {
                 displayUserPreferences(username, userInfo);
             } else {
                 console.error(`'preset' property not found in ${username}'s information`);
+            }
+
+            if (userInfo.mastery) {
+                displayUserMasteries(userInfo.mastery);
+            } else {
+                console.error(`'mastery' property not found in ${username}'s information`);
             }
         } else {
             console.error(`${username} not found in JSON data`);
@@ -307,7 +146,32 @@ function displayUserInfo(username, userInfo) {
     }
 }
 
-function displayUserTiers(userInfo) {
+const tierImages = {
+    '1-15': 'image/bronzeTier.png',
+    '16-30': 'image/silverTier.png',
+    '31-45': 'image/goldTier.png',
+    // Add more mappings as needed
+};
+
+const tierNames = {
+    '1-3': 'Bronze 5',
+    '4-6': 'Bronze 4',
+    '7-9': 'Bronze 3',
+    '10-12': 'Bronze 2',
+    '13-15': 'Bronze 1',
+    '16-18': 'Silver 5',
+    '19-21': 'Silver 4',
+    '22-24': 'Silver 3',
+    '25-27': 'Silver 2',
+    '28-30': 'Silver 1',
+    '31-33': 'Gold 5',
+    '34-36': 'Gold 4',
+    '37-39': 'Gold 3',
+    '40-42': 'Gold 2',
+    '43-45': 'Gold 1',
+};
+
+function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     // Map tier ranges to corresponding tier names
     const tierNames = {
         '1-3': 'Bronze 5',
@@ -327,98 +191,246 @@ function displayUserTiers(userInfo) {
         '43-45': 'Gold 1',
     };
 
-    const dailyTierImage = document.getElementById('dailyTierImage');
-    const weeklyTierImage = document.getElementById('weeklyTierImage');
-    const monthlyTierImage = document.getElementById('monthlyTierImage');
-    const dailyTierInfo = document.getElementById('dailyTierInfo');
-    const weeklyTierInfo = document.getElementById('weeklyTierInfo');
-    const monthlyTierInfo = document.getElementById('monthlyTierInfo');
+    // Get references to tier elements using the provided IDs
+    const dailyTierContainer = document.getElementById(DailyID);
+    const weeklyTierContainer = document.getElementById(WeeklyID);
+    const monthlyTierContainer = document.getElementById(MonthlyID);
 
-    // Map tier ranges to corresponding image URLs
-    const tierImages = {
-        '1-15': 'image/bronzeTier.png',
-        '16-30': 'image/silverTier.png',
-        '31-45': 'image/goldTier.png',
-        // Add more mappings as needed
-    };
+    // Create a function to generate tier grid items
+    function createTierGridItem(container, title, imageSrc, elo, period) {
+        const gridItem = document.createElement('div');
+        gridItem.classList.add('tier-grid-item');
 
-    // Determine the tier range based on the user's tier data
-    let dailyTierRange = getTierRange(userInfo.tier.daily);
-    let weeklyTierRange = getTierRange(userInfo.tier.weekly);
-    let monthlyTierRange = getTierRange(userInfo.tier.monthly);
+        // Create and append tier title
+        const tierTitle = document.createElement('h3');
+        tierTitle.textContent = `${period}: ${title}`;
+        gridItem.appendChild(tierTitle);
 
-    // Set image URLs based on the determined tier ranges
-    dailyTierImage.src = tierImages[dailyTierRange];
-    weeklyTierImage.src = tierImages[weeklyTierRange];
-    monthlyTierImage.src = tierImages[monthlyTierRange];
+        // Create and append tier image
+        const tierImage = document.createElement('img');
+        tierImage.src = imageSrc;
+        tierImage.alt = `${title} Tier Image`;
+        gridItem.appendChild(tierImage);
 
-    dailyTierRange = getSubTierRange(userInfo.tier.daily);
-    weeklyTierRange = getSubTierRange(userInfo.tier.weekly);
-    monthlyTierRange = getSubTierRange(userInfo.tier.monthly);
+        // Create and append progress bar
+        const progressBar = document.createElement('div');
+        progressBar.classList.add('progress-bar');
 
-    console.log(userInfo.tier.daily);
-    console.log(userInfo.tier.weekly);
-    console.log(userInfo.tier.monthly);
+        const eloProgress = document.createElement('div');
+        eloProgress.classList.add('elo-progress');
+        eloProgress.style.width = `${elo}%`; // Set width based on elo
+        progressBar.appendChild(eloProgress);
 
-    // Set tier names next to the headers
-    dailyTierInfo.textContent = tierNames[dailyTierRange];
-    weeklyTierInfo.textContent = tierNames[weeklyTierRange];
-    monthlyTierInfo.textContent = tierNames[monthlyTierRange];
+        gridItem.appendChild(progressBar);
 
-    // Function to get the tier range
-    function getTierRange(tier) {
-        if (tier >= 1 && tier <= 15) {
-            return '1-15';
-        } else if (tier >= 16 && tier <= 30) {
-            return '16-30';
-        } else if (tier >= 31 && tier <= 45) {
-            return '31-45';
-        }
-        // Add more ranges as needed
+        // Append grid item to container
+        container.appendChild(gridItem);
     }
 
-    // Function to get the tier range
-    // Function to get the sub-tier range
-    function getSubTierRange(tier) {
-    if (tier >= 1 && tier <= 3) {
+    // Determine the tier range and corresponding image for each tier
+    const dailyTierRange = getTierRange(userInfo.tier.daily.rank);
+    const weeklyTierRange = getTierRange(userInfo.tier.weekly.rank);
+    const monthlyTierRange = getTierRange(userInfo.tier.monthly.rank);
+
+    const dailyImageSrc = tierImages[dailyTierRange];
+    const weeklyImageSrc = tierImages[weeklyTierRange];
+    const monthlyImageSrc = tierImages[monthlyTierRange];
+
+    // Clear existing content
+    dailyTierContainer.innerHTML = '';
+    weeklyTierContainer.innerHTML = '';
+    monthlyTierContainer.innerHTML = '';
+
+    // Create grid items for daily, weekly, and monthly tiers
+    createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
+    createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
+    createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
+}
+
+
+
+function displayUserMasteries(masteryInfo) {
+    const userMasteriesDiv = document.getElementById('userMasteries');
+    userMasteriesDiv.classList.add('mastery-grid-container');
+
+    // Clear existing content inside userMasteriesDiv
+    userMasteriesDiv.innerHTML = '';
+
+    // Sort masteryInfo based on rank in descending order
+    const sortedMasteries = Object.entries(masteryInfo).sort((a, b) => b[1].rank - a[1].rank);
+
+    // Array to store all created mastery divs
+    const masteryDivs = [];
+
+    // Iterate over the first three sorted masteries
+    for (let i = 0; i < Math.min(3, sortedMasteries.length); i++) {
+        const [masteryKey, mastery] = sortedMasteries[i];
+        const masteryDiv = createMasteryItem(masteryKey, mastery);
+        userMasteriesDiv.appendChild(masteryDiv);
+        masteryDivs.push(masteryDiv);
+    }
+
+    // Create button to reveal hidden masteries
+    // Check if the revealButton already exists
+let revealButton = document.getElementById('revealButton');
+
+// If revealButton doesn't exist, create it
+if (!revealButton) {
+    revealButton = document.createElement('button');
+    revealButton.id = 'revealButton';
+    revealButton.textContent = 'Show More Masteries';
+    userMasteriesDiv.insertAdjacentElement('afterend', revealButton); // Append after userMasteriesDiv
+
+    // Add event listener only once
+    revealButton.addEventListener('click', () => {
+        // Append the rest of the masteries
+        for (let i = 3; i < sortedMasteries.length; i++) {
+            const [masteryKey, mastery] = sortedMasteries[i];
+            const masteryDiv = createMasteryItem(masteryKey, mastery);
+            userMasteriesDiv.appendChild(masteryDiv);
+            masteryDivs.push(masteryDiv);
+        }
+        // Show the hide button
+        hideButton.style.display = 'inline-block';
+        // Hide the reveal button
+        revealButton.style.display = 'none';
+    });
+}
+
+    
+
+    // Create button to hide extra masteries
+    const hideButton = document.createElement('button');
+    hideButton.textContent = 'Hide Extra Masteries';
+    hideButton.style.display = 'none'; // Initially hidden
+    userMasteriesDiv.insertAdjacentElement('afterend', hideButton); // Append after userMasteriesDiv
+    hideButton.addEventListener('click', () => {
+        // Remove extra masteries
+        masteryDivs.slice(3).forEach(div => {
+            div.remove();
+        });
+        // Show the reveal button
+        revealButton.style.display = 'inline-block';
+        // Hide the hide button
+        hideButton.style.display = 'none';
+    });
+}
+
+
+
+
+
+// Helper function to create mastery item
+function createMasteryItem(masteryKey, mastery) {
+    const masteryDiv = document.createElement('div');
+    masteryDiv.classList.add('mastery-grid-item');
+
+    // Create HTML elements for the mastery
+    const masteryHeader = document.createElement('h2');
+    masteryHeader.textContent = `${capitalizeFirstLetter(masteryKey)}: `;
+    const tierSpan = document.createElement('span');
+    tierSpan.id = `${masteryKey}TierInfo`;
+
+    // Determine tier range
+    const tierRange = getTierRange(mastery.rank);
+    const subTierRange = getSubTierRange(mastery.rank);
+
+    // Check if it's a sub-tier or main tier
+    if (subTierRange !== 'Unknown') {
+        tierSpan.textContent = `${tierNames[subTierRange]}`;
+    } else {
+        tierSpan.textContent = `${tierNames[tierRange]}`;
+    }
+
+    masteryHeader.appendChild(tierSpan);
+    masteryDiv.appendChild(masteryHeader);
+
+    const masteryImage = document.createElement('img');
+    masteryImage.id = `${masteryKey}TierImage`;
+
+    // Define image source based on tier range
+    const imageSource = tierImages[tierRange];
+    masteryImage.src = imageSource || 'default_image_path.png'; // Provide a default image path if tier range is not found in tierImages
+    masteryImage.alt = `${capitalizeFirstLetter(masteryKey)} Tier Image`;
+    masteryDiv.appendChild(masteryImage);
+
+    // Create progress bar for Elo
+    const progressBar = document.createElement('div');
+    progressBar.classList.add('progress-bar');
+
+    const eloProgress = document.createElement('div');
+    eloProgress.classList.add('elo-progress');
+    eloProgress.style.width = `${mastery.elo}%`; // Set width based on Elo percentage
+    progressBar.appendChild(eloProgress);
+
+    masteryDiv.appendChild(progressBar);
+
+    return masteryDiv;
+}
+
+
+
+
+
+
+
+
+
+
+// Function to capitalize the first letter of a string
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Function to get the tier range
+function getTierRange(rank) {
+    if (rank >= 1 && rank <= 15) {
+        return '1-15';
+    } else if (rank >= 16 && rank <= 30) {
+        return '16-30';
+    } else if (rank >= 31 && rank <= 45) {
+        return '31-45';
+    }
+    // Add more ranges as needed
+}
+
+// Function to get the sub-tier range
+function getSubTierRange(rank) {
+    if (rank >= 1 && rank <= 3) {
         return '1-3';
-    } else if (tier >= 4 && tier <= 6) {
+    } else if (rank >= 4 && rank <= 6) {
         return '4-6';
-    } else if (tier >= 7 && tier <= 9) {
+    } else if (rank >= 7 && rank <= 9) {
         return '7-9';
-    } else if (tier >= 10 && tier <= 12) {
+    } else if (rank >= 10 && rank <= 12) {
         return '10-12';
-    } else if (tier >= 13 && tier <= 15) {
+    } else if (rank >= 13 && rank <= 15) {
         return '13-15';
-    } else if (tier >= 16 && tier <= 18) {
+    } else if (rank >= 16 && rank <= 18) {
         return '16-18';
-    } else if (tier >= 19 && tier <= 21) {
+    } else if (rank >= 19 && rank <= 21) {
         return '19-21';
-    } else if (tier >= 22 && tier <= 24) {
+    } else if (rank >= 22 && rank <= 24) {
         return '22-24';
-    } else if (tier >= 25 && tier <= 27) {
+    } else if (rank >= 25 && rank <= 27) {
         return '25-27';
-    } else if (tier >= 28 && tier <= 30) {
+    } else if (rank >= 28 && rank <= 30) {
         return '28-30';
-    } else if (tier >= 31 && tier <= 33) {
+    } else if (rank >= 31 && rank <= 33) {
         return '31-33';
-    } else if (tier >= 34 && tier <= 36) {
+    } else if (rank >= 34 && rank <= 36) {
         return '34-36';
-    } else if (tier >= 37 && tier <= 39) {
+    } else if (rank >= 37 && rank <= 39) {
         return '37-39';
-    } else if (tier >= 40 && tier <= 42) {
+    } else if (rank >= 40 && rank <= 42) {
         return '40-42';
-    } else if (tier >= 43 && tier <= 45) {
+    } else if (rank >= 43 && rank <= 45) {
         return '43-45';
     } else {
         // Handle cases outside the defined ranges
         return 'Unknown';
     }
 }
-
-
-}
-
 
 
 
@@ -676,13 +688,14 @@ async function updatePreset(username, preset) {
     }
 }
 
+// Function to update user info
 function update_users_info(newUserInfo) {
     fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newUserInfo)
+        body: JSON.stringify(newUserInfo, null, 2) // Use null for replacer and 2 for indentation
     })
         .then(response => {
             if (!response.ok) {
@@ -695,7 +708,7 @@ function update_users_info(newUserInfo) {
             if (responseJson.success) {
                 console.log('User info updated successfully');
                 // Fetch user data again after successful update
-                fetchUserData(newUserInfo.username);
+                setupProfilePage(newUserInfo.username);
             } else {
                 console.error('User info update failed:', responseJson.message);
             }
@@ -704,6 +717,7 @@ function update_users_info(newUserInfo) {
             console.error('Error fetching POST users_info:', error);
         });
 }
+
 
 // Calculate BMI function
 function calculateBMI(height, weight) {
