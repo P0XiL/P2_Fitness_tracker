@@ -1,17 +1,17 @@
 {
     "Tobias": {
         "daily": {
-            "14/4/2024": {
+            "15/4/2024": {
                 "type": "cardio",
                 "target": 5,
-                "amount": 0,
+                "amount": 2,
                 "text": "Cycle 5 minutes",
                 "state": "incomplete"
             },
             "16/4/2024": {
                 "type": "cardio",
                 "target": 5,
-                "amount": 0,
+                "amount": 4,
                 "text": "Go for a run for 5 minutes",
                 "state": "incomplete"
             },

@@ -13,124 +13,6 @@ async function fetchJSON(url) {
   }
 }
 
-const obj_questLog = {
-  assholeblaster69: {
-    daily: {
-      "31/3/2024": {
-        "type": "pushups",
-        "target": 100,
-        "amount": 5
-      },
-
-      "31/2/2024": {
-        "type": "run",
-        "target": 100,
-        "amount": 5
-      },
-
-      "30/2/2024": {
-        "type": "pushups",
-        "target": 100,
-        "amount": 5
-      },
-
-      "26/3/2024": {
-        "type": "run",
-        "target": 10,
-        "amount": 12
-      }
-    },
-
-    weekly: {
-      "25/3/2024": {
-        "type": "cycling",
-        "target": 40,
-        "amount": 40,
-      },
-
-      "22/3/2024": {
-        "type": "walk",
-        "target": 60,
-        "amount": 35,
-      }
-    },
-
-    monthly: {
-      "1/2/2024": {
-        "type": "crunches",
-        "target": 300,
-        "amount": 301,
-      },
-
-      "1/3/2024": {
-        "type": "crunches",
-        "target": 300,
-        "amount": 2,
-      },
-
-    }
-
-  },
-  assholeblaster63: {
-    daily: {
-      "31/3/2024": {
-        "type": "pushups",
-        "target": 100,
-        "amount": 5
-      },
-
-      "24/2/2024": {
-        "type": "run",
-        "target": 100,
-        "amount": 5
-      },
-
-      "30/2/2024": {
-        "type": "pushups",
-        "target": 100,
-        "amount": 5
-      },
-
-      "22/2/2024": {
-        "type": "run",
-        "target": 100,
-        "amount": 50
-      },
-
-      "21/3/2024": {
-        "type": "run",
-        "target": 10,
-        "amount": 10
-      }
-    },
-
-    weekly: {
-      "25/3/2024": {
-        "type": "cycling",
-        "target": 40,
-        "amount": 40,
-      },
-
-      "22/3/2024": {
-        "type": "walk",
-        "target": 60,
-        "amount": 35,
-      }
-    },
-
-    monthly: {
-      "1/2/2024": {
-        "type": "crunches",
-        "target": 300,
-        "amount": 301,
-      },
-
-    }
-
-  }
-
-}
-
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
 function dropdown_close() {
@@ -163,79 +45,77 @@ function dropdown_close3() {
 }
 
 function individual_stats(user, type, processedTypes) {
-  let amount = 0;
-  for (let period in user) {
-    for (let key in user[period]) {
-      if (user[period][key].type === type) {
-        amount += user[period][key].amount;
-        processedTypes[type] = true; // Mark type as processed
+  return fetchJSON("json/quest_log.json")
+    .then(data => {
+      let amount = 0;
+      for (let period in data[user]) {
+        for (let key in data[user][period]) {
+          if (data[user][period][key].type === type) {
+            amount += data[user][period][key].amount;
+          }
+        }
       }
-    }
-  }
-  return amount;
+      return amount;
+    });
 }
 
 function individual_type() {
   fetchJSON("json/quest_log.json")
     .then(data => {
-      userx = sessionStorage.getItem("username");
-      console.log(userx);
-      user = data[userx];
+      let user = sessionStorage.getItem("username");
       let text = ""; // Initialize text variable
       let processedTypes = {}; // Object to keep track of processed types
 
-      for (let period in user) {
-        for (let key in user[period]) {
-          let type = user[period][key].type;
+      for (let period in data[user]) {
+        for (let key in data[user][period]) {
+          let type = data[user][period][key].type;
           if (!processedTypes[type]) { // Check if type has already been processed
-            let amount = individual_stats(user, type, processedTypes); // Calculate stats for each type
-            text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
-            processedTypes[type] = true; // Mark type as processed
+            processedTypes[type] = true;
+            individual_stats(user, type, processedTypes).then(amount => {
+              text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+              const element = document.getElementById("statsText");
+              const element1 = document.getElementById("statsText1");
+              element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
+              element1.innerHTML = "<pre>" + text + "</pre>";
+              processedTypes[type] = true; // Mark type as processed
+            });
           }
         }
       }
-      const element = document.getElementById("statsText");
-      const element1 = document.getElementById("statsText1");
-      element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
-      element1.innerHTML = "<pre>" + text + "</pre>";
     })
+    .catch(error => {
+      console.error("Error fetching JSON:", error);
+    });
 }
 
-
-//using json with friends
-function friends_stats(user, friend) {
-  for (let key in user_friend) {
-    for (let key1 in user_friend[key]) {
-      if (key1 === friend) {
-        individual_stats(friend);
-      }
-      else {
-        prompt("typed person is not your friend");
-      }
-    }
-  }
-}
+individual_type();
 
 
 let prePeriod = "daily";
-let pretype = "run";
-
-update_graph(pretype, prePeriod);
+let pretype = "cardio";
 
 function update_graph(type, period) {
+  fetchJSON("json/quest_log.json")
+    .then(data => {
+      user = sessionStorage.getItem("username");
+      console.log(user);
   if (type === null && period !== null) {
-    plot("assholeblaster69", pretype, period);
+    plot(user, pretype, period);
     change_text(pretype, period);
     prePeriod = period;
   }
   else if (type !== null && period === null) {
-    plot("assholeblaster69", type, prePeriod);
+    plot(user, type, prePeriod);
     change_text(type, prePeriod);
     pretype = type;
   } else {
-    plot("assholeblaster69", pretype, prePeriod);
+    console.log(user);
+    console.log(pretype);
+    console.log(prePeriod);
+    plot(user, pretype, prePeriod);
     change_text(type, period);
   }
+})
 }
 
 function change_text(value, period) {
@@ -248,6 +128,9 @@ function change_text(value, period) {
 function plot(user, type, period) {
   // ploting with data.
   let ctx = document.getElementById("myChart");
+  console.log(user);
+  console.log(type);
+  console.log(period);
 
   let myChart = new Chart(ctx, {
     type: "line",
@@ -273,24 +156,32 @@ function plot(user, type, period) {
 }
 
 function user_data_x(user, type, period) {
+  fetchJSON("json/quest_log.json")
+    .then(data => {
   let x = ["01/1/2024",];
-  for (let key in obj_questLog[user][period]) {
-    if (obj_questLog[user][period][key].type === type) {
+  for (let key in data[user][period]) {
+    if (data[user][period][key].type === type) {
       x.push(key);
     }
   }
   return x;
+})
 }
 
 function user_data_y(user, type, period) {
+  fetchJSON("json/quest_log.json")
+  .then(data => {
   let amountsWithType = [0,];
-
-  for (let date in obj_questLog[user][period]) {
-    if (obj_questLog[user][period][date].type === type) {
-      amountsWithType.push(obj_questLog[user][period][date].amount);
+  console.log(data[user][period]);
+  for (let date in data[user][period]) {
+    if (data[user][period][date].type === type) {
+      console.log(data[user][period][date].type)
+      amountsWithType.push(data[user][period][date].amount);
     }
   }
+  console.log(amountsWithType);
   return amountsWithType;
+  })
 }
 
 function plot_with_friends(user, user2, type, period) {
@@ -346,7 +237,7 @@ function plot_with_friends(user, user2, type, period) {
   });
 }
 
-
+// TODO when friends json is done
 let prePeriodFriend = "daily";
 let pretypeFriend = "run";
 
@@ -372,5 +263,3 @@ function change_text_friend(value, period) {
   // Change the text content
   element.innerHTML = "This Graph is based on type:  " + value + " in period: " + period;
 }
-
-plot_with_friends("assholeblaster69", "assholeblaster63", "run", "daily");

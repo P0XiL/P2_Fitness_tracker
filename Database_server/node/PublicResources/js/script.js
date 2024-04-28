@@ -153,6 +153,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelector('input[name="login_password"]').value = '';
     
                 clearLoginErrorMessage();
+                individual_type();
+                
     
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
