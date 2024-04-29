@@ -135,6 +135,26 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     const weeklyTierContainer = document.getElementById(WeeklyID);
     const monthlyTierContainer = document.getElementById(MonthlyID);
 
+
+    // Determine the tier range and corresponding image for each tier
+    const dailyTierRange = getTierRange(userInfo.tier.daily.rank);
+    const weeklyTierRange = getTierRange(userInfo.tier.weekly.rank);
+    const monthlyTierRange = getTierRange(userInfo.tier.monthly.rank);
+
+    const dailyImageSrc = tierImages[dailyTierRange];
+    const weeklyImageSrc = tierImages[weeklyTierRange];
+    const monthlyImageSrc = tierImages[monthlyTierRange];
+
+    // Clear existing content
+    dailyTierContainer.innerHTML = '';
+    weeklyTierContainer.innerHTML = '';
+    monthlyTierContainer.innerHTML = '';
+
+    // Create grid items for daily, weekly, and monthly tiers
+    createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
+    createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
+    createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
+    
     // Create a function to generate tier grid items
     function createTierGridItem(container, title, imageSrc, elo, period) {
         const gridItem = document.createElement('div');
@@ -165,25 +185,6 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
         // Append grid item to container
         container.appendChild(gridItem);
     }
-
-    // Determine the tier range and corresponding image for each tier
-    const dailyTierRange = getTierRange(userInfo.tier.daily.rank);
-    const weeklyTierRange = getTierRange(userInfo.tier.weekly.rank);
-    const monthlyTierRange = getTierRange(userInfo.tier.monthly.rank);
-
-    const dailyImageSrc = tierImages[dailyTierRange];
-    const weeklyImageSrc = tierImages[weeklyTierRange];
-    const monthlyImageSrc = tierImages[monthlyTierRange];
-
-    // Clear existing content
-    dailyTierContainer.innerHTML = '';
-    weeklyTierContainer.innerHTML = '';
-    monthlyTierContainer.innerHTML = '';
-
-    // Create grid items for daily, weekly, and monthly tiers
-    createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
-    createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
-    createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
 }
 
 // Function to get the tier range
@@ -296,7 +297,7 @@ function createMasteryItem(masteryKey, mastery) {
     masteryDiv.classList.add('mastery-grid-item');
 
     // Create HTML elements for the mastery
-    const masteryHeader = document.createElement('h2');
+    const masteryHeader = document.createElement('h3');
     masteryHeader.textContent = `${capitalizeFirstLetter(masteryKey)}: `;
     const tierSpan = document.createElement('span');
     tierSpan.id = `${masteryKey}TierInfo`;
@@ -453,7 +454,6 @@ document.getElementById('weight').addEventListener('input', function() {
     }
 });
 
-
 async function setupTiersForQuestPage(username) {
     console.log('hej');
     try {
@@ -476,20 +476,10 @@ async function setupTiersForQuestPage(username) {
     }
 }
 
-
-
-
-
-
-
-
-
-
 // Function to capitalize the first letter of a string
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
 
 // Function to get the sub-tier range
 function getSubTierRange(rank) {
@@ -528,7 +518,6 @@ function getSubTierRange(rank) {
         return 'Unknown';
     }
 }
-
 
 function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
@@ -622,9 +611,14 @@ function postCustomData(username) {
     const runValue = document.getElementById('run').value;
     const walkValue = document.getElementById('walk').value;
     const crunchesValue = document.getElementById('crunches').value; // Define crunchesValue here
+    const existingUserInfo = data.users_info[username];
 
     const newUserInfo = {
-        username: username,
+        username: existingUserInfo.username,
+                health: existingUserInfo.health,
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
         preset: {
             name: 'custom',
             conf: [
@@ -739,7 +733,6 @@ async function updatePreset(username, preset) {
         console.error('Error fetching JSON:', error);
     }
 }
-
 
 // Calculate BMI function
 function calculateBMI(height, weight) {
