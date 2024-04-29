@@ -194,7 +194,7 @@ function checkLoginState() {
 
 
 function loginUser(loginData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/login', {
+    fetch('http://127.0.0.1:3360/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -233,7 +233,7 @@ function loginUser(loginData) {
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -291,7 +291,7 @@ function clearLoginErrorMessage() {
 
 function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json')
+    fetch('http://127.0.0.1:3360/json/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -309,7 +309,7 @@ function fetchUserData(username) {
 async function setupProfilePage(username) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -332,7 +332,7 @@ async function setupTiersForQuestPage(username) {
     console.log('hej');
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -699,7 +699,7 @@ async function postUserInfo(username) {
 
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -858,7 +858,7 @@ function generateSliders(countMap) {
 async function updatePreset(username, preset) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -947,7 +947,7 @@ async function updatePreset(username, preset) {
 
 // Function to update user info
 function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/write_user_info_json', {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

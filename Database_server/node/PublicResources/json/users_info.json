@@ -2,66 +2,18 @@
   "users_info": {
     "idkey1": {
       "username": "idkey1",
-      "health": {
-        "height": 178,
-        "weight": 75
-      },
-      "mastery": {
-        "run": {
-          "rank": 25,
-          "elo": 10
-        },
-        "walk": {
-          "rank": 10,
-          "elo": 69
-        },
-        "crunches": {
-          "rank": 30,
-          "elo": 50
-        },
-        "pushups": {
-          "rank": 40,
-          "elo": 90
-        }
-      },
-      "hiddenRank": {
-        "daily": 23,
-        "weekly": 30,
-        "monthly": 16
-      },
-      "tier": {
-        "daily": {
-          "rank": 23,
-          "elo": 80
-        },
-        "weekly": {
-          "rank": 34,
-          "elo": 25
-        },
-        "monthly": {
-          "rank": 1,
-          "elo": 5
-        }
-      },
       "preset": {
-        "name": "walk",
+        "name": "custom",
         "conf": [
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
           "run",
-          "run",
-          "run",
-          "run",
           "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "crunches",
-          "crunches",
           "crunches"
         ]
       }
