@@ -194,7 +194,7 @@ function checkLoginState() {
 
 
 function loginUser(loginData) {
-    fetch('http://127.0.0.1:3360/login', {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -233,7 +233,7 @@ function loginUser(loginData) {
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -291,7 +291,7 @@ function clearLoginErrorMessage() {
 
 function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
