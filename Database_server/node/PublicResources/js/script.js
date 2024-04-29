@@ -167,12 +167,14 @@ function storeLoginState(username) {
     };
     localStorage.setItem('loginState', JSON.stringify(loginState));
     localStorage.setItem('username', username);
-    localStorage.getItem('username');
 }
 
 // Function to check and handle login state on page load
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
+    const username = localStorage.getItem('username');
+    console.log(username)
+    
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -214,20 +216,19 @@ function loginUser(loginData) {
 
                 // Redirect to home page
                 document.getElementById('main').classList.add('active');
-                highlightNavLink('main');
+                //highlightNavLink('main');
                 document.getElementById('loginPage').classList.remove('active');
-
-                location.reload();
 
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
+
             } else {
                 response.text().then(errorMessage => {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
             
-            highlightNavLink(targetId);
+            //highlightNavLink(targetId);
         });
 }
 
