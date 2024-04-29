@@ -24,8 +24,10 @@
             <li><a href="#main"><img src="image/home.png" alt="Home" class="top-img"></a></li>
         </ul>
         <ul>
-            <li><a id="profileLink" href="#loginPage"><img src="image/profile_image.png" alt="Profile" class="top-img"></a></li>
-                    <br><div class="login"></div></a></li>
+            <li><a id="profileLink" href="#loginPage"><img src="image/profile_image.png" alt="Profile"
+                        class="top-img"></a></li>
+            <br>
+            <div class="login"></div></a></li>
         </ul>
     </nav>
 
@@ -38,7 +40,7 @@
             <button class="difficulty-button" data-difficulty="3">Hard</button>
             <button id="close">Close</button>
         </div>
-      </div>
+    </div>
 
     <div id="inputModal" class="modal">
         <div class="modal-content">
@@ -50,7 +52,7 @@
             <button id="close_input">Close</button>
         </div>
     </div>
-      
+
     <!-- Page sections -->
     <div id="main" class="page active">
         <div id="usernameDisplay" class="username-display"></div>
@@ -62,19 +64,19 @@
 
             <div id="quest1" class="quest">
                 <h2>Daily</h2>
-                <meter id="meter1" value="0" min="0" max="1"></meter> 
+                <meter id="meter1" value="0" min="0" max="1"></meter>
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
                 <h2>Weekly</h2>
-                <meter id="meter2" value="0" min="0" max="1"></meter> 
+                <meter id="meter2" value="0" min="0" max="1"></meter>
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
                 <h2>Monthly</h2>
-                <meter id="meter3" value="0" min="0" max="1"></meter> 
+                <meter id="meter3" value="0" min="0" max="1"></meter>
                 <p id="quest3_type"></p>
             </div>
         </div>
@@ -87,7 +89,7 @@
         });
     </script>
 
-    
+
 
     <div id="friends" class="page center">
         <h2>Friends</h2>
@@ -112,7 +114,7 @@
             </div>
         </div>
 
-    
+
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
@@ -154,7 +156,7 @@
             </div>
         </div>
 
-    
+
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close1()" class="dropbtn">Change period</button>
@@ -206,9 +208,11 @@
     </div>
 
     <div id="profilepage" class="page">
-        <h2 class="heading">Profile</h2>
+        <div id="profile_Username">
+            <h2 class="heading"></h2>
+        </div>
 
-        <div id="profilePageContainer" class="profile"> 
+        <div id="profilePageContainer" class="profile">
             <h2 style="text-align: center;">Tiers</h2>
 
             <div id="userTiers" class="profile_layout">
@@ -218,17 +222,17 @@
                         <img id="dailyTierImage" src="image/bronzeTier.png" alt="Daily Tier Image">
                         <meter id="dailyMeter" value="0" min="0" max="100" style="width: 50%;"></meter>
                     </div>
-            
+
                     <div id="weeklyTier" class="tier">
                         <h2>Weekly <span id="weeklyTierInfo">Tier</span></h2>
                         <img id="weeklyTierImage" src="image/silverTier.png" alt="Weekly Tier Image">
-                        <meter id="weeklyMeter" value="0" min="0" max="50" style="width: 50%;"></meter> 
+                        <meter id="weeklyMeter" value="0" min="0" max="50" style="width: 50%;"></meter>
                     </div>
-            
+
                     <div id="monthlyTier" class="tier">
                         <h2>Monthly <span id="monthlyTierInfo">Tier</span></h2>
                         <img id="monthlyTierImage" src="image/goldTier.png" alt="Monthly Tier Image">
-                        <meter id="monthlyMeter" value="0" min="0" max="20" style="width: 50%;"></meter> 
+                        <meter id="monthlyMeter" value="0" min="0" max="20" style="width: 50%;"></meter>
                     </div>
                 </div>
             </div>
@@ -238,18 +242,18 @@
                 <div class="tiers">
                 </div>
             </div>
-            
-            
+
+
             <div id="userInfo" class="profile_layout">
                 <h2 style="text-align: center;">User info</h2>
-                <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
-                <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
+                <p>Height: <input type="number" id="height" value="${userInfo.health.height}"> cm</p>
+                <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}"> kg</p>
                 <button onclick="postUserInfo('${username}')">Save User Info</button>
                 <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
             </div>
 
             <div id="userPreferences" class="profile_layout">
-                <h2 style= "text-align: center">Preferences</h2>
+                <h2 style="text-align: center">Preferences</h2>
                 <p>Preferences goes here</p>
             </div>
         </div>
@@ -263,11 +267,11 @@
     </div>
 
     <!-- JavaScript to handle navigation -->
-    <script src="js/script.js"></script>    
+    <script src="js/script.js"></script>
     <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/Graph.js"></script>
-    
+
 </body>
 
 </html>

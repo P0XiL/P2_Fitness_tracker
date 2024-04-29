@@ -181,6 +181,8 @@ function checkLoginState() {
 
             // Update UI to display logged-in username
             document.getElementById('usernameDisplay').textContent = "Hello, " + username;
+            document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
+
 
             // Update profile link to point to profile page
             document.getElementById('profileLink').href = "#profilepage";
@@ -218,6 +220,8 @@ function loginUser(loginData) {
 
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
+
+                location.reload();
 
             } else {
                 response.text().then(errorMessage => {
