@@ -167,7 +167,8 @@ function storeLoginState(username) {
     };
     localStorage.setItem('loginState', JSON.stringify(loginState));
     localStorage.setItem('username', username);
-    localStorage.getItem('username');
+    individual_type();
+    
 }
 
 // Function to check and handle login state on page load
@@ -734,7 +735,6 @@ document.getElementById('weight').addEventListener('input', function() {
 });
 
 async function setupTiersForQuestPage(username) {
-    console.log('hej');
     try {
         // Fetch the JSON data
         const response = await fetch('http://127.0.0.1:3360/json/users_info.json');

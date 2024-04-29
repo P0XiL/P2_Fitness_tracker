@@ -65,7 +65,8 @@ function individual_stats(user, type) {
 function individual_type() {
   fetchJSON("json/quest_log.json")
     .then(data => {
-      let user = sessionStorage.getItem("username");
+      let user = localStorage.getItem("username");
+      console.log(user);
       let text = ""; // Initialize text variable
       let processedTypes = {}; // Object to keep track of processed types
 
@@ -97,9 +98,7 @@ let prePeriod = "daily";
 let pretype = "cardio";
 
 function update_graph(type, period) {
-  fetchJSON("json/quest_log.json")
-    .then(data => {
-      user = sessionStorage.getItem("username");
+      let user = localStorage.getItem("username");
       console.log(user + "test");
   if (type === null && period !== null) {
     plot(user, pretype, period);
@@ -114,11 +113,8 @@ function update_graph(type, period) {
     plot(user, pretype, prePeriod);
     change_text(pretype, preperiod);
   }
-})
-.catch(error => {
-  console.error("Error fetching JSON:", error);
-});
 }
+
 
 function change_text(type, period) {
   // Get the element with the id "text"

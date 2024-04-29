@@ -63,7 +63,7 @@
       "28/4/2024": {
         "type": "cardio",
         "target": 180,
-        "amount": 45,
+        "amount": 255,
         "text": "Go for a walk for 180 minutes",
         "state": "incomplete"
       }
@@ -79,7 +79,7 @@
       "16/4/2024": {
         "type": "cardio",
         "target": 117,
-        "amount": 30,
+        "amount": 1030,
         "text": "Go for a walk for 117 minutes",
         "state": "incomplete"
       }
@@ -96,6 +96,16 @@
     "monthly": {}
   },
   "sejt": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "Tobi": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "Test": {
     "daily": {},
     "weekly": {},
     "monthly": {}
