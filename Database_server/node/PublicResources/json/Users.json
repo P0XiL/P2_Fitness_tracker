@@ -1,31 +1,22 @@
 {
   "obj_users": {
-    "123": {
-      "password": "123"
-    },
-    "1234": {
-      "password": "1"
-    },
-    "Username1": {
-      "password": "123"
-    },
-    "Username2": {
+    "1235": {
       "password": "1234"
     },
-    "Username3": {
+    "poggo2": {
+      "password": "123"
+    },
+    "poggo3": {
+      "password": "poggo"
+    },
+    "sejt": {
+      "password": "2"
+    },
+    "Tobias": {
+      "password": "123"
+    },
+    "Haha": {
       "password": "12"
-    },
-    "Username4": {
-      "password": "1"
-    },
-    "Username5": {
-      "password": "Kage"
-    },
-    "Kage": {
-      "password": "123"
-    },
-    "mik": {
-      "password": "123"
     }
   }
 }

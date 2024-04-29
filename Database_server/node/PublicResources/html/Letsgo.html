@@ -24,7 +24,7 @@
             <li><a href="#main"><img src="image/home.png" alt="Home" class="top-img"></a></li>
         </ul>
         <ul>
-            <li><a href="#loginPage"><img src="image/profile_image.png" alt="Profile" class="top-img">
+            <li><a id="profileLink" href="#loginPage"><img src="image/profile_image.png" alt="Profile" class="top-img"></a></li>
                     <br><div class="login"></div></a></li>
         </ul>
     </nav>
@@ -53,6 +53,7 @@
       
     <!-- Page sections -->
     <div id="main" class="page active">
+        <div id="usernameDisplay" class="username-display"></div>
         <h2 class="heading">Quests</h2>
         <div class="questpage">
             <div id="dailyQuestTier" class="tiers"></div>
@@ -104,10 +105,9 @@
             <div class="dropdown">
                 <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
                 <div id="myDropdown2" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend('run', null)">Run</a>
-                    <a href="#" onclick="update_graph_friend('cycling', null)">Cycling</a>
-                    <a href="#" onclick="update_graph_friend('pushups', null)">Pushups</a>
-                    <a href="#" onclick="update_graph_friend('walk', null)">Walk</a>
+                    <a href="#" onclick="update_graph_friend('cardio', null)">Carido</a>
+                    <a href="#" onclick="update_graph_friend('core', null)">Core</a>
+                    <a href="#" onclick="update_graph_friend('lowerbody', null)">Lowerbody</a>
                 </div>
             </div>
         </div>
@@ -147,10 +147,9 @@
             <div class="dropdown">
                 <button onclick="dropdown_close()" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" onclick="update_graph('run', null)">Run</a>
-                    <a href="#" onclick="update_graph('cycling', null)">Cycling</a>
-                    <a href="#" onclick="update_graph('pushups', null)">Pushups</a>
-                    <a href="#" onclick="update_graph('walk', null)">Walk</a>
+                    <a href="#" onclick="update_graph('cardio', null)">Cardio</a>
+                    <a href="#" onclick="update_graph('core', null)">Core</a>
+                    <a href="#" onclick="update_graph('lowerbody', null)">Lowerbody</a>
                 </div>
             </div>
         </div>
