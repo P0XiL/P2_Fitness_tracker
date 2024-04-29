@@ -44,25 +44,12 @@
         }
       },
       "preset": {
-        "name": "run",
+        "name": "custom",
         "conf": [
           "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "walk",
-          "walk",
-          "walk",
           "walk",
           "crunches",
-          "crunches",
-          "crunches"
+          "push-ups"
         ]
       }
     }
