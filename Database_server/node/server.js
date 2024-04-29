@@ -194,8 +194,6 @@ function createUser(req, res) {
 }
 
 
-
-
 function errorResponse(res, code, reason) {
     res.statusCode = code;
     res.setHeader('Content-Type', 'text/txt');
@@ -345,10 +343,6 @@ function change_amount(req, res) {
 }
 
 
-
-
-
-
 function write_user_info_json(req, res) {
     let body = '';
     req.on('data', (chunk) => {
@@ -366,10 +360,10 @@ function write_user_info_json(req, res) {
             }
 
             let existingData = JSON.parse(data);
-            existingData.users_info[user_info.username].preset = user_info.preset;
+            existingData.users_info[user_info.username] = user_info; // Update entire user info
 
-            // Write updated data back to the file
-            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+            // Write updated data back to the file with indentation
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
