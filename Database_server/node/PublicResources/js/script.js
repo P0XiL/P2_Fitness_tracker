@@ -194,7 +194,7 @@ function checkLoginState() {
 
 
 function loginUser(loginData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/login', {
+    fetch('http://127.0.0.1:3360/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -226,14 +226,14 @@ function loginUser(loginData) {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
-
+            
             highlightNavLink(targetId);
         });
 }
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -291,7 +291,7 @@ function clearLoginErrorMessage() {
 
 function fetchUserData(username) {
     // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json')
+    fetch('http://127.0.0.1:3360/json/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -309,7 +309,7 @@ function fetchUserData(username) {
 async function setupProfilePage(username) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -320,6 +320,28 @@ async function setupProfilePage(username) {
 
         // Process the JSON data here
         processData(data, username);
+
+        return data.users_info[username]; // Return the user info
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Re-throw the error for handling by the caller
+    }
+}
+
+async function setupTiersForQuestPage(username) {
+    console.log('hej');
+    try {
+        // Fetch the JSON data
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
+        }
+        const data = await response.json(); // Parse response body as JSON
+
+        // Log the JSON object fetched to the console
+        console.log('Fetched JSON data:', data);
+        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
+        
 
         return data.users_info[username]; // Return the user info
     } catch (error) {
@@ -621,7 +643,7 @@ async function postUserInfo(username) {
 
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -659,7 +681,7 @@ async function postUserInfo(username) {
 
 // Function to update user info
 function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/write_user_info_json', {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -715,7 +737,7 @@ async function setupTiersForQuestPage(username) {
     console.log('hej');
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -773,6 +795,52 @@ function getSubTierRange(rank) {
     } else {
         // Handle cases outside the defined ranges
         return 'Unknown';
+    }
+}
+
+
+
+
+
+async function postUserInfo(username) {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+
+    try {
+        // Fetch the JSON data
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
+        }
+        const data = await response.json(); // Parse response body as JSON
+
+        if (data.users_info && data.users_info[username]) {
+            const existingUserInfo = data.users_info[username];
+
+            // Create a new user info object with the updated health information
+            const newUserInfo = {
+                username: existingUserInfo.username,
+                health: {
+                    height: height,
+                    weight: weight
+                },
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: existingUserInfo.preset
+            };
+
+            // Update the user info on the server
+            update_users_info(newUserInfo);
+
+            // Calculate and display BMI
+            const bmi = calculateBMI(height, weight);
+            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
+        } else {
+            console.error('User info not found for username:', username);
+        }
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
     }
 }
 
@@ -904,7 +972,7 @@ function generateSliders(countMap) {
 async function updatePreset(username, preset) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -990,6 +1058,37 @@ async function updatePreset(username, preset) {
         console.error('Error fetching JSON:', error);
     }
 }
+
+// Function to update user info
+function update_users_info(newUserInfo) {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newUserInfo, null, 2) // Use null for replacer and 2 for indentation
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch POST');
+            }
+            return response.json(); // Read response JSON
+        })
+        .then(responseJson => {
+            console.log('Response from POST:', responseJson);
+            if (responseJson.success) {
+                console.log('User info updated successfully');
+                // Fetch user data again after successful update
+                setupProfilePage(newUserInfo.username);
+            } else {
+                console.error('User info update failed:', responseJson.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching POST users_info:', error);
+        });
+}
+
 
 // Calculate BMI function
 function calculateBMI(height, weight) {
