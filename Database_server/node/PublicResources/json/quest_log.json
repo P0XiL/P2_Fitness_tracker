@@ -31,6 +31,9 @@
         "amount": 0,
         "text": "Do 3 burpees",
         "state": "incomplete"
+      },
+      "29/4/2024": {
+        "type": "cardio"
       }
     },
     "weekly": {

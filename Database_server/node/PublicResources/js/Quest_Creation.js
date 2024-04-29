@@ -9,7 +9,6 @@ function generate_random_number(max) {
 }
 
 
-
 /**
  * Takes an obj and returns a random object key
  * @param {An obj} quests 
@@ -42,7 +41,7 @@ function modify_quest(quest, rank, difficulty, mastery, timespan) {
     //Modify the quest based on timesapan
     switch (timespan) {
         case 'daily':
-            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.5) * (mastery * 0.5) * 1);
+            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.5) * (mastery * 0.5));
             break;
         case 'weekly':
             quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.5) * (mastery * 0.5) * 4);
@@ -55,6 +54,7 @@ function modify_quest(quest, rank, difficulty, mastery, timespan) {
     if (quest["base_target"] < min) {
         quest["base_target"] = min
         quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
+        return quest;
     }
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
@@ -129,9 +129,9 @@ function check_current(timespan, quest_log, userID) {
             obj_state.date = lastestDate;
             const questDateStr = lastestDate.split("/");
             //Check if latest quest is within 7 days of today
-            let questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
+            const questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
             //Difference in milisec
-            diffInMilisec = obj_currentDate - questDateObj;
+            let diffInMilisec = obj_currentDate - questDateObj;
             //Convert to day
             let diffInDays = diffInMilisec / (1000 * 60 * 60 * 24)
 
@@ -212,7 +212,7 @@ function get_current_date_format(){
 
 /**
  * Open a popup window where the user can choose diffuclty
- * @param {timespan of quest} questTimespan 
+ * @param {the timespan of quest} questTimespan 
  * @param {the type of the quest} type 
  */
 function open_modal_for_quest(questTimespan, type) {
@@ -430,7 +430,6 @@ function display_quest(quest, userInfox, user) {
             //If there is no quest
             if (obj_stateQuest["state"] == "None") {
                 //Chooses a type for userInfo
-                console.log(user)
                 const type = userInfo["preset"][generate_random_number(userInfo["preset"].length)];
                 
                 //Makes a obj with info for new quest
