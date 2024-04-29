@@ -1,0 +1,537 @@
+// The function which enables tab switching
+document.addEventListener('DOMContentLoaded', function () {
+    // Assigns all tabs to an array called links
+    const links = document.querySelectorAll('nav a');
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('#side-nav a');
+
+    // Add click event listener to all buttons for tabs
+    links.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            // Disables the hyperref linking from the tab itself since we aren't redirecting, but instead showing and hiding specific pages
+            e.preventDefault();
+
+            // Remove 'active' class from all tabs
+            document.querySelectorAll('.page').forEach(function (page) {
+                page.classList.remove('active');
+            });
+
+            // Get the id for the tab which has been clicked
+            const targetId = this.getAttribute('href').substring(1);
+
+            // Add 'active' class to tab which has been clicked
+            document.getElementById(targetId).classList.add('active');
+
+            // Fetch and display user information on the profile page
+            if (targetId === 'profilepage') {
+                fetchUserData('idkey1');
+            }
+
+            highlightNavLink(targetId);
+        });
+    });
+// Load existing friends from local storage
+loadFriends();
+
+// Add event listener to the form to add a friend contactlist
+document.getElementById("friendForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const name = document.getElementById("name").value;
+    const age = document.getElementById("age").value;
+    addFriend(name, age);
+    saveFriends();
+    this.reset();
+});
+    document.getElementById('toggleCreatePageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('createAccount');
+        const loginPage = document.getElementById('loginPage');
+
+        createAccountPage.classList.remove('active');
+        loginPage.classList.add('active');
+        clearCreateErrorMessage();
+        document.querySelector('input[name="create_username"]').value = '';
+        document.querySelector('input[name="create_password"]').value = '';
+        document.querySelector('input[name="create_confirm_password"]').value = '';
+    });
+
+    document.getElementById('toggleLoginPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('createAccount');
+        const loginPage = document.getElementById('loginPage');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+        clearLoginErrorMessage();
+        document.querySelector('input[name="login_username"]').value = '';
+        document.querySelector('input[name="login_password"]').value = '';
+    });
+
+
+    // Add event listener to the submit button
+    document.getElementById('submitBtn').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Get username and password values
+        const username = document.querySelector('input[name="create_username"]').value;
+        const password = document.querySelector('input[name="create_password"]').value;
+        const confirmPassword = document.querySelector('input[name="create_confirm_password"]').value;
+
+        if (password !== confirmPassword) {
+            displayCreateErrorMessage("Passwords do not match");
+        }
+        else {
+            clearCreateErrorMessage();
+
+            // Create an object with username and password
+            const userData = {
+                username: username,
+                password: password
+            };
+
+            // Send the data to the server-side script for file writing
+            createUser(userData);
+        }
+    });
+
+    document.getElementById('loginBtn').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+    
+        // Get username and password values
+        const username = document.querySelector('input[name="login_username"]').value;
+        const password = document.querySelector('input[name="login_password"]').value;
+    
+        // Create an object with username and password
+        const loginData = {
+            username: username,
+            password: password
+        };
+    
+        // Send the data to the server-side script for login authentication
+        loginUser(loginData);
+    });
+    
+    
+    function loginUser(loginData) {
+        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(loginData)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('User successfully logged in');
+                // Reset input fields
+                document.querySelector('input[name="login_username"]').value = '';
+                document.querySelector('input[name="login_password"]').value = '';
+    
+                clearLoginErrorMessage();
+    
+                // Update UI to reflect logged-in status (e.g., display username in the top right)
+                // Redirect to home page or perform other actions as needed
+            } else {
+                response.text().then(errorMessage => {
+                    displayLoginErrorMessage(errorMessage);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Function to send data to server-side script
+    function createUser(userData) {
+        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Data successfully sent to server');
+                    // Reset input fields
+                    document.querySelector('input[name="create_username"]').value = '';
+                    document.querySelector('input[name="create_password"]').value = '';
+                    document.querySelector('input[name="create_confirm_password"]').value = '';
+
+                    clearCreateErrorMessage();
+
+                    // Redirect to home page
+                    document.getElementById('main').classList.add('active');
+                    document.getElementById('loginpage').classList.remove('active');
+                } else {
+                    response.text().then(errorMessage => {
+                        displayCreateErrorMessage(errorMessage);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function displayCreateErrorMessage(message) {
+        const errorMessage = document.getElementById('createErrorMessage');
+        errorMessage.textContent = message;
+        errorMessage.style.color = 'red';
+    }
+
+    function clearCreateErrorMessage() {
+        const errorMessage = document.getElementById('createErrorMessage');
+        errorMessage.textContent = '';
+    }
+
+
+    //Function which highlights the link of the currently selected tab
+    function highlightNavLink(pageId) {
+        // Remove 'active' class from all navigation links
+        var navLinks = document.querySelectorAll('#side-nav a');
+        navLinks.forEach(function(link) {
+            link.classList.remove('active');
+        });
+        
+        // Add 'active' class to the corresponding navigation link
+        var activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        activeLink.classList.add('active');
+        }
+});
+
+// Function to display login error message
+function displayLoginErrorMessage(message) {
+    const loginErrorMessage = document.getElementById('loginErrorMessage');
+    loginErrorMessage.textContent = message;
+    loginErrorMessage.style.color = 'red';
+}
+
+// Function to clear login error message
+function clearLoginErrorMessage() {
+    const loginErrorMessage = document.getElementById('loginErrorMessage');
+    loginErrorMessage.textContent = '';
+}
+
+function fetchUserData(username) {
+    // Fetch the JSON data
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
+            }
+            return response.json(); // Parse response body as JSON
+        })
+        .then(data => {
+            console.log(data);
+            // Process the JSON data here
+            processData(data, username);
+        })
+        .catch(error => console.error('Error fetching JSON:', error));
+}
+
+
+function processData(data, username) {
+    // Check if users_info exists in data
+    if (data.users_info) {
+        // Check if the specified username exists
+        if (username && data.users_info[username]) {
+            // Extract user information
+            const userInfo = data.users_info[username];
+
+            // Display the user information
+            displayUserInfo(userInfo);
+            displayUserPreferences(username, userInfo); // Pass username to displayUserPreferences
+                    
+            // Update the dropdown menu with the current preset
+            const presetDropdown = document.getElementById('presetDropdown');
+            presetDropdown.value = userInfo.preset.name; // Assuming preset.name holds the current preset value
+        } else {
+            console.error(`${username} not found in JSON data`);
+        }
+    } else {
+        console.error('users_info not found in JSON data');
+    }
+}
+
+
+// Function to display user information
+function displayUserInfo(userInfo) {
+    const userInfoDiv = document.getElementById('userInfo');
+    const userInfoHTML = `
+        <h2 style="text-align: center;">User info</h2>
+        <p>Height: ${userInfo.health.height}</p>
+        <p>Weight: ${userInfo.health.weight}</p>
+    `;
+    userInfoDiv.innerHTML = userInfoHTML;
+}
+
+function displayUserPreferences(username, userInfo) {
+    const preset = userInfo.preset.name;
+    const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
+    const countMap = {};
+    
+    // Filter out empty strings or undefined values (if any)
+    const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
+    
+    // Count occurrences of each element in the filtered array
+    filteredArray.forEach(element => {
+        if (countMap[element]) {
+            countMap[element]++;
+        } else {
+            countMap[element] = 1;
+        }
+    });
+
+    // Generate sliders for exercise preferences
+    const userInfoDiv = document.getElementById('userPreferences');
+    let slidersHTML = '';
+
+    slidersHTML = `
+        <div>
+            <label for="pushups">Pushups</label>
+            <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
+            <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
+        </div>
+        <div>
+            <label for="run">Run</label>
+            <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
+            <span id="runCounter">${countMap.run || 1}</span>
+        </div>
+        <div>
+            <label for="walk">Walk</label>
+            <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
+            <span id="walkCounter">${countMap.walk || 1}</span>
+        </div>
+    `;
+    
+    const userInfoHTML = `
+        <h2 style="text-align: center;">Preferences</h2>
+        <label for="presetDropdown">Choose a preset:</label>
+        <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
+            <option value="run">Run</option>
+            <option value="walk">Walk</option>
+            <option value="strength">Strength</option>
+            <option value="custom">Custom</option>
+        </select>
+        <p>Exercise preferences:</p>
+        ${slidersHTML}
+        ${preset === 'custom' ? '<button onclick="postCustomData(\'' + username + '\')">Save Preset</button>' : ''}
+    `;
+    userInfoDiv.innerHTML = userInfoHTML;
+
+    // Update counter values for custom preset
+    if (preset === 'custom') {
+        updateCounter('pushups', countMap['push-ups'] || 1);
+        updateCounter('run', countMap.run || 1);
+        updateCounter('walk', countMap.walk || 1);
+    }
+}
+
+
+
+function updateCounter(exercise, value) {
+    document.getElementById(`${exercise}Counter`).textContent = value;
+}
+
+
+function postCustomData(username) {
+    const pushupsValue = document.getElementById('pushups').value;
+    const runValue = document.getElementById('run').value;
+    const walkValue = document.getElementById('walk').value;
+
+    const newUserInfo = {
+        username: username,
+        preset: {
+            name: 'custom',
+            conf: [
+                ...Array(Number(pushupsValue)).fill('push-ups'),
+                ...Array(Number(runValue)).fill('run'),
+                ...Array(Number(walkValue)).fill('walk')
+            ]
+        }
+    };
+
+    update_users_info(newUserInfo);
+}
+
+
+// Function to generate sliders for exercise preferences
+function generateSliders(countMap) {
+    return Object.entries(countMap).map(([exercise, count]) => `
+        <div>
+            <label for="${exercise}">${exercise}</label>
+            <input type="range" id="${exercise}" name="${exercise}" min="1" max="10" value="${count}" disabled>
+            <span>${count}</span>
+        </div>
+    `).join('');
+}
+
+function updatePreset(username, preset) {
+    let conf = [];
+    if (preset === 'run') {
+        conf = ['run','run','run','run','run','run','run','run','run','run',
+        'walk','walk','walk','walk',
+        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob',
+        'crunches','crunches','crunches'];
+    } 
+    else if (preset === 'walk') {
+        conf = ['run','run','run','run',
+        'walk','walk','walk','walk','walk','walk','walk','walk','walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches'];
+    }
+
+    else if (preset === 'strength') {
+        conf = ['run','run',
+        'walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches',
+        'push-ups','push-ups','push-ups','push-ups',];
+    }
+
+    else if (preset === 'custom') {
+        conf = ['run','run',
+        'walk','walk',
+        'crunches','crunches','crunches','crunches','crunches','crunches',
+        'push-ups','push-ups','push-ups','push-ups',
+        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob'];
+    }
+
+    // Define the new user info object
+    const newUserInfo = {
+        username: username,
+        preset: {
+            name: preset,
+            conf: conf
+        }
+    };
+
+    // Update the user info on the server
+    update_users_info(newUserInfo);
+}
+
+//contactList
+function saveFriends() {
+    const friendItems = document.querySelectorAll("#friendList li");
+    const friends = [];
+    let errorEncountered = false; // Track if an error is encountered
+    friendItems.forEach(item => {
+        // Splitting by " - " to separate name and age
+        const [name, ageText] = item.textContent.split(" - ");
+        
+        // Extracting age value and removing "Delete" text if present
+        let age = parseInt(ageText.replace("Delete", "").trim());
+
+        // Validate if age is a valid number
+        if (isNaN(age) || age < 1 || age > 110) {
+            console.error("Invalid age found:", age);
+            // Optionally, display an error message on the screen
+            alert("Invalid age: Age must be a number between 1 and 110.");
+            errorEncountered = true; // Set error flag
+            
+            // Remove the corresponding list item from the DOM
+            item.remove();
+            
+            return; // Skip adding this friend if age is invalid
+        }
+
+        // Construct friend object and add to the friends array
+        friends.push({ name, age });
+    });
+
+    // If an error was encountered, do not proceed with saving friends
+    if (errorEncountered) {
+        console.error('Error encountered. Friends not saved.');
+        return;
+    }
+
+    // POST request to save friends to the server
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node2/saveContacts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(friends)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to save friends');
+        }
+        return response.json(); // Parse response body as JSON
+    })
+    .then(data => {
+        console.log('Friends saved successfully:', data);
+        // Optionally, perform any additional actions after successful save
+    })
+    .catch(error => {
+        console.error('Error saving friends:', error);
+        // Optionally, notify the user about the error
+    });
+
+}
+
+
+
+
+
+
+
+function update_users_info(newUserInfo) {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newUserInfo)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch POST');
+            }
+            return response.json(); // Read response JSON
+        })
+        .then(responseJson => {
+            console.log('Response from POST:', responseJson);
+            if (responseJson.success) {
+                console.log('User info updated successfully');
+                // Fetch user data again after successful update
+                fetchUserData(newUserInfo.username);
+            } else {
+                console.error('User info update failed:', responseJson.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching POST users_info:', error);
+        });
+}
+
+function addFriend(name, age) {
+    const friend = { name, age };
+    const listItem = document.createElement("li");
+    listItem.textContent = `${name} - ${age}`;
+    
+    // Add delete button to the list item
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", function() {
+        listItem.remove();
+        saveFriends();
+    });
+    listItem.appendChild(deleteButton);
+
+    document.getElementById("friendList").appendChild(listItem);
+}
+
+function loadFriends() {
+    const savedFriends = localStorage.getItem("friends");
+    if (savedFriends) {
+        const friends = JSON.parse(savedFriends);
+        friends.forEach(friend => {
+            addFriend(friend.name, friend.age);
+        });
+    }
+}
+
+
