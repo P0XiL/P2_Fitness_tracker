@@ -485,7 +485,7 @@ function display_quest(quest, userInfox, user) {
 
 
 
-//TODO: Save type
+
 //TODO: Prettiere popus
 
 
