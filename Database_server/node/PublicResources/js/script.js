@@ -223,50 +223,6 @@ const tierNames = {
     '43-45': 'Gold 1',
 };
 
-
-async function setupTiersForQuestPage(username) {
-    console.log('hej');
-    try {
-        // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
-
-        // Log the JSON object fetched to the console
-        console.log('Fetched JSON data:', data);
-        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
-        
-
-        return data.users_info[username]; // Return the user info
-    } catch (error) {
-        console.error('Error fetching JSON:', error);
-        throw error; // Re-throw the error for handling by the caller
-    }
-}
-
-
-function displayUserInfo(username, userInfo) {
-    const userInfoDiv = document.getElementById('userInfo');
-    let userInfoHTML = `
-        <h2 style="text-align: center;">User info</h2>
-        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
-        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
-        <button onclick="postUserInfo('${username}')">Save User Info</button>
-        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
-    `;
-    userInfoDiv.innerHTML = userInfoHTML;
-
-    // Calculate and display initial BMI if height and weight are present
-    const height = parseFloat(userInfo.health.height);
-    const weight = parseFloat(userInfo.health.weight);
-    if (!isNaN(height) && !isNaN(weight)) {
-        updateBMI(height, weight);
-    }
-}
-
-
 function displayUserMasteries(masteryInfo) {
     const userMasteriesDiv = document.getElementById('userMasteries');
     userMasteriesDiv.classList.add('mastery-grid-container');
@@ -290,28 +246,28 @@ function displayUserMasteries(masteryInfo) {
 
     // Create button to reveal hidden masteries
     // Check if the revealButton already exists
-let revealButton = document.getElementById('revealButton');
+    let revealButton = document.getElementById('revealButton');
 
 // If revealButton doesn't exist, create it
-if (!revealButton) {
-    revealButton = document.createElement('button');
-    revealButton.id = 'revealButton';
-    revealButton.textContent = 'Show More Masteries';
-    userMasteriesDiv.insertAdjacentElement('afterend', revealButton); // Append after userMasteriesDiv
+    if (!revealButton) {
+        revealButton = document.createElement('button');
+        revealButton.id = 'revealButton';
+        revealButton.textContent = 'Show More Masteries';
+        userMasteriesDiv.insertAdjacentElement('afterend', revealButton); // Append after userMasteriesDiv
 
-    // Add event listener only once
-    revealButton.addEventListener('click', () => {
-        // Append the rest of the masteries
-        for (let i = 3; i < sortedMasteries.length; i++) {
-            const [masteryKey, mastery] = sortedMasteries[i];
-            const masteryDiv = createMasteryItem(masteryKey, mastery);
-            userMasteriesDiv.appendChild(masteryDiv);
-            masteryDivs.push(masteryDiv);
-        }
-        // Show the hide button
-        hideButton.style.display = 'inline-block';
-        // Hide the reveal button
-        revealButton.style.display = 'none';
+        // Add event listener only once
+        revealButton.addEventListener('click', () => {
+            // Append the rest of the masteries
+            for (let i = 3; i < sortedMasteries.length; i++) {
+                const [masteryKey, mastery] = sortedMasteries[i];
+                const masteryDiv = createMasteryItem(masteryKey, mastery);
+                userMasteriesDiv.appendChild(masteryDiv);
+                masteryDivs.push(masteryDiv);
+            }
+            // Show the hide button
+            hideButton.style.display = 'inline-block';
+            // Hide the reveal button
+            revealButton.style.display = 'none';
     });
 }
 
@@ -333,10 +289,6 @@ if (!revealButton) {
         hideButton.style.display = 'none';
     });
 }
-
-
-
-
 
 // Helper function to create mastery item
 function createMasteryItem(masteryKey, mastery) {
@@ -384,6 +336,144 @@ function createMasteryItem(masteryKey, mastery) {
     masteryDiv.appendChild(progressBar);
 
     return masteryDiv;
+}
+
+function displayUserInfo(username, userInfo) {
+    const userInfoDiv = document.getElementById('userInfo');
+    let userInfoHTML = `
+        <h2 style="text-align: center;">User info</h2>
+        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
+        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
+        <button onclick="postUserInfo('${username}')">Save User Info</button>
+        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
+    `;
+    userInfoDiv.innerHTML = userInfoHTML;
+
+    // Calculate and display initial BMI if height and weight are present
+    const height = parseFloat(userInfo.health.height);
+    const weight = parseFloat(userInfo.health.weight);
+    if (!isNaN(height) && !isNaN(weight)) {
+        updateBMI(height, weight);
+    }
+}
+
+async function postUserInfo(username) {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+
+    try {
+        // Fetch the JSON data
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
+        }
+        const data = await response.json(); // Parse response body as JSON
+
+        if (data.users_info && data.users_info[username]) {
+            const existingUserInfo = data.users_info[username];
+
+            // Create a new user info object with the updated health information
+            const newUserInfo = {
+                username: existingUserInfo.username,
+                health: {
+                    height: height,
+                    weight: weight
+                },
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: existingUserInfo.preset
+            };
+
+            // Update the user info on the server
+            update_users_info(newUserInfo);
+
+            // Calculate and display BMI
+            const bmi = calculateBMI(height, weight);
+            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
+        } else {
+            console.error('User info not found for username:', username);
+        }
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+    }
+}
+
+// Function to update user info
+function update_users_info(newUserInfo) {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newUserInfo, null, 2) // Use null for replacer and 2 for indentation
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch POST');
+            }
+            return response.json(); // Read response JSON
+        })
+        .then(responseJson => {
+            console.log('Response from POST:', responseJson);
+            if (responseJson.success) {
+                console.log('User info updated successfully');
+                // Fetch user data again after successful update
+                setupProfilePage(newUserInfo.username);
+            } else {
+                console.error('User info update failed:', responseJson.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching POST users_info:', error);
+        });
+}
+
+// Function to update BMI text
+function updateBMI(height, weight) {
+    const bmi = calculateBMI(height, weight);
+    const bmiText = document.getElementById('bmiText');
+    bmiText.textContent = `BMI: ${bmi}`;
+}
+
+// Update BMI text after user inputs height or weight
+document.getElementById('height').addEventListener('input', function() {
+    const height = parseFloat(this.value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    if (!isNaN(height) && !isNaN(weight)) {
+        updateBMI(height, weight);
+    }
+});
+
+document.getElementById('weight').addEventListener('input', function() {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(this.value);
+    if (!isNaN(height) && !isNaN(weight)) {
+        updateBMI(height, weight);
+    }
+});
+
+
+async function setupTiersForQuestPage(username) {
+    console.log('hej');
+    try {
+        // Fetch the JSON data
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
+        }
+        const data = await response.json(); // Parse response body as JSON
+
+        // Log the JSON object fetched to the console
+        console.log('Fetched JSON data:', data);
+        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
+        
+
+        return data.users_info[username]; // Return the user info
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Re-throw the error for handling by the caller
+    }
 }
 
 
@@ -439,51 +529,6 @@ function getSubTierRange(rank) {
     }
 }
 
-
-
-
-
-async function postUserInfo(username) {
-    const height = parseFloat(document.getElementById('height').value);
-    const weight = parseFloat(document.getElementById('weight').value);
-
-    try {
-        // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
-
-        if (data.users_info && data.users_info[username]) {
-            const existingUserInfo = data.users_info[username];
-
-            // Create a new user info object with the updated health information
-            const newUserInfo = {
-                username: existingUserInfo.username,
-                health: {
-                    height: height,
-                    weight: weight
-                },
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
-                preset: existingUserInfo.preset
-            };
-
-            // Update the user info on the server
-            update_users_info(newUserInfo);
-
-            // Calculate and display BMI
-            const bmi = calculateBMI(height, weight);
-            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
-        } else {
-            console.error('User info not found for username:', username);
-        }
-    } catch (error) {
-        console.error('Error fetching JSON:', error);
-    }
-}
 
 function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
@@ -695,36 +740,6 @@ async function updatePreset(username, preset) {
     }
 }
 
-// Function to update user info
-function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newUserInfo, null, 2) // Use null for replacer and 2 for indentation
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch POST');
-            }
-            return response.json(); // Read response JSON
-        })
-        .then(responseJson => {
-            console.log('Response from POST:', responseJson);
-            if (responseJson.success) {
-                console.log('User info updated successfully');
-                // Fetch user data again after successful update
-                setupProfilePage(newUserInfo.username);
-            } else {
-                console.error('User info update failed:', responseJson.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching POST users_info:', error);
-        });
-}
-
 
 // Calculate BMI function
 function calculateBMI(height, weight) {
@@ -734,27 +749,3 @@ function calculateBMI(height, weight) {
     const bmi = weight / (heightMeters * heightMeters);
     return bmi.toFixed(1); // Round to 1 decimal place
 }
-
-// Function to update BMI text
-function updateBMI(height, weight) {
-    const bmi = calculateBMI(height, weight);
-    const bmiText = document.getElementById('bmiText');
-    bmiText.textContent = `BMI: ${bmi}`;
-}
-
-// Update BMI text after user inputs height or weight
-document.getElementById('height').addEventListener('input', function() {
-    const height = parseFloat(this.value);
-    const weight = parseFloat(document.getElementById('weight').value);
-    if (!isNaN(height) && !isNaN(weight)) {
-        updateBMI(height, weight);
-    }
-});
-
-document.getElementById('weight').addEventListener('input', function() {
-    const height = parseFloat(document.getElementById('height').value);
-    const weight = parseFloat(this.value);
-    if (!isNaN(height) && !isNaN(weight)) {
-        updateBMI(height, weight);
-    }
-});
