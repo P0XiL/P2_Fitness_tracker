@@ -163,6 +163,8 @@ function storeLoginState(username) {
         expiration: expirationTime
     };
     localStorage.setItem('loginState', JSON.stringify(loginState));
+    localStorage.setItem('username', username);
+    localStorage.getItem('username');
 }
 
 // Function to check and handle login state on page load
@@ -186,7 +188,6 @@ function checkLoginState() {
         }
     }
 }
-
 
 
 function loginUser(loginData) {
@@ -213,6 +214,7 @@ function loginUser(loginData) {
                 highlightNavLink('main');
                 document.getElementById('loginPage').classList.remove('active');
 
+                location.reload();
 
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed

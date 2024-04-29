@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3360; 
+const port = 3364; 
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -164,8 +164,6 @@ function createUser(req, res) {
 }
 
 
-
-
 function errorResponse(res, code, reason) {
     res.statusCode = code;
     res.setHeader('Content-Type', 'text/txt');
@@ -314,10 +312,6 @@ function change_amount(req, res) {
         });
     });
 }
-
-
-
-
 
 
 function write_user_info_json(req, res) {
