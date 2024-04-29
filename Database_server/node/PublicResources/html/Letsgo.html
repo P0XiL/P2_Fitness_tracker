@@ -55,6 +55,10 @@
     <div id="main" class="page active">
         <h2 class="heading">Quests</h2>
         <div class="questpage">
+            <div id="dailyQuestTier" class="tiers"></div>
+            <div id="weeklyQuestTier" class="tiers"></div>
+            <div id="monthlyQuestTier" class="tiers"></div>
+
             <div id="quest1" class="quest">
                 <h2>Daily</h2>
                 <meter id="meter1" value="0" min="0" max="1"></meter> 
@@ -74,6 +78,14 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Call setupTiersForQuestPage when the website is entered
+        document.addEventListener('DOMContentLoaded', function () {
+            setupTiersForQuestPage('idkey1');
+        });
+    </script>
+
     
 
     <div id="friends" class="page center">
@@ -196,10 +208,43 @@
         <h2 class="heading">Profile</h2>
 
         <div id="profilePageContainer" class="profile"> 
+            <h2 style="text-align: center;">Tiers</h2>
 
+            <div id="userTiers" class="profile_layout">
+                <div class="tiers">
+                    <div id="dailyTier" class="tier">
+                        <h2>Daily <span id="dailyTierInfo">Tier</span></h2>
+                        <img id="dailyTierImage" src="image/bronzeTier.png" alt="Daily Tier Image">
+                        <meter id="dailyMeter" value="0" min="0" max="100" style="width: 50%;"></meter>
+                    </div>
+            
+                    <div id="weeklyTier" class="tier">
+                        <h2>Weekly <span id="weeklyTierInfo">Tier</span></h2>
+                        <img id="weeklyTierImage" src="image/silverTier.png" alt="Weekly Tier Image">
+                        <meter id="weeklyMeter" value="0" min="0" max="50" style="width: 50%;"></meter> 
+                    </div>
+            
+                    <div id="monthlyTier" class="tier">
+                        <h2>Monthly <span id="monthlyTierInfo">Tier</span></h2>
+                        <img id="monthlyTierImage" src="image/goldTier.png" alt="Monthly Tier Image">
+                        <meter id="monthlyMeter" value="0" min="0" max="20" style="width: 50%;"></meter> 
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h2 style="text-align: center;">Masteries</h2>
+            <div id="userMasteries" class="profile_layout">
+                <div class="tiers">
+                </div>
+            </div>
+            
+            
             <div id="userInfo" class="profile_layout">
-                <h2 style= "text-align: center">User info</h2>
-                <p>User goes here</p>
+                <h2 style="text-align: center;">User info</h2>
+                <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
+                <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
+                <button onclick="postUserInfo('${username}')">Save User Info</button>
+                <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
             </div>
 
             <div id="userPreferences" class="profile_layout">
