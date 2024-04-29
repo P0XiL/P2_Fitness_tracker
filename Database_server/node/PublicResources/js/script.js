@@ -309,7 +309,7 @@ function fetchUserData(username) {
 async function setupProfilePage(username) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -621,7 +621,7 @@ async function postUserInfo(username) {
 
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -659,7 +659,7 @@ async function postUserInfo(username) {
 
 // Function to update user info
 function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -715,7 +715,7 @@ async function setupTiersForQuestPage(username) {
     console.log('hej');
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -904,7 +904,7 @@ function generateSliders(countMap) {
 async function updatePreset(username, preset) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
