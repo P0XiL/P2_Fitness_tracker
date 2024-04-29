@@ -164,8 +164,6 @@ function createUser(req, res) {
 }
 
 
-
-
 function errorResponse(res, code, reason) {
     res.statusCode = code;
     res.setHeader('Content-Type', 'text/txt');
@@ -314,10 +312,6 @@ function change_amount(req, res) {
         });
     });
 }
-
-
-
-
 
 
 function write_user_info_json(req, res) {
