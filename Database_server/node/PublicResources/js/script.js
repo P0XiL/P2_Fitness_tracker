@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
-                fetchUserData('idkey1'); 
+                fetchUserData('idkey1');
             }
             else if (targetId === 'main') { // Check if the clicked tab is the quest page
                 setupTiersForQuestPage('idkey1'); // Call setupTiersForQuestPage with the appropriate username
@@ -137,11 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
         createAccountPage.classList.add('active');
     });
 
-
-
-    // Call checkLoginState() on page load
-    window.addEventListener('load', checkLoginState);
-
     //Function which highlights the link of the currently selected tab
     function highlightNavLink(pageId) {
         // Remove 'active' class from all navigation links
@@ -156,6 +151,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
         activeLink.classList.add('active');
     }
+
+    // Call checkLoginState() on page load
+    window.addEventListener('load', checkLoginState);
 });
 
 // Function to handle storing login state
@@ -173,8 +171,7 @@ function storeLoginState(username) {
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
     const username = localStorage.getItem('username');
-    console.log(username)
-    
+    console.log(username);
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -227,7 +224,7 @@ function loginUser(loginData) {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
-            
+
             //highlightNavLink(targetId);
         });
 }
@@ -341,8 +338,8 @@ async function setupTiersForQuestPage(username) {
 
         // Log the JSON object fetched to the console
         console.log('Fetched JSON data:', data);
-        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
-        
+        displayUserTiers(data.users_info[username], 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
+
 
         return data.users_info[username]; // Return the user info
     } catch (error) {
@@ -374,7 +371,7 @@ function processData(data, username) {
 
             // Display the user information
             displayUserInfo(username, userInfo);
-            
+
             // Check if userInfo contains 'preset' property before calling displayUserPreferences
             if (userInfo.preset) {
                 displayUserPreferences(username, userInfo);
@@ -434,7 +431,7 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
     createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
     createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
-    
+
     // Create a function to generate tier grid items
     function createTierGridItem(container, title, imageSrc, elo, period) {
         const gridItem = document.createElement('div');
@@ -529,7 +526,7 @@ function displayUserMasteries(masteryInfo) {
     // Check if the revealButton already exists
     let revealButton = document.getElementById('revealButton');
 
-// If revealButton doesn't exist, create it
+    // If revealButton doesn't exist, create it
     if (!revealButton) {
         revealButton = document.createElement('button');
         revealButton.id = 'revealButton';
@@ -549,10 +546,10 @@ function displayUserMasteries(masteryInfo) {
             hideButton.style.display = 'inline-block';
             // Hide the reveal button
             revealButton.style.display = 'none';
-    });
-}
+        });
+    }
 
-    
+
 
     // Create button to hide extra masteries
     const hideButton = document.createElement('button');
@@ -718,7 +715,7 @@ function updateBMI(height, weight) {
 }
 
 // Update BMI text after user inputs height or weight
-document.getElementById('height').addEventListener('input', function() {
+document.getElementById('height').addEventListener('input', function () {
     const height = parseFloat(this.value);
     const weight = parseFloat(document.getElementById('weight').value);
     if (!isNaN(height) && !isNaN(weight)) {
@@ -726,7 +723,7 @@ document.getElementById('height').addEventListener('input', function() {
     }
 });
 
-document.getElementById('weight').addEventListener('input', function() {
+document.getElementById('weight').addEventListener('input', function () {
     const height = parseFloat(document.getElementById('height').value);
     const weight = parseFloat(this.value);
     if (!isNaN(height) && !isNaN(weight)) {
@@ -746,8 +743,8 @@ async function setupTiersForQuestPage(username) {
 
         // Log the JSON object fetched to the console
         console.log('Fetched JSON data:', data);
-        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
-        
+        displayUserTiers(data.users_info[username], 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
+
 
         return data.users_info[username]; // Return the user info
     } catch (error) {
@@ -849,10 +846,10 @@ function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
-    
+
     // Filter out empty strings or undefined values (if any)
     const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
-    
+
     // Count occurrences of each element in the filtered array
     filteredArray.forEach(element => {
         if (countMap[element]) {
@@ -867,7 +864,7 @@ function displayUserPreferences(username, userInfo) {
     let slidersHTML = '';
 
     // Check if countMap for each exercise is greater than 0, then include the slider
-    if (countMap['push-ups'] > 0 || preset=='custom') {
+    if (countMap['push-ups'] > 0 || preset == 'custom') {
         slidersHTML += `
             <div>
                 <label for="pushups">Pushups</label>
@@ -876,7 +873,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.run > 0 || preset=='custom') {
+    if (countMap.run > 0 || preset == 'custom') {
         slidersHTML += `
             <div>
                 <label for="run">Run</label>
@@ -885,7 +882,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.walk > 0 || preset=='custom') {
+    if (countMap.walk > 0 || preset == 'custom') {
         slidersHTML += `
             <div>
                 <label for="walk">Walk</label>
@@ -894,7 +891,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.crunches >= 0 || preset=='custom') { // Updated condition for crunches
+    if (countMap.crunches >= 0 || preset == 'custom') { // Updated condition for crunches
         slidersHTML += `
             <div>
                 <label for="crunches">Crunches</label>
@@ -903,7 +900,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    
+
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
@@ -941,10 +938,10 @@ function postCustomData(username) {
 
     const newUserInfo = {
         username: existingUserInfo.username,
-                health: existingUserInfo.health,
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
+        health: existingUserInfo.health,
+        mastery: existingUserInfo.mastery,
+        hiddenRank: existingUserInfo.hiddenRank,
+        tier: existingUserInfo.tier,
         preset: {
             name: 'custom',
             conf: [
