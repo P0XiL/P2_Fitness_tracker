@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
-                setupProfilePage('idkey1');
-            } else if (targetId === 'main') { // Check if the clicked tab is the quest page
+                fetchUserData('idkey1'); 
+            }
+            else if (targetId === 'main') { // Check if the clicked tab is the quest page
                 setupTiersForQuestPage('idkey1'); // Call setupTiersForQuestPage with the appropriate username
             }
 
@@ -33,8 +34,247 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Add other event listeners and functions here...
+    document.getElementById('toggleCreatePageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('createAccount');
+        const loginPage = document.getElementById('loginPage');
+
+        createAccountPage.classList.remove('active');
+        loginPage.classList.add('active');
+        clearCreateErrorMessage();
+        document.querySelector('input[name="create_username"]').value = '';
+        document.querySelector('input[name="create_password"]').value = '';
+        document.querySelector('input[name="create_confirm_password"]').value = '';
+    });
+
+    document.getElementById('toggleLoginPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('createAccount');
+        const loginPage = document.getElementById('loginPage');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+        clearLoginErrorMessage();
+        document.querySelector('input[name="login_username"]').value = '';
+        document.querySelector('input[name="login_password"]').value = '';
+    });
+
+
+
+
+    // Add event listener to the submit button
+    document.getElementById('submitBtn').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Get username and password values
+        const username = document.querySelector('input[name="create_username"]').value;
+        const password = document.querySelector('input[name="create_password"]').value;
+        const confirmPassword = document.querySelector('input[name="create_confirm_password"]').value;
+
+        if (password !== confirmPassword) {
+            displayCreateErrorMessage("Passwords do not match");
+        }
+        else {
+            clearCreateErrorMessage();
+
+            // Create an object with username and password
+            const userData = {
+                username: username,
+                password: password
+            };
+
+            // Send the data to the server-side script for file writing
+            createUser(userData);
+        }
+    });
+
+    document.getElementById('loginBtn').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Get username and password values
+        const username = document.querySelector('input[name="login_username"]').value;
+        const password = document.querySelector('input[name="login_password"]').value;
+
+        // Create an object with username and password
+        const loginData = {
+            username: username,
+            password: password
+        };
+
+        // Send the data to the server-side script for login authentication
+        loginUser(loginData);
+    });
+
+    document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userstats');
+        const loginPage = document.getElementById('stats');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPlotPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('FriendsPlot');
+        const loginPage = document.getElementById('userfriend');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userfriend');
+        const loginPage = document.getElementById('friends');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+
+
+    // Call checkLoginState() on page load
+    window.addEventListener('load', checkLoginState);
+
+    //Function which highlights the link of the currently selected tab
+    function highlightNavLink(pageId) {
+        // Remove 'active' class from all navigation links
+        const navLinks = document.querySelectorAll('#side-nav a');
+        navLinks.forEach(function (link) {
+            link.classList.remove('active');
+        });
+        if (pageId == "loginPage") {
+            return;
+        }
+        // Add 'active' class to the corresponding navigation link
+        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        activeLink.classList.add('active');
+    }
 });
+
+// Function to handle storing login state
+function storeLoginState(username) {
+    const expirationTime = new Date().getTime() + (30 * 60 * 1000); // 30 minutes expiration
+    const loginState = {
+        username: username,
+        expiration: expirationTime
+    };
+    localStorage.setItem('loginState', JSON.stringify(loginState));
+    localStorage.setItem('username', username);
+    localStorage.getItem('username');
+}
+
+// Function to check and handle login state on page load
+function checkLoginState() {
+    const loginState = localStorage.getItem('loginState');
+    if (loginState) {
+        const parsedLoginState = JSON.parse(loginState);
+        if (parsedLoginState.expiration > new Date().getTime()) {
+            // Log the user in automatically
+            const username = parsedLoginState.username;
+            loginUser({ username: username });
+
+            // Update UI to display logged-in username
+            document.getElementById('usernameDisplay').textContent = "Hello, " + username;
+
+            // Update profile link to point to profile page
+            document.getElementById('profileLink').href = "#profilepage";
+        } else {
+            // Clear expired login state
+            localStorage.removeItem('loginState');
+        }
+    }
+}
+
+
+function loginUser(loginData) {
+    fetch('http://127.0.0.1:3360/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('User successfully logged in');
+                // Reset input fields
+                document.querySelector('input[name="login_username"]').value = '';
+                document.querySelector('input[name="login_password"]').value = '';
+
+                clearLoginErrorMessage();
+
+                storeLoginState(loginData.username);
+
+                // Redirect to home page
+                document.getElementById('main').classList.add('active');
+                highlightNavLink('main');
+                document.getElementById('loginPage').classList.remove('active');
+
+                location.reload();
+
+                // Update UI to reflect logged-in status (e.g., display username in the top right)
+                // Redirect to home page or perform other actions as needed
+            } else {
+                response.text().then(errorMessage => {
+                    displayLoginErrorMessage(errorMessage);
+                });
+            }
+
+            highlightNavLink(targetId);
+        });
+}
+
+// Function to send data to server-side script
+function createUser(userData) {
+    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Data successfully sent to server');
+                // Reset input fields
+                document.querySelector('input[name="create_username"]').value = '';
+                document.querySelector('input[name="create_password"]').value = '';
+                document.querySelector('input[name="create_confirm_password"]').value = '';
+
+                clearCreateErrorMessage();
+
+                // Redirect to home page
+                document.getElementById('main').classList.add('active');
+                highlightNavLink('main');
+                document.getElementById('loginPage').classList.remove('active');
+            } else {
+                response.text().then(errorMessage => {
+                    displayCreateErrorMessage(errorMessage);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function displayCreateErrorMessage(message) {
+    const errorMessage = document.getElementById('createErrorMessage');
+    errorMessage.textContent = message;
+    errorMessage.style.color = 'red';
+}
+
+function clearCreateErrorMessage() {
+    const errorMessage = document.getElementById('createErrorMessage');
+    errorMessage.textContent = '';
+}
 
 // Function to display login error message
 function displayLoginErrorMessage(message) {
@@ -49,10 +289,27 @@ function clearLoginErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
+function fetchUserData(username) {
+    // Fetch the JSON data
+    fetch('http://127.0.0.1:3360/json/users_info.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
+            }
+            return response.json(); // Parse response body as JSON
+        })
+        .then(data => {
+            console.log(data);
+            // Process the JSON data here
+            processData(data, username);
+        })
+        .catch(error => console.error('Error fetching JSON:', error));
+}
+
 async function setupProfilePage(username) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -364,7 +621,7 @@ async function postUserInfo(username) {
 
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -647,7 +904,7 @@ function generateSliders(countMap) {
 async function updatePreset(username, preset) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/json/users_info.json');
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
