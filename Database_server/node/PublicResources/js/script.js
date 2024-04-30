@@ -137,6 +137,11 @@ document.addEventListener('DOMContentLoaded', function () {
         createAccountPage.classList.add('active');
     });
 
+
+
+    // Call checkLoginState() on page load
+    window.addEventListener('load', checkLoginState);
+
     //Function which highlights the link of the currently selected tab
     function highlightNavLink(pageId) {
         // Remove 'active' class from all navigation links
@@ -151,9 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
         activeLink.classList.add('active');
     }
-
-    // Call checkLoginState() on page load
-    window.addEventListener('load', checkLoginState);
 });
 
 // Function to handle storing login state
@@ -165,13 +167,12 @@ function storeLoginState(username) {
     };
     localStorage.setItem('loginState', JSON.stringify(loginState));
     localStorage.setItem('username', username);
+    localStorage.getItem('username');
 }
 
 // Function to check and handle login state on page load
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
-    const username = localStorage.getItem('username');
-    console.log(username);
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -213,19 +214,20 @@ function loginUser(loginData) {
 
                 // Redirect to home page
                 document.getElementById('main').classList.add('active');
-                //highlightNavLink('main');
+                highlightNavLink('main');
                 document.getElementById('loginPage').classList.remove('active');
+
+                location.reload();
 
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
-
             } else {
                 response.text().then(errorMessage => {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
 
-            //highlightNavLink(targetId);
+            highlightNavLink(targetId);
         });
 }
 
@@ -248,20 +250,20 @@ function createUser(userData) {
 
                 clearCreateErrorMessage();
 
-                    // Redirect to home page
-                    document.getElementById('surveyForm').classList.add('active');
-                    highlightNavLink('main');
-                    document.getElementById('createAccount').classList.remove('active');
-                } else {
-                    response.text().then(errorMessage => {
-                        displayCreateErrorMessage(errorMessage);
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
+                // Redirect to home page
+                document.getElementById('main').classList.add('active');
+                highlightNavLink('main');
+                document.getElementById('loginPage').classList.remove('active');
+            } else {
+                response.text().then(errorMessage => {
+                    displayCreateErrorMessage(errorMessage);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
 function displayCreateErrorMessage(message) {
     const errorMessage = document.getElementById('createErrorMessage');
@@ -344,7 +346,7 @@ function processData(data, username) {
 
             // Display the user information
             displayUserInfo(username, userInfo);
-
+            
             // Check if userInfo contains 'preset' property before calling displayUserPreferences
             if (userInfo.preset) {
                 displayUserPreferences(username, userInfo);
@@ -386,7 +388,7 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
     createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
     createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
-
+    
     // Create a function to generate tier grid items
     function createTierGridItem(container, title, imageSrc, elo, period) {
         const gridItem = document.createElement('div');
@@ -485,7 +487,7 @@ function displayUserMasteries(masteryInfo) {
     // Check if the revealButton already exists
     let revealButton = document.getElementById('revealButton');
 
-    // If revealButton doesn't exist, create it
+// If revealButton doesn't exist, create it
     if (!revealButton) {
         revealButton = document.createElement('button');
         revealButton.id = 'revealButton';
@@ -505,10 +507,10 @@ function displayUserMasteries(masteryInfo) {
             hideButton.style.display = 'inline-block';
             // Hide the reveal button
             revealButton.style.display = 'none';
-        });
-    }
+    });
+}
 
-
+    
 
     // Create button to hide extra masteries
     const hideButton = document.createElement('button');
@@ -633,7 +635,7 @@ async function postUserInfo(username) {
 
 // Function to update user info
 function update_users_info(newUserInfo) {
-    fetch('http://127.0.0.1:3360/write_user_info_json', {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -669,7 +671,7 @@ function updateBMI(height, weight) {
 }
 
 // Update BMI text after user inputs height or weight
-document.getElementById('height').addEventListener('input', function () {
+document.getElementById('height').addEventListener('input', function() {
     const height = parseFloat(this.value);
     const weight = parseFloat(document.getElementById('weight').value);
     if (!isNaN(height) && !isNaN(weight)) {
@@ -677,7 +679,7 @@ document.getElementById('height').addEventListener('input', function () {
     }
 });
 
-document.getElementById('weight').addEventListener('input', function () {
+document.getElementById('weight').addEventListener('input', function() {
     const height = parseFloat(document.getElementById('height').value);
     const weight = parseFloat(this.value);
     if (!isNaN(height) && !isNaN(weight)) {
@@ -691,8 +693,8 @@ async function setupTiersForQuestPage(username) {
 
         // Log the JSON object fetched to the console
         console.log('Fetched JSON data:', data);
-        displayUserTiers(data.users_info[username], 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
-
+        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
+        
 
         return data.users_info[username]; // Return the user info
     } catch (error) {
@@ -749,10 +751,10 @@ function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
-
+    
     // Filter out empty strings or undefined values (if any)
     const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
-
+    
     // Count occurrences of each element in the filtered array
     filteredArray.forEach(element => {
         if (countMap[element]) {
@@ -767,7 +769,7 @@ function displayUserPreferences(username, userInfo) {
     let slidersHTML = '';
 
     // Check if countMap for each exercise is greater than 0, then include the slider
-    if (countMap['push-ups'] > 0 || preset == 'custom') {
+    if (countMap['push-ups'] > 0 || preset=='custom') {
         slidersHTML += `
             <div>
                 <label for="pushups">Pushups</label>
@@ -776,7 +778,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.run > 0 || preset == 'custom') {
+    if (countMap.run > 0 || preset=='custom') {
         slidersHTML += `
             <div>
                 <label for="run">Run</label>
@@ -785,7 +787,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.walk > 0 || preset == 'custom') {
+    if (countMap.walk > 0 || preset=='custom') {
         slidersHTML += `
             <div>
                 <label for="walk">Walk</label>
@@ -794,7 +796,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.crunches >= 0 || preset == 'custom') { // Updated condition for crunches
+    if (countMap.crunches >= 0 || preset=='custom') { // Updated condition for crunches
         slidersHTML += `
             <div>
                 <label for="crunches">Crunches</label>
@@ -803,7 +805,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-
+    
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
@@ -883,6 +885,7 @@ function generateSliders(countMap) {
 async function updatePreset(username, preset) {
     try {
         const data = await fetchUserData(username);
+
         if (data.users_info && data.users_info[username]) {
             const existingUserInfo = data.users_info[username];
             let conf = [];
@@ -964,148 +967,11 @@ async function updatePreset(username, preset) {
     }
 }
 
-// Function to update user info
-function update_users_info(newUserInfo) {
-    fetch('http://127.0.0.1:3360/write_user_info_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newUserInfo, null, 2) // Use null for replacer and 2 for indentation
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch POST');
-            }
-            return response.json(); // Read response JSON
-        })
-        .then(responseJson => {
-            console.log('Response from POST:', responseJson);
-            if (responseJson.success) {
-                console.log('User info updated successfully');
-                // Fetch user data again after successful update
-                setupProfilePage(newUserInfo.username);
-            } else {
-                console.error('User info update failed:', responseJson.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching POST users_info:', error);
-        });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    function handleSurveyFormSubmit() {
-        const form = document.getElementById('surveyForm');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Extracting specific parameters from form data
-            const formData = new FormData(form);
-            const surveyData = {};
-            for (const [key, value] of formData.entries()) {
-                if (surveyData[key]) {
-                    if (!Array.isArray(surveyData[key])) {
-                        surveyData[key] = [surveyData[key]];
-                    }
-                    surveyData[key].push(value);
-                } else {
-                    surveyData[key] = value;
-                }
-            }
-            console.log(surveyData);
-            sendSurveyData(surveyData);
-
-            document.getElementById('main').classList.add('active');
-            document.getElementById('surveyForm').classList.remove('active')
-        });
-    }
-
-    // Call the function to attach the event listener
-    handleSurveyFormSubmit();
-});
-
-function sendSurveyData(surveyData) {
-    fetch('http://127.0.0.1:3360/write_survey_data_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(surveyData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch POST');
-        }
-        return response.json();
-    })
-    .then(responseJson => {
-        console.log('Response from POST:', responseJson);
-        if (responseJson.success) {
-            console.log('Survey data sent successfully');
-        } else {
-            console.error('Failed to send survey data:', responseJson.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error sending survey data:', error);
-    });
-}
-
-let lastActiveDates = {};
-
-function updateStreak(userId) {
-  const currentDate = new Date().toDateString();
-  
-  if (!lastActiveDates[userId]) {
-    lastActiveDates[userId] = null;
-  }
-  
-  if (currentDate === lastActiveDates[userId]) {
-    return; // Already active today
-  }
-  
-  const lastDate = new Date();
-  lastDate.setDate(lastDate.getDate() - 1);
-  
-  const lastDateString = lastDate.toDateString();
-  
-  if (currentDate === lastDateString) {
-    if (lastActiveDates[userId] !== currentDate) {
-      lastActiveDates[userId] = currentDate;
-    }
-  } else {
-    lastActiveDates[userId] = currentDate;
-  }
-}
-
-function getStreakCount(userId) {
-  let streakCount = 0;
-  let currentDate = new Date().toDateString();
-  let lastDate = null;
-
-  if (lastActiveDates[userId]) {
-    lastDate = new Date(lastActiveDates[userId]);
-  }
-
-  if (lastDate) {
-    while (currentDate === lastDate.toDateString()) {
-      streakCount++;
-      lastDate.setDate(lastDate.getDate() - 1);
-      currentDate = lastDate.toDateString();
-    }
-  }
-
-  return streakCount;
-}
-
-updateStreak(userId); // Call this function whenever user is active
-const streakCount = getStreakCount(userId);
-console.log("Current streak for user", userId + ":", streakCount);
-
-// Display PNG image if streak is active
-if (streakCount > 0) {
-  const img = document.createElement("img");
-  img.src = "Database_server\node\PublicResources\image\Streak.png";
-  document.body.appendChild(img);
+// Calculate BMI function
+function calculateBMI(height, weight) {
+    // Convert height to meters
+    const heightMeters = height / 100;
+    // Calculate BMI
+    const bmi = weight / (heightMeters * heightMeters);
+    return bmi.toFixed(1); // Round to 1 decimal place
 }

@@ -44,7 +44,7 @@
         }
       },
       "preset": {
-        "name": "run",
+        "name": "custom",
         "conf": [
           "push-ups",
           "push-ups",
@@ -66,18 +66,6 @@
           "run",
           "run",
           "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "walk",
-          "walk",
-          "walk",
           "walk",
           "walk",
           "walk",
