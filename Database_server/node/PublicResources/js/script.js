@@ -194,7 +194,7 @@ function checkLoginState() {
 
 
 function loginUser(loginData) {
-    fetch('http://127.0.0.1:3360/login', {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -233,7 +233,7 @@ function loginUser(loginData) {
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
