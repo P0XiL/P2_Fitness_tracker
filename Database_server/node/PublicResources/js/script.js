@@ -184,7 +184,6 @@ function checkLoginState() {
             document.getElementById('usernameDisplay').textContent = "Hello, " + username;
             document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
 
-
             // Update profile link to point to profile page
             document.getElementById('profileLink').href = "#profilepage";
         } else {
@@ -206,22 +205,14 @@ function loginUser(loginData) {
         .then(response => {
             if (response.ok) {
                 console.log('User successfully logged in');
-                // Reset input fields
-                document.querySelector('input[name="login_username"]').value = '';
-                document.querySelector('input[name="login_password"]').value = '';
-
                 clearLoginErrorMessage();
 
                 storeLoginState(loginData.username);
 
                 // Redirect to home page
-                document.getElementById('main').classList.add('active');
                 //highlightNavLink('main');
+                document.getElementById('main').classList.add('active');
                 document.getElementById('loginPage').classList.remove('active');
-
-                // Update UI to reflect logged-in status (e.g., display username in the top right)
-                // Redirect to home page or perform other actions as needed
-
                 location.reload();
 
             } else {
@@ -246,10 +237,6 @@ function createUser(userData) {
         .then(response => {
             if (response.ok) {
                 console.log('Data successfully sent to server');
-                // Reset input fields
-                document.querySelector('input[name="create_username"]').value = '';
-                document.querySelector('input[name="create_password"]').value = '';
-                document.querySelector('input[name="create_confirm_password"]').value = '';
 
                 clearCreateErrorMessage();
 
