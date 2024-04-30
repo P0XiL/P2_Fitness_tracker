@@ -5,7 +5,8 @@
   "main": "app.js",
   "type": "module",
   "dependencies": {
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "node-localstorage": "^3.0.5"
   },
   "devDependencies": {
     "eslint": "^7.21.0"
