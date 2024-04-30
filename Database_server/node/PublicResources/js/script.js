@@ -75,6 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (password !== confirmPassword) {
             displayCreateErrorMessage("Passwords do not match");
+        } else if (password.length < 1) {
+            displayCreateErrorMessage("Password must be at least 1 character");
+        } else if (username.length < 1) {
+            displayCreateErrorMessage("Username must be at least 1 character");
         }
         else {
             clearCreateErrorMessage();
@@ -137,26 +141,24 @@ document.addEventListener('DOMContentLoaded', function () {
         createAccountPage.classList.add('active');
     });
 
-
-
     // Call checkLoginState() on page load
     window.addEventListener('load', checkLoginState);
-
-    //Function which highlights the link of the currently selected tab
-    function highlightNavLink(pageId) {
-        // Remove 'active' class from all navigation links
-        const navLinks = document.querySelectorAll('#side-nav a');
-        navLinks.forEach(function (link) {
-            link.classList.remove('active');
-        });
-        if (pageId == "loginPage") {
-            return;
-        }
-        // Add 'active' class to the corresponding navigation link
-        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
-        activeLink.classList.add('active');
-    }
 });
+
+//Function which highlights the link of the currently selected tab
+function highlightNavLink(pageId) {
+    // Remove 'active' class from all navigation links
+    const navLinks = document.querySelectorAll('#side-nav a');
+    navLinks.forEach(function (link) {
+        link.classList.remove('active');
+    });
+    if (pageId == "loginPage") {
+        return;
+    }
+    // Add 'active' class to the corresponding navigation link
+    const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+    activeLink.classList.add('active');
+}
 
 // Function to handle storing login state
 function storeLoginState(username) {
@@ -167,12 +169,13 @@ function storeLoginState(username) {
     };
     localStorage.setItem('loginState', JSON.stringify(loginState));
     localStorage.setItem('username', username);
-    localStorage.getItem('username');
 }
 
 // Function to check and handle login state on page load
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
+    const username = localStorage.getItem('username');
+    console.log(username);
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -182,6 +185,8 @@ function checkLoginState() {
 
             // Update UI to display logged-in username
             document.getElementById('usernameDisplay').textContent = "Hello, " + username;
+            document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
+
 
             // Update profile link to point to profile page
             document.getElementById('profileLink').href = "#profilepage";
@@ -214,20 +219,21 @@ function loginUser(loginData) {
 
                 // Redirect to home page
                 document.getElementById('main').classList.add('active');
-                highlightNavLink('main');
+                //highlightNavLink('main');
                 document.getElementById('loginPage').classList.remove('active');
-
-                location.reload();
 
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
+
+                location.reload();
+
             } else {
                 response.text().then(errorMessage => {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
 
-            highlightNavLink(targetId);
+            //highlightNavLink(targetId);
         });
 }
 
@@ -250,10 +256,15 @@ function createUser(userData) {
 
                 clearCreateErrorMessage();
 
+                highlightNavLink('main');
+
                 // Redirect to home page
                 document.getElementById('main').classList.add('active');
-                highlightNavLink('main');
-                document.getElementById('loginPage').classList.remove('active');
+                document.getElementById('createAccount').classList.remove('active');
+
+                storeLoginState(userData.username);
+
+                location.reload();
             } else {
                 response.text().then(errorMessage => {
                     displayCreateErrorMessage(errorMessage);
@@ -351,7 +362,7 @@ function processData(data, username) {
             if (userInfo.preset) {
                 displayUserPreferences(username, userInfo);
             } else {
-                console.error(`'preset' property not found in ${username}'s information`);
+                console.error(`'tiers' property not found in ${username}'s information`);
             }
 
         } else {
@@ -436,6 +447,17 @@ function getTierRange(rank) {
     }
 }
 
+// Function to get the tier range
+function getTierRange(rank) {
+    if (rank >= 1 && rank <= 15) {
+        return '1-15';
+    } else if (rank >= 16 && rank <= 30) {
+        return '16-30';
+    } else if (rank >= 31 && rank <= 45) {
+        return '31-45';
+    }
+    // Add more ranges as needed
+}
 
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
@@ -510,7 +532,6 @@ function displayUserMasteries(masteryInfo) {
     });
 }
 
-    
 
     // Create button to hide extra masteries
     const hideButton = document.createElement('button');
@@ -751,10 +772,10 @@ function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
-    
+
     // Filter out empty strings or undefined values (if any)
     const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
-    
+
     // Count occurrences of each element in the filtered array
     filteredArray.forEach(element => {
         if (countMap[element]) {
@@ -769,7 +790,7 @@ function displayUserPreferences(username, userInfo) {
     let slidersHTML = '';
 
     // Check if countMap for each exercise is greater than 0, then include the slider
-    if (countMap['push-ups'] > 0 || preset=='custom') {
+    if (countMap['push-ups'] > 0 || preset == 'custom') {
         slidersHTML += `
             <div>
                 <label for="pushups">Pushups</label>
@@ -778,7 +799,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.run > 0 || preset=='custom') {
+    if (countMap.run > 0 || preset == 'custom') {
         slidersHTML += `
             <div>
                 <label for="run">Run</label>
@@ -787,7 +808,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.walk > 0 || preset=='custom') {
+    if (countMap.walk > 0 || preset == 'custom') {
         slidersHTML += `
             <div>
                 <label for="walk">Walk</label>
@@ -796,7 +817,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.crunches >= 0 || preset=='custom') { // Updated condition for crunches
+    if (countMap.crunches >= 0 || preset == 'custom') { // Updated condition for crunches
         slidersHTML += `
             <div>
                 <label for="crunches">Crunches</label>
@@ -805,7 +826,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    
+
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
