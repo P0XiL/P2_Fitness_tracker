@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
             displayCreateErrorMessage("Passwords do not match");
         } else if (password.length < 1) {
             displayCreateErrorMessage("Password must be at least 1 character");
-        } else if (username.length < 1){
+        } else if (username.length < 1) {
             displayCreateErrorMessage("Username must be at least 1 character");
         }
         else {
@@ -141,24 +141,24 @@ document.addEventListener('DOMContentLoaded', function () {
         createAccountPage.classList.add('active');
     });
 
-    //Function which highlights the link of the currently selected tab
-    function highlightNavLink(pageId) {
-        // Remove 'active' class from all navigation links
-        const navLinks = document.querySelectorAll('#side-nav a');
-        navLinks.forEach(function (link) {
-            link.classList.remove('active');
-        });
-        if (pageId == "loginPage") {
-            return;
-        }
-        // Add 'active' class to the corresponding navigation link
-        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
-        activeLink.classList.add('active');
-    }
-
     // Call checkLoginState() on page load
     window.addEventListener('load', checkLoginState);
 });
+
+//Function which highlights the link of the currently selected tab
+function highlightNavLink(pageId) {
+    // Remove 'active' class from all navigation links
+    const navLinks = document.querySelectorAll('#side-nav a');
+    navLinks.forEach(function (link) {
+        link.classList.remove('active');
+    });
+    if (pageId == "loginPage") {
+        return;
+    }
+    // Add 'active' class to the corresponding navigation link
+    const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+    activeLink.classList.add('active');
+}
 
 // Function to handle storing login state
 function storeLoginState(username) {
@@ -256,10 +256,15 @@ function createUser(userData) {
 
                 clearCreateErrorMessage();
 
+                highlightNavLink('main');
+
                 // Redirect to home page
                 document.getElementById('main').classList.add('active');
-                highlightNavLink('main');
-                document.getElementById('loginPage').classList.remove('active');
+                document.getElementById('createAccount').classList.remove('active');
+
+                storeLoginState(userData.username);
+
+                location.reload();
             } else {
                 response.text().then(errorMessage => {
                     displayCreateErrorMessage(errorMessage);
