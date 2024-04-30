@@ -75,6 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (password !== confirmPassword) {
             displayCreateErrorMessage("Passwords do not match");
+        } else if (password.length < 1) {
+            displayCreateErrorMessage("Password must be at least 1 character");
+        } else if (username.length < 1){
+            displayCreateErrorMessage("Username must be at least 1 character");
         }
         else {
             clearCreateErrorMessage();
