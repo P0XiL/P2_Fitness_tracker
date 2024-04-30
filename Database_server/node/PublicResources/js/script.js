@@ -61,9 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('input[name="login_password"]').value = '';
     });
 
-
-
-
     // Add event listener to the submit button
     document.getElementById('submitBtn').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default form submission
@@ -174,8 +171,8 @@ function storeLoginState(username) {
 // Function to check and handle login state on page load
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
-    const username = localStorage.getItem('username');
-    console.log(username);
+    //const username = localStorage.getItem('username');
+    //console.log(username);
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
