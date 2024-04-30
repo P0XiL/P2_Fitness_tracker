@@ -46,10 +46,14 @@
       "preset": {
         "name": "custom",
         "conf": [
+          "push-ups",
           "run",
           "walk",
+          "walk",
           "crunches",
-          "push-ups"
+          "crunches",
+          "crunches",
+          "crunches"
         ]
       }
     }

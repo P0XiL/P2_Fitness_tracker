@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
-                fetchUserData('idkey1'); 
+                setupProfilePage('idkey1');
             }
             else if (targetId === 'main') { // Check if the clicked tab is the quest page
                 setupTiersForQuestPage('idkey1'); // Call setupTiersForQuestPage with the appropriate username
@@ -289,44 +289,39 @@ function clearLoginErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
-function fetchUserData(username) {
-    // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
+async function fetchUserData(username) {
+    // Fetch the JSON data and return the promise
+    return fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
             }
             return response.json(); // Parse response body as JSON
         })
-        .then(data => {
-            console.log(data);
-            // Process the JSON data here
-            processData(data, username);
-        })
-        .catch(error => console.error('Error fetching JSON:', error));
+        .catch(error => {
+            console.error('Error fetching JSON:', error);
+            throw error; // Rethrow the error to propagate it to the caller
+        });
 }
 
 async function setupProfilePage(username) {
     try {
-        // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
+        // Fetch user data using fetchUserData
+        const userData = await fetchUserData(username);
 
-        // Log the JSON object fetched to the console
-        console.log('Fetched JSON data:', data);
+        // Log the fetched JSON data to the console
+        console.log('Fetched JSON data:', userData);
 
         // Process the JSON data here
-        processData(data, username);
+        processData(userData, username);
 
-        return data.users_info[username]; // Return the user info
+        return userData.users_info[username]; // Return the user info
     } catch (error) {
         console.error('Error fetching JSON:', error);
         throw error; // Re-throw the error for handling by the caller
     }
 }
+
 
 function processData(data, username) {
     // Check if users_info exists in data
@@ -368,24 +363,6 @@ function processData(data, username) {
 }
 
 function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
-    // Map tier ranges to corresponding tier names
-    const tierNames = {
-        '1-3': 'Bronze 5',
-        '4-6': 'Bronze 4',
-        '7-9': 'Bronze 3',
-        '10-12': 'Bronze 2',
-        '13-15': 'Bronze 1',
-        '16-18': 'Silver 5',
-        '19-21': 'Silver 4',
-        '22-24': 'Silver 3',
-        '25-27': 'Silver 2',
-        '28-30': 'Silver 1',
-        '31-33': 'Gold 5',
-        '34-36': 'Gold 4',
-        '37-39': 'Gold 3',
-        '40-42': 'Gold 2',
-        '43-45': 'Gold 1',
-    };
 
     // Get references to tier elements using the provided IDs
     const dailyTierContainer = document.getElementById(DailyID);
@@ -446,15 +423,19 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
 
 // Function to get the tier range
 function getTierRange(rank) {
-    if (rank >= 1 && rank <= 15) {
-        return '1-15';
-    } else if (rank >= 16 && rank <= 30) {
-        return '16-30';
-    } else if (rank >= 31 && rank <= 45) {
-        return '31-45';
+    switch (true) {
+        case rank >= 1 && rank <= 15:
+            return '1-15';
+        case rank >= 16 && rank <= 30:
+            return '16-30';
+        case rank >= 31 && rank <= 45:
+            return '31-45';
+        default:
+            // Handle cases outside the defined ranges
+            return 'Unknown';
     }
-    // Add more ranges as needed
 }
+
 
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
@@ -620,12 +601,7 @@ async function postUserInfo(username) {
     const weight = parseFloat(document.getElementById('weight').value);
 
     try {
-        // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
+        const data = await fetchUserData(username);
 
         if (data.users_info && data.users_info[username]) {
             const existingUserInfo = data.users_info[username];
@@ -712,14 +688,8 @@ document.getElementById('weight').addEventListener('input', function() {
 });
 
 async function setupTiersForQuestPage(username) {
-    console.log('hej');
     try {
-        // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
+        const data = await fetchUserData(username);
 
         // Log the JSON object fetched to the console
         console.log('Fetched JSON data:', data);
@@ -740,41 +710,42 @@ function capitalizeFirstLetter(string) {
 
 // Function to get the sub-tier range
 function getSubTierRange(rank) {
-    if (rank >= 1 && rank <= 3) {
-        return '1-3';
-    } else if (rank >= 4 && rank <= 6) {
-        return '4-6';
-    } else if (rank >= 7 && rank <= 9) {
-        return '7-9';
-    } else if (rank >= 10 && rank <= 12) {
-        return '10-12';
-    } else if (rank >= 13 && rank <= 15) {
-        return '13-15';
-    } else if (rank >= 16 && rank <= 18) {
-        return '16-18';
-    } else if (rank >= 19 && rank <= 21) {
-        return '19-21';
-    } else if (rank >= 22 && rank <= 24) {
-        return '22-24';
-    } else if (rank >= 25 && rank <= 27) {
-        return '25-27';
-    } else if (rank >= 28 && rank <= 30) {
-        return '28-30';
-    } else if (rank >= 31 && rank <= 33) {
-        return '31-33';
-    } else if (rank >= 34 && rank <= 36) {
-        return '34-36';
-    } else if (rank >= 37 && rank <= 39) {
-        return '37-39';
-    } else if (rank >= 40 && rank <= 42) {
-        return '40-42';
-    } else if (rank >= 43 && rank <= 45) {
-        return '43-45';
-    } else {
-        // Handle cases outside the defined ranges
-        return 'Unknown';
+    switch (true) {
+        case rank >= 1 && rank <= 3:
+            return '1-3';
+        case rank >= 4 && rank <= 6:
+            return '4-6';
+        case rank >= 7 && rank <= 9:
+            return '7-9';
+        case rank >= 10 && rank <= 12:
+            return '10-12';
+        case rank >= 13 && rank <= 15:
+            return '13-15';
+        case rank >= 16 && rank <= 18:
+            return '16-18';
+        case rank >= 19 && rank <= 21:
+            return '19-21';
+        case rank >= 22 && rank <= 24:
+            return '22-24';
+        case rank >= 25 && rank <= 27:
+            return '25-27';
+        case rank >= 28 && rank <= 30:
+            return '28-30';
+        case rank >= 31 && rank <= 33:
+            return '31-33';
+        case rank >= 34 && rank <= 36:
+            return '34-36';
+        case rank >= 37 && rank <= 39:
+            return '37-39';
+        case rank >= 40 && rank <= 42:
+            return '40-42';
+        case rank >= 43 && rank <= 45:
+            return '43-45';
+        default:
+            return 'Unknown';
     }
 }
+
 
 function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
@@ -863,32 +834,42 @@ function updateCounter(exercise, value) {
     document.getElementById(`${exercise}Counter`).textContent = value;
 }
 
-function postCustomData(username) {
+async function postCustomData(username) {
     const pushupsValue = document.getElementById('pushups').value;
     const runValue = document.getElementById('run').value;
     const walkValue = document.getElementById('walk').value;
-    const crunchesValue = document.getElementById('crunches').value; // Define crunchesValue here
-    const existingUserInfo = data.users_info[username];
+    const crunchesValue = document.getElementById('crunches').value;
 
-    const newUserInfo = {
-        username: existingUserInfo.username,
-                health: existingUserInfo.health,
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
-        preset: {
-            name: 'custom',
-            conf: [
-                ...Array(Number(pushupsValue)).fill('push-ups'),
-                ...Array(Number(runValue)).fill('run'),
-                ...Array(Number(walkValue)).fill('walk'),
-                ...Array(Number(crunchesValue)).fill('crunches')
-            ]
-        }
-    };
+    try {
+        const userData = await fetchUserData(username);
 
-    update_users_info(newUserInfo);
+        // Get existing user info by username
+        const existingUserInfo = userData.users_info[username];
+
+        const newUserInfo = {
+            username: existingUserInfo.username,
+            health: existingUserInfo.health,
+            mastery: existingUserInfo.mastery,
+            hiddenRank: existingUserInfo.hiddenRank,
+            tier: existingUserInfo.tier,
+            preset: {
+                name: 'custom',
+                conf: [
+                    ...Array(Number(pushupsValue)).fill('push-ups'),
+                    ...Array(Number(runValue)).fill('run'),
+                    ...Array(Number(walkValue)).fill('walk'),
+                    ...Array(Number(crunchesValue)).fill('crunches')
+                ]
+            }
+        };
+
+        // Call function to update user info
+        update_users_info(newUserInfo);
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
 }
+
 
 // Function to generate sliders for exercise preferences
 function generateSliders(countMap) {
@@ -903,12 +884,7 @@ function generateSliders(countMap) {
 
 async function updatePreset(username, preset) {
     try {
-        // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
+        const data = await fetchUserData(username);
 
         if (data.users_info && data.users_info[username]) {
             const existingUserInfo = data.users_info[username];
