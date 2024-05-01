@@ -99,7 +99,6 @@ let pretype = "cardio";
 
 function update_graph(type, period) {
       let user = localStorage.getItem("username");
-      console.log(user + "test");
   if (type === null && period !== null) {
     plot(user, pretype, period);
     change_text(pretype, period);
@@ -176,14 +175,12 @@ function user_data_y(user, type, period) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
       let amountsWithType = [0];
-      console.log(data[user][period]);
       for (let date in data[user][period]) {
         if (data[user][period][date].type === type) {
           console.log(data[user][period][date].type);
           amountsWithType.push(data[user][period][date].amount);
         }
       }
-      console.log(amountsWithType + " test");
       return amountsWithType;
     })
     .catch(error => {

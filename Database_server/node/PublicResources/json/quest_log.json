@@ -4,7 +4,7 @@
     "weekly": {},
     "monthly": {}
   },
-  "assholeblaster69": {
+  "Tobi": {
     "daily": {
       "14/4/2024": {
         "type": "cardio",
@@ -43,6 +43,9 @@
         "amount": 22,
         "text": "Go for a walk for 22 minutes",
         "state": "incomplete"
+      },
+      "30/4/2024": {
+        "type": "lowerbody"
       }
     },
     "weekly": {
