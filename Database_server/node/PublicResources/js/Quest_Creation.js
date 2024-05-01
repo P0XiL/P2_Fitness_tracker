@@ -205,7 +205,7 @@ function add_quest_json(quest) {
  * Get the current date and transform it to date/month/year format
  * @returns A string with  date/month/year
  */
-function get_current_date_format(){
+function get_current_date_format() {
     obj_currentDate = new Date;
     return obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
 }
@@ -215,7 +215,7 @@ function get_current_date_format(){
  * @param {the timespan of quest} questTimespan 
  * @param {the type of the quest} type 
  */
-function open_modal_for_quest(questTimespan, type) {
+function open_modal_for_quest(questTimespan, type, user) {
     //Makke the popup visable
     document.getElementById("myModal").style.display = "block";
     document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
@@ -241,7 +241,8 @@ function open_modal_for_quest(questTimespan, type) {
                     obj_newQuest[date].text = obj_Quest.quest_text;
                     obj_newQuest[date].state = "incomplete";
                     obj_newQuest.timespan = questTimespan;
-                    
+                    obj_newQuest.userID = user;
+
                     //Add quest to json file
                     add_quest_json(obj_newQuest);
                     //remove popup window
@@ -315,7 +316,6 @@ function input_data(obj_para) {
     const inputField = document.getElementById("InputInputfield");
     document.getElementById("InputHeader").innerText = obj_para["timespan"].charAt(0).toUpperCase() + obj_para["timespan"].slice(1);
     document.getElementById("InputPopupText").innerText = "Enter a number below to change the amount done";
-
     //Functions for add button
     document.getElementById("add").addEventListener("click", () => {
         if (validate_input(inputField.value)) {
@@ -394,7 +394,8 @@ function update_meter(ID, obj_quest) {
  * @param {userinfo} userInfox 
  * @param {username} user 
  */
-function display_quest(quest, userInfox, user) {
+async function display_quest(quest, userInfox, user) {
+    return new Promise((resolve, reject) => {
     //Based on ID figure out the timespan
     const timespans = ["daily", "weekly", "monthly"];
     const questTimespan = timespans[quest[5] - 1];
@@ -406,7 +407,6 @@ function display_quest(quest, userInfox, user) {
     function new_quest(type) {
         document.getElementById(quest + "_type").innerText = "Type: " + type;
 
-
         //Create button
         const button = document.createElement("button");
         button.textContent = "Get new Quest!";
@@ -417,7 +417,7 @@ function display_quest(quest, userInfox, user) {
 
         //Add event listner to button
         button.addEventListener("click", () => {
-            open_modal_for_quest(questTimespan, type);
+            open_modal_for_quest(questTimespan, type, user);
         });
     }
 
@@ -426,45 +426,50 @@ function display_quest(quest, userInfox, user) {
         .then(quest_log => {
             //Check the state of quest
             const obj_stateQuest = check_current(questTimespan, quest_log, user);
-            
+
             //If there is no quest
             if (obj_stateQuest["state"] == "None") {
                 //Chooses a type for userInfo
                 const type = userInfo["preset"][generate_random_number(userInfo["preset"].length)];
-                
+
                 //Makes a obj with info for new quest
                 const date = get_current_date_format();
                 let obj_newQuest = {};
                 obj_newQuest[date] = {};
                 obj_newQuest[date].type = type;
                 obj_newQuest.timespan = questTimespan;
+                obj_newQuest.userID = user;
                 //Adds the type to Json file
                 add_quest_json(obj_newQuest);
                 //Make the new quest button appear
                 new_quest(type);
-                
+                resolve();
+                return;
 
-                
+
             } else if (obj_stateQuest["state"] == "Done") {
                 //If quest is done
                 document.getElementById(quest + "_type").innerText = "Quest done";
-
+                resolve();
+                return;
             } else {
                 //If a quest is ongoing
 
                 //if only a type for the quest exits make a new quest
-                if (Object.keys(quest_log[user][questTimespan][obj_stateQuest["date"]]).length < 2){
+                if (Object.keys(quest_log[user][questTimespan][obj_stateQuest["date"]]).length < 2) {
                     new_quest(quest_log[user][questTimespan][obj_stateQuest["date"]]["type"]);
+                    resolve();
                     return;
-                } 
-                
+                }
+
                 //Makes obj with parametes for other functions
                 const obj_para = {
                     questID: quest,
                     timespan: questTimespan,
-                    date: obj_stateQuest["date"]
+                    date: obj_stateQuest["date"],
+                    user: user
                 };
-                
+
                 //Add edit button
                 add_edit_button(obj_para);
                 const vaules = quest_log[user][questTimespan][obj_stateQuest["date"]];
@@ -473,12 +478,11 @@ function display_quest(quest, userInfox, user) {
                 //Show meter and update it
                 document.getElementById("meter" + quest[5]).style.display = "block"
                 update_meter(quest[5], quest_log[user][questTimespan][obj_stateQuest["date"]]);
+                resolve();
 
             }
-
-
-
         })
+    })
 
 }
 
@@ -495,10 +499,29 @@ userInfo = {
     preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
 };
 
+async function display_all_quest(user){
+    try {
+        //Display the daily quest
+        await display_quest("quest1", "Add User Json Here", user);
+        //Display the weekly quest
+        await display_quest("quest2", "Add User Json Here", user);
+        //Display the monthly quest
+        await display_quest("quest3", "Add User Json Here", user);
+        
+    } catch (error) {
+        console.error("Error displaing quests:", error);
+    }
+}
 
+try {
+    const userx = localStorage.getItem('username');
+    display_all_quest(userx);
 
-display_quest("quest1", "Add User Json Here", "assholeblaster69");
-display_quest("quest2", "Add User Json Here", "assholeblaster69");
-display_quest("quest3", "Add User Json Here", "assholeblaster69");
+} catch (error) {
+    console.log("User not logged in");
+    document.getElementById("quest1_type").innerText = "Please login"
+    document.getElementById("quest1_type").innerText = "Please login"
+    document.getElementById("quest1_type").innerText = "Please login"
+}
 
 

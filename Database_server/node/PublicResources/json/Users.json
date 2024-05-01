@@ -1,5 +1,8 @@
 {
   "obj_users": {
+    "321": {
+      "password": "321"
+    },
     "1235": {
       "password": "1234"
     },
@@ -14,6 +17,9 @@
     },
     "Tobias": {
       "password": "123"
+    },
+    "pog": {
+      "password": "1"
     }
   }
 }

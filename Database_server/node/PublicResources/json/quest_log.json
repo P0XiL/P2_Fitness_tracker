@@ -1,8 +1,20 @@
 {
   "1235": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
+    "daily": {
+      "1/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "1/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "1/5/2024": {
+        "type": "core"
+      }
+    }
   },
   "assholeblaster69": {
     "daily": {
@@ -43,6 +55,9 @@
         "amount": 22,
         "text": "Go for a walk for 22 minutes",
         "state": "incomplete"
+      },
+      "1/5/2024": {
+        "type": "core"
       }
     },
     "weekly": {
@@ -82,22 +97,90 @@
         "amount": 30,
         "text": "Go for a walk for 117 minutes",
         "state": "incomplete"
+      },
+      "1/5/2024": {
+        "type": "lowerbody"
       }
     }
   },
   "poggo2": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
+    "daily": {
+      "1/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "1/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "1/5/2024": {
+        "type": "core"
+      }
+    }
   },
   "poggo3": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
+    "daily": {
+      "1/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "1/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "1/5/2024": {
+        "type": "core"
+      }
+    }
   },
   "sejt": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
+    "daily": {
+      "1/5/2024": {
+        "type": "cardio",
+        "target": 22,
+        "amount": 213123,
+        "text": "Go for a walk for 22 minutes",
+        "state": "incomplete"
+      }
+    },
+    "weekly": {
+      "1/5/2024": {
+        "type": "cardio",
+        "target": 180,
+        "amount": 4279,
+        "text": "Go for a run for 180 minutes",
+        "state": "incomplete"
+      }
+    },
+    "monthly": {
+      "1/5/2024": {
+        "type": "core",
+        "target": 10,
+        "amount": 10,
+        "text": "Do the plank for 10 seconds",
+        "state": "incomplete"
+      }
+    }
+  },
+  "pog": {
+    "daily": {
+      "1/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "1/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "1/5/2024": {
+        "type": "core"
+      }
+    }
   }
 }
