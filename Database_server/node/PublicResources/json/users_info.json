@@ -1,70 +1,55 @@
 {
-  "users_info": {
-    "idkey1": {
-      "username": "idkey1",
-      "health": {
-        "height": 178,
-        "weight": 75
-      },
-      "mastery": {
-        "run": {
-          "rank": 25,
-          "elo": 10
+    "users_info": {
+        "idkey1": {
+            "health": {
+                "height": "10cm",
+                "weight": "250kg"
+            },
+            "preset": {
+                "name": "custom",
+                "conf": [
+                    "push-ups",
+                    "run",
+                    "run",
+                    "run",
+                    "walk",
+                    "walk",
+                    "walk",
+                    "walk",
+                    "walk",
+                    "crunches",
+                    "crunches",
+                    "crunches",
+                    "crunches",
+                    "crunches"
+                ]
+            },
+            "mastery": {
+                "run": {
+                    "level": 69,
+                    "elo": 10
+                },
+                "walk": {
+                    "level": 420,
+                    "elo": 69
+                }
+            },
+            "hidden rank": {
+                "daily": 23,
+                "weekly": 30,
+                "monthly": 16
+            }
         },
-        "walk": {
-          "rank": 10,
-          "elo": 69
-        },
-        "crunches": {
-          "rank": 30,
-          "elo": 50
-        },
-        "pushups": {
-          "rank": 40,
-          "elo": 90
+        "defaultIdkey": {
+            "surveyData": {
+                "name": "lh",
+                "age": "66",
+                "gender": "male",
+                "height": "66",
+                "weight": "66",
+                "fitnessGoal": "muscleGain",
+                "activityLevel": "lightlyActive"
+            }
         }
-      },
-      "hiddenRank": {
-        "daily": 23,
-        "weekly": 30,
-        "monthly": 16
-      },
-      "tier": {
-        "daily": {
-          "rank": 23,
-          "elo": 80
-        },
-        "weekly": {
-          "rank": 34,
-          "elo": 25
-        },
-        "monthly": {
-          "rank": 1,
-          "elo": 5
-        }
-      },
-      "preset": {
-        "name": "run",
-        "conf": [
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "run",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "crunches",
-          "crunches",
-          "crunches"
-        ]
-      }
     }
-  }
 }
