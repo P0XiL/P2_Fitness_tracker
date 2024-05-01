@@ -55,6 +55,9 @@ function individual_stats(user, type) {
           }
         }
       }
+      if(amount === null){
+        amount = 0;
+      }
       return amount;
     })
     .catch(error => {
@@ -79,8 +82,15 @@ function individual_type() {
               text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
               const element = document.getElementById("statsText");
               const element1 = document.getElementById("statsText1");
-              element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
-              element1.innerHTML = "<pre>" + text + "</pre>";
+              console.log(text);
+              try {
+                element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
+                element1.innerHTML = "<pre>" + text + "</pre>";
+              } catch (error) {
+                console.error("Error setting innerHTML:", error);
+              }
+            }).catch(error => {
+              console.error("Error in individual_stats:", error);
             });
           }
         }
@@ -246,18 +256,18 @@ function plot_with_friends(user, user2, type, period) {
 let prePeriodFriend = "daily";
 let pretypeFriend = "cardio";
 
-function update_graph_friend(type, period) {
+function update_graph_friend(user, user1, type, period) {
   if (type === null && period !== null) {
-    plot_with_friends("Tobias", "Tobias1", pretypeFriend, period);
+    plot_with_friends(user, user1, pretypeFriend, period);
     change_text_friend(pretypeFriend, period);
     prePeriodFriend = period;
   }
   else if (type !== null && period === null) {
-    plot_with_friends("Tobias", "Tobias1", type, prePeriodFriend);
+    plot_with_friends(user, user1, type, prePeriodFriend);
     change_text_friend(type, prePeriodFriend);
     pretypeFriend = type;
   } else {
-    plot_with_friends("Tobias", "Tobias1", pretypeFriend, prePeriodFriend);
+    plot_with_friends(user, user1, pretypeFriend, prePeriodFriend);
     change_text_friend(type, period);
   }
 }

@@ -1,5 +1,5 @@
 {
-    "assholeblaster69": {
+    "Tobi": {
         "daily": {
             "14/4/2024": {
                 "type": "cardio",
@@ -43,7 +43,7 @@
             "16/1/2024": {
                 "type": "lowerbody",
                 "target": 10,
-                "amount": 0,
+                "amount": 5,
                 "text": "Do the wallsit for 10 seconds",
                 "state": "incomplete"
             },
