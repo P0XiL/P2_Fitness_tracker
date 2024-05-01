@@ -1,5 +1,14 @@
 {
   "obj_users": {
+    "2": {
+      "password": "2"
+    },
+    "22": {
+      "password": "2"
+    },
+    "222": {
+      "password": "2"
+    },
     "1235": {
       "password": "1234"
     },
@@ -20,6 +29,9 @@
     },
     "Kage": {
       "password": "123"
+    },
+    "": {
+      "password": ""
     }
   }
 }

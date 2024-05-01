@@ -1,5 +1,9 @@
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
+    // Call checkLoginState() on page load
+    //window.addEventListener('load', checkLoginState);
+    checkLoginState();
+    
     // Assigns all tabs to an array called links
     const links = document.querySelectorAll('nav a');
     // Get all navigation links
@@ -137,9 +141,6 @@ document.addEventListener('DOMContentLoaded', function () {
         loginPage.classList.remove('active');
         createAccountPage.classList.add('active');
     });
-
-    // Call checkLoginState() on page load
-    window.addEventListener('load', checkLoginState);
 });
 
 //Function which highlights the link of the currently selected tab
@@ -149,9 +150,7 @@ function highlightNavLink(pageId) {
     navLinks.forEach(function (link) {
         link.classList.remove('active');
     });
-    if (pageId == "loginPage") {
-        return;
-    }
+
     // Add 'active' class to the corresponding navigation link
     const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
     activeLink.classList.add('active');
@@ -171,25 +170,22 @@ function storeLoginState(username) {
 // Function to check and handle login state on page load
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
-    //const username = localStorage.getItem('username');
-    //console.log(username);
-    if (loginState) {
+    if (!loginState || JSON.parse(loginState).expiration < new Date().getTime()) {
+        // If user is not logged in or login state has expired, redirect to login.html
+        window.location.href = "Login.html";
+    } else {
+        // User is logged in
         const parsedLoginState = JSON.parse(loginState);
-        if (parsedLoginState.expiration > new Date().getTime()) {
-            // Log the user in automatically
-            const username = parsedLoginState.username;
-            loginUser({ username: username });
+        // Log the user in automatically
+        const username = parsedLoginState.username;
+        loginUser({ username: username });
 
-            // Update UI to display logged-in username
-            document.getElementById('usernameDisplay').textContent = "Hello, " + username;
-            document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
+        // Update UI to display logged-in username
+        document.getElementById('usernameDisplay').textContent = "Hello, " + username;
+        document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
 
-            // Update profile link to point to profile page
-            document.getElementById('profileLink').href = "#profilepage";
-        } else {
-            // Clear expired login state
-            localStorage.removeItem('loginState');
-        }
+        // Update profile link to point to profile page
+        document.getElementById('profileLink').href = "#profilepage";
     }
 }
 
@@ -208,11 +204,9 @@ function loginUser(loginData) {
                 clearLoginErrorMessage();
 
                 storeLoginState(loginData.username);
-
-                // Redirect to home page
-                //highlightNavLink('main');
                 document.getElementById('main').classList.add('active');
                 document.getElementById('loginPage').classList.remove('active');
+
                 location.reload();
 
             } else {
@@ -220,8 +214,6 @@ function loginUser(loginData) {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
-
-            //highlightNavLink(targetId);
         });
 }
 
@@ -240,9 +232,7 @@ function createUser(userData) {
 
                 clearCreateErrorMessage();
 
-                highlightNavLink('main');
 
-                // Redirect to home page
                 document.getElementById('main').classList.add('active');
                 document.getElementById('createAccount').classList.remove('active');
 

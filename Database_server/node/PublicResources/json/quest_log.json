@@ -1,4 +1,19 @@
 {
+  "2": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "22": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "222": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
   "1235": {
     "daily": {},
     "weekly": {},
@@ -43,6 +58,9 @@
         "amount": 22,
         "text": "Go for a walk for 22 minutes",
         "state": "incomplete"
+      },
+      "1/5/2024": {
+        "type": "cardio"
       }
     },
     "weekly": {
@@ -82,6 +100,9 @@
         "amount": 30,
         "text": "Go for a walk for 117 minutes",
         "state": "incomplete"
+      },
+      "1/5/2024": {
+        "type": "cardio"
       }
     }
   },
