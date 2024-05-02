@@ -360,9 +360,43 @@ function addUserToUsers_info(username) {
                     height: 0,
                     weight: 0
                 },
-                mastery: {},
-                hiddenRank: {},
-                tier: {},
+                mastery: {
+                    run: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    walk: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    crunches: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    pushups: {
+                      rank: 1,
+                      elo: 0
+                    }
+                  },
+                hiddenRank: {
+                    daily: 0,
+                    weekly: 0,
+                    monthly: 0
+                },
+                tier: {
+                    daily: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    weekly: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    monthly: {
+                      rank: 1,
+                      elo: 0
+                    }
+                  },
                 preset: {}
             };
 

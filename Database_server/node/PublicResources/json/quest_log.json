@@ -62,6 +62,21 @@
       }
     }
   },
+  "1235": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "42069": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "696969": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
   "assholeblaster69": {
     "daily": {
       "14/4/2024": {
@@ -84,6 +99,9 @@
         "amount": 2,
         "text": "Do 3 burpees",
         "state": "incomplete"
+      },
+      "2/5/2024": {
+        "type": "cardio"
       }
     },
     "weekly": {
@@ -100,6 +118,9 @@
         "amount": 0,
         "text": "Do 3 situps",
         "state": "incomplete"
+      },
+      "2/5/2024": {
+        "type": "lowerbody"
       }
     },
     "monthly": {
@@ -116,7 +137,35 @@
         "amount": 30,
         "text": "Go for a walk for 117 minutes",
         "state": "incomplete"
+      },
+      "2/5/2024": {
+        "type": "cardio"
       }
     }
+  },
+  "ChristiansStørsteFan": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "fuckmigensmule": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "fuckmigensmule1": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "ubunto": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "assholelicker": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
   }
 }
