@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('input[name="login_password"]').value = '';
     });
 
-
+    
 
 
     // Add event listener to the submit button
@@ -96,21 +96,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('loginBtn').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default form submission
-
+    
         // Get username and password values
         const username = document.querySelector('input[name="login_username"]').value;
         const password = document.querySelector('input[name="login_password"]').value;
-
+    
         // Create an object with username and password
         const loginData = {
             username: username,
             password: password
         };
-
+    
         // Send the data to the server-side script for login authentication
         loginUser(loginData);
     });
-
+    
     document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
 
@@ -212,16 +212,9 @@ function loginUser(loginData) {
                 // Reset input fields
                 document.querySelector('input[name="login_username"]').value = '';
                 document.querySelector('input[name="login_password"]').value = '';
-
+    
                 clearLoginErrorMessage();
-
-                storeLoginState(loginData.username);
-
-                // Redirect to home page
-                document.getElementById('main').classList.add('active');
-                //highlightNavLink('main');
-                document.getElementById('loginPage').classList.remove('active');
-
+    
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
 
@@ -232,10 +225,11 @@ function loginUser(loginData) {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
-
-            //highlightNavLink(targetId);
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-}
+    }
 
 // Function to send data to server-side script
 function createUser(userData) {
@@ -254,7 +248,7 @@ function createUser(userData) {
                 document.querySelector('input[name="create_password"]').value = '';
                 document.querySelector('input[name="create_confirm_password"]').value = '';
 
-                clearCreateErrorMessage();
+                    clearCreateErrorMessage();
 
                 highlightNavLink('main');
 
@@ -276,16 +270,32 @@ function createUser(userData) {
         });
 }
 
-function displayCreateErrorMessage(message) {
-    const errorMessage = document.getElementById('createErrorMessage');
-    errorMessage.textContent = message;
-    errorMessage.style.color = 'red';
-}
+    function displayCreateErrorMessage(message) {
+        const errorMessage = document.getElementById('createErrorMessage');
+        errorMessage.textContent = message;
+        errorMessage.style.color = 'red';
+    }
 
-function clearCreateErrorMessage() {
-    const errorMessage = document.getElementById('createErrorMessage');
-    errorMessage.textContent = '';
-}
+    function clearCreateErrorMessage() {
+        const errorMessage = document.getElementById('createErrorMessage');
+        errorMessage.textContent = '';
+    }
+
+
+    //Function which highlights the link of the currently selected tab
+    function highlightNavLink(pageId) {
+        // Remove 'active' class from all navigation links
+        const navLinks = document.querySelectorAll('#side-nav a');
+        navLinks.forEach(function(link) {
+            link.classList.remove('active');
+        });
+        if (pageId == "loginPage"){
+            return;
+        }
+        // Add 'active' class to the corresponding navigation link
+        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        activeLink.classList.add('active');
+        };
 
 // Function to display login error message
 function displayLoginErrorMessage(message) {
@@ -618,12 +628,10 @@ function createMasteryItem(masteryKey, mastery) {
 
 function displayUserInfo(username, userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
-    let userInfoHTML = `
+    const userInfoHTML = `
         <h2 style="text-align: center;">User info</h2>
-        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
-        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
-        <button onclick="postUserInfo('${username}')">Save User Info</button>
-        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
+        <p>Height: ${userInfo[idkey].surveyData.height}</p>
+        <p>Weight: ${userInfo[idkey].surveyData.weight}</p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 
@@ -804,10 +812,10 @@ function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
-
+    
     // Filter out empty strings or undefined values (if any)
     const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
-
+    
     // Count occurrences of each element in the filtered array
     filteredArray.forEach(element => {
         if (countMap[element]) {
@@ -822,7 +830,7 @@ function displayUserPreferences(username, userInfo) {
     let slidersHTML = '';
 
     // Check if countMap for each exercise is greater than 0, then include the slider
-    if (countMap['push-ups'] > 0 || preset == 'custom') {
+    if (countMap['push-ups'] > 0 || preset=='custom') {
         slidersHTML += `
             <div>
                 <label for="pushups">Pushups</label>
@@ -831,7 +839,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.run > 0 || preset == 'custom') {
+    if (countMap.run > 0 || preset=='custom') {
         slidersHTML += `
             <div>
                 <label for="run">Run</label>
@@ -840,7 +848,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.walk > 0 || preset == 'custom') {
+    if (countMap.walk > 0 || preset=='custom') {
         slidersHTML += `
             <div>
                 <label for="walk">Walk</label>
@@ -849,7 +857,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.crunches >= 0 || preset == 'custom') { // Updated condition for crunches
+    if (countMap.crunches >= 0 || preset=='custom') { // Updated condition for crunches
         slidersHTML += `
             <div>
                 <label for="crunches">Crunches</label>
@@ -858,7 +866,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-
+    
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
@@ -882,6 +890,11 @@ function displayUserPreferences(username, userInfo) {
         updateCounter('crunches', countMap.crunches || 0); // Set crunches count to 0 if not found
     }
 }
+
+
+
+
+
 
 function updateCounter(exercise, value) {
     document.getElementById(`${exercise}Counter`).textContent = value;
@@ -1022,6 +1035,19 @@ async function updatePreset(username, preset) {
     } catch (error) {
         console.error('Error fetching user data:', error.message);
     }
+    
+
+    // Define the new user info object
+    const newUserInfo = {
+        username: username,
+        preset: {
+            name: preset,
+            conf: conf
+        }
+    };
+
+    // Update the user info on the server
+    update_users_info(newUserInfo);
 }
 
 
