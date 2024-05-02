@@ -1,18 +1,4 @@
 
-
-async function fetchJSON(url) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Failed to fetch JSON');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching JSON', error);
-    return null;
-  }
-}
-
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
 function dropdown_close() {
