@@ -74,7 +74,6 @@ function processReq(req, res) {
     }
 }
 
-
 // Function to handle user login
 function loginUser(req, res) {
     let body = '';
@@ -110,7 +109,6 @@ function loginUser(req, res) {
         });
     });
 }
-
 
 // Function to handle writing user data to a JSON file
 function createUser(req, res) {
@@ -304,7 +302,6 @@ function change_amount(req, res) {
                 }
             }
 
-
             // Write updated data back to the file
             fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
                 if (err) {
@@ -320,6 +317,8 @@ function change_amount(req, res) {
         });
     });
 }
+
+// Function to handle writing user info to a JSON file
 function write_user_info_json(req, res) {
     let body = '';
     req.on('data', (chunk) => {
@@ -327,6 +326,7 @@ function write_user_info_json(req, res) {
     });
     req.on('end', () => {
         let user_info = JSON.parse(body);
+        const username = user_info.username; // Extract the username from the request body
 
         // Read existing data from the file
         fs.readFile('PublicResources/json/users_info.json', (err, data) => {
@@ -342,21 +342,31 @@ function write_user_info_json(req, res) {
 
             // Write updated data back to the file
             fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
-                if (err) {
-                    console.error(err);
-                    errorResponse(res, 500, String(err));
-                } else {
-                    console.log('User info written to file');
-                    // Send a JSON response confirming the success of the operation
-                    const jsonResponse = {
-                        success: true,
-                        message: 'User info updated successfully'
-                    };
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify(jsonResponse));
-                }
-            });
+                    if (err) {
+                        console.error(err);
+                        errorResponse(res, 500, String(err));
+                    } else {
+                        console.log('User info written to file');
+                        // Send a JSON response confirming the success of the operation
+                        const jsonResponse = {
+                            success: true,
+                            message: 'User info updated successfully'
+                        };
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.end(JSON.stringify(jsonResponse));
+                    }
+                });
+            } else {
+                // Send a JSON response indicating that the username was not found
+                const jsonResponse = {
+                    success: false,
+                    message: `User info not found for username: ${username}`
+                };
+                res.statusCode = 404;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(jsonResponse));
+            }
         });
     });
 }
@@ -369,16 +379,33 @@ function write_user_preferences_json(req, res) {
     req.on('end', () => {
         let user_info = JSON.parse(body);
 
-        // Read existing data from the file
-        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
-            if (err) {
-                console.error(err);
+    // Read existing data from the file
+    fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+        if (err) {
+            console.error(err);
                 errorResponse(res, 500, String(err));
-                return;
-            }
+            return;
+        }
 
-            let existingData = JSON.parse(data);
-            existingData.users_info[user_info.username].preset = user_info.preset;
+        let existingData = JSON.parse(data);
+
+        // Check if the username exists in the users_info object
+        if (!existingData.users_info.hasOwnProperty(username)) {
+            // Create the new user object
+            let newUser = {
+                username: username,
+                health: {
+                    height: 0,
+                    weight: 0
+                },
+                mastery: {},
+                hiddenRank: {},
+                tier: {},
+                preset: {}
+            };
+
+            // Add the new user to the users_info object
+            existingData.users_info[username] = newUser;
 
             // Write updated data back to the file
             fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
@@ -396,7 +423,7 @@ function write_user_preferences_json(req, res) {
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify(jsonResponse));
                 }
-            });
+    });
         });
     });
 }
@@ -438,23 +465,23 @@ function write_user_preferences_json(req, res) {
     
                 // Write updated data back to the file
                 fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
-                    if (err) {
+        if (err) {
                         console.error('Error writing data:', err);
                         errorResponse(res, 500, String(err));
-                    } else {
+        } else {
                         console.log('Survey data written to file');
                         // Send a JSON response confirming the success of the operation
                         const jsonResponse = {
                             success: true,
                             message: 'Survey data saved successfully'
                         };
-                        res.statusCode = 200;
+            res.statusCode = 200;
                         res.setHeader('Content-Type', 'application/json');
                         res.end(JSON.stringify(jsonResponse));
                     }
                 });
             });
         });
-    }
-    
+}
+
 startServer();
