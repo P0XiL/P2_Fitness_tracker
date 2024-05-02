@@ -24,7 +24,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
-                setupProfilePage('idkey1');
+                setupProfilePage(localStorage.getItem('username'));
+            }
+            else if (targetId === 'main') { // Check if the clicked tab is the quest page
+                setupTiersForQuestPage(localStorage.getItem('username')); // Call setupTiersForQuestPage with the appropriate username
             }
 
             highlightNavLink(targetId);
@@ -58,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('input[name="login_password"]').value = '';
     });
 
-    
+
 
 
     // Add event listener to the submit button
@@ -93,21 +96,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('loginBtn').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default form submission
-    
+
         // Get username and password values
         const username = document.querySelector('input[name="login_username"]').value;
         const password = document.querySelector('input[name="login_password"]').value;
-    
+
         // Create an object with username and password
         const loginData = {
             username: username,
             password: password
         };
-    
+
         // Send the data to the server-side script for login authentication
         loginUser(loginData);
     });
-    
+
     document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
 
@@ -209,9 +212,16 @@ function loginUser(loginData) {
                 // Reset input fields
                 document.querySelector('input[name="login_username"]').value = '';
                 document.querySelector('input[name="login_password"]').value = '';
-    
+
                 clearLoginErrorMessage();
-    
+
+                storeLoginState(loginData.username);
+
+                // Redirect to home page
+                document.getElementById('main').classList.add('active');
+                //highlightNavLink('main');
+                document.getElementById('loginPage').classList.remove('active');
+
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
 
@@ -222,11 +232,10 @@ function loginUser(loginData) {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+
+            //highlightNavLink(targetId);
         });
-    }
+}
 
 // Function to send data to server-side script
 function createUser(userData) {
@@ -245,7 +254,7 @@ function createUser(userData) {
                 document.querySelector('input[name="create_password"]').value = '';
                 document.querySelector('input[name="create_confirm_password"]').value = '';
 
-                    clearCreateErrorMessage();
+                clearCreateErrorMessage();
 
                 highlightNavLink('main');
 
@@ -267,32 +276,16 @@ function createUser(userData) {
         });
 }
 
-    function displayCreateErrorMessage(message) {
-        const errorMessage = document.getElementById('createErrorMessage');
-        errorMessage.textContent = message;
-        errorMessage.style.color = 'red';
-    }
+function displayCreateErrorMessage(message) {
+    const errorMessage = document.getElementById('createErrorMessage');
+    errorMessage.textContent = message;
+    errorMessage.style.color = 'red';
+}
 
-    function clearCreateErrorMessage() {
-        const errorMessage = document.getElementById('createErrorMessage');
-        errorMessage.textContent = '';
-    }
-
-
-    //Function which highlights the link of the currently selected tab
-    function highlightNavLink(pageId) {
-        // Remove 'active' class from all navigation links
-        const navLinks = document.querySelectorAll('#side-nav a');
-        navLinks.forEach(function(link) {
-            link.classList.remove('active');
-        });
-        if (pageId == "loginPage"){
-            return;
-        }
-        // Add 'active' class to the corresponding navigation link
-        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
-        activeLink.classList.add('active');
-        };
+function clearCreateErrorMessage() {
+    const errorMessage = document.getElementById('createErrorMessage');
+    errorMessage.textContent = '';
+}
 
 // Function to display login error message
 function displayLoginErrorMessage(message) {
@@ -308,19 +301,32 @@ function clearLoginErrorMessage() {
 }
 
 async function fetchUserData(username) {
-    // Fetch the JSON data and return the promise
-    return fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-            }
-            return response.json(); // Parse response body as JSON
-        })
-        .catch(error => {
-            console.error('Error fetching JSON:', error);
-            throw error; // Rethrow the error to propagate it to the caller
-        });
+    try {
+        // Fetch the JSON data
+        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
+        }
+
+        // Parse response body as JSON
+        const data = await response.json();
+
+        // Find the user data by username
+        const userData = data.users_info[username];
+
+        if (!userData) {
+            throw new Error(`User data for ${username} not found.`);
+        }
+
+        // Return the user data
+        return userData;
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Rethrow the error to propagate it to the caller
+    }
 }
+
 
 async function setupProfilePage(username) {
     try {
@@ -333,67 +339,84 @@ async function setupProfilePage(username) {
         // Process the JSON data here
         processData(userData, username);
 
-        return userData.users_info[username]; // Return the user info
+        // Return the user info
+        return userData;
     } catch (error) {
         console.error('Error fetching JSON:', error);
         throw error; // Re-throw the error for handling by the caller
     }
 }
 
-
 function processData(data, username) {
-    // Check if users_info exists in data
-    if (data.users_info) {
-        // Check if the specified username exists
-        if (username && data.users_info[username]) {
-            // Extract user information
-            const userInfo = data.users_info[username];
+    // Check if the data is not null or undefined
+    if (data) {
+        // Extract user information
+        const userInfo = data;
 
-            // Display the user information
-            displayUserInfo(username, userInfo);
-            
-            // Check if userInfo contains 'preset' property before calling displayUserPreferences
-            if (userInfo.preset) {
-                displayUserPreferences(username, userInfo);
-            } else {
-                console.error(`'tiers' property not found in ${username}'s information`);
-            }
-
+        // Check if userInfo contains 'tier' property before calling displayUserTiers
+        if (userInfo.tier) {
+            displayUserTiers(userInfo, 'dailyTier', 'weeklyTier', 'monthlyTier');
         } else {
-            console.error(`${username} not found in JSON data`);
+            console.error(`'tier' property not found in ${username}'s information`);
+        }
+
+        // Check if userInfo contains 'mastery' property before calling displayUserMasteries
+        if (userInfo.mastery) {
+            displayUserMasteries(userInfo.mastery);
+        } else {
+            console.error(`'mastery' property not found in ${username}'s information`);
+        }
+
+        // Display the user information
+        displayUserInfo(username, userInfo);
+
+        // Check if userInfo contains 'preset' property before calling displayUserPreferences
+        if (userInfo.preset) {
+            displayUserPreferences(username, userInfo);
+        } else {
+            console.error(`'preset' property not found in ${username}'s information`);
         }
     } else {
-        console.error('users_info not found in JSON data');
+        console.error('User data is null or undefined');
     }
 }
 
+
 function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
+    // Check if userInfo is not null or undefined
+    if (userInfo) {
+        // Get references to tier elements using the provided IDs
+        const dailyTierContainer = document.getElementById(DailyID);
+        const weeklyTierContainer = document.getElementById(WeeklyID);
+        const monthlyTierContainer = document.getElementById(MonthlyID);
 
-    // Get references to tier elements using the provided IDs
-    const dailyTierContainer = document.getElementById(DailyID);
-    const weeklyTierContainer = document.getElementById(WeeklyID);
-    const monthlyTierContainer = document.getElementById(MonthlyID);
+        // Check if the tier objects exist in userInfo
+        if (userInfo.tier && userInfo.tier.daily && userInfo.tier.weekly && userInfo.tier.monthly) {
+            // Determine the tier range and corresponding image for each tier
+            const dailyTierRange = getTierRange(userInfo.tier.daily.rank);
+            const weeklyTierRange = getTierRange(userInfo.tier.weekly.rank);
+            const monthlyTierRange = getTierRange(userInfo.tier.monthly.rank);
 
+            const dailyImageSrc = tierImages[dailyTierRange];
+            const weeklyImageSrc = tierImages[weeklyTierRange];
+            const monthlyImageSrc = tierImages[monthlyTierRange];
 
-    // Determine the tier range and corresponding image for each tier
-    const dailyTierRange = getTierRange(userInfo.tier.daily.rank);
-    const weeklyTierRange = getTierRange(userInfo.tier.weekly.rank);
-    const monthlyTierRange = getTierRange(userInfo.tier.monthly.rank);
+            // Clear existing content
+            dailyTierContainer.innerHTML = '';
+            weeklyTierContainer.innerHTML = '';
+            monthlyTierContainer.innerHTML = '';
 
-    const dailyImageSrc = tierImages[dailyTierRange];
-    const weeklyImageSrc = tierImages[weeklyTierRange];
-    const monthlyImageSrc = tierImages[monthlyTierRange];
+            // Create grid items for daily, weekly, and monthly tiers
+            createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
+            createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
+            createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
+        } else {
+            console.error(`'tier' property or its daily, weekly, or monthly sub-properties not found in userInfo`);
+        }
+    } else {
+        console.error('User info is null or undefined');
+    }
 
-    // Clear existing content
-    dailyTierContainer.innerHTML = '';
-    weeklyTierContainer.innerHTML = '';
-    monthlyTierContainer.innerHTML = '';
-
-    // Create grid items for daily, weekly, and monthly tiers
-    createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
-    createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
-    createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
-    
     // Create a function to generate tier grid items
     function createTierGridItem(container, title, imageSrc, elo, period) {
         const gridItem = document.createElement('div');
@@ -425,6 +448,7 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
         container.appendChild(gridItem);
     }
 }
+
 
 // Function to get the tier range
 function getTierRange(rank) {
@@ -594,10 +618,12 @@ function createMasteryItem(masteryKey, mastery) {
 
 function displayUserInfo(username, userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
-    const userInfoHTML = `
+    let userInfoHTML = `
         <h2 style="text-align: center;">User info</h2>
-        <p>Height: ${userInfo[idkey].surveyData.height}</p>
-        <p>Weight: ${userInfo[idkey].surveyData.weight}</p>
+        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
+        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
+        <button onclick="postUserInfo('${username}')">Save User Info</button>
+        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 
@@ -614,14 +640,14 @@ async function postUserInfo(username) {
     const weight = parseFloat(document.getElementById('weight').value);
 
     try {
-        const data = await fetchUserData(username);
+        const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
 
-        if (data.users_info && data.users_info[username]) {
-            const existingUserInfo = data.users_info[username];
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
 
             // Create a new user info object with the updated health information
             const newUserInfo = {
-                username: existingUserInfo.username,
+                username: username,
                 health: {
                     height: height,
                     weight: weight
@@ -642,9 +668,10 @@ async function postUserInfo(username) {
             console.error('User info not found for username:', username);
         }
     } catch (error) {
-        console.error('Error fetching JSON:', error);
+        console.error('Error fetching user data:', error);
     }
 }
+
 
 // Function to update user info
 function update_users_info(newUserInfo) {
@@ -653,12 +680,13 @@ function update_users_info(newUserInfo) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newUserInfo, null, 2) // Use null for replacer and 2 for indentation
+        body: JSON.stringify(newUserInfo, null, 2) // Include the entire user information
     })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch POST');
             }
+            console.log(response);
             return response.json(); // Read response JSON
         })
         .then(responseJson => {
@@ -675,6 +703,7 @@ function update_users_info(newUserInfo) {
             console.error('Error fetching POST users_info:', error);
         });
 }
+
 
 // Function to update BMI text
 function updateBMI(height, weight) {
@@ -702,19 +731,30 @@ document.getElementById('weight').addEventListener('input', function() {
 
 async function setupTiersForQuestPage(username) {
     try {
-        const data = await fetchUserData(username);
+        const userData = await fetchUserData(username);
 
         // Log the JSON object fetched to the console
-        console.log('Fetched JSON data:', data);
-        displayUserTiers(data.users_info[username],'dailyQuestTier','weeklyQuestTier','monthlyQuestTier');
-        
+        console.log('Fetched JSON data:', userData);
 
-        return data.users_info[username]; // Return the user info
+        // Check if the user object exists
+        if (userData) {
+            // Display user tiers if the user object contains the necessary information
+            if (userData.mastery && userData.tier) {
+                displayUserTiers(userData, 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
+                return userData; // Return the user info
+            } else {
+                console.error('Mastery or tier information not found in user data');
+            }
+        } else {
+            console.error('User data not found');
+        }
     } catch (error) {
         console.error('Error fetching JSON:', error);
         throw error; // Re-throw the error for handling by the caller
     }
 }
+
+
 
 // Function to capitalize the first letter of a string
 function capitalizeFirstLetter(string) {
@@ -764,10 +804,10 @@ function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
-    
+
     // Filter out empty strings or undefined values (if any)
     const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
-    
+
     // Count occurrences of each element in the filtered array
     filteredArray.forEach(element => {
         if (countMap[element]) {
@@ -782,7 +822,7 @@ function displayUserPreferences(username, userInfo) {
     let slidersHTML = '';
 
     // Check if countMap for each exercise is greater than 0, then include the slider
-    if (countMap['push-ups'] > 0 || preset=='custom') {
+    if (countMap['push-ups'] > 0 || preset == 'custom') {
         slidersHTML += `
             <div>
                 <label for="pushups">Pushups</label>
@@ -791,7 +831,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.run > 0 || preset=='custom') {
+    if (countMap.run > 0 || preset == 'custom') {
         slidersHTML += `
             <div>
                 <label for="run">Run</label>
@@ -800,7 +840,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.walk > 0 || preset=='custom') {
+    if (countMap.walk > 0 || preset == 'custom') {
         slidersHTML += `
             <div>
                 <label for="walk">Walk</label>
@@ -809,7 +849,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.crunches >= 0 || preset=='custom') { // Updated condition for crunches
+    if (countMap.crunches >= 0 || preset == 'custom') { // Updated condition for crunches
         slidersHTML += `
             <div>
                 <label for="crunches">Crunches</label>
@@ -818,7 +858,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    
+
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
@@ -843,11 +883,6 @@ function displayUserPreferences(username, userInfo) {
     }
 }
 
-
-
-
-
-
 function updateCounter(exercise, value) {
     document.getElementById(`${exercise}Counter`).textContent = value;
 }
@@ -861,30 +896,33 @@ async function postCustomData(username) {
     try {
         const userData = await fetchUserData(username);
 
-        // Get existing user info by username
-        const existingUserInfo = userData.users_info[username];
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
 
-        const newUserInfo = {
-            username: existingUserInfo.username,
-            health: existingUserInfo.health,
-            mastery: existingUserInfo.mastery,
-            hiddenRank: existingUserInfo.hiddenRank,
-            tier: existingUserInfo.tier,
-            preset: {
-                name: 'custom',
-                conf: [
-                    ...Array(Number(pushupsValue)).fill('push-ups'),
-                    ...Array(Number(runValue)).fill('run'),
-                    ...Array(Number(walkValue)).fill('walk'),
-                    ...Array(Number(crunchesValue)).fill('crunches')
-                ]
-            }
-        };
+            const newUserInfo = {
+                username: username,
+                health: existingUserInfo.health,
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: {
+                    name: 'custom',
+                    conf: [
+                        ...Array(Number(pushupsValue)).fill('push-ups'),
+                        ...Array(Number(runValue)).fill('run'),
+                        ...Array(Number(walkValue)).fill('walk'),
+                        ...Array(Number(crunchesValue)).fill('crunches')
+                    ]
+                }
+            };
 
-        // Call function to update user info
-        update_users_info(newUserInfo);
+            // Call function to update user info
+            update_users_info(newUserInfo);
+        } else {
+            console.error('User info not found for username:', username);
+        }
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error('Error fetching user data:', error.message);
     }
 }
 
@@ -902,70 +940,90 @@ function generateSliders(countMap) {
 
 async function updatePreset(username, preset) {
     try {
-        const data = await fetchUserData(username);
+        const userData = await fetchUserData(username);
 
-    switch (preset) {
-        case 'run':
-            conf = [
-                ...Array(Number(run)).fill('run'),
-                ...Array(Number(walk)).fill('walk'),
-                ...Array(Number(crunches)).fill('crunches')
-            ];
-            break;
-        case 'walk':
-            run = 4;
-            walk = 10;
-            crunches = 3;
-    
-            conf = [
-                ...Array(Number(run)).fill('run'),
-                ...Array(Number(walk)).fill('walk'),
-                ...Array(Number(crunches)).fill('crunches')
-            ];
-            break;
-        case 'strength':
-            run = 2;
-            walk = 2;
-            crunches = 6;
-            pushUps = 4;
-    
-            conf = [
-                ...Array(Number(run)).fill('run'),
-                ...Array(Number(walk)).fill('walk'),
-                ...Array(Number(crunches)).fill('crunches'),
-                ...Array(Number(pushUps)).fill('push-ups')
-            ];
-            break;
-        case 'custom':
-            run = 1;
-            walk = 1;
-            crunches = 1;
-            pushUps = 1;
-    
-            conf = [
-                ...Array(Number(run)).fill('run'),
-                ...Array(Number(walk)).fill('walk'),
-                ...Array(Number(crunches)).fill('crunches'),
-                ...Array(Number(pushUps)).fill('push-ups')
-            ];
-            break;
-        default:
-            console.error(`Invalid preset: ${preset}`);
-    }
-    
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
 
-    // Define the new user info object
-    const newUserInfo = {
-        username: username,
-        preset: {
-            name: preset,
-            conf: conf
+            let conf = [];
+            let run = 0;
+            let walk = 0;
+            let crunches = 0;
+            let pushUps = 0;
+
+            switch (preset) {
+                case 'run':
+                    run = 10;
+                    walk = 4;
+                    crunches = 3;
+                    conf = [
+                        ...Array(Number(run)).fill('run'),
+                        ...Array(Number(walk)).fill('walk'),
+                        ...Array(Number(crunches)).fill('crunches')
+                    ];
+                    break;
+                case 'walk':
+                    run = 4;
+                    walk = 10;
+                    crunches = 3;
+                    conf = [
+                        ...Array(Number(run)).fill('run'),
+                        ...Array(Number(walk)).fill('walk'),
+                        ...Array(Number(crunches)).fill('crunches')
+                    ];
+                    break;
+                case 'strength':
+                    run = 2;
+                    walk = 2;
+                    crunches = 6;
+                    pushUps = 4;
+                    conf = [
+                        ...Array(Number(run)).fill('run'),
+                        ...Array(Number(walk)).fill('walk'),
+                        ...Array(Number(crunches)).fill('crunches'),
+                        ...Array(Number(pushUps)).fill('push-ups')
+                    ];
+                    break;
+                case 'custom':
+                    run = 1;
+                    walk = 1;
+                    crunches = 1;
+                    pushUps = 1;
+                    conf = [
+                        ...Array(Number(run)).fill('run'),
+                        ...Array(Number(walk)).fill('walk'),
+                        ...Array(Number(crunches)).fill('crunches'),
+                        ...Array(Number(pushUps)).fill('push-ups')
+                    ];
+                    break;
+                default:
+                    console.error(`Invalid preset: ${preset}`);
+                    return;
+            }
+
+            // Update only the preset while retaining other information
+            const newUserInfo = {
+                username: existingUserInfo.username,
+                health: existingUserInfo.health,
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: {
+                    name: preset,
+                    conf: conf
+                }
+            };
+
+            // Update the user info on the server
+            update_users_info(newUserInfo);
+        } else {
+            console.error('User info not found for username:', username);
         }
-    };
-
-    // Update the user info on the server
-    update_users_info(newUserInfo);
+    } catch (error) {
+        console.error('Error fetching user data:', error.message);
+    }
 }
+
 
 // Calculate BMI function
 function calculateBMI(height, weight) {
