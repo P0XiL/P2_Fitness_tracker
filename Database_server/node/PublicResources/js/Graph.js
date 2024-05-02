@@ -42,7 +42,6 @@ function individual_stats(user, type) {
             const currentAmount = data[user][period][key].amount;
             if (!isNaN(currentAmount)) {
               amount += currentAmount;
-              console.log(amount);
             }
           }
         }
