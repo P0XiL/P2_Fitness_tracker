@@ -161,6 +161,60 @@
       "hiddenRank": {},
       "tier": {},
       "preset": {}
+    },
+    " ": {
+      "username": " ",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {
+        "name": "walk",
+        "conf": [
+          "run",
+          "run",
+          "run",
+          "run",
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "crunches",
+          "crunches",
+          "crunches"
+        ]
+      }
+    },
+    "gg": {
+      "username": "gg",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "ggg": {
+      "username": "ggg",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
     }
   }
 }
