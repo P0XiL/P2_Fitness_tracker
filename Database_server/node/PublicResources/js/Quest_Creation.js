@@ -498,7 +498,10 @@ userInfo = {
     mastery: generate_random_number(3),
     preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
 };
-
+/**
+ * Displayes all the quest
+ * @param {userID} user 
+ */
 async function display_all_quest(user){
     try {
         //Display the daily quest
@@ -516,6 +519,7 @@ async function display_all_quest(user){
 try {
     const userx = localStorage.getItem('username');
     display_all_quest(userx);
+    console.log(userx);
 
 } catch (error) {
     console.log("User not logged in");
