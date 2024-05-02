@@ -444,6 +444,7 @@ async function display_all_quest(user){
 try {
     const userx = localStorage.getItem('username');
     display_all_quest(userx);
+    console.log(userx);
 
 } catch (error) {
     console.log("User not logged in");
