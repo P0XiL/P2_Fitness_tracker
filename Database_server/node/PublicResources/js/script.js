@@ -215,9 +215,6 @@ function loginUser(loginData) {
 
                 storeLoginState(loginData.username);
 
-                // Redirect to home page
-                //document.getElementById('main').classList.add('active');
-                //document.getElementById('loginPage').classList.remove('active');
                 location.reload();
 
             } else {
@@ -242,10 +239,6 @@ function createUser(userData) {
                 console.log('Data successfully sent to server');
 
                 clearCreateErrorMessage();
-
-                // Redirect to home page
-                document.getElementById('surveyForm').classList.add('active');
-                document.getElementById('createAccount').classList.remove('active');
 
                 storeLoginState(userData.username);
 
