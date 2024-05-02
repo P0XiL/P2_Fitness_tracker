@@ -1,4 +1,4 @@
-const serverPath = 'https://127.0.0.1:3360/';
+const serverPath = 'http://127.0.0.1:3360/';
 
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
