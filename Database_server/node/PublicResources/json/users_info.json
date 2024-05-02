@@ -5,6 +5,20 @@
                 "height": "10cm",
                 "weight": "250kg"
             },
+            "tier": {
+              "daily": {
+                "rank": 23,
+                "elo": 80
+              },
+              "weekly": {
+                "rank": 34,
+                "elo": 25
+              },
+              "monthly": {
+                "rank": 1,
+                "elo": 5
+              }
+            },
             "preset": {
                 "name": "custom",
                 "conf": [
@@ -39,17 +53,6 @@
                 "weekly": 30,
                 "monthly": 16
             }
-        },
-        "defaultIdkey": {
-            "surveyData": {
-                "name": "lh",
-                "age": "66",
-                "gender": "male",
-                "height": "66",
-                "weight": "66",
-                "fitnessGoal": "muscleGain",
-                "activityLevel": "lightlyActive"
-            }
         }
-    }
+      }
 }

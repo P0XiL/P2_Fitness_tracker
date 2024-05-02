@@ -141,7 +141,7 @@ function check_current(timespan, quest_log, userID) {
 
 
 function add_quest_json(quest) {
-    fetch('http://127.0.0.1:3360/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -196,7 +196,7 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
 
 
 function change_amount(obj_para) {
-    fetch('http://127.0.0.1:3360/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

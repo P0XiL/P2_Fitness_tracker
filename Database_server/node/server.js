@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3360; 
+const port = 3369; 
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -57,12 +57,6 @@ function processReq(req, res) {
 
             } else if (queryPath === "/write_user_info_json") { // Add new route for writing user info
                 write_user_info_json(req, res);
-
-            } else if (queryPath === "/userPreferences_json") { // Add new route for writing user info
-                write_user_preferences_json(req, res);
-
-            } else if (queryPath === "/write_survey_data_json") {
-                write_survey_data_json(req, res);
 
             } else {
                 errorResponse(res, 404, "not found")
@@ -320,6 +314,8 @@ function change_amount(req, res) {
         });
     });
 }
+
+
 function write_user_info_json(req, res) {
     let body = '';
     req.on('data', (chunk) => {
@@ -335,13 +331,12 @@ function write_user_info_json(req, res) {
                 errorResponse(res, 500, String(err));
                 return;
             }
-            let obj_survey = {};
 
             let existingData = JSON.parse(data);
-            existingData.users_info[user_info.username].preset = user_info.preset;
+            existingData.users_info[user_info.username] = user_info; // Update entire user info
 
-            // Write updated data back to the file
-            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+            // Write updated data back to the file with indentation
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
