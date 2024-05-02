@@ -76,9 +76,6 @@ function individual_type() {
       for (let period in data[user]) {
         for (let key in data[user][period]) {
           let type = data[user][period][key].type;
-      for (let period in data[user]) {
-        for (let key in data[user][period]) {
-          let type = data[user][period][key].type;
           if (!processedTypes[type]) { // Check if type has already been processed
             processedTypes[type] = true;
             individual_stats(user, type).then(amount => {
@@ -109,40 +106,29 @@ individual_type();
 
 let prePeriod = "daily";
 let pretype = "cardio";
-let pretype = "cardio";
 
 function update_graph(type, period) {
       let user = localStorage.getItem("username");
   if (type === null && period !== null) {
-    plot(user, pretype, period);
     plot(user, pretype, period);
     change_text(pretype, period);
     prePeriod = period;
   }
   else if (type !== null && period === null) {
     plot(user, type, prePeriod);
-    plot(user, type, prePeriod);
     change_text(type, prePeriod);
     pretype = type;
   } else {
     plot(user, pretype, prePeriod);
     change_text(pretype, preperiod);
-    plot(user, pretype, prePeriod);
-    change_text(pretype, preperiod);
   }
-})
-.catch(error => {
-  console.error("Error fetching JSON:", error);
-});
 }
 
-function change_text(type, period) {
 
 function change_text(type, period) {
   // Get the element with the id "text"
   const element = document.getElementById("text");
   // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + type + " in period: " + period;
   element.innerHTML = "This Graph is based on type:  " + type + " in period: " + period;
 }
 
@@ -175,51 +161,10 @@ function plot(user, type, period) {
     .catch(error => {
       console.error("Error plotting graph:", error);
     });
-  Promise.all([user_data_x(user, type, period), user_data_y(user, type, period)])
-    .then(([labels, data]) => {
-      let maxVal = data.length > 0 ? Math.max(...data) + 1 : 10;
-      let myChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: labels,
-          datasets: [{
-            fill: false,
-            lineTension: 0,
-            backgroundColor: "rgba(255,255,255,1)",
-            borderColor: "rgba(0,0,255,0.5)",
-            data: data,
-          }]
-        },
-        options: {
-          legend: { display: false },
-          scales: {
-            yAxes: [{ ticks: { min: 0, max: maxVal } }],
-          }
-        }
-      });
-    })
-    .catch(error => {
-      console.error("Error plotting graph:", error);
-    });
 }
 
 
-
 function user_data_x(user, type, period) {
-  return fetchJSON("json/quest_log.json")
-    .then(data => {
-      let x = ["01/1/2024"];
-      for (let key in data[user][period]) {
-        if (data[user][period][key].type === type) {
-          x.push(key);
-        }
-      }
-      return x;
-    })
-    .catch(error => {
-      console.error("Error fetching JSON:", error);
-      return []; // return an empty array in case of an error
-    });
   return fetchJSON("json/quest_log.json")
     .then(data => {
       let x = ["01/1/2024"];
@@ -261,27 +206,7 @@ function plot_with_friends(user, user2, type, period) {
     .then(([labels_user1, labels_user2, data_user1, data_user2]) => {
       //sort the two x data
       let all_labels = [...new Set([...labels_user1, ...labels_user2])].sort();
-  Promise.all([user_data_x(user, type, period), user_data_x(user2, type, period), user_data_y(user, type, period), user_data_y(user2, type, period)])
-    .then(([labels_user1, labels_user2, data_user1, data_user2]) => {
-      //sort the two x data
-      let all_labels = [...new Set([...labels_user1, ...labels_user2])].sort();
 
-      let dataset_user1 = {
-        label: user,
-        fill: false,
-        lineTension: 0,
-        backgroundColor: "rgba(255,255,255,1)",
-        borderColor: "rgba(0,0,255,0.5)",
-        data: [],
-      };
-      let dataset_user2 = {
-        label: user2,
-        fill: false,
-        lineTension: 0,
-        backgroundColor: "rgba(255,255,255,1)",
-        borderColor: "rgba(245, 27, 19, 0.8)",
-        data: [],
-      };
       let dataset_user1 = {
         label: user,
         fill: false,
@@ -304,32 +229,7 @@ function plot_with_friends(user, user2, type, period) {
         dataset_user1.data.push(labels_user1.includes(label) ? data_user1[labels_user1.indexOf(label)] : 0);
         dataset_user2.data.push(labels_user2.includes(label) ? data_user2[labels_user2.indexOf(label)] : 0);
       });
-      //push data into datasets and if no data then set to 0
-      all_labels.forEach(label => {
-        dataset_user1.data.push(labels_user1.includes(label) ? data_user1[labels_user1.indexOf(label)] : 0);
-        dataset_user2.data.push(labels_user2.includes(label) ? data_user2[labels_user2.indexOf(label)] : 0);
-      });
 
-      //creat the chart
-      let myChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: all_labels,
-          datasets: [dataset_user1, dataset_user2]
-        },
-        options: {
-          legend: { display: true },
-          scales: {
-            yAxes: [{
-              ticks: { min: 0, max: Math.max(...dataset_user1.data.concat(dataset_user2.data)) + 1 }
-            }]
-          }
-        }
-      });
-    })
-    .catch(error => {
-      console.error("Error plotting graph with friends:", error);
-    });
       //creat the chart
       let myChart = new Chart(ctx, {
         type: "line",
@@ -353,9 +253,7 @@ function plot_with_friends(user, user2, type, period) {
 }
 
 // TODO when friends json is done
-// TODO when friends json is done
 let prePeriodFriend = "daily";
-let pretypeFriend = "cardio";
 let pretypeFriend = "cardio";
 
 function update_graph_friend(user, user1, type, period) {
