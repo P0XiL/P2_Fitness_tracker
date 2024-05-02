@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Send the data to the server-side script for file writing
+            console.log(username);
             createUser(userData);
         }
     });
@@ -199,7 +200,7 @@ function checkLoginState() {
 
 
 function loginUser(loginData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/login', {
+    fetch('http://127.0.0.1:3360/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -239,7 +240,7 @@ function loginUser(loginData) {
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -303,7 +304,7 @@ function clearLoginErrorMessage() {
 async function fetchUserData(username) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -675,7 +676,7 @@ async function postUserInfo(username) {
 
 // Function to update user info
 function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
