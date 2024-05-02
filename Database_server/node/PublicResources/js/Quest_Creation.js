@@ -187,7 +187,7 @@ function check_current(timespan, quest_log, userID) {
  * @param {ojb containg the quest} quest 
  */
 function add_quest_json(quest) {
-    fetch('http://127.0.0.1:3360/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch(serverPath+'write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -270,7 +270,7 @@ function open_modal_for_quest(questTimespan, type, user) {
  * @param {an object which contain parameters for change amount function} obj_para 
  */
 function change_amount(obj_para) {
-    fetch('http://127.0.0.1:3360/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch(serverPath+'change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
