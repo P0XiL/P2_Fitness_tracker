@@ -1,70 +1,47 @@
-
-/**
- * A function which returns a number between 0 and Max
- * @param {max vaule for number} max 
- * @returns A number between 0 and max
- */
+//Generate a random number from 0 to max
 function generate_random_number(max) {
     return Math.floor(Math.random() * max);
 }
 
+//Returns a type for the quest based on preset
+function choose_quest_type(preset) {
+    return preset[generate_random_number(preset.length)];
+}
 
-/**
- * Takes an obj and returns a random object key
- * @param {An obj} quests 
- * @returns A random object key 
- */
+
 function choose_quest(quests) {
     return quests[Object.keys(quests)[generate_random_number(Object.keys(quests).length)]]
 }
 
-/**
- * Checks if an obj is empty
- * @param {obj} obj 
- * @returns True if obj is empty
- */
 function is_empty_object(obj) {
     return Object.keys(obj).length === 0;
 }
 
-/**
- * Modify a given quest and inserts the target into the text
- * @param {An obj for a quest} quest 
- * @param {The users rank} rank 
- * @param {The choosen difficulty} difficulty 
- * @param {The users mastery} mastery 
- * @param {The timespan of the quest} timespan 
- * @returns A obj mostifed basend on the parameters
- */
+
 function modify_quest(quest, rank, difficulty, mastery, timespan) {
+    //formular for scaling
     const min = quest["base_target"];
-    //Modify the quest based on timesapan
     switch (timespan) {
         case 'daily':
-            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.5) * (mastery * 0.5));
+            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.1) * (mastery * 0.5) * 1);
             break;
         case 'weekly':
-            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.5) * (mastery * 0.5) * 4);
+            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.1) * (mastery * 0.5) * 4);
             break;
         case 'monthly':
-            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.5) * (mastery * 0.5) * 13);
+            quest["base_target"] = Math.floor(quest["base_target"] * ((rank + parseInt(difficulty)) * 0.1) * (mastery * 0.5) * 13);
             break;
     }
-    //Ensures the new target isn't lower than base target
+
     if (quest["base_target"] < min) {
         quest["base_target"] = min
         quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
-        return quest;
     }
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
 }
 
-/**
- * Fetches a Json file
- * @param {Path to Json file} url 
- * @returns Json file as js object
- */
+
 async function fetchJSON(url) {
     try {
         const response = await fetch(url);
@@ -78,14 +55,7 @@ async function fetchJSON(url) {
     }
 }
 
-/**
- * Checks the sate of the current quest
- * @param {Timespan of quest} timespan 
- * @param {The quest_log} quest_log 
- * @param {The usersID} userID 
- * @returns An obj of with the state of the quest and date of the newest quest if a 
- * current quest exists else date is the current date 
- */
+
 function check_current(timespan, quest_log, userID) {
     const obj_currentDate = new Date();
     let lastestDate;
@@ -93,23 +63,19 @@ function check_current(timespan, quest_log, userID) {
     switch (timespan) {
         case 'daily': {
             const obj_dailies = quest_log[userID][timespan];
-            //Checks if there exists any quest
             if (is_empty_object(obj_dailies)) {
                 obj_state.state = "None";
-                obj_state.date = get_current_date_format();
                 return obj_state;
             }
-            //Gets the latest entry by taking the last key
             lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
-            obj_state.date = lastestDate;
             const questDate = lastestDate.split("/");
-            //Check if latest quest is the same date as today
             if (questDate[0] == obj_currentDate.getDate() && questDate[1] == (obj_currentDate.getMonth() + 1) && questDate[2] == obj_currentDate.getFullYear()) {
-                //If the current quest is active, check if the quest is done
                 if (obj_dailies[lastestDate]["target"] <= obj_dailies[lastestDate]["amount"]) {
                     obj_state.state = "Done";
+                    obj_state.date = lastestDate;
                     return obj_state;
                 }
+                obj_state.date = lastestDate;
                 return obj_state;
             }
         }
@@ -118,30 +84,27 @@ function check_current(timespan, quest_log, userID) {
 
         case 'weekly':
             const obj_weeklies = quest_log[userID][timespan];
-            //Check if the object is empty
             if (is_empty_object(obj_weeklies)) {
                 obj_state.state = "None";
-                obj_state.date = get_current_date_format();
                 return obj_state;
             }
-            //Gets the latest quest
             lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
-            obj_state.date = lastestDate;
             const questDateStr = lastestDate.split("/");
-            //Check if latest quest is within 7 days of today
-            const questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
+            //Check if questDay is within 7 days of today
+            let questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
             //Difference in milisec
-            let diffInMilisec = obj_currentDate - questDateObj;
+            diffInMilisec = obj_currentDate - questDateObj;
             //Convert to day
             let diffInDays = diffInMilisec / (1000 * 60 * 60 * 24)
 
-            //If the difference is less then or equel to 7 the quest is still active
+
             if (Math.abs(diffInDays) <= 7) {
-                //Check if quest is complete
                 if (obj_weeklies[lastestDate]["target"] <= obj_weeklies[lastestDate]["amount"]) {
                     obj_state.state = "Done";
+                    obj_state.date = lastestDate;
                     return obj_state;
                 }
+                obj_state.date = lastestDate;
                 return obj_state;
             }
             obj_state.state = "None";
@@ -149,23 +112,19 @@ function check_current(timespan, quest_log, userID) {
 
         case 'monthly':
             const obj_monthlies = quest_log[userID][timespan];
-            //Checks if the obj is empty
             if (is_empty_object(obj_monthlies)) {
                 obj_state.state = "None";
-                obj_state.date = get_current_date_format();
                 return obj_state;
             }
-            //Get lastest quest
             lastestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
-            obj_state.date = lastestDate;
             const questDate = lastestDate.split("/");
-            //Check if quest is in the same month as current month
             if ((obj_currentDate.getMonth() + 1) == questDate[1] && obj_currentDate.getFullYear() == questDate[2]) {
-                //If the quest is active check if it is done
                 if (obj_monthlies[lastestDate]["target"] <= obj_monthlies[lastestDate]["amount"]) {
                     obj_state.state = "Done";
+                    obj_state.date = lastestDate;
                     return obj_state;
                 }
+                obj_state.date = lastestDate;
                 return obj_state;
             }
             obj_state.state = "None";
@@ -175,13 +134,12 @@ function check_current(timespan, quest_log, userID) {
 
 
     }
+
+
 }
 
 
-/**
- * Add the quest to quest_log json file
- * @param {ojb containg the quest} quest 
- */
+
 function add_quest_json(quest) {
     fetch('http://127.0.0.1:3360/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
@@ -194,7 +152,7 @@ function add_quest_json(quest) {
             if (!response.ok) {
                 throw new Error('Failed to fetch POST');
             }
-            return response.text();
+            return response.json();
         })
         .catch(error => {
             console.error('Error fetch Post quest_log:', error);
@@ -220,20 +178,17 @@ function open_modal_for_quest(questTimespan, type, user) {
     document.getElementById("myModal").style.display = "block";
     document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
 
-    //Adds functionality to each difficulty button
     document.querySelectorAll(".difficulty-button").forEach(difficultyButton => {
         difficultyButton.addEventListener("click", (event) => {
-            //Gets the difficulty of the button
             const difficulty = event.target.dataset.difficulty;
             fetchJSON('json/quest_templates.json')
                 .then(data => {
-                    //Gets a quest out of quest_templates
                     let obj_Quest = choose_quest(data.quest_templates[type]);
-                    //Modify the quest
                     obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6, questTimespan);
                     obj_newQuest = new Object;
-                    const date = get_current_date_format();
-                    //Make an obj which is used when adding the quest
+                    obj_currentDate = new Date;
+                    const date = obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
+
                     obj_newQuest[date] = {};
                     obj_newQuest[date].type = type;
                     obj_newQuest[date].target = obj_Quest["base_target"];
@@ -245,25 +200,16 @@ function open_modal_for_quest(questTimespan, type, user) {
 
                     //Add quest to json file
                     add_quest_json(obj_newQuest);
-                    //remove popup window
                     document.getElementById("myModal").style.display = "none";
-                    //Reload the page
                     location.reload();
                 });
 
         });
     })
-    //add functionality to close button
-    document.getElementById("close").addEventListener("click", () => {
-        document.getElementById("myModal").style.display = "none";
-    });
 
 }
 
-/**
- * A function that changes the amount for a done for a quest
- * @param {an object which contain parameters for change amount function} obj_para 
- */
+
 function change_amount(obj_para) {
     fetch('http://127.0.0.1:3360/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
@@ -288,13 +234,8 @@ function change_amount(obj_para) {
 
 
 //validates a value such that the vaule is a posetiv number
-/**
- * Validates a string such thats is a number
- * @param {a string} value 
- * @returns True if vaule is valid
- */
 function validate_input(value) {
-    //Insures the input is a string only containg numbers
+    //insures the input is a string only containg numbers
     if (/^\d+$/.test(value) && parseFloat(value) > 0) {
         return true
     } else if (parseFloat(value) <= 0) {
@@ -306,12 +247,7 @@ function validate_input(value) {
     }
 }
 
-/**
- * A function for opening a popup window, and lets the user add or substract from amount done
- * @param {an obj which contains parameters, used when chaning the amount} obj_para 
- */
 function input_data(obj_para) {
-    //show popup
     document.getElementById("inputModal").style.display = "block";
     const inputField = document.getElementById("InputInputfield");
     document.getElementById("InputHeader").innerText = obj_para["timespan"].charAt(0).toUpperCase() + obj_para["timespan"].slice(1);
@@ -353,12 +289,9 @@ function input_data(obj_para) {
 
 }
 
-/**
- * Makes the edit button
- * @param {An obj cointing parameters, such as QuestID} obj_para 
- */
 function add_edit_button(obj_para) {
-    //Creates an image in the lower corner of given quest
+    //obj_quest.timespanID = questID;
+
     const image = document.createElement("img");
     image.src = "image/edit_button.png";
     image.width = 50;
@@ -369,18 +302,13 @@ function add_edit_button(obj_para) {
 
     image.addEventListener('click', input_data.bind(null, obj_para));
 
-    //Add the image in the the quest boxed based on questID from obj_para
     const questContainer = document.getElementById(obj_para["questID"]);
     questContainer.style.position = 'relative';
     questContainer.appendChild(image);
 
 }
 
-/**
- * Updates the meter
- * @param {Quest ID} ID 
- * @param {obj cointing the quest} obj_quest 
- */
+
 function update_meter(ID, obj_quest) {
     const meter = document.getElementById("meter" + ID);
     meter.max = obj_quest.target;
@@ -424,7 +352,6 @@ async function display_quest(quest, userInfox, user) {
     //Fetch quest_log
     fetchJSON('json/quest_log.json')
         .then(quest_log => {
-            //Check the state of quest
             const obj_stateQuest = check_current(questTimespan, quest_log, user);
 
             //If there is no quest
@@ -448,7 +375,7 @@ async function display_quest(quest, userInfox, user) {
 
 
             } else if (obj_stateQuest["state"] == "Done") {
-                //If quest is done
+
                 document.getElementById(quest + "_type").innerText = "Quest done";
                 resolve();
                 return;
@@ -475,7 +402,6 @@ async function display_quest(quest, userInfox, user) {
                 const vaules = quest_log[user][questTimespan][obj_stateQuest["date"]];
                 document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
 
-                //Show meter and update it
                 document.getElementById("meter" + quest[5]).style.display = "block"
                 update_meter(quest[5], quest_log[user][questTimespan][obj_stateQuest["date"]]);
                 resolve();
@@ -489,7 +415,6 @@ async function display_quest(quest, userInfox, user) {
 
 
 
-//TODO: Prettiere popus
 
 
 //example of output
