@@ -15,7 +15,6 @@
             <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
             <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
             <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
-            <li><a href="#page4">Exercise</a></li>
             <li><a href="#profilepage" id="profile-link">Profile</a></li>
         </ul>
     </nav>
@@ -25,8 +24,10 @@
             <li><a href="#main"><img src="image/home.png" alt="Home" class="top-img"></a></li>
         </ul>
         <ul>
-            <li><a href="#loginPage"><img src="image/profile_image.png" alt="Profile" class="top-img">
-                    <br><div class="login"></div></a></li>
+            <li><a id="profileLink" href="#loginPage"><img src="image/profile_image.png" alt="Profile"
+                        class="top-img"></a></li>
+            <br>
+            <div class="login"></div></a></li>
         </ul>
     </nav>
 
@@ -39,7 +40,7 @@
             <button class="difficulty-button" data-difficulty="3">Hard</button>
             <button id="close">Close</button>
         </div>
-      </div>
+    </div>
 
     <div id="inputModal" class="modal">
         <div class="modal-content">
@@ -51,37 +52,51 @@
             <button id="close_input">Close</button>
         </div>
     </div>
-      
+
     <!-- Page sections -->
     <div id="main" class="page active">
         <h2 class="heading">Quests</h2>
         <div class="questpage">
             <div id="quest1" class="quest">
                 <h2>Daily</h2>
-                <meter id="meter1" value="0" min="0" max="1"></meter> 
+                <meter id="meter1" value="0" min="0" max="1"></meter>
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
                 <h2>Weekly</h2>
-                <meter id="meter2" value="0" min="0" max="1"></meter> 
+                <meter id="meter2" value="0" min="0" max="1"></meter>
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
                 <h2>Monthly</h2>
-                <meter id="meter3" value="0" min="0" max="1"></meter> 
+                <meter id="meter3" value="0" min="0" max="1"></meter>
                 <p id="quest3_type"></p>
             </div>
         </div>
     </div>
-    
 
-    <div id="friends" class="page">
+    <script>
+        // Call setupTiersForQuestPage when the website is entered
+        document.addEventListener('DOMContentLoaded', function () {
+            setupTiersForQuestPage('idkey1');
+        });
+    </script>
+
+
+
+    <div id="friends" class="page center">
         <h2>Friends</h2>
         <p>The friends feature goes here</p>
 
+        <a href="#" id="toggleFriendPageLink" class="dropbtn">Show friends</a>
 
+    </div>
+
+    <div id="FriendsPlot" class="page center">
+
+        <h2>Friends</h2>
 
         <div class="dropdown-container">
             <div class="dropdown">
@@ -95,7 +110,7 @@
             </div>
         </div>
 
-    
+
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
@@ -111,14 +126,20 @@
         <p id="textfriend"> </p>
 
         <div>
-            <h1>Graph with friends</h1>
+            <h1>Graph with friends </h1>
             <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
         </div>
     </div>
 
-    <div id="stats" class="page">
+    <div id="stats" class="page center">
         <h2>Stats</h2>
-        <p id="text"> </p>
+        <a href="#" id="toggleStatsPageLink" class="dropbtn">User plot</a>
+        <p id="statsText"></p>
+    </div>
+
+
+    <div id="userstats" class="page center">
+        <h2>Stats Exercise</h2>
 
         <div class="dropdown-container">
             <div class="dropdown">
@@ -132,7 +153,7 @@
             </div>
         </div>
 
-    
+
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close1()" class="dropbtn">Change period</button>
@@ -144,15 +165,12 @@
             </div>
         </div>
 
+        <p id="text"> </p>
+
         <div>
             <h1>Graph</h1>
             <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
         </div>
-    </div>
-
-    <div id =page4 class="page">
-            <h2>Stats Exercise</h2>
-            <p id="statsText"></p>
     </div>
 
     <div id="createAccount" class="page">
@@ -187,73 +205,62 @@
     </div>
 
     <div id="profilepage" class="page">
-        <h2 class="heading">Profile</h2>
+        <div id="profile_Username">
+            <h2 class="heading"></h2>
+        </div>
 
-        <div id="profilePageContainer" class="profile"> 
+        <div id="profilePageContainer" class="profile">
+            <h2 style="text-align: center;">Tiers</h2>
+
+            <div id="userTiers" class="profile_layout">
+                <div class="tiers">
+                    <div id="dailyTier" class="tier">
+                        <h2>Daily <span id="dailyTierInfo">Tier</span></h2>
+                        <img id="dailyTierImage" src="image/bronzeTier.png" alt="Daily Tier Image">
+                        <meter id="dailyMeter" value="0" min="0" max="100" style="width: 50%;"></meter>
+                    </div>
+
+                    <div id="weeklyTier" class="tier">
+                        <h2>Weekly <span id="weeklyTierInfo">Tier</span></h2>
+                        <img id="weeklyTierImage" src="image/silverTier.png" alt="Weekly Tier Image">
+                        <meter id="weeklyMeter" value="0" min="0" max="50" style="width: 50%;"></meter>
+                    </div>
+
+                    <div id="monthlyTier" class="tier">
+                        <h2>Monthly <span id="monthlyTierInfo">Tier</span></h2>
+                        <img id="monthlyTierImage" src="image/goldTier.png" alt="Monthly Tier Image">
+                        <meter id="monthlyMeter" value="0" min="0" max="20" style="width: 50%;"></meter>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h2 style="text-align: center;">Masteries</h2>
+            <div id="userMasteries" class="profile_layout">
+                <div class="tiers">
+                </div>
+            </div>
+
 
             <div id="userInfo" class="profile_layout">
-                <h2 style= "text-align: center">User info</h2>
-                <p>User goes here</p>
+                <h2 style="text-align: center;">User info</h2>
+                <p>Height: <input type="number" id="height" value="${userInfo.health.height}"> cm</p>
+                <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}"> kg</p>
+                <button onclick="postUserInfo('${username}')">Save User Info</button>
+                <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
             </div>
 
             <div id="userPreferences" class="profile_layout">
-                <h2 style= "text-align: center">Preferences</h2>
+                <h2 style="text-align: center">Preferences</h2>
                 <p>Preferences goes here</p>
             </div>
         </div>
     </div>
 
-    <div id="surveyContainer">
-        <form id="surveyForm" class="page">   
-            <h1>Welcome to LetsGo! </h1>
-            <h2>Personal Information:</h2>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br><br>
-    
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" required><br><br>
-    
-            <label for="gender">Gender:</label>
-            <select id="gender" name="gender" required>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="Other">Other</option>
-            </select><br><br>
-    
-            <label for="height">Height (in cm):</label>
-            <input type="number" id="height" name="height" required><br><br>
-    
-            <label for="weight">Weight (in kg):</label>
-            <input type="number" id="weight" name="weight" required><br><br>
-    
-            <h2>Fitness Goals:</h2>
-            <input type="checkbox" id="weightLoss" name="fitnessGoal" value="weightLoss">
-            <label for="weightLoss">Weight loss</label><br>
-    
-            <input type="checkbox" id="muscleGain" name="fitnessGoal" value="muscleGain">
-            <label for="muscleGain">Muscle gain</label><br>
-    
-            <input type="checkbox" id="endurance" name="fitnessGoal" value="endurance">
-            <label for="endurance">Improve endurance</label><br>
-    
-            <h2>Activity Level:</h2>
-            <input type="radio" id="sedentary" name="activityLevel" value="sedentary">
-            <label for="sedentary">Sedentary</label><br>
-    
-            <input type="radio" id="lightlyActive" name="activityLevel" value="lightlyActive">
-            <label for="lightlyActive">Lightly active</label><br>
-    
-            <input type="radio" id="moderatelyActive" name="activityLevel" value="moderatelyActive">
-            <label for="moderatelyActive">Moderately active</label><br>
-    
-            <input type="radio" id="veryActive" name="activityLevel" value="veryActive">
-            <label for="veryActive">Very active</label><br>
-    
-            <input type="radio" id="extremelyActive" name="activityLevel" value="extremelyActive">
-            <label for="extremelyActive">Extremely active</label><br><br>
-    
-            <button type="submit">Submit</button>
-        </form>
+    <div id="userfriend" class="page center">
+        <h2>User friend</h2>
+        <a href="#" id="toggleFriendPlotPageLink" class="dropbtn">Show friends plot</a>
+        <p id="statsText1"></p>
+
     </div>
 
     <!-- JavaScript to handle navigation -->
@@ -261,7 +268,7 @@
     <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/Graph.js"></script>
-    
+
 </body>
 
 </html>
