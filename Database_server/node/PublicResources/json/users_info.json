@@ -1,7 +1,7 @@
 {
   "users_info": {
-    "idkey1": {
-      "username": "idkey1",
+    "1235": {
+      "username": "1235",
       "health": {
         "height": 180,
         "weight": 75
@@ -44,29 +44,22 @@
         }
       },
       "preset": {
-        "name": "walk",
+        "name": "custom",
         "conf": [
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
           "run",
           "run",
           "run",
-          "run",
           "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "walk",
-          "crunches",
-          "crunches",
           "crunches"
         ]
       }
     },
-    "Tobias": {
+    "idkey1": {
       "username": "Tobias",
       "health": {
         "height": 178,
@@ -146,6 +139,28 @@
           "crunches"
         ]
       }
+    },
+    "Jacobskæmpeløg": {
+      "username": "Jacobskæmpeløg",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "Dingo3": {
+      "username": "Dingo3",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
     }
   }
 }
