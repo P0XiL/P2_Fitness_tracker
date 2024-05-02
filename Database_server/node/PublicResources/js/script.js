@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Send the data to the server-side script for file writing
+            console.log(username);
             createUser(userData);
         }
     });

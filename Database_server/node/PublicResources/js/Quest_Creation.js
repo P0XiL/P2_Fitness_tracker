@@ -183,7 +183,7 @@ function check_current(timespan, quest_log, userID) {
  * @param {ojb containg the quest} quest 
  */
 function add_quest_json(quest) {
-    fetch('http://127.0.0.1:3360/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -205,7 +205,7 @@ function add_quest_json(quest) {
  * Get the current date and transform it to date/month/year format
  * @returns A string with  date/month/year
  */
-function get_current_date_format() {
+function get_current_date_format(){
     obj_currentDate = new Date;
     return obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
 }
@@ -215,7 +215,7 @@ function get_current_date_format() {
  * @param {the timespan of quest} questTimespan 
  * @param {the type of the quest} type 
  */
-function open_modal_for_quest(questTimespan, type, user) {
+function open_modal_for_quest(questTimespan, type){
     //Makke the popup visable
     document.getElementById("myModal").style.display = "block";
     document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
@@ -265,7 +265,7 @@ function open_modal_for_quest(questTimespan, type, user) {
  * @param {an object which contain parameters for change amount function} obj_para 
  */
 function change_amount(obj_para) {
-    fetch('http://127.0.0.1:3360/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -426,12 +426,10 @@ async function display_quest(quest, userInfox, user) {
         .then(quest_log => {
             //Check the state of quest
             const obj_stateQuest = check_current(questTimespan, quest_log, user);
-
             //If there is no quest
             if (obj_stateQuest["state"] == "None") {
                 //Chooses a type for userInfo
                 const type = userInfo["preset"][generate_random_number(userInfo["preset"].length)];
-
                 //Makes a obj with info for new quest
                 const date = get_current_date_format();
                 let obj_newQuest = {};
@@ -447,6 +445,7 @@ async function display_quest(quest, userInfox, user) {
                 return;
 
 
+                
             } else if (obj_stateQuest["state"] == "Done") {
                 //If quest is done
                 document.getElementById(quest + "_type").innerText = "Quest done";
