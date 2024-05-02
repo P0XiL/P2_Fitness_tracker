@@ -57,30 +57,25 @@ footer {grid-area: f;}
 }
 
 #top-nav {
+  display: grid;
   grid-area: h;
-  display: flex; /* Use flexbox for layout */
-  justify-content: space-between; /* Spacing between the two ul elements */
-  align-items: center; /* Center items vertically */
 }
 
-
-#top-nav ul {
+#top-navigation-links {
+  display: flex;
   list-style: none;
-  margin-right: 10px;
-  padding-inline-start: 20px;
+  justify-content: space-between;
+  margin-right: 30px;
+  margin-left: 0px;
+  margin-top: 5px;
 }
 
-#top-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 3em;
+.top-right-img {
+  max-width: 60px;
+  max-height: 60px;
 }
 
-#top-nav .login {
-  font-size: 0.2em;
-}
-.top-img {
-  margin-top: 10px;
+.top-left-img {
   max-width: 60px;
   max-height: 60px;
 }

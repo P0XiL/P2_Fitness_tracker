@@ -190,157 +190,6 @@ function createUser(req, res) {
     });
 }
 
-//Function for adding a quest to the quest_log json file
-function write_quest_json(req, res) {
-    let body = '';
-    req.on('data', (chunk) => {
-        body += chunk.toString();
-    });
-    req.on('end', () => {
-        let obj_quest = JSON.parse(body);
-
-        // Read existing data from the file
-        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
-            let obj_questLog = {}; // Initialize quest_log object
-
-            if (!err) {
-                try {
-                    obj_questLog = JSON.parse(data);
-                } catch (parseError) {
-                    console.error("Error parsing existing quest_log:", parseError);
-                }
-            } else {
-                // Handle file not found or empty
-                console.error("Error reading existing quest_log:", err);
-            }
-
-            const timespan = obj_quest.timespan;
-            delete obj_quest.timespan;
-            obj_questLog["assholeblaster69"][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
-
-            // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
-                if (err) {
-                    console.error(err);
-                    errorResponse(res, 500, String(err));
-                } else {
-                    console.log('Added new quest');
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'text/plain');
-                    res.end('Added new quest');
-                }
-            });
-        });
-    });
-}
-
-//Function that changes amount of completion
-function change_amount(req, res) {
-    let body = '';
-    req.on('data', (chunk) => {
-        body += chunk.toString();
-    });
-    req.on('end', () => {
-        let obj_amountInfo = JSON.parse(body);
-
-        // Read existing data from the file
-        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
-            let obj_questLog = {}; // Initialize quest_log object
-
-            if (!err) {
-                try {
-                    obj_questLog = JSON.parse(data);
-                } catch (parseError) {
-                    console.error("Error parsing existing quest_log:", parseError);
-                }
-            } else {
-                // Handle file not found or empty
-                console.error("Error reading existing quest_log:", err);
-            }
-
-            const quest = obj_questLog["assholeblaster69"][obj_amountInfo.timespan][obj_amountInfo.date];
-            if (obj_amountInfo["mode"] === "add") {
-                quest.amount += obj_amountInfo.amount;
-            } else {
-                quest.amount -= obj_amountInfo.amount;
-                if (quest.amount < 0) {
-                    quest.amount = 0;
-                }
-            }
-
-            // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
-                if (err) {
-                    console.error(err);
-                    errorResponse(res, 500, String(err));
-                } else {
-                    console.log('Amount Changed');
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'text/plain');
-                    res.end('Amount Changed');
-                }
-            });
-        });
-    });
-}
-
-// Function to handle writing user info to a JSON file
-function write_user_info_json(req, res) {
-    let body = '';
-    req.on('data', (chunk) => {
-        body += chunk.toString();
-    });
-    req.on('end', () => {
-        let user_info = JSON.parse(body);
-        const username = user_info.username; // Extract the username from the request body
-
-        // Read existing data from the file
-        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
-            if (err) {
-                console.error(err);
-                errorResponse(res, 500, String(err));
-                return;
-            }
-
-            let existingData = JSON.parse(data);
-
-            // Check if the username exists in the user_info object
-            if (existingData.users_info.hasOwnProperty(username)) {
-                // Update the user information for the specified username
-                existingData.users_info[username] = user_info;
-
-                // Write updated data back to the file with indentation
-                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
-                    if (err) {
-                        console.error(err);
-                        errorResponse(res, 500, String(err));
-                    } else {
-                        console.log('User info written to file');
-                        // Send a JSON response confirming the success of the operation
-                        const jsonResponse = {
-                            success: true,
-                            message: 'User info updated successfully'
-                        };
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.end(JSON.stringify(jsonResponse));
-                    }
-                });
-            } else {
-                // Send a JSON response indicating that the username was not found
-                const jsonResponse = {
-                    success: false,
-                    message: `User info not found for username: ${username}`
-                };
-                res.statusCode = 404;
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(jsonResponse));
-            }
-        });
-    });
-}
-
-
 function addUserToUsers_info(username) {
     // Read existing data from the file
     fs.readFile('PublicResources/json/users_info.json', (err, data) => {
@@ -476,4 +325,237 @@ function guessMimeType(fileName) {
     return ext2Mime[fileExtension] || undefined;
 }
 
+//Function for adding a quest to the quest_log json file
+function write_quest_json(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_quest = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+            let obj_questLog = {}; // Initialize quest_log object
+
+            if (!err) {
+                try {
+                    obj_questLog = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing quest_log:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing quest_log:", err);
+            }
+            const timespan = obj_quest.timespan;
+            delete obj_quest.timespan;
+            const user = obj_quest.userID;
+            delete obj_quest.userID;
+            obj_questLog[user][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
+           
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('Added new ' + timespan + ' Quest');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
+        });
+    });
+}
+
+//Function that changes amount of completion
+function change_amount(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_amountInfo = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+            let obj_questLog = {}; // Initialize quest_log object
+
+            if (!err) {
+                try {
+                    obj_questLog = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing quest_log:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing quest_log:", err);
+            }
+
+            const quest = obj_questLog[obj_amountInfo.user][obj_amountInfo.timespan][obj_amountInfo.date];
+            if (obj_amountInfo["mode"] === "add") {
+                quest.amount += obj_amountInfo.amount;
+            } else {
+                quest.amount -= obj_amountInfo.amount;
+                if (quest.amount < 0) {
+                    quest.amount = 0;
+                }
+            }
+
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User data appended to file');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
+        });
+    });
+}
+
+
+
+
+
+
+function write_user_info_json(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let user_info = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error(err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+            let obj_survey = {};
+
+            let existingData = JSON.parse(data);
+            existingData.users_info[user_info.username].preset = user_info.preset;
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User info written to file');
+                    // Send a JSON response confirming the success of the operation
+                    const jsonResponse = {
+                        success: true,
+                        message: 'User info updated successfully'
+                    };
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(jsonResponse));
+                }
+            });
+        });
+    });
+}
+
+function write_user_preferences_json(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let user_info = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error(err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            let existingData = JSON.parse(data);
+            existingData.users_info[user_info.username].preset = user_info.preset;
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User info written to file');
+                    // Send a JSON response confirming the success of the operation
+                    const jsonResponse = {
+                        success: true,
+                        message: 'User info updated successfully'
+                    };
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(jsonResponse));
+                }
+            });
+        });
+    });
+}
+    function write_survey_data_json(req, res) {
+        let body = '';
+        req.on('data', (chunk) => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            let surveyData = JSON.parse(body);
+            console.log('Received survey data:', surveyData); // Log received survey data
+    
+            // Read existing data from the file
+            fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+                if (err) {
+                    console.error('Error reading existing data:', err);
+                    errorResponse(res, 500, String(err));
+                    return;
+                }
+    
+                let existingData = JSON.parse(data);
+                console.log('Existing data:', existingData); // Log existing data
+    
+                // Ensure users_info object exists
+                existingData.users_info = existingData.users_info || {};
+
+                // Fetch idkey from users_info or set a default value if not available
+                const idkey = existingData.users_info && existingData.users_info.idkey ? existingData.users_info.idkey : "defaultIdkey";
+
+                // Ensure the idkey exists within users_info
+                existingData.users_info[idkey] = existingData.users_info[idkey] || {};
+
+                // Add the surveyData to the specified idkey
+                 existingData.users_info[idkey].surveyData = surveyData;
+    
+                // Write updated data back to the file
+                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+                    if (err) {
+                        console.error('Error writing data:', err);
+                        errorResponse(res, 500, String(err));
+                    } else {
+                        console.log('Survey data written to file');
+                        // Send a JSON response confirming the success of the operation
+                        const jsonResponse = {
+                            success: true,
+                            message: 'Survey data saved successfully'
+                        };
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.end(JSON.stringify(jsonResponse));
+                    }
+                });
+            });
+        });
+    }
 startServer();
