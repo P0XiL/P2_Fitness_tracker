@@ -190,64 +190,6 @@ function createUser(req, res) {
     });
 }
 
-
-// Function to handle writing user info to a JSON file
-function write_user_info_json(req, res) {
-    let body = '';
-    req.on('data', (chunk) => {
-        body += chunk.toString();
-    });
-    req.on('end', () => {
-        let user_info = JSON.parse(body);
-        const username = user_info.username; // Extract the username from the request body
-
-        // Read existing data from the file
-        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
-            if (err) {
-                console.error(err);
-                errorResponse(res, 500, String(err));
-                return;
-            }
-
-            let existingData = JSON.parse(data);
-
-            // Check if the username exists in the user_info object
-            if (existingData.users_info.hasOwnProperty(username)) {
-                // Update the user information for the specified username
-                existingData.users_info[username] = user_info;
-
-                // Write updated data back to the file with indentation
-                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
-                    if (err) {
-                        console.error(err);
-                        errorResponse(res, 500, String(err));
-                    } else {
-                        console.log('User info written to file');
-                        // Send a JSON response confirming the success of the operation
-                        const jsonResponse = {
-                            success: true,
-                            message: 'User info updated successfully'
-                        };
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.end(JSON.stringify(jsonResponse));
-                    }
-                });
-            } else {
-                // Send a JSON response indicating that the username was not found
-                const jsonResponse = {
-                    success: false,
-                    message: `User info not found for username: ${username}`
-                };
-                res.statusCode = 404;
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(jsonResponse));
-            }
-        });
-    });
-}
-
-
 function addUserToUsers_info(username) {
     // Read existing data from the file
     fs.readFile('PublicResources/json/users_info.json', (err, data) => {
