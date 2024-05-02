@@ -1,4 +1,5 @@
 
+const fetchNode9 = "https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/";
 /**
  * A function which returns a number between 0 and Max
  * @param {max vaule for number} max 
@@ -183,7 +184,7 @@ function check_current(timespan, quest_log, userID) {
  * @param {ojb containg the quest} quest 
  */
 function add_quest_json(quest) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch(fetchNode9+'write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -265,7 +266,7 @@ function open_modal_for_quest(questTimespan, type){
  * @param {an object which contain parameters for change amount function} obj_para 
  */
 function change_amount(obj_para) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch(fetchNode9+'change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
