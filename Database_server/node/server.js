@@ -355,7 +355,7 @@ function write_quest_json(req, res) {
             obj_questLog[user][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
            
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
@@ -406,7 +406,7 @@ function change_amount(req, res) {
 
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));

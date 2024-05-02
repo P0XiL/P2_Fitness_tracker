@@ -1,6 +1,5 @@
-const serverPath = 'https://127.0.0.1:3360/';
-// LOCALHOST: https://127.0.0.1:3360
-// SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
+const serverPath = 'http://127.0.0.1:3360/';
+
 
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
