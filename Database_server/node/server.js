@@ -320,6 +320,12 @@ function change_amount(req, res) {
         });
     });
 }
+
+
+
+
+
+
 function write_user_info_json(req, res) {
     let body = '';
     req.on('data', (chunk) => {
@@ -423,12 +429,8 @@ function write_user_preferences_json(req, res) {
                 // Ensure users_info object exists
                 existingData.users_info = existingData.users_info || {};
 
-                // Fetch idkey from users_info or display an error if not available
-                const idkey = existingData.users_info && existingData.users_info.idkey 
-                            ? existingData.users_info.idkey 
-                            : (() => {
-                                console.error("User info not found!"); 
-                            })();
+                // Fetch idkey from users_info or set a default value if not available
+                const idkey = existingData.users_info && existingData.users_info.idkey ? existingData.users_info.idkey : "defaultIdkey";
 
                 // Ensure the idkey exists within users_info
                 existingData.users_info[idkey] = existingData.users_info[idkey] || {};
@@ -456,5 +458,4 @@ function write_user_preferences_json(req, res) {
             });
         });
     }
-    
 startServer();

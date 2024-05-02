@@ -600,33 +600,7 @@ function updateStreak(userId) {
   }
 }
 
-function getStreakCount(userId) {
-  let streakCount = 0;
-  let currentDate = new Date().toDateString();
-  let lastDate = null;
-
-  if (lastActiveDates[userId]) {
-    lastDate = new Date(lastActiveDates[userId]);
-  }
-
-  if (lastDate) {
-    while (currentDate === lastDate.toDateString()) {
-      streakCount++;
-      lastDate.setDate(lastDate.getDate() - 1);
-      currentDate = lastDate.toDateString();
-    }
-  }
-
-  return streakCount;
-}
-
+// Example of using the function
+const userId = "exampleUserId";
 updateStreak(userId); // Call this function whenever user is active
-const streakCount = getStreakCount(userId);
 console.log("Current streak for user", userId + ":", streakCount);
-
-// Display PNG image if streak is active
-if (streakCount > 0) {
-  const img = document.createElement("img");
-  img.src = "Database_server\node\PublicResources\image\Streak.png";
-  document.body.appendChild(img);
-}
