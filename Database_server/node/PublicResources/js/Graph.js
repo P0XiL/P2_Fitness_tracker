@@ -1,17 +1,5 @@
+const user = localStorage.getItem("username");
 
-
-async function fetchJSON(url) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Failed to fetch JSON');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching JSON', error);
-    return null;
-  }
-}
 
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
@@ -51,7 +39,10 @@ function individual_stats(user, type) {
       for (let period in data[user]) {
         for (let key in data[user][period]) {
           if (data[user][period][key].type === type) {
-            amount += data[user][period][key].amount;
+            const currentAmount = data[user][period][key].amount;
+            if (!isNaN(currentAmount)) {
+              amount += currentAmount;
+            }
           }
         }
       }
@@ -62,24 +53,29 @@ function individual_stats(user, type) {
     });
 }
 
-function individual_type() {
+function individual_type(user) {
   fetchJSON("json/quest_log.json")
     .then(data => {
-      let user = sessionStorage.getItem("username");
       let text = ""; // Initialize text variable
-      let processedTypes = {}; // Object to keep track of processed types
+      const processedTypes = {}; // Object to keep track of processed types
 
       for (let period in data[user]) {
         for (let key in data[user][period]) {
-          let type = data[user][period][key].type;
+          const type = data[user][period][key].type;
           if (!processedTypes[type]) { // Check if type has already been processed
             processedTypes[type] = true;
             individual_stats(user, type).then(amount => {
-              text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
-              const element = document.getElementById("statsText");
-              const element1 = document.getElementById("statsText1");
-              element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
-              element1.innerHTML = "<pre>" + text + "</pre>";
+              if (amount !== 0) {
+                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+                const element = document.getElementById("statsText");
+                try {
+                  element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
+                } catch (error) {
+                  console.error("Error setting innerHTML:", error);
+                }
+              }
+            }).catch(error => {
+              console.error("Error in individual_stats:", error);
             });
           }
         }
@@ -90,17 +86,49 @@ function individual_type() {
     });
 }
 
-individual_type();
+function individual_type_friend(user) {
+  fetchJSON("json/quest_log.json")
+    .then(data => {
+      let text = ""; // Initialize text variable
+      const processedTypes = {}; // Object to keep track of processed types
+
+      for (let period in data[user]) {
+        for (let key in data[user][period]) {
+          const type = data[user][period][key].type;
+          if (!processedTypes[type]) { // Check if type has already been processed
+            processedTypes[type] = true;
+            individual_stats(user, type).then(amount => {
+              if (amount !== 0) {
+                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+                const element1 = document.getElementById("statsText1");
+                try {
+                  element1.innerHTML = "<pre>" + text + "</pre>";
+                } catch (error) {
+                  console.error("Error setting innerHTML:", error);
+                }
+              }
+            }).catch(error => {
+              console.error("Error in individual_stats:", error);
+            });
+          }
+        }
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching JSON:", error);
+    });
+}
+
+
+individual_type(user);
+individual_type_friend("assholeblaster69");
 
 
 let prePeriod = "daily";
 let pretype = "cardio";
 
 function update_graph(type, period) {
-  fetchJSON("json/quest_log.json")
-    .then(data => {
-      user = sessionStorage.getItem("username");
-      console.log(user + "test");
+      let user = localStorage.getItem("username");
   if (type === null && period !== null) {
     plot(user, pretype, period);
     change_text(pretype, period);
@@ -114,11 +142,8 @@ function update_graph(type, period) {
     plot(user, pretype, prePeriod);
     change_text(pretype, preperiod);
   }
-})
-.catch(error => {
-  console.error("Error fetching JSON:", error);
-});
 }
+
 
 function change_text(type, period) {
   // Get the element with the id "text"
@@ -180,14 +205,12 @@ function user_data_y(user, type, period) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
       let amountsWithType = [0];
-      console.log(data[user][period]);
       for (let date in data[user][period]) {
         if (data[user][period][date].type === type) {
           console.log(data[user][period][date].type);
           amountsWithType.push(data[user][period][date].amount);
         }
       }
-      console.log(amountsWithType + " test");
       return amountsWithType;
     })
     .catch(error => {
@@ -253,18 +276,18 @@ function plot_with_friends(user, user2, type, period) {
 let prePeriodFriend = "daily";
 let pretypeFriend = "cardio";
 
-function update_graph_friend(type, period) {
+function update_graph_friend(user, user1, type, period) {
   if (type === null && period !== null) {
-    plot_with_friends("Tobias", "Tobias1", pretypeFriend, period);
+    plot_with_friends(user, user1, pretypeFriend, period);
     change_text_friend(pretypeFriend, period);
     prePeriodFriend = period;
   }
   else if (type !== null && period === null) {
-    plot_with_friends("Tobias", "Tobias1", type, prePeriodFriend);
+    plot_with_friends(user, user1, type, prePeriodFriend);
     change_text_friend(type, prePeriodFriend);
     pretypeFriend = type;
   } else {
-    plot_with_friends("Tobias", "Tobias1", pretypeFriend, prePeriodFriend);
+    plot_with_friends(user, user1, pretypeFriend, prePeriodFriend);
     change_text_friend(type, period);
   }
 }

@@ -205,7 +205,7 @@ function add_quest_json(quest) {
  * Get the current date and transform it to date/month/year format
  * @returns A string with  date/month/year
  */
-function get_current_date_format(){
+function get_current_date_format() {
     obj_currentDate = new Date;
     return obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
 }
@@ -215,7 +215,7 @@ function get_current_date_format(){
  * @param {the timespan of quest} questTimespan 
  * @param {the type of the quest} type 
  */
-function open_modal_for_quest(questTimespan, type){
+function open_modal_for_quest(questTimespan, type, user) {
     //Makke the popup visable
     document.getElementById("myModal").style.display = "block";
     document.getElementById("popupText").innerText = "Choose difficulty for " + questTimespan + " of type: " + type;
@@ -488,7 +488,6 @@ async function display_quest(quest, userInfox, user) {
 
 
 
-//TODO: Prettiere popus
 
 
 //example of output
@@ -497,7 +496,10 @@ userInfo = {
     mastery: generate_random_number(3),
     preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
 };
-
+/**
+ * Displayes all the quest
+ * @param {userID} user 
+ */
 async function display_all_quest(user){
     try {
         //Display the daily quest
