@@ -1,9 +1,11 @@
 const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/';
+
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
     // Call checkLoginState() on page load
     //window.addEventListener('load', checkLoginState);
     checkLoginState();
+    setupTiersForQuestPage(localStorage.getItem('username'));
 
     // Assigns all tabs to an array called links
     const links = document.querySelectorAll('nav a');
