@@ -12,10 +12,14 @@ function generate_random_number(max) {
 /**
  * Takes an obj and returns a random object key
  * @param {An obj} quests 
- * @returns A random object key 
+ * @returns An obj with a random quest, and the exercise 
  */
 function choose_quest(quests) {
-    return quests[Object.keys(quests)[generate_random_number(Object.keys(quests).length)]]
+    const quest = new Object;
+    const random = generate_random_number(Object.keys(quests).length);
+    quest.quest = quests[Object.keys(quests)[random]];
+    quest.exercise = Object.keys(quests)[random];
+    return quest;
 }
 
 /**
@@ -183,7 +187,7 @@ function check_current(timespan, quest_log, userID) {
  * @param {ojb containg the quest} quest 
  */
 function add_quest_json(quest) {
-    fetch('http://127.0.0.1:3360/write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch(serverPath+'write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -230,16 +234,17 @@ function open_modal_for_quest(questTimespan, type, user) {
                     //Gets a quest out of quest_templates
                     let obj_Quest = choose_quest(data.quest_templates[type]);
                     //Modify the quest
-                    obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6, questTimespan);
+                    obj_Quest.quest = modify_quest(obj_Quest.quest, 3, difficulty, 6, questTimespan);
                     obj_newQuest = new Object;
                     const date = get_current_date_format();
                     //Make an obj which is used when adding the quest
                     obj_newQuest[date] = {};
                     obj_newQuest[date].type = type;
-                    obj_newQuest[date].target = obj_Quest["base_target"];
+                    obj_newQuest[date].target = obj_Quest.quest["base_target"];
                     obj_newQuest[date].amount = 0;
-                    obj_newQuest[date].text = obj_Quest.quest_text;
+                    obj_newQuest[date].text = obj_Quest.quest.quest_text;
                     obj_newQuest[date].state = "incomplete";
+                    obj_newQuest[date].exercise = obj_Quest.exercise;
                     obj_newQuest.timespan = questTimespan;
                     obj_newQuest.userID = user;
 
@@ -265,7 +270,7 @@ function open_modal_for_quest(questTimespan, type, user) {
  * @param {an object which contain parameters for change amount function} obj_para 
  */
 function change_amount(obj_para) {
-    fetch('http://127.0.0.1:3360/change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch(serverPath+'change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
