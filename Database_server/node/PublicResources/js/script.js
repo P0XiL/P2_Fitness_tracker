@@ -1027,151 +1027,20 @@ async function updatePreset(username, preset) {
 
             // Update the user info on the server
             update_users_info(newUserInfo);
-}
-
-
-
-function update_users_info(newUserInfo) {
-    fetch('http://127.0.0.1:3360/write_user_info_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newUserInfo)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch POST');
-            }
-            return response.json(); // Read response JSON
-        })
-        .then(responseJson => {
-            console.log('Response from POST:', responseJson);
-            if (responseJson.success) {
-                console.log('User info updated successfully');
-                // Fetch user data again after successful update
-                fetchUserData(newUserInfo.username);
         } else {
             console.error('User info not found for username:', username);
         }
-        })
-        .catch(error => {
-            console.error('Error fetching POST users_info:', error);
-        });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    function handleSurveyFormSubmit() {
-        const form = document.getElementById('surveyForm');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Extracting specific parameters from form data
-            const formData = new FormData(form);
-            const surveyData = {};
-            for (const [key, value] of formData.entries()) {
-                if (surveyData[key]) {
-                    if (!Array.isArray(surveyData[key])) {
-                        surveyData[key] = [surveyData[key]];
-                    }
-                    surveyData[key].push(value);
-                } else {
-                    surveyData[key] = value;
-                }
-            }
-            console.log(surveyData);
-            sendSurveyData(surveyData);
-
-            document.getElementById('main').classList.add('active');
-            document.getElementById('surveyForm').classList.remove('active')
-        });
+    } catch (error) {
+        console.error('Error fetching user data:', error.message);
     }
-
-    // Call the function to attach the event listener
-    handleSurveyFormSubmit();
-});
-
-function sendSurveyData(surveyData) {
-    fetch('http://127.0.0.1:3360/write_survey_data_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(surveyData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch POST');
-        }
-        return response.json();
-    })
-    .then(responseJson => {
-        console.log('Response from POST:', responseJson);
-        if (responseJson.success) {
-            console.log('Survey data sent successfully');
-        } else {
-            console.error('Failed to send survey data:', responseJson.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error sending survey data:', error);
-    });
 }
 
-let lastActiveDates = {};
 
-function updateStreak(userId) {
-  const currentDate = new Date().toDateString();
-  
-  if (!lastActiveDates[userId]) {
-    lastActiveDates[userId] = null;
-  }
-  
-  if (currentDate === lastActiveDates[userId]) {
-    return; // Already active today
-  }
-  
-  const lastDate = new Date();
-  lastDate.setDate(lastDate.getDate() - 1);
-  
-  const lastDateString = lastDate.toDateString();
-  
-  if (currentDate === lastDateString) {
-    if (lastActiveDates[userId] !== currentDate) {
-      lastActiveDates[userId] = currentDate;
-    }
-  } else {
-    lastActiveDates[userId] = currentDate;
-  }
-}
-
-function getStreakCount(userId) {
-  let streakCount = 0;
-  let currentDate = new Date().toDateString();
-  let lastDate = null;
-
-  if (lastActiveDates[userId]) {
-    lastDate = new Date(lastActiveDates[userId]);
-  }
-
-  if (lastDate) {
-    while (currentDate === lastDate.toDateString()) {
-      streakCount++;
-      lastDate.setDate(lastDate.getDate() - 1);
-      currentDate = lastDate.toDateString();
-    }
-  }
-
-  return streakCount;
-}
-
-updateStreak(userId); // Call this function whenever user is active
-const streakCount = getStreakCount(userId);
-console.log("Current streak for user", userId + ":", streakCount);
-
-// Display PNG image if streak is active
-if (streakCount > 0) {
-  const img = document.createElement("img");
-  img.src = "Database_server\node\PublicResources\image\Streak.png";
-  document.body.appendChild(img);
+// Calculate BMI function
+function calculateBMI(height, weight) {
+    // Convert height to meters
+    const heightMeters = height / 100;
+    // Calculate BMI
+    const bmi = weight / (heightMeters * heightMeters);
+    return bmi.toFixed(1); // Round to 1 decimal place
 }
