@@ -91,6 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Send the data to the server-side script for file writing
             createUser(userData);
+            console.log(username);
+            addUserToUsers_info(username);
         }
     });
 
@@ -275,6 +277,64 @@ function createUser(userData) {
             console.error('Error:', error);
         });
 }
+
+function addUserToUsers_info(username) {
+    const template = {
+        [username]: {
+            username: username,
+            health: {
+                height: 0,
+                weight: 0
+            },
+            mastery: {
+                run: {
+                    rank: 0,
+                    elo: 0
+                },
+                walk: {
+                    rank: 0,
+                    elo: 0
+                },
+                crunches: {
+                    rank: 0,
+                    elo: 0
+                },
+                pushups: {
+                    rank: 0,
+                    elo: 0
+                }
+            },
+            hiddenRank: {
+                daily: 0,
+                weekly: 0,
+                monthly: 0
+            },
+            tier: {
+                daily: {
+                    rank: 0,
+                    elo: 0
+                },
+                weekly: {
+                    rank: 0,
+                    elo: 0
+                },
+                monthly: {
+                    rank: 0,
+                    elo: 0
+                }
+            },
+            preset: {
+                name: "custom",
+                conf: []
+            }
+        }
+    };
+
+    console.log('hej');
+
+    postUserToUsers_info(template);
+}
+
 
 function displayCreateErrorMessage(message) {
     const errorMessage = document.getElementById('createErrorMessage');
@@ -695,6 +755,35 @@ function update_users_info(newUserInfo) {
                 console.log('User info updated successfully');
                 // Fetch user data again after successful update
                 setupProfilePage(newUserInfo.username);
+            } else {
+                console.error('User info update failed:', responseJson.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching POST users_info:', error);
+        });
+}
+
+function postUserToUsers_info(newUserInfo) {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/addUserToUsers_info', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newUserInfo, null, 2) // Include the entire user information
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch POST');
+            }
+            console.log(response);
+            return response.json(); // Read response JSON
+        })
+        .then(responseJson => {
+            console.log('Response from POST:', responseJson);
+            if (responseJson.success) {
+                console.log('User info updated successfully');
+                // Fetch user data again after successful update
             } else {
                 console.error('User info update failed:', responseJson.message);
             }

@@ -46,7 +46,8 @@ function processReq(req, res) {
             if (queryPath === "/createUser") {
                 // Handle the POST request to write user data to a file
                 createUser(req, res);
-            } else if (queryPath === "/login") {
+            } 
+            else if (queryPath === "/login") {
                 loginUser(req, res);
             }
             else if (queryPath === "/write_quest_json") {
@@ -150,12 +151,44 @@ function createUser(req, res) {
                     errorResponse(res, 500, String(err));
                 } else {
                     console.log('User data appended to file');
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'text/plain');
-                    res.end('User data appended to file');
+                    fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+                        let obj_questLog = {}; // Initialize questLog object
+                        if (!err) {
+                            try {
+                                obj_questLog = JSON.parse(data);
+                            } catch (parseError) {
+                                console.error("Error parsing existing quests:", parseError);
+                            }
+                        } else {
+                            // Handle file not found or empty
+                            console.error("Error reading existing quest_log:", err);
+                        }
+                        obj_questLog[userData.username] = {
+                            daily: {},
+                            weekly: {},
+                            monthly: {}
+                        };
+                    
+                        fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
+                            if (err) {
+                                console.error(err);
+                                errorResponse(res, 500, String(err));
+                            } else {
+                                console.log('User added to quest_log');
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'text/plain');
+                                res.end('User added to quest_log');
+                            }
+                        });
+                        
+
+                        
+                    });
                 }
             });
+            
         });
+        addUserToUsers_info(userData.username);
     });
 }
 
@@ -308,6 +341,53 @@ function write_user_info_json(req, res) {
         });
     });
 }
+
+
+function addUserToUsers_info(username) {
+    // Read existing data from the file
+    fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+
+        let existingData = JSON.parse(data);
+
+        // Check if the username exists in the users_info object
+        if (!existingData.users_info.hasOwnProperty(username)) {
+            // Create the new user object
+            let newUser = {
+                username: username,
+                health: {
+                    height: 0,
+                    weight: 0
+                },
+                mastery: {},
+                hiddenRank: {},
+                tier: {},
+                preset: {}
+            };
+
+            // Add the new user to the users_info object
+            existingData.users_info[username] = newUser;
+
+            // Write updated data back to the file with indentation
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log('New user info written to file');
+                }
+            });
+        } else {
+            // Log a message indicating that the username already exists
+            console.log(`User with username '${username}' already exists`);
+        }
+    });
+}
+
+
+
 
 
 
