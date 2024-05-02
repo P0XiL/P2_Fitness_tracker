@@ -129,9 +129,6 @@
         "text": "Go for a walk for 22 minutes",
         "state": "incomplete"
       },
-      "1/5/2024": {
-        "type": "cardio"
-      },
       "2/5/2024": {
         "type": "cardio"
       }
@@ -152,9 +149,6 @@
         "amount": 10,
         "text": "Do the plank for 10 seconds",
         "state": "incomplete"
-      },
-      "1/5/2024": {
-        "type": "cardio"
       }
     }
   },
