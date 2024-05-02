@@ -387,11 +387,6 @@ function change_amount(req, res) {
     });
 }
 
-
-
-
-
-
 function write_user_info_json(req, res) {
     let body = '';
     req.on('data', (chunk) => {
