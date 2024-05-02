@@ -24,24 +24,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
-                fetchUserData('idkey1');
+                setupProfilePage(localStorage.getItem('username'));
+            }
+            else if (targetId === 'main') { // Check if the clicked tab is the quest page
+                setupTiersForQuestPage(localStorage.getItem('username')); // Call setupTiersForQuestPage with the appropriate username
             }
 
             highlightNavLink(targetId);
         });
     });
-// Load existing friends from local storage
-loadFriends();
-
-// Add event listener to the form to add a friend contactlist
-document.getElementById("friendForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-    const name = document.getElementById("name").value;
-    const age = document.getElementById("age").value;
-    addFriend(name, age);
-    saveFriends();
-    this.reset();
-});
     document.getElementById('toggleCreatePageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
 
@@ -70,6 +61,8 @@ document.getElementById("friendForm").addEventListener("submit", function(event)
     });
 
 
+
+
     // Add event listener to the submit button
     document.getElementById('submitBtn').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default form submission
@@ -81,6 +74,10 @@ document.getElementById("friendForm").addEventListener("submit", function(event)
 
         if (password !== confirmPassword) {
             displayCreateErrorMessage("Passwords do not match");
+        } else if (password.length < 1) {
+            displayCreateErrorMessage("Password must be at least 1 character");
+        } else if (username.length < 1) {
+            displayCreateErrorMessage("Username must be at least 1 character");
         }
         else {
             clearCreateErrorMessage();
@@ -92,116 +89,203 @@ document.getElementById("friendForm").addEventListener("submit", function(event)
             };
 
             // Send the data to the server-side script for file writing
+            console.log(username);
             createUser(userData);
         }
     });
 
     document.getElementById('loginBtn').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default form submission
-    
+
         // Get username and password values
         const username = document.querySelector('input[name="login_username"]').value;
         const password = document.querySelector('input[name="login_password"]').value;
-    
+
         // Create an object with username and password
         const loginData = {
             username: username,
             password: password
         };
-    
+
         // Send the data to the server-side script for login authentication
         loginUser(loginData);
     });
-    
-    
-    function loginUser(loginData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(loginData)
-        })
+
+    document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userstats');
+        const loginPage = document.getElementById('stats');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPlotPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('FriendsPlot');
+        const loginPage = document.getElementById('userfriend');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userfriend');
+        const loginPage = document.getElementById('friends');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    // Call checkLoginState() on page load
+    window.addEventListener('load', checkLoginState);
+});
+
+//Function which highlights the link of the currently selected tab
+function highlightNavLink(pageId) {
+    // Remove 'active' class from all navigation links
+    const navLinks = document.querySelectorAll('#side-nav a');
+    navLinks.forEach(function (link) {
+        link.classList.remove('active');
+    });
+    if (pageId == "loginPage") {
+        return;
+    }
+    // Add 'active' class to the corresponding navigation link
+    const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+    activeLink.classList.add('active');
+}
+
+// Function to handle storing login state
+function storeLoginState(username) {
+    const expirationTime = new Date().getTime() + (30 * 60 * 1000); // 30 minutes expiration
+    const loginState = {
+        username: username,
+        expiration: expirationTime
+    };
+    localStorage.setItem('loginState', JSON.stringify(loginState));
+    localStorage.setItem('username', username);
+}
+
+// Function to check and handle login state on page load
+function checkLoginState() {
+    const loginState = localStorage.getItem('loginState');
+    const username = localStorage.getItem('username');
+    console.log(username);
+    if (loginState) {
+        const parsedLoginState = JSON.parse(loginState);
+        if (parsedLoginState.expiration > new Date().getTime()) {
+            // Log the user in automatically
+            const username = parsedLoginState.username;
+            loginUser({ username: username });
+
+            // Update UI to display logged-in username
+            document.getElementById('usernameDisplay').textContent = "Hello, " + username;
+            document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
+
+
+            // Update profile link to point to profile page
+            document.getElementById('profileLink').href = "#profilepage";
+        } else {
+            // Clear expired login state
+            localStorage.removeItem('loginState');
+        }
+    }
+}
+
+
+function loginUser(loginData) {
+    fetch('http://127.0.0.1:3360/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+    })
         .then(response => {
             if (response.ok) {
                 console.log('User successfully logged in');
                 // Reset input fields
                 document.querySelector('input[name="login_username"]').value = '';
                 document.querySelector('input[name="login_password"]').value = '';
-    
+
                 clearLoginErrorMessage();
-    
+
+                storeLoginState(loginData.username);
+
+                // Redirect to home page
+                document.getElementById('main').classList.add('active');
+                //highlightNavLink('main');
+                document.getElementById('loginPage').classList.remove('active');
+
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
+
+                location.reload();
+
             } else {
                 response.text().then(errorMessage => {
                     displayLoginErrorMessage(errorMessage);
+                });
+            }
+
+            //highlightNavLink(targetId);
+        });
+}
+
+// Function to send data to server-side script
+function createUser(userData) {
+    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Data successfully sent to server');
+                // Reset input fields
+                document.querySelector('input[name="create_username"]').value = '';
+                document.querySelector('input[name="create_password"]').value = '';
+                document.querySelector('input[name="create_confirm_password"]').value = '';
+
+                clearCreateErrorMessage();
+
+                highlightNavLink('main');
+
+                // Redirect to home page
+                document.getElementById('surveyForm').classList.add('active');
+                document.getElementById('createAccount').classList.remove('active');
+
+                storeLoginState(userData.username);
+
+                location.reload();
+            } else {
+                response.text().then(errorMessage => {
+                    displayCreateErrorMessage(errorMessage);
                 });
             }
         })
         .catch(error => {
             console.error('Error:', error);
         });
-    }
+}
 
-    // Function to send data to server-side script
-    function createUser(userData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node4/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Data successfully sent to server');
-                    // Reset input fields
-                    document.querySelector('input[name="create_username"]').value = '';
-                    document.querySelector('input[name="create_password"]').value = '';
-                    document.querySelector('input[name="create_confirm_password"]').value = '';
+function displayCreateErrorMessage(message) {
+    const errorMessage = document.getElementById('createErrorMessage');
+    errorMessage.textContent = message;
+    errorMessage.style.color = 'red';
+}
 
-                    clearCreateErrorMessage();
-
-                    // Redirect to home page
-                    document.getElementById('main').classList.add('active');
-                    document.getElementById('loginpage').classList.remove('active');
-                } else {
-                    response.text().then(errorMessage => {
-                        displayCreateErrorMessage(errorMessage);
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-
-    function displayCreateErrorMessage(message) {
-        const errorMessage = document.getElementById('createErrorMessage');
-        errorMessage.textContent = message;
-        errorMessage.style.color = 'red';
-    }
-
-    function clearCreateErrorMessage() {
-        const errorMessage = document.getElementById('createErrorMessage');
-        errorMessage.textContent = '';
-    }
-
-
-    //Function which highlights the link of the currently selected tab
-    function highlightNavLink(pageId) {
-        // Remove 'active' class from all navigation links
-        var navLinks = document.querySelectorAll('#side-nav a');
-        navLinks.forEach(function(link) {
-            link.classList.remove('active');
-        });
-        
-        // Add 'active' class to the corresponding navigation link
-        var activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
-        activeLink.classList.add('active');
-        }
-});
+function clearCreateErrorMessage() {
+    const errorMessage = document.getElementById('createErrorMessage');
+    errorMessage.textContent = '';
+}
 
 // Function to display login error message
 function displayLoginErrorMessage(message) {
@@ -216,67 +300,514 @@ function clearLoginErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
-function fetchUserData(username) {
-    // Fetch the JSON data
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-            }
-            return response.json(); // Parse response body as JSON
-        })
-        .then(data => {
-            console.log(data);
-            // Process the JSON data here
-            processData(data, username);
-        })
-        .catch(error => console.error('Error fetching JSON:', error));
-}
-
-
-function processData(data, username) {
-    // Check if users_info exists in data
-    if (data.users_info) {
-        // Check if the specified username exists
-        if (username && data.users_info[username]) {
-            // Extract user information
-            const userInfo = data.users_info[username];
-
-            // Display the user information
-            displayUserInfo(userInfo);
-            displayUserPreferences(username, userInfo); // Pass username to displayUserPreferences
-                    
-            // Update the dropdown menu with the current preset
-            const presetDropdown = document.getElementById('presetDropdown');
-            presetDropdown.value = userInfo.preset.name; // Assuming preset.name holds the current preset value
-        } else {
-            console.error(`${username} not found in JSON data`);
+async function fetchUserData(username) {
+    try {
+        // Fetch the JSON data
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
-    } else {
-        console.error('users_info not found in JSON data');
+
+        // Parse response body as JSON
+        const data = await response.json();
+
+        // Find the user data by username
+        const userData = data.users_info[username];
+
+        if (!userData) {
+            throw new Error(`User data for ${username} not found.`);
+        }
+
+        // Return the user data
+        return userData;
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Rethrow the error to propagate it to the caller
     }
 }
 
 
-// Function to display user information
-function displayUserInfo(userInfo) {
+async function setupProfilePage(username) {
+    try {
+        // Fetch user data using fetchUserData
+        const userData = await fetchUserData(username);
+
+        // Log the fetched JSON data to the console
+        console.log('Fetched JSON data:', userData);
+
+        // Process the JSON data here
+        processData(userData, username);
+
+        // Return the user info
+        return userData;
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Re-throw the error for handling by the caller
+    }
+}
+
+function processData(data, username) {
+    // Check if the data is not null or undefined
+    if (data) {
+        // Extract user information
+        const userInfo = data;
+
+        // Check if userInfo contains 'tier' property before calling displayUserTiers
+        if (userInfo.tier) {
+            displayUserTiers(userInfo, 'dailyTier', 'weeklyTier', 'monthlyTier');
+        } else {
+            console.error(`'tier' property not found in ${username}'s information`);
+        }
+
+        // Check if userInfo contains 'mastery' property before calling displayUserMasteries
+        if (userInfo.mastery) {
+            displayUserMasteries(userInfo.mastery);
+        } else {
+            console.error(`'mastery' property not found in ${username}'s information`);
+        }
+
+        // Display the user information
+        displayUserInfo(username, userInfo);
+
+        // Check if userInfo contains 'preset' property before calling displayUserPreferences
+        if (userInfo.preset) {
+            displayUserPreferences(username, userInfo);
+        } else {
+            console.error(`'preset' property not found in ${username}'s information`);
+        }
+    } else {
+        console.error('User data is null or undefined');
+    }
+}
+
+
+function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
+    // Check if userInfo is not null or undefined
+    if (userInfo) {
+        // Get references to tier elements using the provided IDs
+        const dailyTierContainer = document.getElementById(DailyID);
+        const weeklyTierContainer = document.getElementById(WeeklyID);
+        const monthlyTierContainer = document.getElementById(MonthlyID);
+
+        // Check if the tier objects exist in userInfo
+        if (userInfo.tier && userInfo.tier.daily && userInfo.tier.weekly && userInfo.tier.monthly) {
+            // Determine the tier range and corresponding image for each tier
+            const dailyTierRange = getTierRange(userInfo.tier.daily.rank);
+            const weeklyTierRange = getTierRange(userInfo.tier.weekly.rank);
+            const monthlyTierRange = getTierRange(userInfo.tier.monthly.rank);
+
+            const dailyImageSrc = tierImages[dailyTierRange];
+            const weeklyImageSrc = tierImages[weeklyTierRange];
+            const monthlyImageSrc = tierImages[monthlyTierRange];
+
+            // Clear existing content
+            dailyTierContainer.innerHTML = '';
+            weeklyTierContainer.innerHTML = '';
+            monthlyTierContainer.innerHTML = '';
+
+            // Create grid items for daily, weekly, and monthly tiers
+            createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
+            createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
+            createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
+        } else {
+            console.error(`'tier' property or its daily, weekly, or monthly sub-properties not found in userInfo`);
+        }
+    } else {
+        console.error('User info is null or undefined');
+    }
+
+    // Create a function to generate tier grid items
+    function createTierGridItem(container, title, imageSrc, elo, period) {
+        const gridItem = document.createElement('div');
+        gridItem.classList.add('tier-grid-item');
+
+        // Create and append tier title
+        const tierTitle = document.createElement('h3');
+        tierTitle.textContent = `${period}: ${title}`;
+        gridItem.appendChild(tierTitle);
+
+        // Create and append tier image
+        const tierImage = document.createElement('img');
+        tierImage.src = imageSrc;
+        tierImage.alt = `${title} Tier Image`;
+        gridItem.appendChild(tierImage);
+
+        // Create and append progress bar
+        const progressBar = document.createElement('div');
+        progressBar.classList.add('progress-bar');
+
+        const eloProgress = document.createElement('div');
+        eloProgress.classList.add('elo-progress');
+        eloProgress.style.width = `${elo}%`; // Set width based on elo
+        progressBar.appendChild(eloProgress);
+
+        gridItem.appendChild(progressBar);
+
+        // Append grid item to container
+        container.appendChild(gridItem);
+    }
+}
+
+
+// Function to get the tier range
+function getTierRange(rank) {
+    switch (true) {
+        case rank >= 1 && rank <= 15:
+            return '1-15';
+        case rank >= 16 && rank <= 30:
+            return '16-30';
+        case rank >= 31 && rank <= 45:
+            return '31-45';
+        default:
+            // Handle cases outside the defined ranges
+            return 'Unknown';
+    }
+}
+
+// Function to get the tier range
+function getTierRange(rank) {
+    if (rank >= 1 && rank <= 15) {
+        return '1-15';
+    } else if (rank >= 16 && rank <= 30) {
+        return '16-30';
+    } else if (rank >= 31 && rank <= 45) {
+        return '31-45';
+    }
+    // Add more ranges as needed
+}
+
+const tierImages = {
+    '1-15': 'image/bronzeTier.png',
+    '16-30': 'image/silverTier.png',
+    '31-45': 'image/goldTier.png',
+    // Add more mappings as needed
+};
+
+const tierNames = {
+    '1-3': 'Bronze 5',
+    '4-6': 'Bronze 4',
+    '7-9': 'Bronze 3',
+    '10-12': 'Bronze 2',
+    '13-15': 'Bronze 1',
+    '16-18': 'Silver 5',
+    '19-21': 'Silver 4',
+    '22-24': 'Silver 3',
+    '25-27': 'Silver 2',
+    '28-30': 'Silver 1',
+    '31-33': 'Gold 5',
+    '34-36': 'Gold 4',
+    '37-39': 'Gold 3',
+    '40-42': 'Gold 2',
+    '43-45': 'Gold 1',
+};
+
+function displayUserMasteries(masteryInfo) {
+    const userMasteriesDiv = document.getElementById('userMasteries');
+    userMasteriesDiv.classList.add('mastery-grid-container');
+
+    // Clear existing content inside userMasteriesDiv
+    userMasteriesDiv.innerHTML = '';
+
+    // Sort masteryInfo based on rank in descending order
+    const sortedMasteries = Object.entries(masteryInfo).sort((a, b) => b[1].rank - a[1].rank);
+
+    // Array to store all created mastery divs
+    const masteryDivs = [];
+
+    // Iterate over the first three sorted masteries
+    for (let i = 0; i < Math.min(3, sortedMasteries.length); i++) {
+        const [masteryKey, mastery] = sortedMasteries[i];
+        const masteryDiv = createMasteryItem(masteryKey, mastery);
+        userMasteriesDiv.appendChild(masteryDiv);
+        masteryDivs.push(masteryDiv);
+    }
+
+    // Create button to reveal hidden masteries
+    // Check if the revealButton already exists
+    let revealButton = document.getElementById('revealButton');
+
+// If revealButton doesn't exist, create it
+    if (!revealButton) {
+        revealButton = document.createElement('button');
+        revealButton.id = 'revealButton';
+        revealButton.textContent = 'Show More Masteries';
+        userMasteriesDiv.insertAdjacentElement('afterend', revealButton); // Append after userMasteriesDiv
+
+        // Add event listener only once
+        revealButton.addEventListener('click', () => {
+            // Append the rest of the masteries
+            for (let i = 3; i < sortedMasteries.length; i++) {
+                const [masteryKey, mastery] = sortedMasteries[i];
+                const masteryDiv = createMasteryItem(masteryKey, mastery);
+                userMasteriesDiv.appendChild(masteryDiv);
+                masteryDivs.push(masteryDiv);
+            }
+            // Show the hide button
+            hideButton.style.display = 'inline-block';
+            // Hide the reveal button
+            revealButton.style.display = 'none';
+    });
+}
+
+
+    // Create button to hide extra masteries
+    const hideButton = document.createElement('button');
+    hideButton.textContent = 'Hide Extra Masteries';
+    hideButton.style.display = 'none'; // Initially hidden
+    userMasteriesDiv.insertAdjacentElement('afterend', hideButton); // Append after userMasteriesDiv
+    hideButton.addEventListener('click', () => {
+        // Remove extra masteries
+        masteryDivs.slice(3).forEach(div => {
+            div.remove();
+        });
+        // Show the reveal button
+        revealButton.style.display = 'inline-block';
+        // Hide the hide button
+        hideButton.style.display = 'none';
+    });
+}
+
+// Helper function to create mastery item
+function createMasteryItem(masteryKey, mastery) {
+    const masteryDiv = document.createElement('div');
+    masteryDiv.classList.add('mastery-grid-item');
+
+    // Create HTML elements for the mastery
+    const masteryHeader = document.createElement('h3');
+    masteryHeader.textContent = `${capitalizeFirstLetter(masteryKey)}: `;
+    const tierSpan = document.createElement('span');
+    tierSpan.id = `${masteryKey}TierInfo`;
+
+    // Determine tier range
+    const tierRange = getTierRange(mastery.rank);
+    const subTierRange = getSubTierRange(mastery.rank);
+
+    // Check if it's a sub-tier or main tier
+    if (subTierRange !== 'Unknown') {
+        tierSpan.textContent = `${tierNames[subTierRange]}`;
+    } else {
+        tierSpan.textContent = `${tierNames[tierRange]}`;
+    }
+
+    masteryHeader.appendChild(tierSpan);
+    masteryDiv.appendChild(masteryHeader);
+
+    const masteryImage = document.createElement('img');
+    masteryImage.id = `${masteryKey}TierImage`;
+
+    // Define image source based on tier range
+    const imageSource = tierImages[tierRange];
+    masteryImage.src = imageSource || 'default_image_path.png'; // Provide a default image path if tier range is not found in tierImages
+    masteryImage.alt = `${capitalizeFirstLetter(masteryKey)} Tier Image`;
+    masteryDiv.appendChild(masteryImage);
+
+    // Create progress bar for Elo
+    const progressBar = document.createElement('div');
+    progressBar.classList.add('progress-bar');
+
+    const eloProgress = document.createElement('div');
+    eloProgress.classList.add('elo-progress');
+    eloProgress.style.width = `${mastery.elo}%`; // Set width based on Elo percentage
+    progressBar.appendChild(eloProgress);
+
+    masteryDiv.appendChild(progressBar);
+
+    return masteryDiv;
+}
+
+function displayUserInfo(username, userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
-    const userInfoHTML = `
+    let userInfoHTML = `
         <h2 style="text-align: center;">User info</h2>
-        <p>Height: ${userInfo.health.height}</p>
-        <p>Weight: ${userInfo.health.weight}</p>
+        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
+        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
+        <button onclick="postUserInfo('${username}')">Save User Info</button>
+        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
+
+    // Calculate and display initial BMI if height and weight are present
+    const height = parseFloat(userInfo.health.height);
+    const weight = parseFloat(userInfo.health.weight);
+    if (!isNaN(height) && !isNaN(weight)) {
+        updateBMI(height, weight);
+    }
 }
+
+async function postUserInfo(username) {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+
+    try {
+        const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
+
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
+
+            // Create a new user info object with the updated health information
+            const newUserInfo = {
+                username: username,
+                health: {
+                    height: height,
+                    weight: weight
+                },
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: existingUserInfo.preset
+            };
+
+            // Update the user info on the server
+            update_users_info(newUserInfo);
+
+            // Calculate and display BMI
+            const bmi = calculateBMI(height, weight);
+            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
+        } else {
+            console.error('User info not found for username:', username);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
+
+// Function to update user info
+function update_users_info(newUserInfo) {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newUserInfo, null, 2) // Include the entire user information
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch POST');
+            }
+            console.log(response);
+            return response.json(); // Read response JSON
+        })
+        .then(responseJson => {
+            console.log('Response from POST:', responseJson);
+            if (responseJson.success) {
+                console.log('User info updated successfully');
+                // Fetch user data again after successful update
+                setupProfilePage(newUserInfo.username);
+            } else {
+                console.error('User info update failed:', responseJson.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching POST users_info:', error);
+        });
+}
+
+
+// Function to update BMI text
+function updateBMI(height, weight) {
+    const bmi = calculateBMI(height, weight);
+    const bmiText = document.getElementById('bmiText');
+    bmiText.textContent = `BMI: ${bmi}`;
+}
+
+// Update BMI text after user inputs height or weight
+document.getElementById('height').addEventListener('input', function() {
+    const height = parseFloat(this.value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    if (!isNaN(height) && !isNaN(weight)) {
+        updateBMI(height, weight);
+    }
+});
+
+document.getElementById('weight').addEventListener('input', function() {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(this.value);
+    if (!isNaN(height) && !isNaN(weight)) {
+        updateBMI(height, weight);
+    }
+});
+
+async function setupTiersForQuestPage(username) {
+    try {
+        const userData = await fetchUserData(username);
+
+        // Log the JSON object fetched to the console
+        console.log('Fetched JSON data:', userData);
+
+        // Check if the user object exists
+        if (userData) {
+            // Display user tiers if the user object contains the necessary information
+            if (userData.mastery && userData.tier) {
+                displayUserTiers(userData, 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
+                return userData; // Return the user info
+            } else {
+                console.error('Mastery or tier information not found in user data');
+            }
+        } else {
+            console.error('User data not found');
+        }
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Re-throw the error for handling by the caller
+    }
+}
+
+
+
+// Function to capitalize the first letter of a string
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Function to get the sub-tier range
+function getSubTierRange(rank) {
+    switch (true) {
+        case rank >= 1 && rank <= 3:
+            return '1-3';
+        case rank >= 4 && rank <= 6:
+            return '4-6';
+        case rank >= 7 && rank <= 9:
+            return '7-9';
+        case rank >= 10 && rank <= 12:
+            return '10-12';
+        case rank >= 13 && rank <= 15:
+            return '13-15';
+        case rank >= 16 && rank <= 18:
+            return '16-18';
+        case rank >= 19 && rank <= 21:
+            return '19-21';
+        case rank >= 22 && rank <= 24:
+            return '22-24';
+        case rank >= 25 && rank <= 27:
+            return '25-27';
+        case rank >= 28 && rank <= 30:
+            return '28-30';
+        case rank >= 31 && rank <= 33:
+            return '31-33';
+        case rank >= 34 && rank <= 36:
+            return '34-36';
+        case rank >= 37 && rank <= 39:
+            return '37-39';
+        case rank >= 40 && rank <= 42:
+            return '40-42';
+        case rank >= 43 && rank <= 45:
+            return '43-45';
+        default:
+            return 'Unknown';
+    }
+}
+
 
 function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
-    
+
     // Filter out empty strings or undefined values (if any)
     const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
-    
+
     // Count occurrences of each element in the filtered array
     filteredArray.forEach(element => {
         if (countMap[element]) {
@@ -290,32 +821,52 @@ function displayUserPreferences(username, userInfo) {
     const userInfoDiv = document.getElementById('userPreferences');
     let slidersHTML = '';
 
-    slidersHTML = `
-        <div>
-            <label for="pushups">Pushups</label>
-            <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
-            <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
-        </div>
-        <div>
-            <label for="run">Run</label>
-            <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
-            <span id="runCounter">${countMap.run || 1}</span>
-        </div>
-        <div>
-            <label for="walk">Walk</label>
-            <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
-            <span id="walkCounter">${countMap.walk || 1}</span>
-        </div>
-    `;
-    
+    // Check if countMap for each exercise is greater than 0, then include the slider
+    if (countMap['push-ups'] > 0 || preset == 'custom') {
+        slidersHTML += `
+            <div>
+                <label for="pushups">Pushups</label>
+                <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
+                <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
+            </div>
+        `;
+    }
+    if (countMap.run > 0 || preset == 'custom') {
+        slidersHTML += `
+            <div>
+                <label for="run">Run</label>
+                <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
+                <span id="runCounter">${countMap.run || 1}</span>
+            </div>
+        `;
+    }
+    if (countMap.walk > 0 || preset == 'custom') {
+        slidersHTML += `
+            <div>
+                <label for="walk">Walk</label>
+                <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
+                <span id="walkCounter">${countMap.walk || 1}</span>
+            </div>
+        `;
+    }
+    if (countMap.crunches >= 0 || preset == 'custom') { // Updated condition for crunches
+        slidersHTML += `
+            <div>
+                <label for="crunches">Crunches</label>
+                <input type="range" id="crunches" name="crunches" min="1" max="10" value="${countMap.crunches || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('crunches', this.value)">
+                <span id="crunchesCounter">${countMap.crunches || 1}</span>
+            </div>
+        `;
+    }
+
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
         <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
-            <option value="run">Run</option>
-            <option value="walk">Walk</option>
-            <option value="strength">Strength</option>
-            <option value="custom">Custom</option>
+            <option value="run" ${preset === 'run' ? 'selected' : ''}>Run</option>
+            <option value="walk" ${preset === 'walk' ? 'selected' : ''}>Walk</option>
+            <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
+            <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
         </select>
         <p>Exercise preferences:</p>
         ${slidersHTML}
@@ -328,34 +879,51 @@ function displayUserPreferences(username, userInfo) {
         updateCounter('pushups', countMap['push-ups'] || 1);
         updateCounter('run', countMap.run || 1);
         updateCounter('walk', countMap.walk || 1);
+        updateCounter('crunches', countMap.crunches || 0); // Set crunches count to 0 if not found
     }
 }
-
-
 
 function updateCounter(exercise, value) {
     document.getElementById(`${exercise}Counter`).textContent = value;
 }
 
-
-function postCustomData(username) {
+async function postCustomData(username) {
     const pushupsValue = document.getElementById('pushups').value;
     const runValue = document.getElementById('run').value;
     const walkValue = document.getElementById('walk').value;
+    const crunchesValue = document.getElementById('crunches').value;
 
-    const newUserInfo = {
-        username: username,
-        preset: {
-            name: 'custom',
-            conf: [
-                ...Array(Number(pushupsValue)).fill('push-ups'),
-                ...Array(Number(runValue)).fill('run'),
-                ...Array(Number(walkValue)).fill('walk')
-            ]
+    try {
+        const userData = await fetchUserData(username);
+
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
+
+            const newUserInfo = {
+                username: username,
+                health: existingUserInfo.health,
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: {
+                    name: 'custom',
+                    conf: [
+                        ...Array(Number(pushupsValue)).fill('push-ups'),
+                        ...Array(Number(runValue)).fill('run'),
+                        ...Array(Number(walkValue)).fill('walk'),
+                        ...Array(Number(crunchesValue)).fill('crunches')
+                    ]
+                }
+            };
+
+            // Call function to update user info
+            update_users_info(newUserInfo);
+        } else {
+            console.error('User info not found for username:', username);
         }
-    };
-
-    update_users_info(newUserInfo);
+    } catch (error) {
+        console.error('Error fetching user data:', error.message);
+    }
 }
 
 
@@ -364,174 +932,104 @@ function generateSliders(countMap) {
     return Object.entries(countMap).map(([exercise, count]) => `
         <div>
             <label for="${exercise}">${exercise}</label>
-            <input type="range" id="${exercise}" name="${exercise}" min="1" max="10" value="${count}" disabled>
+            <input type="range" id="${exercise}" name="${exercise}" min="0" max="10" value="${count}" disabled>
             <span>${count}</span>
         </div>
     `).join('');
 }
 
-function updatePreset(username, preset) {
-    let conf = [];
-    if (preset === 'run') {
-        conf = ['run','run','run','run','run','run','run','run','run','run',
-        'walk','walk','walk','walk',
-        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob',
-        'crunches','crunches','crunches'];
-    } 
-    else if (preset === 'walk') {
-        conf = ['run','run','run','run',
-        'walk','walk','walk','walk','walk','walk','walk','walk','walk','walk',
-        'crunches','crunches','crunches','crunches','crunches','crunches'];
-    }
+async function updatePreset(username, preset) {
+    try {
+        const userData = await fetchUserData(username);
 
-    else if (preset === 'strength') {
-        conf = ['run','run',
-        'walk','walk',
-        'crunches','crunches','crunches','crunches','crunches','crunches',
-        'push-ups','push-ups','push-ups','push-ups',];
-    }
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
 
-    else if (preset === 'custom') {
-        conf = ['run','run',
-        'walk','walk',
-        'crunches','crunches','crunches','crunches','crunches','crunches',
-        'push-ups','push-ups','push-ups','push-ups',
-        'hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob','hip-thrust-into-jacob'];
-    }
+            let conf = [];
+            let run = 0;
+            let walk = 0;
+            let crunches = 0;
+            let pushUps = 0;
 
-    // Define the new user info object
-    const newUserInfo = {
-        username: username,
-        preset: {
-            name: preset,
-            conf: conf
-        }
-    };
-
-    // Update the user info on the server
-    update_users_info(newUserInfo);
-}
-
-//contactList
-function saveFriends() {
-    const friendItems = document.querySelectorAll("#friendList li");
-    const friends = [];
-    let errorEncountered = false; // Track if an error is encountered
-    friendItems.forEach(item => {
-        // Splitting by " - " to separate name and age
-        const [name, ageText] = item.textContent.split(" - ");
-        
-        // Extracting age value and removing "Delete" text if present
-        let age = parseInt(ageText.replace("Delete", "").trim());
-
-        // Validate if age is a valid number
-        if (isNaN(age) || age < 1 || age > 110) {
-            console.error("Invalid age found:", age);
-            // Optionally, display an error message on the screen
-            alert("Invalid age: Age must be a number between 1 and 110.");
-            errorEncountered = true; // Set error flag
-            
-            // Remove the corresponding list item from the DOM
-            item.remove();
-            
-            return; // Skip adding this friend if age is invalid
-        }
-
-        // Construct friend object and add to the friends array
-        friends.push({ name, age });
-    });
-
-    // If an error was encountered, do not proceed with saving friends
-    if (errorEncountered) {
-        console.error('Error encountered. Friends not saved.');
-        return;
-    }
-
-    // POST request to save friends to the server
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node2/saveContacts', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(friends)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to save friends');
-        }
-        return response.json(); // Parse response body as JSON
-    })
-    .then(data => {
-        console.log('Friends saved successfully:', data);
-        // Optionally, perform any additional actions after successful save
-    })
-    .catch(error => {
-        console.error('Error saving friends:', error);
-        // Optionally, notify the user about the error
-    });
-
-}
-
-
-
-
-
-
-
-function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newUserInfo)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch POST');
+            switch (preset) {
+                case 'run':
+                    run = 10;
+                    walk = 4;
+                    crunches = 3;
+                    conf = [
+                        ...Array(Number(run)).fill('run'),
+                        ...Array(Number(walk)).fill('walk'),
+                        ...Array(Number(crunches)).fill('crunches')
+                    ];
+                    break;
+                case 'walk':
+                    run = 4;
+                    walk = 10;
+                    crunches = 3;
+                    conf = [
+                        ...Array(Number(run)).fill('run'),
+                        ...Array(Number(walk)).fill('walk'),
+                        ...Array(Number(crunches)).fill('crunches')
+                    ];
+                    break;
+                case 'strength':
+                    run = 2;
+                    walk = 2;
+                    crunches = 6;
+                    pushUps = 4;
+                    conf = [
+                        ...Array(Number(run)).fill('run'),
+                        ...Array(Number(walk)).fill('walk'),
+                        ...Array(Number(crunches)).fill('crunches'),
+                        ...Array(Number(pushUps)).fill('push-ups')
+                    ];
+                    break;
+                case 'custom':
+                    run = 1;
+                    walk = 1;
+                    crunches = 1;
+                    pushUps = 1;
+                    conf = [
+                        ...Array(Number(run)).fill('run'),
+                        ...Array(Number(walk)).fill('walk'),
+                        ...Array(Number(crunches)).fill('crunches'),
+                        ...Array(Number(pushUps)).fill('push-ups')
+                    ];
+                    break;
+                default:
+                    console.error(`Invalid preset: ${preset}`);
+                    return;
             }
-            return response.json(); // Read response JSON
-        })
-        .then(responseJson => {
-            console.log('Response from POST:', responseJson);
-            if (responseJson.success) {
-                console.log('User info updated successfully');
-                // Fetch user data again after successful update
-                fetchUserData(newUserInfo.username);
-            } else {
-                console.error('User info update failed:', responseJson.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching POST users_info:', error);
-        });
-}
 
-function addFriend(name, age) {
-    const friend = { name, age };
-    const listItem = document.createElement("li");
-    listItem.textContent = `${name} - ${age}`;
-    
-    // Add delete button to the list item
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Delete";
-    deleteButton.addEventListener("click", function() {
-        listItem.remove();
-        saveFriends();
-    });
-    listItem.appendChild(deleteButton);
+            // Update only the preset while retaining other information
+            const newUserInfo = {
+                username: existingUserInfo.username,
+                health: existingUserInfo.health,
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: {
+                    name: preset,
+                    conf: conf
+                }
+            };
 
-    document.getElementById("friendList").appendChild(listItem);
-}
-
-function loadFriends() {
-    const savedFriends = localStorage.getItem("friends");
-    if (savedFriends) {
-        const friends = JSON.parse(savedFriends);
-        friends.forEach(friend => {
-            addFriend(friend.name, friend.age);
-        });
+            // Update the user info on the server
+            update_users_info(newUserInfo);
+        } else {
+            console.error('User info not found for username:', username);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error.message);
     }
 }
 
 
+// Calculate BMI function
+function calculateBMI(height, weight) {
+    // Convert height to meters
+    const heightMeters = height / 100;
+    // Calculate BMI
+    const bmi = weight / (heightMeters * heightMeters);
+    return bmi.toFixed(1); // Round to 1 decimal place
+}
