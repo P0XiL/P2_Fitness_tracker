@@ -1,3 +1,5 @@
+const user = localStorage.getItem("username");
+
 
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
@@ -37,12 +39,13 @@ function individual_stats(user, type) {
       for (let period in data[user]) {
         for (let key in data[user][period]) {
           if (data[user][period][key].type === type) {
-            amount += data[user][period][key].amount;
+            const currentAmount = data[user][period][key].amount;
+            if (!isNaN(currentAmount)) {
+              amount += currentAmount;
+              console.log(amount);
+            }
           }
         }
-      }
-      if(amount === null){
-        amount = 0;
       }
       return amount;
     })
@@ -51,29 +54,26 @@ function individual_stats(user, type) {
     });
 }
 
-function individual_type() {
+function individual_type(user) {
   fetchJSON("json/quest_log.json")
     .then(data => {
-      let user = localStorage.getItem("username");
-      console.log(user);
       let text = ""; // Initialize text variable
-      let processedTypes = {}; // Object to keep track of processed types
+      const processedTypes = {}; // Object to keep track of processed types
 
       for (let period in data[user]) {
         for (let key in data[user][period]) {
-          let type = data[user][period][key].type;
+          const type = data[user][period][key].type;
           if (!processedTypes[type]) { // Check if type has already been processed
             processedTypes[type] = true;
             individual_stats(user, type).then(amount => {
-              text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
-              const element = document.getElementById("statsText");
-              const element1 = document.getElementById("statsText1");
-              console.log(text);
-              try {
-                element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
-                element1.innerHTML = "<pre>" + text + "</pre>";
-              } catch (error) {
-                console.error("Error setting innerHTML:", error);
+              if (amount !== 0) {
+                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+                const element = document.getElementById("statsText");
+                try {
+                  element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
+                } catch (error) {
+                  console.error("Error setting innerHTML:", error);
+                }
               }
             }).catch(error => {
               console.error("Error in individual_stats:", error);
@@ -87,7 +87,42 @@ function individual_type() {
     });
 }
 
-individual_type();
+function individual_type_friend(user) {
+  fetchJSON("json/quest_log.json")
+    .then(data => {
+      let text = ""; // Initialize text variable
+      const processedTypes = {}; // Object to keep track of processed types
+
+      for (let period in data[user]) {
+        for (let key in data[user][period]) {
+          const type = data[user][period][key].type;
+          if (!processedTypes[type]) { // Check if type has already been processed
+            processedTypes[type] = true;
+            individual_stats(user, type).then(amount => {
+              if (amount !== 0) {
+                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+                const element1 = document.getElementById("statsText1");
+                try {
+                  element1.innerHTML = "<pre>" + text + "</pre>";
+                } catch (error) {
+                  console.error("Error setting innerHTML:", error);
+                }
+              }
+            }).catch(error => {
+              console.error("Error in individual_stats:", error);
+            });
+          }
+        }
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching JSON:", error);
+    });
+}
+
+
+individual_type(user);
+individual_type_friend("assholeblaster69");
 
 
 let prePeriod = "daily";

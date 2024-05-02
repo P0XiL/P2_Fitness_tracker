@@ -1,5 +1,5 @@
 {
-  "1235": {
+  "69": {
     "daily": {
       "1/5/2024": {
         "type": "cardio"
@@ -19,7 +19,7 @@
       "2/5/2024": {
         "type": "lowerbody",
         "target": 54,
-        "amount": 54,
+        "amount": 44,
         "text": "Do 54 squats",
         "state": "incomplete"
       }
