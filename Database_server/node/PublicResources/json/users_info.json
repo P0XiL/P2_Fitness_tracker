@@ -215,6 +215,17 @@
       "hiddenRank": {},
       "tier": {},
       "preset": {}
+    },
+    "champ": {
+      "username": "champ",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
     }
   }
 }
