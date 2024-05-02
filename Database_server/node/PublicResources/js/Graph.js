@@ -32,13 +32,13 @@ function dropdown_close3() {
   document.getElementById("myDropdown3").classList.toggle("show");
 }
 
-function individual_stats(user, type) {
+function individual_stats(user, exercise) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
       let amount = 0;
       for (let period in data[user]) {
         for (let key in data[user][period]) {
-          if (data[user][period][key].type === type) {
+          if (data[user][period][key].exercise === exercise) {
             const currentAmount = data[user][period][key].amount;
             if (!isNaN(currentAmount)) {
               amount += currentAmount;
@@ -61,12 +61,12 @@ function individual_type(user) {
 
       for (let period in data[user]) {
         for (let key in data[user][period]) {
-          const type = data[user][period][key].type;
-          if (!processedTypes[type]) { // Check if type has already been processed
-            processedTypes[type] = true;
-            individual_stats(user, type).then(amount => {
+          const exercise = data[user][period][key].exercise;
+          if (!processedTypes[exercise]) { // Check if type has already been processed
+            processedTypes[exercise] = true;
+            individual_stats(user, exercise).then(amount => {
               if (amount !== 0) {
-                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+                text += "Amount of " + exercise + " = " + amount + " \n\n"; // Append stats to text
                 const element = document.getElementById("statsText");
                 try {
                   element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
@@ -94,12 +94,12 @@ function individual_type_friend(user) {
 
       for (let period in data[user]) {
         for (let key in data[user][period]) {
-          const type = data[user][period][key].type;
-          if (!processedTypes[type]) { // Check if type has already been processed
-            processedTypes[type] = true;
-            individual_stats(user, type).then(amount => {
+          const exercise = data[user][period][key].exercise;
+          if (!processedTypes[exercise]) { // Check if type has already been processed
+            processedTypes[exercise] = true;
+            individual_stats(user, exercise).then(amount => {
               if (amount !== 0) {
-                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+                text += "Amount of " + exercise + " = " + amount + " \n\n"; // Append stats to text
                 const element1 = document.getElementById("statsText1");
                 try {
                   element1.innerHTML = "<pre>" + text + "</pre>";
