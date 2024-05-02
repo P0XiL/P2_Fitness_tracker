@@ -1,5 +1,4 @@
 
-const fetchNode9 = "https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/";
 /**
  * A function which returns a number between 0 and Max
  * @param {max vaule for number} max 
