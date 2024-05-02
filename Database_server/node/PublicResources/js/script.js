@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
-                fetchUserData('idkey1');
+                setupProfilePage(localStorage.getItem('username'));
             }
             else if (targetId === 'main') { // Check if the clicked tab is the quest page
-                setupTiersForQuestPage('idkey1'); // Call setupTiersForQuestPage with the appropriate username
+                setupTiersForQuestPage(localStorage.getItem('username')); // Call setupTiersForQuestPage with the appropriate username
             }
 
             highlightNavLink(targetId);
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('input[name="login_password"]').value = '';
     });
 
-
+    
 
 
     // Add event listener to the submit button
@@ -75,6 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (password !== confirmPassword) {
             displayCreateErrorMessage("Passwords do not match");
+        } else if (password.length < 1) {
+            displayCreateErrorMessage("Password must be at least 1 character");
+        } else if (username.length < 1) {
+            displayCreateErrorMessage("Username must be at least 1 character");
         }
         else {
             clearCreateErrorMessage();
@@ -86,27 +90,28 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Send the data to the server-side script for file writing
+            console.log(username);
             createUser(userData);
         }
     });
 
     document.getElementById('loginBtn').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default form submission
-
+    
         // Get username and password values
         const username = document.querySelector('input[name="login_username"]').value;
         const password = document.querySelector('input[name="login_password"]').value;
-
+    
         // Create an object with username and password
         const loginData = {
             username: username,
             password: password
         };
-
+    
         // Send the data to the server-side script for login authentication
         loginUser(loginData);
     });
-
+    
     document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
 
@@ -137,24 +142,24 @@ document.addEventListener('DOMContentLoaded', function () {
         createAccountPage.classList.add('active');
     });
 
-    //Function which highlights the link of the currently selected tab
-    function highlightNavLink(pageId) {
-        // Remove 'active' class from all navigation links
-        const navLinks = document.querySelectorAll('#side-nav a');
-        navLinks.forEach(function (link) {
-            link.classList.remove('active');
-        });
-        if (pageId == "loginPage") {
-            return;
-        }
-        // Add 'active' class to the corresponding navigation link
-        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
-        activeLink.classList.add('active');
-    }
-
     // Call checkLoginState() on page load
     window.addEventListener('load', checkLoginState);
 });
+
+//Function which highlights the link of the currently selected tab
+function highlightNavLink(pageId) {
+    // Remove 'active' class from all navigation links
+    const navLinks = document.querySelectorAll('#side-nav a');
+    navLinks.forEach(function (link) {
+        link.classList.remove('active');
+    });
+    if (pageId == "loginPage") {
+        return;
+    }
+    // Add 'active' class to the corresponding navigation link
+    const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+    activeLink.classList.add('active');
+}
 
 // Function to handle storing login state
 function storeLoginState(username) {
@@ -181,6 +186,8 @@ function checkLoginState() {
 
             // Update UI to display logged-in username
             document.getElementById('usernameDisplay').textContent = "Hello, " + username;
+            document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
+
 
             // Update profile link to point to profile page
             document.getElementById('profileLink').href = "#profilepage";
@@ -206,32 +213,28 @@ function loginUser(loginData) {
                 // Reset input fields
                 document.querySelector('input[name="login_username"]').value = '';
                 document.querySelector('input[name="login_password"]').value = '';
-
+    
                 clearLoginErrorMessage();
-
-                storeLoginState(loginData.username);
-
-                // Redirect to home page
-                document.getElementById('main').classList.add('active');
-                //highlightNavLink('main');
-                document.getElementById('loginPage').classList.remove('active');
-
+    
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
+
+                location.reload();
 
             } else {
                 response.text().then(errorMessage => {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
-
-            //highlightNavLink(targetId);
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-}
+    }
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -248,31 +251,53 @@ function createUser(userData) {
 
                 clearCreateErrorMessage();
 
-                    // Redirect to home page
-                    document.getElementById('surveyForm').classList.add('active');
-                    highlightNavLink('main');
-                    document.getElementById('createAccount').classList.remove('active');
-                } else {
-                    response.text().then(errorMessage => {
-                        displayCreateErrorMessage(errorMessage);
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                highlightNavLink('main');
+
+                // Redirect to home page
+                document.getElementById('surveyForm').classList.add('active');
+                document.getElementById('createAccount').classList.remove('active');
+
+                storeLoginState(userData.username);
+
+                location.reload();
+            } else {
+                response.text().then(errorMessage => {
+                    displayCreateErrorMessage(errorMessage);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+    function displayCreateErrorMessage(message) {
+        const errorMessage = document.getElementById('createErrorMessage');
+        errorMessage.textContent = message;
+        errorMessage.style.color = 'red';
     }
 
-function displayCreateErrorMessage(message) {
-    const errorMessage = document.getElementById('createErrorMessage');
-    errorMessage.textContent = message;
-    errorMessage.style.color = 'red';
-}
+    function clearCreateErrorMessage() {
+        const errorMessage = document.getElementById('createErrorMessage');
+        errorMessage.textContent = '';
+    }
 
-function clearCreateErrorMessage() {
-    const errorMessage = document.getElementById('createErrorMessage');
-    errorMessage.textContent = '';
-}
+
+    //Function which highlights the link of the currently selected tab
+    function highlightNavLink(pageId) {
+        // Remove 'active' class from all navigation links
+        const navLinks = document.querySelectorAll('#side-nav a');
+        navLinks.forEach(function(link) {
+            link.classList.remove('active');
+        });
+        if (pageId == "loginPage"){
+            return;
+        }
+        // Add 'active' class to the corresponding navigation link
+        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        activeLink.classList.add('active');
+        }
+});
 
 // Function to display login error message
 function displayLoginErrorMessage(message) {
@@ -287,61 +312,47 @@ function clearLoginErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
-function fetchUserData(username) {
-    // Fetch the JSON data
-    fetch('http://127.0.0.1:3360/json/users_info.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-            }
-            return response.json(); // Parse response body as JSON
-        })
-        .then(data => {
-            console.log(data);
-            // Process the JSON data here
-            processData(data, username);
-        })
-        .catch(error => console.error('Error fetching JSON:', error));
-}
-
-async function setupProfilePage(username) {
+async function fetchUserData(username) {
     try {
         // Fetch the JSON data
         const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
+        
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
-        const data = await response.json(); // Parse response body as JSON
 
-        // Log the JSON object fetched to the console
-        console.log('Fetched JSON data:', data);
+        // Parse response body as JSON
+        const data = await response.json();
 
-        // Process the JSON data here
-        processData(data, username);
+        // Find the user data by username
+        const userData = data.users_info[username];
 
-        return data.users_info[username]; // Return the user info
+        if (!userData) {
+            throw new Error(`User data for ${username} not found.`);
+        }
+
+        // Return the user data
+        return userData;
     } catch (error) {
         console.error('Error fetching JSON:', error);
-        throw error; // Re-throw the error for handling by the caller
+        throw error; // Rethrow the error to propagate it to the caller
     }
 }
 
-async function setupTiersForQuestPage(username) {
-    console.log('hej');
+
+async function setupProfilePage(username) {
     try {
-        // Fetch the JSON data
-        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
+        // Fetch user data using fetchUserData
+        const userData = await fetchUserData(username);
 
-        // Log the JSON object fetched to the console
-        console.log('Fetched JSON data:', data);
-        displayUserTiers(data.users_info[username], 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
+        // Log the fetched JSON data to the console
+        console.log('Fetched JSON data:', userData);
 
+        // Process the JSON data here
+        processData(userData, username);
 
-        return data.users_info[username]; // Return the user info
+        // Return the user info
+        return userData;
     } catch (error) {
         console.error('Error fetching JSON:', error);
         throw error; // Re-throw the error for handling by the caller
@@ -349,88 +360,74 @@ async function setupTiersForQuestPage(username) {
 }
 
 function processData(data, username) {
-    // Check if users_info exists in data
-    if (data.users_info) {
-        // Check if the specified username exists
-        if (username && data.users_info[username]) {
-            // Extract user information
-            const userInfo = data.users_info[username];
+    // Check if the data is not null or undefined
+    if (data) {
+        // Extract user information
+        const userInfo = data;
 
-
-            if (userInfo.tier) {
-                displayUserTiers(userInfo, 'dailyTier', 'weeklyTier', 'monthlyTier');
-            } else {
-                console.error(`'tiers' property not found in ${username}'s information`);
-            }
-
-            if (userInfo.mastery) {
-                displayUserMasteries(userInfo.mastery);
-            } else {
-                console.error(`'mastery' property not found in ${username}'s information`);
-            }
-
-            // Display the user information
-            displayUserInfo(username, userInfo);
-
-            // Check if userInfo contains 'preset' property before calling displayUserPreferences
-            if (userInfo.preset) {
-                displayUserPreferences(username, userInfo);
-            } else {
-                console.error(`'preset' property not found in ${username}'s information`);
-            }
-
+        // Check if userInfo contains 'tier' property before calling displayUserTiers
+        if (userInfo.tier) {
+            displayUserTiers(userInfo, 'dailyTier', 'weeklyTier', 'monthlyTier');
         } else {
-            console.error(`${username} not found in JSON data`);
+            console.error(`'tier' property not found in ${username}'s information`);
+        }
+
+        // Check if userInfo contains 'mastery' property before calling displayUserMasteries
+        if (userInfo.mastery) {
+            displayUserMasteries(userInfo.mastery);
+        } else {
+            console.error(`'mastery' property not found in ${username}'s information`);
+        }
+
+        // Display the user information
+        displayUserInfo(username, userInfo);
+
+        // Check if userInfo contains 'preset' property before calling displayUserPreferences
+        if (userInfo.preset) {
+            displayUserPreferences(username, userInfo);
+        } else {
+            console.error(`'preset' property not found in ${username}'s information`);
         }
     } else {
-        console.error('users_info not found in JSON data');
+        console.error('User data is null or undefined');
     }
 }
 
+
 function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
-    // Map tier ranges to corresponding tier names
-    const tierNames = {
-        '1-3': 'Bronze 5',
-        '4-6': 'Bronze 4',
-        '7-9': 'Bronze 3',
-        '10-12': 'Bronze 2',
-        '13-15': 'Bronze 1',
-        '16-18': 'Silver 5',
-        '19-21': 'Silver 4',
-        '22-24': 'Silver 3',
-        '25-27': 'Silver 2',
-        '28-30': 'Silver 1',
-        '31-33': 'Gold 5',
-        '34-36': 'Gold 4',
-        '37-39': 'Gold 3',
-        '40-42': 'Gold 2',
-        '43-45': 'Gold 1',
-    };
+    // Check if userInfo is not null or undefined
+    if (userInfo) {
+        // Get references to tier elements using the provided IDs
+        const dailyTierContainer = document.getElementById(DailyID);
+        const weeklyTierContainer = document.getElementById(WeeklyID);
+        const monthlyTierContainer = document.getElementById(MonthlyID);
 
-    // Get references to tier elements using the provided IDs
-    const dailyTierContainer = document.getElementById(DailyID);
-    const weeklyTierContainer = document.getElementById(WeeklyID);
-    const monthlyTierContainer = document.getElementById(MonthlyID);
+        // Check if the tier objects exist in userInfo
+        if (userInfo.tier && userInfo.tier.daily && userInfo.tier.weekly && userInfo.tier.monthly) {
+            // Determine the tier range and corresponding image for each tier
+            const dailyTierRange = getTierRange(userInfo.tier.daily.rank);
+            const weeklyTierRange = getTierRange(userInfo.tier.weekly.rank);
+            const monthlyTierRange = getTierRange(userInfo.tier.monthly.rank);
 
+            const dailyImageSrc = tierImages[dailyTierRange];
+            const weeklyImageSrc = tierImages[weeklyTierRange];
+            const monthlyImageSrc = tierImages[monthlyTierRange];
 
-    // Determine the tier range and corresponding image for each tier
-    const dailyTierRange = getTierRange(userInfo.tier.daily.rank);
-    const weeklyTierRange = getTierRange(userInfo.tier.weekly.rank);
-    const monthlyTierRange = getTierRange(userInfo.tier.monthly.rank);
+            // Clear existing content
+            dailyTierContainer.innerHTML = '';
+            weeklyTierContainer.innerHTML = '';
+            monthlyTierContainer.innerHTML = '';
 
-    const dailyImageSrc = tierImages[dailyTierRange];
-    const weeklyImageSrc = tierImages[weeklyTierRange];
-    const monthlyImageSrc = tierImages[monthlyTierRange];
-
-    // Clear existing content
-    dailyTierContainer.innerHTML = '';
-    weeklyTierContainer.innerHTML = '';
-    monthlyTierContainer.innerHTML = '';
-
-    // Create grid items for daily, weekly, and monthly tiers
-    createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
-    createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
-    createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
+            // Create grid items for daily, weekly, and monthly tiers
+            createTierGridItem(dailyTierContainer, tierNames[getSubTierRange(userInfo.tier.daily.rank)], dailyImageSrc, userInfo.tier.daily.elo, 'Daily');
+            createTierGridItem(weeklyTierContainer, tierNames[getSubTierRange(userInfo.tier.weekly.rank)], weeklyImageSrc, userInfo.tier.weekly.elo, 'Weekly');
+            createTierGridItem(monthlyTierContainer, tierNames[getSubTierRange(userInfo.tier.monthly.rank)], monthlyImageSrc, userInfo.tier.monthly.elo, 'Monthly');
+        } else {
+            console.error(`'tier' property or its daily, weekly, or monthly sub-properties not found in userInfo`);
+        }
+    } else {
+        console.error('User info is null or undefined');
+    }
 
     // Create a function to generate tier grid items
     function createTierGridItem(container, title, imageSrc, elo, period) {
@@ -461,6 +458,22 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
 
         // Append grid item to container
         container.appendChild(gridItem);
+    }
+}
+
+
+// Function to get the tier range
+function getTierRange(rank) {
+    switch (true) {
+        case rank >= 1 && rank <= 15:
+            return '1-15';
+        case rank >= 16 && rank <= 30:
+            return '16-30';
+        case rank >= 31 && rank <= 45:
+            return '31-45';
+        default:
+            // Handle cases outside the defined ranges
+            return 'Unknown';
     }
 }
 
@@ -526,7 +539,7 @@ function displayUserMasteries(masteryInfo) {
     // Check if the revealButton already exists
     let revealButton = document.getElementById('revealButton');
 
-    // If revealButton doesn't exist, create it
+// If revealButton doesn't exist, create it
     if (!revealButton) {
         revealButton = document.createElement('button');
         revealButton.id = 'revealButton';
@@ -546,9 +559,8 @@ function displayUserMasteries(masteryInfo) {
             hideButton.style.display = 'inline-block';
             // Hide the reveal button
             revealButton.style.display = 'none';
-        });
-    }
-
+    });
+}
 
 
     // Create button to hide extra masteries
@@ -618,12 +630,10 @@ function createMasteryItem(masteryKey, mastery) {
 
 function displayUserInfo(username, userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
-    let userInfoHTML = `
+    const userInfoHTML = `
         <h2 style="text-align: center;">User info</h2>
-        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
-        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
-        <button onclick="postUserInfo('${username}')">Save User Info</button>
-        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
+        <p>Height: ${userInfo[idkey].surveyData.height}</p>
+        <p>Weight: ${userInfo[idkey].surveyData.weight}</p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 
@@ -640,19 +650,14 @@ async function postUserInfo(username) {
     const weight = parseFloat(document.getElementById('weight').value);
 
     try {
-        // Fetch the JSON data
-        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
+        const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
 
-        if (data.users_info && data.users_info[username]) {
-            const existingUserInfo = data.users_info[username];
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
 
             // Create a new user info object with the updated health information
             const newUserInfo = {
-                username: existingUserInfo.username,
+                username: username,
                 health: {
                     height: height,
                     weight: weight
@@ -673,9 +678,10 @@ async function postUserInfo(username) {
             console.error('User info not found for username:', username);
         }
     } catch (error) {
-        console.error('Error fetching JSON:', error);
+        console.error('Error fetching user data:', error);
     }
 }
+
 
 // Function to update user info
 function update_users_info(newUserInfo) {
@@ -684,12 +690,13 @@ function update_users_info(newUserInfo) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newUserInfo, null, 2) // Use null for replacer and 2 for indentation
+        body: JSON.stringify(newUserInfo, null, 2) // Include the entire user information
     })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch POST');
             }
+            console.log(response);
             return response.json(); // Read response JSON
         })
         .then(responseJson => {
@@ -707,6 +714,7 @@ function update_users_info(newUserInfo) {
         });
 }
 
+
 // Function to update BMI text
 function updateBMI(height, weight) {
     const bmi = calculateBMI(height, weight);
@@ -715,7 +723,7 @@ function updateBMI(height, weight) {
 }
 
 // Update BMI text after user inputs height or weight
-document.getElementById('height').addEventListener('input', function () {
+document.getElementById('height').addEventListener('input', function() {
     const height = parseFloat(this.value);
     const weight = parseFloat(document.getElementById('weight').value);
     if (!isNaN(height) && !isNaN(weight)) {
@@ -723,7 +731,7 @@ document.getElementById('height').addEventListener('input', function () {
     }
 });
 
-document.getElementById('weight').addEventListener('input', function () {
+document.getElementById('weight').addEventListener('input', function() {
     const height = parseFloat(document.getElementById('height').value);
     const weight = parseFloat(this.value);
     if (!isNaN(height) && !isNaN(weight)) {
@@ -732,26 +740,31 @@ document.getElementById('weight').addEventListener('input', function () {
 });
 
 async function setupTiersForQuestPage(username) {
-    console.log('hej');
     try {
-        // Fetch the JSON data
-        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
+        const userData = await fetchUserData(username);
 
         // Log the JSON object fetched to the console
-        console.log('Fetched JSON data:', data);
-        displayUserTiers(data.users_info[username], 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
+        console.log('Fetched JSON data:', userData);
 
-
-        return data.users_info[username]; // Return the user info
+        // Check if the user object exists
+        if (userData) {
+            // Display user tiers if the user object contains the necessary information
+            if (userData.mastery && userData.tier) {
+                displayUserTiers(userData, 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
+                return userData; // Return the user info
+            } else {
+                console.error('Mastery or tier information not found in user data');
+            }
+        } else {
+            console.error('User data not found');
+        }
     } catch (error) {
         console.error('Error fetching JSON:', error);
         throw error; // Re-throw the error for handling by the caller
     }
 }
+
+
 
 // Function to capitalize the first letter of a string
 function capitalizeFirstLetter(string) {
@@ -760,96 +773,51 @@ function capitalizeFirstLetter(string) {
 
 // Function to get the sub-tier range
 function getSubTierRange(rank) {
-    if (rank >= 1 && rank <= 3) {
-        return '1-3';
-    } else if (rank >= 4 && rank <= 6) {
-        return '4-6';
-    } else if (rank >= 7 && rank <= 9) {
-        return '7-9';
-    } else if (rank >= 10 && rank <= 12) {
-        return '10-12';
-    } else if (rank >= 13 && rank <= 15) {
-        return '13-15';
-    } else if (rank >= 16 && rank <= 18) {
-        return '16-18';
-    } else if (rank >= 19 && rank <= 21) {
-        return '19-21';
-    } else if (rank >= 22 && rank <= 24) {
-        return '22-24';
-    } else if (rank >= 25 && rank <= 27) {
-        return '25-27';
-    } else if (rank >= 28 && rank <= 30) {
-        return '28-30';
-    } else if (rank >= 31 && rank <= 33) {
-        return '31-33';
-    } else if (rank >= 34 && rank <= 36) {
-        return '34-36';
-    } else if (rank >= 37 && rank <= 39) {
-        return '37-39';
-    } else if (rank >= 40 && rank <= 42) {
-        return '40-42';
-    } else if (rank >= 43 && rank <= 45) {
-        return '43-45';
-    } else {
-        // Handle cases outside the defined ranges
-        return 'Unknown';
+    switch (true) {
+        case rank >= 1 && rank <= 3:
+            return '1-3';
+        case rank >= 4 && rank <= 6:
+            return '4-6';
+        case rank >= 7 && rank <= 9:
+            return '7-9';
+        case rank >= 10 && rank <= 12:
+            return '10-12';
+        case rank >= 13 && rank <= 15:
+            return '13-15';
+        case rank >= 16 && rank <= 18:
+            return '16-18';
+        case rank >= 19 && rank <= 21:
+            return '19-21';
+        case rank >= 22 && rank <= 24:
+            return '22-24';
+        case rank >= 25 && rank <= 27:
+            return '25-27';
+        case rank >= 28 && rank <= 30:
+            return '28-30';
+        case rank >= 31 && rank <= 33:
+            return '31-33';
+        case rank >= 34 && rank <= 36:
+            return '34-36';
+        case rank >= 37 && rank <= 39:
+            return '37-39';
+        case rank >= 40 && rank <= 42:
+            return '40-42';
+        case rank >= 43 && rank <= 45:
+            return '43-45';
+        default:
+            return 'Unknown';
     }
 }
 
-
-
-
-
-async function postUserInfo(username) {
-    const height = parseFloat(document.getElementById('height').value);
-    const weight = parseFloat(document.getElementById('weight').value);
-
-    try {
-        // Fetch the JSON data
-        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
-
-        if (data.users_info && data.users_info[username]) {
-            const existingUserInfo = data.users_info[username];
-
-            // Create a new user info object with the updated health information
-            const newUserInfo = {
-                username: existingUserInfo.username,
-                health: {
-                    height: height,
-                    weight: weight
-                },
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
-                preset: existingUserInfo.preset
-            };
-
-            // Update the user info on the server
-            update_users_info(newUserInfo);
-
-            // Calculate and display BMI
-            const bmi = calculateBMI(height, weight);
-            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
-        } else {
-            console.error('User info not found for username:', username);
-        }
-    } catch (error) {
-        console.error('Error fetching JSON:', error);
-    }
-}
 
 function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
     const countMap = {};
-
+    
     // Filter out empty strings or undefined values (if any)
     const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
-
+    
     // Count occurrences of each element in the filtered array
     filteredArray.forEach(element => {
         if (countMap[element]) {
@@ -864,7 +832,7 @@ function displayUserPreferences(username, userInfo) {
     let slidersHTML = '';
 
     // Check if countMap for each exercise is greater than 0, then include the slider
-    if (countMap['push-ups'] > 0 || preset == 'custom') {
+    if (countMap['push-ups'] > 0 || preset=='custom') {
         slidersHTML += `
             <div>
                 <label for="pushups">Pushups</label>
@@ -873,7 +841,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.run > 0 || preset == 'custom') {
+    if (countMap.run > 0 || preset=='custom') {
         slidersHTML += `
             <div>
                 <label for="run">Run</label>
@@ -882,7 +850,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.walk > 0 || preset == 'custom') {
+    if (countMap.walk > 0 || preset=='custom') {
         slidersHTML += `
             <div>
                 <label for="walk">Walk</label>
@@ -891,7 +859,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (countMap.crunches >= 0 || preset == 'custom') { // Updated condition for crunches
+    if (countMap.crunches >= 0 || preset=='custom') { // Updated condition for crunches
         slidersHTML += `
             <div>
                 <label for="crunches">Crunches</label>
@@ -900,7 +868,7 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-
+    
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
@@ -925,36 +893,54 @@ function displayUserPreferences(username, userInfo) {
     }
 }
 
+
+
+
+
+
 function updateCounter(exercise, value) {
     document.getElementById(`${exercise}Counter`).textContent = value;
 }
 
-function postCustomData(username) {
+async function postCustomData(username) {
     const pushupsValue = document.getElementById('pushups').value;
     const runValue = document.getElementById('run').value;
     const walkValue = document.getElementById('walk').value;
-    const crunchesValue = document.getElementById('crunches').value; // Define crunchesValue here
-    const existingUserInfo = data.users_info[username];
+    const crunchesValue = document.getElementById('crunches').value;
 
-    const newUserInfo = {
-        username: existingUserInfo.username,
-        health: existingUserInfo.health,
-        mastery: existingUserInfo.mastery,
-        hiddenRank: existingUserInfo.hiddenRank,
-        tier: existingUserInfo.tier,
-        preset: {
-            name: 'custom',
-            conf: [
-                ...Array(Number(pushupsValue)).fill('push-ups'),
-                ...Array(Number(runValue)).fill('run'),
-                ...Array(Number(walkValue)).fill('walk'),
-                ...Array(Number(crunchesValue)).fill('crunches')
-            ]
+    try {
+        const userData = await fetchUserData(username);
+
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
+
+            const newUserInfo = {
+                username: username,
+                health: existingUserInfo.health,
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: {
+                    name: 'custom',
+                    conf: [
+                        ...Array(Number(pushupsValue)).fill('push-ups'),
+                        ...Array(Number(runValue)).fill('run'),
+                        ...Array(Number(walkValue)).fill('walk'),
+                        ...Array(Number(crunchesValue)).fill('crunches')
+                    ]
+                }
+            };
+
+            // Call function to update user info
+            update_users_info(newUserInfo);
+        } else {
+            console.error('User info not found for username:', username);
         }
-    };
-
-    update_users_info(newUserInfo);
+    } catch (error) {
+        console.error('Error fetching user data:', error.message);
+    }
 }
+
 
 // Function to generate sliders for exercise preferences
 function generateSliders(countMap) {
@@ -969,83 +955,75 @@ function generateSliders(countMap) {
 
 async function updatePreset(username, preset) {
     try {
-        // Fetch the JSON data
-        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
-        }
-        const data = await response.json(); // Parse response body as JSON
+        const userData = await fetchUserData(username);
 
-        if (data.users_info && data.users_info[username]) {
-            const existingUserInfo = data.users_info[username];
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
+
             let conf = [];
             let run = 0;
             let walk = 0;
             let crunches = 0;
             let pushUps = 0;
 
-            switch (preset) {
-                case 'run':
-                    run = 10;
-                    walk = 4;
-                    crunches = 3;
-                    conf = [
-                        ...Array(Number(run)).fill('run'),
-                        ...Array(Number(walk)).fill('walk'),
-                        ...Array(Number(crunches)).fill('crunches')
-                    ];
-                    break;
-                case 'walk':
-                    run = 4;
-                    walk = 10;
-                    crunches = 3;
-                    conf = [
-                        ...Array(Number(run)).fill('run'),
-                        ...Array(Number(walk)).fill('walk'),
-                        ...Array(Number(crunches)).fill('crunches')
-                    ];
-                    break;
-                case 'strength':
-                    run = 2;
-                    walk = 2;
-                    crunches = 6;
-                    pushUps = 4;
-                    conf = [
-                        ...Array(Number(run)).fill('run'),
-                        ...Array(Number(walk)).fill('walk'),
-                        ...Array(Number(crunches)).fill('crunches'),
-                        ...Array(Number(pushUps)).fill('push-ups')
-                    ];
-                    break;
-                case 'custom':
-                    run = 1;
-                    walk = 1;
-                    crunches = 1;
-                    pushUps = 1;
-                    conf = [
-                        ...Array(Number(run)).fill('run'),
-                        ...Array(Number(walk)).fill('walk'),
-                        ...Array(Number(crunches)).fill('crunches'),
-                        ...Array(Number(pushUps)).fill('push-ups')
-                    ];
-                    break;
-                default:
-                    console.error(`Invalid preset: ${preset}`);
-                    return;
-            }
+    switch (preset) {
+        case 'run':
+            conf = [
+                ...Array(Number(run)).fill('run'),
+                ...Array(Number(walk)).fill('walk'),
+                ...Array(Number(crunches)).fill('crunches')
+            ];
+            break;
+        case 'walk':
+            run = 4;
+            walk = 10;
+            crunches = 3;
+    
+            conf = [
+                ...Array(Number(run)).fill('run'),
+                ...Array(Number(walk)).fill('walk'),
+                ...Array(Number(crunches)).fill('crunches')
+            ];
+            break;
+        case 'strength':
+            run = 2;
+            walk = 2;
+            crunches = 6;
+            pushUps = 4;
+    
+            conf = [
+                ...Array(Number(run)).fill('run'),
+                ...Array(Number(walk)).fill('walk'),
+                ...Array(Number(crunches)).fill('crunches'),
+                ...Array(Number(pushUps)).fill('push-ups')
+            ];
+            break;
+        case 'custom':
+            run = 1;
+            walk = 1;
+            crunches = 1;
+            pushUps = 1;
+    
+            conf = [
+                ...Array(Number(run)).fill('run'),
+                ...Array(Number(walk)).fill('walk'),
+                ...Array(Number(crunches)).fill('crunches'),
+                ...Array(Number(pushUps)).fill('push-ups')
+            ];
+            break;
+        default:
+            console.error(`Invalid preset: ${preset}`);
+    }
+    
 
-            // Update only the preset while retaining other information
-            const newUserInfo = {
-                username: existingUserInfo.username,
-                health: existingUserInfo.health,
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
-                preset: {
-                    name: preset,
-                    conf: conf
-                }
-            };
+    // Define the new user info object
+    const newUserInfo = {
+        username: username,
+        preset: {
+            name: preset,
+            conf: conf
+        }
+    };
 
             // Update the user info on the server
             update_users_info(newUserInfo);
@@ -1053,152 +1031,16 @@ async function updatePreset(username, preset) {
             console.error('User info not found for username:', username);
         }
     } catch (error) {
-        console.error('Error fetching JSON:', error);
+        console.error('Error fetching user data:', error.message);
     }
 }
 
-// Function to update user info
-function update_users_info(newUserInfo) {
-    fetch('http://127.0.0.1:3360/write_user_info_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newUserInfo, null, 2) // Use null for replacer and 2 for indentation
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch POST');
-            }
-            return response.json(); // Read response JSON
-        })
-        .then(responseJson => {
-            console.log('Response from POST:', responseJson);
-            if (responseJson.success) {
-                console.log('User info updated successfully');
-                // Fetch user data again after successful update
-                setupProfilePage(newUserInfo.username);
-            } else {
-                console.error('User info update failed:', responseJson.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching POST users_info:', error);
-        });
-}
 
-document.addEventListener('DOMContentLoaded', function() {
-    function handleSurveyFormSubmit() {
-        const form = document.getElementById('surveyForm');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Extracting specific parameters from form data
-            const formData = new FormData(form);
-            const surveyData = {};
-            for (const [key, value] of formData.entries()) {
-                if (surveyData[key]) {
-                    if (!Array.isArray(surveyData[key])) {
-                        surveyData[key] = [surveyData[key]];
-                    }
-                    surveyData[key].push(value);
-                } else {
-                    surveyData[key] = value;
-                }
-            }
-            console.log(surveyData);
-            sendSurveyData(surveyData);
-
-            document.getElementById('main').classList.add('active');
-            document.getElementById('surveyForm').classList.remove('active')
-        });
-    }
-
-    // Call the function to attach the event listener
-    handleSurveyFormSubmit();
-});
-
-function sendSurveyData(surveyData) {
-    fetch('http://127.0.0.1:3360/write_survey_data_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(surveyData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch POST');
-        }
-        return response.json();
-    })
-    .then(responseJson => {
-        console.log('Response from POST:', responseJson);
-        if (responseJson.success) {
-            console.log('Survey data sent successfully');
-        } else {
-            console.error('Failed to send survey data:', responseJson.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error sending survey data:', error);
-    });
-}
-
-let lastActiveDates = {};
-
-function updateStreak(userId) {
-  const currentDate = new Date().toDateString();
-  
-  if (!lastActiveDates[userId]) {
-    lastActiveDates[userId] = null;
-  }
-  
-  if (currentDate === lastActiveDates[userId]) {
-    return; // Already active today
-  }
-  
-  const lastDate = new Date();
-  lastDate.setDate(lastDate.getDate() - 1);
-  
-  const lastDateString = lastDate.toDateString();
-  
-  if (currentDate === lastDateString) {
-    if (lastActiveDates[userId] !== currentDate) {
-      lastActiveDates[userId] = currentDate;
-    }
-  } else {
-    lastActiveDates[userId] = currentDate;
-  }
-}
-
-function getStreakCount(userId) {
-  let streakCount = 0;
-  let currentDate = new Date().toDateString();
-  let lastDate = null;
-
-  if (lastActiveDates[userId]) {
-    lastDate = new Date(lastActiveDates[userId]);
-  }
-
-  if (lastDate) {
-    while (currentDate === lastDate.toDateString()) {
-      streakCount++;
-      lastDate.setDate(lastDate.getDate() - 1);
-      currentDate = lastDate.toDateString();
-    }
-  }
-
-  return streakCount;
-}
-
-updateStreak(userId); // Call this function whenever user is active
-const streakCount = getStreakCount(userId);
-console.log("Current streak for user", userId + ":", streakCount);
-
-// Display PNG image if streak is active
-if (streakCount > 0) {
-  const img = document.createElement("img");
-  img.src = "Database_server\node\PublicResources\image\Streak.png";
-  document.body.appendChild(img);
+// Calculate BMI function
+function calculateBMI(height, weight) {
+    // Convert height to meters
+    const heightMeters = height / 100;
+    // Calculate BMI
+    const bmi = weight / (heightMeters * heightMeters);
+    return bmi.toFixed(1); // Round to 1 decimal place
 }

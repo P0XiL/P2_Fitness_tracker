@@ -1,8 +1,66 @@
 {
-  "1235": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
+  "69": {
+    "daily": {
+      "2/5/2024": {
+        "type": "cardio",
+        "target": 5,
+        "amount": 0,
+        "text": "Go for a run for 5 minutes",
+        "state": "incomplete"
+      }
+    },
+    "weekly": {
+      "2/5/2024": {
+        "type": "cardio",
+        "target": 90,
+        "amount": 0,
+        "text": "Go for a walk for 90 minutes",
+        "state": "incomplete"
+      }
+    },
+    "monthly": {
+      "2/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "312": {
+    "daily": {
+      "2/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "2/5/2024": {
+        "type": "cardio",
+        "target": 90,
+        "amount": 0,
+        "text": "Cycle 90 minutes",
+        "state": "incomplete"
+      }
+    },
+    "monthly": {
+      "2/5/2024": {
+        "type": "lowerbody"
+      }
+    }
+  },
+  "412": {
+    "daily": {
+      "2/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "2/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "2/5/2024": {
+        "type": "upperbody"
+      }
+    }
   },
   "assholeblaster69": {
     "daily": {
@@ -20,28 +78,11 @@
         "text": "Go for a run for 5 minutes",
         "state": "incomplete"
       },
-      "21/4/2024": {
+      "17/4/2024": {
         "type": "core",
         "target": 3,
-        "amount": 1,
+        "amount": 2,
         "text": "Do 3 burpees",
-        "state": "incomplete"
-      },
-      "22/4/2024": {
-        "type": "cardio"
-      },
-      "28/4/2024": {
-        "type": "core",
-        "target": 3,
-        "amount": 0,
-        "text": "Do 3 burpees",
-        "state": "incomplete"
-      },
-      "29/4/2024": {
-        "type": "cardio",
-        "target": 22,
-        "amount": 22,
-        "text": "Go for a walk for 22 minutes",
         "state": "incomplete"
       }
     },
@@ -56,15 +97,8 @@
       "16/4/2024": {
         "type": "core",
         "target": 3,
-        "amount": 3,
+        "amount": 0,
         "text": "Do 3 situps",
-        "state": "incomplete"
-      },
-      "28/4/2024": {
-        "type": "cardio",
-        "target": 180,
-        "amount": 45,
-        "text": "Go for a walk for 180 minutes",
         "state": "incomplete"
       }
     },
@@ -84,25 +118,5 @@
         "state": "incomplete"
       }
     }
-  },
-  "poggo2": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
-  },
-  "poggo3": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
-  },
-  "sejt": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
-  },
-  "Haha": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
   }
 }

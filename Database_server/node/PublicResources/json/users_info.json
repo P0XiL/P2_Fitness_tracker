@@ -1,7 +1,66 @@
 {
   "users_info": {
+    "1235": {
+      "username": "1235",
+      "health": {
+        "height": 180,
+        "weight": 75
+      },
+      "mastery": {
+        "run": {
+          "rank": 25,
+          "elo": 10
+        },
+        "walk": {
+          "rank": 10,
+          "elo": 69
+        },
+        "crunches": {
+          "rank": 30,
+          "elo": 50
+        },
+        "pushups": {
+          "rank": 40,
+          "elo": 90
+        }
+      },
+      "hiddenRank": {
+        "daily": 23,
+        "weekly": 30,
+        "monthly": 16
+      },
+      "tier": {
+        "daily": {
+          "rank": 23,
+          "elo": 80
+        },
+        "weekly": {
+          "rank": 34,
+          "elo": 25
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 5
+        }
+      },
+      "preset": {
+        "name": "custom",
+        "conf": [
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "run",
+          "run",
+          "run",
+          "walk",
+          "crunches"
+        ]
+      }
+    },
     "idkey1": {
-      "username": "idkey1",
+      "username": "Tobias",
       "health": {
         "height": 178,
         "weight": 75
@@ -44,8 +103,18 @@
         }
       },
       "preset": {
-        "name": "run",
+        "name": "custom",
         "conf": [
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
+          "push-ups",
           "run",
           "run",
           "run",
@@ -60,11 +129,38 @@
           "walk",
           "walk",
           "walk",
+          "crunches",
+          "crunches",
+          "crunches",
+          "crunches",
+          "crunches",
           "crunches",
           "crunches",
           "crunches"
         ]
       }
+    },
+    "Jacobskæmpeløg": {
+      "username": "Jacobskæmpeløg",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "Dingo3": {
+      "username": "Dingo3",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
     }
   }
 }
