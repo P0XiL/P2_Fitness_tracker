@@ -10,7 +10,8 @@
 <body>
     <header>Lets GO</header>
     <!-- Navigation links -->
-    <nav id="side-nav">
+    <nav id="side-nav" style="display: none;">
+        <ul id="side-navigation-links">
         <ul><br>
             <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
             <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
@@ -19,17 +20,12 @@
         </ul>
     </nav>
 
-    <nav id="top-nav">
-        <ul>
-            <li><a href="#main"><img src="image/home.png" alt="Home" class="top-img"></a></li>
+    <nav id="top-nav" style="display: none;">
+        <ul id="top-navigation-links">
+            <li><a href="#main"><img src="image/home.png" alt="Home" class="top-right-img"></a></li>
+            <li><a href="#profilepage"><img src="image/profile_image.png" alt="Profile" class="top-left-img"></a></li>
         </ul>
-        <ul>
-            <li><a id="profileLink" href="#loginPage"><img src="image/profile_image.png" alt="Profile"
-                        class="top-img"></a></li>
-            <br>
-            <div class="login"></div></a></li>
-        </ul>
-    </nav>
+    </nav>    
 
     <!-- A popup when choosing new quest-->
     <div id="myModal" class="modal">
@@ -54,7 +50,7 @@
     </div>
 
     <!-- Page sections -->
-    <div id="main" class="page active">
+    <div id="main" class="page">
         <div id="usernameDisplay" class="username-display"></div>
         <h2 class="heading">Quests</h2>
         <div class="questpage">

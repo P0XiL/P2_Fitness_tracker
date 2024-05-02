@@ -1,5 +1,9 @@
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
+    // Call checkLoginState() on page load
+    //window.addEventListener('load', checkLoginState);
+    checkLoginState();
+
     // Assigns all tabs to an array called links
     const links = document.querySelectorAll('nav a');
     // Get all navigation links
@@ -61,9 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('input[name="login_password"]').value = '';
     });
 
-
-
-
     // Add event listener to the submit button
     document.getElementById('submitBtn').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default form submission
@@ -90,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Send the data to the server-side script for file writing
+            console.log(username);
             createUser(userData);
         }
     });
@@ -140,9 +142,6 @@ document.addEventListener('DOMContentLoaded', function () {
         loginPage.classList.remove('active');
         createAccountPage.classList.add('active');
     });
-
-    // Call checkLoginState() on page load
-    window.addEventListener('load', checkLoginState);
 });
 
 //Function which highlights the link of the currently selected tab
@@ -152,9 +151,6 @@ function highlightNavLink(pageId) {
     navLinks.forEach(function (link) {
         link.classList.remove('active');
     });
-    if (pageId == "loginPage") {
-        return;
-    }
     // Add 'active' class to the corresponding navigation link
     const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
     activeLink.classList.add('active');
@@ -174,8 +170,9 @@ function storeLoginState(username) {
 // Function to check and handle login state on page load
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
-    const username = localStorage.getItem('username');
-    console.log(username);
+    const sidenavigation = document.getElementById('side-nav');
+    const topnavigation = document.getElementById('top-nav');
+
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -187,19 +184,24 @@ function checkLoginState() {
             document.getElementById('usernameDisplay').textContent = "Hello, " + username;
             document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
 
-
-            // Update profile link to point to profile page
-            document.getElementById('profileLink').href = "#profilepage";
+            sidenavigation.style.display = 'block';
+            topnavigation.style.display = 'block';
+            document.getElementById('main').classList.add('active');
         } else {
             // Clear expired login state
             localStorage.removeItem('loginState');
+            loginPage.classList.add('active');
         }
+    } else {
+        sidenavigation.style.display = 'none';
+        topnavigation.style.display = 'none';
+        loginPage.classList.add('active');
     }
 }
 
 
 function loginUser(loginData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/login', {
+    fetch('http://127.0.0.1:3360/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -209,21 +211,9 @@ function loginUser(loginData) {
         .then(response => {
             if (response.ok) {
                 console.log('User successfully logged in');
-                // Reset input fields
-                document.querySelector('input[name="login_username"]').value = '';
-                document.querySelector('input[name="login_password"]').value = '';
-
                 clearLoginErrorMessage();
 
                 storeLoginState(loginData.username);
-
-                // Redirect to home page
-                document.getElementById('main').classList.add('active');
-                //highlightNavLink('main');
-                document.getElementById('loginPage').classList.remove('active');
-
-                // Update UI to reflect logged-in status (e.g., display username in the top right)
-                // Redirect to home page or perform other actions as needed
 
                 location.reload();
 
@@ -232,14 +222,12 @@ function loginUser(loginData) {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
-
-            //highlightNavLink(targetId);
         });
 }
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -249,18 +237,8 @@ function createUser(userData) {
         .then(response => {
             if (response.ok) {
                 console.log('Data successfully sent to server');
-                // Reset input fields
-                document.querySelector('input[name="create_username"]').value = '';
-                document.querySelector('input[name="create_password"]').value = '';
-                document.querySelector('input[name="create_confirm_password"]').value = '';
 
                 clearCreateErrorMessage();
-
-                highlightNavLink('main');
-
-                // Redirect to home page
-                document.getElementById('main').classList.add('active');
-                document.getElementById('createAccount').classList.remove('active');
 
                 storeLoginState(userData.username);
 
@@ -303,7 +281,7 @@ function clearLoginErrorMessage() {
 async function fetchUserData(username) {
     try {
         // Fetch the JSON data
-        const response = await fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/json/users_info.json');
+        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
         
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -675,7 +653,7 @@ async function postUserInfo(username) {
 
 // Function to update user info
 function update_users_info(newUserInfo) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/write_user_info_json', {
+    fetch('http://127.0.0.1:3360/write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
