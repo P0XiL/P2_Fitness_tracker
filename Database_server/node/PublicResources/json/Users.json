@@ -1,6 +1,39 @@
 {
   "obj_users": {
-    "1235": {
+    "42": {
+      "password": "42"
+    },
+    "51": {
+      "password": "51"
+    },
+    "69": {
+      "password": "69"
+    },
+    "88": {
+      "password": "88"
+    },
+    "123": {
+      "password": "123"
+    },
+    "312": {
+      "password": "2"
+    },
+    "412": {
+      "password": "1"
+    },
+    "431": {
+      "password": "4321"
+    },
+    "1234": {
+      "password": "1"
+    },
+    "321321": {
+      "password": "321321"
+    },
+    "Username1": {
+      "password": "123"
+    },
+    "Username2": {
       "password": "1234"
     },
     "poggo2": {

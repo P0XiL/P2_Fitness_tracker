@@ -181,8 +181,6 @@ function createUser(req, res) {
                             }
                         });
                         
-
-                        
                     });
                 }
             });

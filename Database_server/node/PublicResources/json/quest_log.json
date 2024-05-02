@@ -1,22 +1,122 @@
 {
-  "JacobsDildo69": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
+  "69": {
+    "daily": {
+      "2/5/2024": {
+        "type": "cardio",
+        "target": 5,
+        "amount": 0,
+        "text": "Go for a run for 5 minutes",
+        "state": "incomplete"
+      }
+    },
+    "weekly": {
+      "2/5/2024": {
+        "type": "cardio",
+        "target": 90,
+        "amount": 0,
+        "text": "Go for a walk for 90 minutes",
+        "state": "incomplete"
+      }
+    },
+    "monthly": {
+      "2/5/2024": {
+        "type": "core"
+      }
+    }
   },
-  "Jacobskæmpeløg": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
+  "312": {
+    "daily": {
+      "2/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "2/5/2024": {
+        "type": "cardio",
+        "target": 90,
+        "amount": 0,
+        "text": "Cycle 90 minutes",
+        "state": "incomplete"
+      }
+    },
+    "monthly": {
+      "2/5/2024": {
+        "type": "lowerbody"
+      }
+    }
   },
-  "Dingo": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
+  "412": {
+    "daily": {
+      "2/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "2/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "2/5/2024": {
+        "type": "upperbody"
+      }
+    }
   },
-  "Dingo3": {
-    "daily": {},
-    "weekly": {},
-    "monthly": {}
+  "assholeblaster69": {
+    "daily": {
+      "14/4/2024": {
+        "type": "cardio",
+        "target": 5,
+        "amount": 0,
+        "text": "Cycle 5 minutes",
+        "state": "incomplete"
+      },
+      "16/4/2024": {
+        "type": "cardio",
+        "target": 5,
+        "amount": 0,
+        "text": "Go for a run for 5 minutes",
+        "state": "incomplete"
+      },
+      "17/4/2024": {
+        "type": "core",
+        "target": 3,
+        "amount": 2,
+        "text": "Do 3 burpees",
+        "state": "incomplete"
+      }
+    },
+    "weekly": {
+      "16/2/2024": {
+        "type": "core",
+        "target": 21,
+        "amount": 0,
+        "text": "Do 21 backextentions",
+        "state": "incomplete"
+      },
+      "16/4/2024": {
+        "type": "core",
+        "target": 3,
+        "amount": 0,
+        "text": "Do 3 situps",
+        "state": "incomplete"
+      }
+    },
+    "monthly": {
+      "16/1/2024": {
+        "type": "lowerbody",
+        "target": 10,
+        "amount": 0,
+        "text": "Do the wallsit for 10 seconds",
+        "state": "incomplete"
+      },
+      "16/4/2024": {
+        "type": "cardio",
+        "target": 117,
+        "amount": 30,
+        "text": "Go for a walk for 117 minutes",
+        "state": "incomplete"
+      }
+    }
   }
 }
