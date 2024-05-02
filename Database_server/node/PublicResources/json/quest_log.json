@@ -43,6 +43,16 @@
         "amount": 22,
         "text": "Go for a walk for 22 minutes",
         "state": "incomplete"
+      },
+      "30/4/2024": {
+        "type": "cardio",
+        "target": 45,
+        "amount": 0,
+        "text": "Go for a run for 45 minutes",
+        "state": "incomplete"
+      },
+      "1/5/2024": {
+        "type": "upperbody"
       }
     },
     "weekly": {
@@ -63,7 +73,7 @@
       "28/4/2024": {
         "type": "cardio",
         "target": 180,
-        "amount": 45,
+        "amount": 15,
         "text": "Go for a walk for 180 minutes",
         "state": "incomplete"
       }
@@ -82,6 +92,9 @@
         "amount": 30,
         "text": "Go for a walk for 117 minutes",
         "state": "incomplete"
+      },
+      "1/5/2024": {
+        "type": "core"
       }
     }
   },
@@ -106,6 +119,11 @@
     "monthly": {}
   },
   "Kage": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "idkey1": {
     "daily": {},
     "weekly": {},
     "monthly": {}

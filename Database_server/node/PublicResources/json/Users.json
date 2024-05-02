@@ -20,6 +20,9 @@
     },
     "Kage": {
       "password": "123"
+    },
+    "idkey1": {
+      "password": "123"
     }
   }
 }
