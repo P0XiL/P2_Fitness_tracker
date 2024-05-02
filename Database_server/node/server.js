@@ -159,13 +159,42 @@ function createUser(req, res) {
                     errorResponse(res, 500, String(err));
                 } else {
                     console.log('User data appended to file');
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'text/plain');
-                    res.end('User data appended to file');
+                    fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+                        let obj_questLog = {}; // Initialize questLog object
+                        if (!err) {
+                            try {
+                                obj_questLog = JSON.parse(data);
+                            } catch (parseError) {
+                                console.error("Error parsing existing quests:", parseError);
+                            }
+                        } else {
+                            // Handle file not found or empty
+                            console.error("Error reading existing quest_log:", err);
+                        }
+                        obj_questLog[userData.username] = {
+                            daily: {},
+                            weekly: {},
+                            monthly: {}
+                        };
+                    
+                        fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
+                            if (err) {
+                                console.error(err);
+                                errorResponse(res, 500, String(err));
+                            } else {
+                                console.log('User added to quest_log');
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'text/plain');
+                                res.end('User added to quest_log');
+                            }
+                        });
+                        
+                    });
                 }
             });
             
         });
+    
     });
 }
 
@@ -248,22 +277,22 @@ function write_quest_json(req, res) {
                 // Handle file not found or empty
                 console.error("Error reading existing quest_log:", err);
             }
-
             const timespan = obj_quest.timespan;
             delete obj_quest.timespan;
-
-            obj_questLog["assholeblaster69"][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
-
+            const user = obj_quest.userID;
+            delete obj_quest.userID;
+            obj_questLog[user][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
+           
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
                 } else {
-                    console.log('User data appended to file');
+                    console.log('Added new ' + timespan + ' Quest');
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
-                    res.end('User data appended to file');
+                    res.end('Added new quest');
                 }
             });
         });
@@ -294,7 +323,7 @@ function change_amount(req, res) {
                 console.error("Error reading existing quest_log:", err);
             }
 
-            const quest = obj_questLog["assholeblaster69"][obj_amountInfo.timespan][obj_amountInfo.date];
+            const quest = obj_questLog[obj_amountInfo.user][obj_amountInfo.timespan][obj_amountInfo.date];
             if (obj_amountInfo["mode"] === "add") {
                 quest.amount += obj_amountInfo.amount;
             } else {
@@ -306,15 +335,15 @@ function change_amount(req, res) {
 
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
                 } else {
-                    console.log('User data appended to file');
+                    console.log('Amount Changed');
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
-                    res.end('User data appended to file');
+                    res.end('Amount Changed');
                 }
             });
         });
