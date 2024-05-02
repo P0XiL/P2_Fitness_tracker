@@ -82,8 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
             displayCreateErrorMessage("Username must be at least 1 character");
         }
         else {
-            clearCreateErrorMessage();
-
             // Create an object with username and password
             const userData = {
                 username: username,
@@ -211,7 +209,6 @@ function loginUser(loginData) {
         .then(response => {
             if (response.ok) {
                 console.log('User successfully logged in');
-                clearLoginErrorMessage();
 
                 storeLoginState(loginData.username);
 
@@ -237,8 +234,6 @@ function createUser(userData) {
         .then(response => {
             if (response.ok) {
                 console.log('Data successfully sent to server');
-
-                clearCreateErrorMessage();
 
                 storeLoginState(userData.username);
 
