@@ -4,7 +4,27 @@
     "weekly": {},
     "monthly": {}
   },
+  "3": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "4": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "21": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
   "22": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "23": {
     "daily": {},
     "weekly": {},
     "monthly": {}
@@ -60,6 +80,9 @@
         "state": "incomplete"
       },
       "1/5/2024": {
+        "type": "cardio"
+      },
+      "2/5/2024": {
         "type": "cardio"
       }
     },
@@ -127,6 +150,16 @@
     "monthly": {}
   },
   "Kage": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  " ": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "gggggg": {
     "daily": {},
     "weekly": {},
     "monthly": {}

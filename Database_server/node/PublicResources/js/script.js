@@ -169,6 +169,9 @@ function storeLoginState(username) {
 // Function to check and handle login state on page load
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
+    const sidenavigation = document.getElementById('side-nav');
+    const topnavigation = document.getElementById('top-nav');
+
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -180,12 +183,18 @@ function checkLoginState() {
             document.getElementById('usernameDisplay').textContent = "Hello, " + username;
             document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
 
-            // Update profile link to point to profile page
-            document.getElementById('profileLink').href = "#profilepage";
+            sidenavigation.style.display = 'block';
+            topnavigation.style.display = 'block';
+            document.getElementById('main').classList.add('active');
         } else {
             // Clear expired login state
             localStorage.removeItem('loginState');
+            loginPage.classList.add('active');
         }
+    } else {
+        sidenavigation.style.display = 'none';
+        topnavigation.style.display = 'none';
+        loginPage.classList.add('active');
     }
 }
 
@@ -206,8 +215,8 @@ function loginUser(loginData) {
                 storeLoginState(loginData.username);
 
                 // Redirect to home page
-                document.getElementById('main').classList.add('active');
-                document.getElementById('loginPage').classList.remove('active');
+                //document.getElementById('main').classList.add('active');
+                //document.getElementById('loginPage').classList.remove('active');
                 location.reload();
 
             } else {
