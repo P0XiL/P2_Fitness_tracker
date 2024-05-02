@@ -145,11 +145,15 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => {
             if (response.ok) {
                 console.log('User successfully logged in');
+                localStorage.setItem("username", loginData.username);
+                sessionStorage.setItem("username", loginData.username);
                 // Reset input fields
                 document.querySelector('input[name="login_username"]').value = '';
                 document.querySelector('input[name="login_password"]').value = '';
     
                 clearLoginErrorMessage();
+                individual_type();
+                
     
                 // Update UI to reflect logged-in status (e.g., display username in the top right)
                 // Redirect to home page or perform other actions as needed
@@ -184,9 +188,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     clearCreateErrorMessage();
 
                     // Redirect to home page
-                    document.getElementById('surveyForm').classList.add('active');
+                    document.getElementById('main').classList.add('active');
                     highlightNavLink('main');
-                    document.getElementById('createAccount').classList.remove('active');
+                    document.getElementById('loginPage').classList.remove('active');
                 } else {
                     response.text().then(errorMessage => {
                         displayCreateErrorMessage(errorMessage);
@@ -281,8 +285,8 @@ function displayUserInfo(userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
     const userInfoHTML = `
         <h2 style="text-align: center;">User info</h2>
-        <p>Height: ${userInfo[idkey].surveyData.height}</p>
-        <p>Weight: ${userInfo[idkey].surveyData.weight}</p>
+        <p>Height: ${userInfo.health.height}</p>
+        <p>Weight: ${userInfo.health.weight}</p>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 }
@@ -515,118 +519,4 @@ function update_users_info(newUserInfo) {
         });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    function handleSurveyFormSubmit() {
-        const form = document.getElementById('surveyForm');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Extracting specific parameters from form data
-            const formData = new FormData(form);
-            const surveyData = {};
-            for (const [key, value] of formData.entries()) {
-                if (surveyData[key]) {
-                    if (!Array.isArray(surveyData[key])) {
-                        surveyData[key] = [surveyData[key]];
-                    }
-                    surveyData[key].push(value);
-                } else {
-                    surveyData[key] = value;
-                }
-            }
-            console.log(surveyData);
-            sendSurveyData(surveyData);
 
-            document.getElementById('main').classList.add('active');
-            document.getElementById('surveyForm').classList.remove('active')
-        });
-    }
-
-    // Call the function to attach the event listener
-    handleSurveyFormSubmit();
-});
-
-function sendSurveyData(surveyData) {
-    fetch('http://127.0.0.1:3360/write_survey_data_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(surveyData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch POST');
-        }
-        return response.json();
-    })
-    .then(responseJson => {
-        console.log('Response from POST:', responseJson);
-        if (responseJson.success) {
-            console.log('Survey data sent successfully');
-        } else {
-            console.error('Failed to send survey data:', responseJson.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error sending survey data:', error);
-    });
-}
-
-let lastActiveDates = {};
-
-function updateStreak(userId) {
-  const currentDate = new Date().toDateString();
-  
-  if (!lastActiveDates[userId]) {
-    lastActiveDates[userId] = null;
-  }
-  
-  if (currentDate === lastActiveDates[userId]) {
-    return; // Already active today
-  }
-  
-  const lastDate = new Date();
-  lastDate.setDate(lastDate.getDate() - 1);
-  
-  const lastDateString = lastDate.toDateString();
-  
-  if (currentDate === lastDateString) {
-    if (lastActiveDates[userId] !== currentDate) {
-      lastActiveDates[userId] = currentDate;
-    }
-  } else {
-    lastActiveDates[userId] = currentDate;
-  }
-}
-
-function getStreakCount(userId) {
-  let streakCount = 0;
-  let currentDate = new Date().toDateString();
-  let lastDate = null;
-
-  if (lastActiveDates[userId]) {
-    lastDate = new Date(lastActiveDates[userId]);
-  }
-
-  if (lastDate) {
-    while (currentDate === lastDate.toDateString()) {
-      streakCount++;
-      lastDate.setDate(lastDate.getDate() - 1);
-      currentDate = lastDate.toDateString();
-    }
-  }
-
-  return streakCount;
-}
-
-updateStreak(userId); // Call this function whenever user is active
-const streakCount = getStreakCount(userId);
-console.log("Current streak for user", userId + ":", streakCount);
-
-// Display PNG image if streak is active
-if (streakCount > 0) {
-  const img = document.createElement("img");
-  img.src = "Database_server\node\PublicResources\image\Streak.png";
-  document.body.appendChild(img);
-}
