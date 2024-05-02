@@ -1,4 +1,39 @@
 {
+  "2": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "3": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "4": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "21": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "22": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "23": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "222": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
   "1235": {
     "daily": {
       "1/5/2024": {
@@ -93,6 +128,12 @@
         "amount": 213123,
         "text": "Go for a walk for 22 minutes",
         "state": "incomplete"
+      },
+      "1/5/2024": {
+        "type": "cardio"
+      },
+      "2/5/2024": {
+        "type": "cardio"
       }
     },
     "weekly": {
@@ -111,6 +152,9 @@
         "amount": 10,
         "text": "Do the plank for 10 seconds",
         "state": "incomplete"
+      },
+      "1/5/2024": {
+        "type": "cardio"
       }
     }
   },
