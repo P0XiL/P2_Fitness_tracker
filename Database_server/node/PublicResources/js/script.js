@@ -519,4 +519,92 @@ function update_users_info(newUserInfo) {
         });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    function handleSurveyFormSubmit() {
+        const form = document.getElementById('surveyForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Extracting specific parameters from form data
+            const formData = new FormData(form);
+            const surveyData = {};
+            for (const [key, value] of formData.entries()) {
+                if (surveyData[key]) {
+                    if (!Array.isArray(surveyData[key])) {
+                        surveyData[key] = [surveyData[key]];
+                    }
+                    surveyData[key].push(value);
+                } else {
+                    surveyData[key] = value;
+                }
+            }
+            console.log(surveyData);
+            sendSurveyData(surveyData);
 
+            document.getElementById('main').classList.add('active');
+            document.getElementById('surveyForm').classList.remove('active')
+        });
+    }
+
+    // Call the function to attach the event listener
+    handleSurveyFormSubmit();
+});
+
+function sendSurveyData(surveyData) {
+    fetch('http://127.0.0.1:3360/write_survey_data_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(surveyData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch POST');
+        }
+        return response.json();
+    })
+    .then(responseJson => {
+        console.log('Response from POST:', responseJson);
+        if (responseJson.success) {
+            console.log('Survey data sent successfully');
+        } else {
+            console.error('Failed to send survey data:', responseJson.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error sending survey data:', error);
+    });
+}
+
+let lastActiveDates = {};
+
+function updateStreak(userId) {
+  const currentDate = new Date().toDateString();
+  
+  if (!lastActiveDates[userId]) {
+    lastActiveDates[userId] = null;
+  }
+  
+  if (currentDate === lastActiveDates[userId]) {
+    return; // Already active today
+  }
+  
+  const lastDate = new Date();
+  lastDate.setDate(lastDate.getDate() - 1);
+  
+  const lastDateString = lastDate.toDateString();
+  
+  if (currentDate === lastDateString) {
+    if (lastActiveDates[userId] !== currentDate) {
+      lastActiveDates[userId] = currentDate;
+    }
+  } else {
+    lastActiveDates[userId] = currentDate;
+  }
+}
+
+// Example of using the function
+const userId = "exampleUserId";
+updateStreak(userId); // Call this function whenever user is active
+console.log("Current streak for user", userId + ":", streakCount);
