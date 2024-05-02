@@ -1,39 +1,12 @@
 {
   "obj_users": {
-    "42": {
-      "password": "42"
-    },
-    "51": {
-      "password": "51"
-    },
-    "69": {
-      "password": "69"
-    },
-    "88": {
-      "password": "88"
-    },
     "123": {
       "password": "123"
     },
-    "312": {
-      "password": "2"
+    "321": {
+      "password": "321"
     },
-    "412": {
-      "password": "1"
-    },
-    "431": {
-      "password": "4321"
-    },
-    "1234": {
-      "password": "1"
-    },
-    "321321": {
-      "password": "321321"
-    },
-    "Username1": {
-      "password": "123"
-    },
-    "Username2": {
+    "1235": {
       "password": "1234"
     },
     "poggo2": {
@@ -44,9 +17,6 @@
     },
     "sejt": {
       "password": "2"
-    },
-    "Tobias": {
-      "password": "123"
     },
     "Haha": {
       "password": "12"
@@ -99,7 +69,34 @@
     "Dingo": {
       "password": "123"
     },
-    "Dingo3": {
+    "bb": {
+      "password": "bb"
+    },
+    "bbb": {
+      "password": "bbb"
+    },
+    "bg": {
+      "password": "bg"
+    },
+    "aa": {
+      "password": "aa"
+    },
+    "zz": {
+      "password": "zz"
+    },
+    "gg": {
+      "password": "gg"
+    },
+    "pp": {
+      "password": "pp"
+    },
+    "vvv": {
+      "password": "vvv"
+    },
+    "jk": {
+      "password": "jk"
+    },
+    "Tobias": {
       "password": "123"
     }
   }
