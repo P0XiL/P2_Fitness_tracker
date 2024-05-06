@@ -1,5 +1,13 @@
+const serverPath = 'http://127.0.0.1:3360/';
+
+
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
+    // Call checkLoginState() on page load
+    //window.addEventListener('load', checkLoginState);
+    checkLoginState();
+    setupTiersForQuestPage(localStorage.getItem('username'));
+
     // Assigns all tabs to an array called links
     const links = document.querySelectorAll('nav a');
     // Get all navigation links
@@ -59,9 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('input[name="login_username"]').value = '';
         document.querySelector('input[name="login_password"]').value = '';
     });
-
-
-
 
     // Add event listener to the submit button
     document.getElementById('submitBtn').addEventListener('click', function (e) {
@@ -140,9 +145,6 @@ document.addEventListener('DOMContentLoaded', function () {
         loginPage.classList.remove('active');
         createAccountPage.classList.add('active');
     });
-
-    // Call checkLoginState() on page load
-    window.addEventListener('load', checkLoginState);
 });
 
 //Function which highlights the link of the currently selected tab
@@ -152,9 +154,6 @@ function highlightNavLink(pageId) {
     navLinks.forEach(function (link) {
         link.classList.remove('active');
     });
-    if (pageId == "loginPage") {
-        return;
-    }
     // Add 'active' class to the corresponding navigation link
     const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
     activeLink.classList.add('active');
@@ -174,8 +173,9 @@ function storeLoginState(username) {
 // Function to check and handle login state on page load
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
-    const username = localStorage.getItem('username');
-    console.log(username);
+    const sidenavigation = document.getElementById('side-nav');
+    const topnavigation = document.getElementById('top-nav');
+
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -187,19 +187,24 @@ function checkLoginState() {
             document.getElementById('usernameDisplay').textContent = "Hello, " + username;
             document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
 
-
-            // Update profile link to point to profile page
-            document.getElementById('profileLink').href = "#profilepage";
+            sidenavigation.style.display = 'block';
+            topnavigation.style.display = 'block';
+            document.getElementById('main').classList.add('active');
         } else {
             // Clear expired login state
             localStorage.removeItem('loginState');
+            loginPage.classList.add('active');
         }
+    } else {
+        sidenavigation.style.display = 'none';
+        topnavigation.style.display = 'none';
+        loginPage.classList.add('active');
     }
 }
 
 
 function loginUser(loginData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node2/login', {
+    fetch(serverPath+'login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -209,21 +214,9 @@ function loginUser(loginData) {
         .then(response => {
             if (response.ok) {
                 console.log('User successfully logged in');
-                // Reset input fields
-                document.querySelector('input[name="login_username"]').value = '';
-                document.querySelector('input[name="login_password"]').value = '';
-
                 clearLoginErrorMessage();
 
                 storeLoginState(loginData.username);
-
-                // Redirect to home page
-                document.getElementById('main').classList.add('active');
-                //highlightNavLink('main');
-                document.getElementById('loginPage').classList.remove('active');
-
-                // Update UI to reflect logged-in status (e.g., display username in the top right)
-                // Redirect to home page or perform other actions as needed
 
                 location.reload();
 
@@ -232,14 +225,12 @@ function loginUser(loginData) {
                     displayLoginErrorMessage(errorMessage);
                 });
             }
-
-            //highlightNavLink(targetId);
         });
 }
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node2/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch(serverPath+'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -249,17 +240,13 @@ function createUser(userData) {
         .then(response => {
             if (response.ok) {
                 console.log('Data successfully sent to server');
-                // Reset input fields
-                document.querySelector('input[name="create_username"]').value = '';
-                document.querySelector('input[name="create_password"]').value = '';
-                document.querySelector('input[name="create_confirm_password"]').value = '';
 
                 clearCreateErrorMessage();
 
                 highlightNavLink('main');
 
                 // Redirect to home page
-                document.getElementById('surveyForm').classList.add('active');
+                document.getElementById('main').classList.add('active');
                 document.getElementById('createAccount').classList.remove('active');
 
                 storeLoginState(userData.username);
@@ -303,7 +290,7 @@ function clearLoginErrorMessage() {
 async function fetchUserData(username) {
     try {
         // Fetch the JSON data
-        const response = await fetch('PublicResources/json/users_info.json');
+        const response = await fetch(serverPath+'json/users_info.json');
         
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -795,7 +782,7 @@ function loadFriends() {
 
 // Function to update user info
 function update_users_info(newUserInfo) {
-    fetch('http://127.0.0.1:3360/write_user_info_json', {
+    fetch(serverPath+'write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -922,59 +909,46 @@ function getSubTierRange(rank) {
 
 function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
-    const confArray = userInfo.preset.conf || []; // Ensure confArray is an array
-    const countMap = {};
-
-    // Filter out empty strings or undefined values (if any)
-    const filteredArray = confArray.filter(element => element !== '' && element !== undefined);
-
-    // Count occurrences of each element in the filtered array
-    filteredArray.forEach(element => {
-        if (countMap[element]) {
-            countMap[element]++;
-        } else {
-            countMap[element] = 1;
-        }
-    });
+    const confObject = userInfo.preset.conf || {}; // Ensure confObject is an object
 
     // Generate sliders for exercise preferences
     const userInfoDiv = document.getElementById('userPreferences');
     let slidersHTML = '';
 
-    // Check if countMap for each exercise is greater than 0, then include the slider
-    if (countMap['push-ups'] > 0 || preset == 'custom') {
+    // Check if each exercise exists in the confObject, then include the slider
+    if (confObject['pushups'] !== undefined || preset === 'custom') {
         slidersHTML += `
             <div>
                 <label for="pushups">Pushups</label>
-                <input type="range" id="pushups" name="pushups" min="1" max="10" value="${countMap['push-ups'] || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
-                <span id="pushupsCounter">${countMap['push-ups'] || 1}</span>
+                <input type="range" id="pushups" name="pushups" min="0" max="10" value="${confObject['pushups'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
+                <span id="pushupsCounter">${confObject['pushups'] || 0}</span>
             </div>
         `;
     }
-    if (countMap.run > 0 || preset == 'custom') {
+    if (confObject['run'] !== undefined || preset === 'custom') {
         slidersHTML += `
             <div>
                 <label for="run">Run</label>
-                <input type="range" id="run" name="run" min="1" max="10" value="${countMap.run || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
-                <span id="runCounter">${countMap.run || 1}</span>
+                <input type="range" id="run" name="run" min="0" max="10" value="${confObject['run'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
+                <span id="runCounter">${confObject['run'] || 0}</span>
             </div>
         `;
     }
-    if (countMap.walk > 0 || preset == 'custom') {
+    if (confObject['walk'] !== undefined || preset === 'custom') {
         slidersHTML += `
             <div>
                 <label for="walk">Walk</label>
-                <input type="range" id="walk" name="walk" min="1" max="10" value="${countMap.walk || 1}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
-                <span id="walkCounter">${countMap.walk || 1}</span>
+                <input type="range" id="walk" name="walk" min="0" max="10" value="${confObject['walk'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
+                <span id="walkCounter">${confObject['walk'] || 0}</span>
             </div>
         `;
     }
-    if (countMap.crunches >= 0 || preset == 'custom') { // Updated condition for crunches
+    if (confObject['crunches'] !== undefined || preset === 'custom') {
         slidersHTML += `
             <div>
                 <label for="crunches">Crunches</label>
-                <input type="range" id="crunches" name="crunches" min="1" max="10" value="${countMap.crunches || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('crunches', this.value)">
-                <span id="crunchesCounter">${countMap.crunches || 1}</span>
+                <input type="range" id="crunches" name="crunches" min="0" max="10" value="${confObject['crunches'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('crunches', this.value)">
+                <span id="crunchesCounter">${confObject['crunches'] || 0}</span>
             </div>
         `;
     }
@@ -996,12 +970,13 @@ function displayUserPreferences(username, userInfo) {
 
     // Update counter values for custom preset
     if (preset === 'custom') {
-        updateCounter('pushups', countMap['push-ups'] || 1);
-        updateCounter('run', countMap.run || 1);
-        updateCounter('walk', countMap.walk || 1);
-        updateCounter('crunches', countMap.crunches || 0); // Set crunches count to 0 if not found
+        updateCounter('pushups', confObject['pushups'] || 0);
+        updateCounter('run', confObject['run'] || 0);
+        updateCounter('walk', confObject['walk'] || 0);
+        updateCounter('crunches', confObject['crunches'] || 0);
     }
 }
+
 
 function updateCounter(exercise, value) {
     document.getElementById(`${exercise}Counter`).textContent = value;
@@ -1066,55 +1041,36 @@ async function updatePreset(username, preset) {
             const existingUserInfo = userData;
 
             let conf = [];
-            let run = 0;
-            let walk = 0;
-            let crunches = 0;
-            let pushUps = 0;
-
             switch (preset) {
                 case 'run':
-                    run = 10;
-                    walk = 4;
-                    crunches = 3;
-                    conf = [
-                        ...Array(Number(run)).fill('run'),
-                        ...Array(Number(walk)).fill('walk'),
-                        ...Array(Number(crunches)).fill('crunches')
-                    ];
+                    conf = {
+                        run: 10,
+                        walk: 4,
+                        crunches: 3
+                    }
                     break;
                 case 'walk':
-                    run = 4;
-                    walk = 10;
-                    crunches = 3;
-                    conf = [
-                        ...Array(Number(run)).fill('run'),
-                        ...Array(Number(walk)).fill('walk'),
-                        ...Array(Number(crunches)).fill('crunches')
-                    ];
+                    conf = {
+                        run: 4,
+                        walk: 10,
+                        crunches: 3
+                    }
                     break;
                 case 'strength':
-                    run = 2;
-                    walk = 2;
-                    crunches = 6;
-                    pushUps = 4;
-                    conf = [
-                        ...Array(Number(run)).fill('run'),
-                        ...Array(Number(walk)).fill('walk'),
-                        ...Array(Number(crunches)).fill('crunches'),
-                        ...Array(Number(pushUps)).fill('push-ups')
-                    ];
+                    conf = {
+                        run: 2,
+                        walk: 2,
+                        crunches: 6,
+                        pushUps: 4
+                    }
                     break;
                 case 'custom':
-                    run = 1;
-                    walk = 1;
-                    crunches = 1;
-                    pushUps = 1;
-                    conf = [
-                        ...Array(Number(run)).fill('run'),
-                        ...Array(Number(walk)).fill('walk'),
-                        ...Array(Number(crunches)).fill('crunches'),
-                        ...Array(Number(pushUps)).fill('push-ups')
-                    ];
+                    conf = {
+                        run: 1,
+                        walk: 1,
+                        crunches: 1,
+                        pushUps: 1
+                    }
                     break;
                 default:
                     console.error(`Invalid preset: ${preset}`);
@@ -1133,6 +1089,7 @@ async function updatePreset(username, preset) {
                     conf: conf
                 }
             };
+            console.log(newUserInfo.preset);
 
             // Update the user info on the server
             update_users_info(newUserInfo);

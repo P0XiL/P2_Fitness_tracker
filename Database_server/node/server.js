@@ -314,9 +314,43 @@ function addUserToUsers_info(username) {
                     height: 0,
                     weight: 0
                 },
-                mastery: {},
-                hiddenRank: {},
-                tier: {},
+                mastery: {
+                    run: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    walk: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    crunches: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    pushups: {
+                      rank: 1,
+                      elo: 0
+                    }
+                  },
+                hiddenRank: {
+                    daily: 0,
+                    weekly: 0,
+                    monthly: 0
+                },
+                tier: {
+                    daily: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    weekly: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    monthly: {
+                      rank: 1,
+                      elo: 0
+                    }
+                  },
                 preset: {}
             };
 
@@ -426,7 +460,7 @@ function write_quest_json(req, res) {
             obj_questLog[user][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
            
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
@@ -477,7 +511,7 @@ function change_amount(req, res) {
 
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog), (err) => {
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));

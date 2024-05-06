@@ -1,4 +1,39 @@
 {
+  "2": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "3": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "4": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "21": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "22": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "23": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "222": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
   "1235": {
     "daily": {
       "1/5/2024": {
@@ -19,7 +54,7 @@
       "2/5/2024": {
         "type": "lowerbody",
         "target": 54,
-        "amount": 54,
+        "amount": 44,
         "text": "Do 54 squats",
         "state": "incomplete"
       }
@@ -27,6 +62,13 @@
     "monthly": {
       "1/5/2024": {
         "type": "core"
+      },
+      "2/5/2024": {
+        "type": "core",
+        "target": 175,
+        "amount": 132,
+        "text": "Do 175 situps",
+        "state": "incomplete"
       }
     }
   },
@@ -93,6 +135,9 @@
         "amount": 213123,
         "text": "Go for a walk for 22 minutes",
         "state": "incomplete"
+      },
+      "2/5/2024": {
+        "type": "cardio"
       }
     },
     "weekly": {
@@ -128,6 +173,38 @@
     "monthly": {
       "1/5/2024": {
         "type": "core"
+      }
+    }
+  },
+  "champ": {
+    "daily": {
+      "2/5/2024": {
+        "type": "upperbody",
+        "target": 10,
+        "amount": 0,
+        "text": "Do arm circles for 10 seconds",
+        "state": "incomplete",
+        "exercise": "Pog"
+      }
+    },
+    "weekly": {
+      "2/5/2024": {
+        "type": "core",
+        "target": 54,
+        "amount": 0,
+        "text": "Do 54 burpees",
+        "state": "incomplete",
+        "exercise": "Pog"
+      }
+    },
+    "monthly": {
+      "2/5/2024": {
+        "type": "core",
+        "target": 351,
+        "amount": 0,
+        "text": "Do 351 backextentions",
+        "state": "incomplete",
+        "exercise": "backextentions"
       }
     }
   }
