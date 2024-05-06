@@ -17,6 +17,7 @@
             <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
             <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
             <li><a href="#profilepage" id="profile-link">Profile</a></li>
+            <li><a href="#contacts"><img src="" class="nav-img">Contacts</a></li><br>
         </ul>
     </nav>
 
@@ -78,7 +79,22 @@
         </div>
     </div>
 
+<!-- Contact List -->
+<div id="contacts" class="page">
+    <h2>Contacts</h2>
+    
+    <!-- Form to add a friend -->
+    <form id="friendForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="text" id="age" placeholder="Age" required>
+        <button type="submit">Add Friend</button>
+    </form>
 
+    <!-- Display list of friends -->
+    <ul id="friendList">
+        <!-- Friends will be added here -->
+    </ul>
+</div>
 
     <div id="friends" class="page center">
         <h2>Friends</h2>
