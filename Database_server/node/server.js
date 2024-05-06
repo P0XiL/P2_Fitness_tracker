@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3360; 
+const port = 3362; 
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -21,52 +21,7 @@ function startServer() {
     });
 }
 
-function processReq(req, res) {
-    const baseURL = 'http://' + req.headers.host + '/';
-    const url = new URL(req.url, baseURL);
-    const searchParams = new URLSearchParams(url.search);
-    const queryPath = decodeURIComponent(url.pathname);
 
-    switch (req.method) {
-        case "GET":
-            // Handle GET requests
-            switch (queryPath) {
-                case "/":
-                    fileResponse(res, "html/Letsgo.html");
-                    break;
-                // Add more cases for different routes if needed
-                default:
-                    fileResponse(res, req.url);
-                    break;
-            }
-            break;
-        case "POST":
-            // Handle POST requests
-            // Add your POST request handling logic here
-            if (queryPath === "/createUser") {
-                // Handle the POST request to write user data to a file
-                createUser(req, res);
-            } 
-            else if (queryPath === "/login") {
-                loginUser(req, res);
-            }
-            else if (queryPath === "/write_quest_json") {
-                write_quest_json(req, res);
-            } else if (queryPath === "/change_amount") { 
-                // Add new route for changing quest amount
-                change_amount(req, res);
-            } else if (queryPath === "/write_user_info_json") { 
-                // Add new route for writing user info
-                write_user_info_json(req, res);
-            } else {
-                errorResponse(res, 404, "not found")
-            }
-            break;
-        default:
-            errorResponse(res, 405, "Method Not Allowed");
-            break;
-    }
-}
 
 // Function to handle user login
 function loginUser(req, res) {
@@ -119,7 +74,6 @@ function processReq(req, res) {
                 case "/":
                     fileResponse(res, "html/Letsgo.html");
                     break;
-                // Add more cases for different routes if needed
                 case "/contacts":
                     readContacts((err, contacts) => {
                         if (err) {
@@ -138,26 +92,39 @@ function processReq(req, res) {
             break;
         case "POST":
             // Handle POST requests
-            switch (queryPath) {
-                case "/createUser":
-                    createUser(req, res);
-                    break;
-                case "/login":
-                    loginUser(req, res);
-                    break;
-                case "/write_quest_json":
-                    write_quest_json(req, res);
-                    break;
-                case "/change_amount":
-                    change_amount(req, res);
-                    break;
-                case "/write_user_info_json":
-                    write_user_info_json(req, res);
-                    break;
-                case "/saveContacts":
-                    saveContacts(req, res);
-                    break;
-                    case "/contacts/add":
+            // Add your POST request handling logic here
+            if (queryPath === "/createUser") {
+                // Handle the POST request to write user data to a file
+                createUser(req, res);
+            } 
+            else if (queryPath === "/login") {
+                loginUser(req, res);
+            }
+            else if (queryPath === "/write_quest_json") {
+                write_quest_json(req, res);
+            } else if (queryPath === "/change_amount") { 
+                // Add new route for changing quest amount
+                change_amount(req, res);
+            } else if (queryPath === "/write_user_info_json") { 
+                // Add new route for writing user info
+                write_user_info_json(req, res);
+            } else if (queryPath === "/saveContacts") {
+                // Handle the POST request to save contacts to a file
+                saveContacts(req, res);
+            } else if (queryPath === "/contacts/add") {
+               ContactAdd(req, res); 
+            } else {
+                errorResponse(res, 404, "not found")
+            }
+            break;
+        default:
+            errorResponse(res, 405, "Method Not Allowed");
+            break;
+    }
+}
+
+function ContactAdd(req, res){
+    // Handle the POST request to add a new contact
     let body = '';
     req.on('data', (chunk) => {
         body += chunk.toString();
@@ -185,18 +152,8 @@ function processReq(req, res) {
             errorResponse(res, 400, 'Invalid JSON format');
         }
     });
-    break;
-
-                    
-                default:
-                    errorResponse(res, 404, "not found")
-            }
-            break;
-        default:
-            errorResponse(res, 405, "Method Not Allowed");
-            break;
-    }
 }
+
 
 
 // Add this function to handle writing contacts to the contactList.json file

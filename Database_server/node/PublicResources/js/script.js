@@ -199,7 +199,7 @@ function checkLoginState() {
 
 
 function loginUser(loginData) {
-    fetch('http://127.0.0.1:3360/login', {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node2/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -239,7 +239,7 @@ function loginUser(loginData) {
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch('http://127.0.0.1:3360/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node2/createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -303,7 +303,7 @@ function clearLoginErrorMessage() {
 async function fetchUserData(username) {
     try {
         // Fetch the JSON data
-        const response = await fetch('http://127.0.0.1:3360/json/users_info.json');
+        const response = await fetch('PublicResources/json/users_info.json');
         
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
@@ -671,6 +671,126 @@ async function postUserInfo(username) {
         console.error('Error fetching user data:', error);
     }
 }
+
+
+
+function saveFriends() {
+    const friendItems = document.querySelectorAll("#friendList li");
+    const friends = [];
+    let errorEncountered = false; // Track if an error is encountered
+    friendItems.forEach(item => {
+        // Splitting by " - " to separate name and age
+        const [name, ageText] = item.textContent.split(" - ");
+        
+        // Extracting age value and removing "Delete" text if present
+        let age = parseInt(ageText.replace("Delete", "").trim());
+
+        // Validate if age is a valid number
+        if (isNaN(age) || age < 1 || age > 110) {
+            console.error("Invalid age found:", age);
+            // Optionally, display an error message on the screen
+            alert("Invalid age: Age must be a number between 1 and 110.");
+            errorEncountered = true; // Set error flag
+            
+            // Remove the corresponding list item from the DOM
+            item.remove();
+            
+            return; // Skip adding this friend if age is invalid
+        }
+
+        // Construct friend object and add to the friends array
+        friends.push({ name, age });
+    });
+
+    // If an error was encountered, do not proceed with saving friends
+    if (errorEncountered) {
+        console.error('Error encountered. Friends not saved.');
+        return;
+    }
+
+    // POST request to save friends to the server
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node2/saveContacts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(friends)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to save friends');
+        }
+        return response.json(); // Parse response body as JSON
+    })
+    .then(data => {
+        console.log('Friends saved successfully:', data);
+        // Optionally, perform any additional actions after successful save
+        // Update the contact list displayed on the website
+        loadFriends(); // Assuming you have a function to load and display friends
+        loadFriendsFromServer();
+    })
+    .catch(error => {
+        console.error('Error saving friends:', error);
+        // Optionally, notify the user about the error
+    });
+}
+
+function loadFriendsFromServer() {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node2/saveContacts')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch contact list');
+            }
+            return response.json(); // Parse response body as JSON
+        })
+        .then(data => {
+            data.forEach(friend => {
+                addFriend(friend.name, friend.age);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading friends:', error);
+        });
+}
+
+function addFriend(name, age) {
+    const friend = { name, age };
+    const listItem = document.createElement("li");
+    listItem.textContent = `${name} - ${age}`;
+    
+    // Add delete button to the list item
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", function() {
+        listItem.remove();
+        saveFriends();
+    });
+    listItem.appendChild(deleteButton);
+
+    document.getElementById("friendList").appendChild(listItem);
+}
+
+function loadFriends() {
+    fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node2/json/contactList.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch contact list');
+            }
+            return response.json(); // Parse response body as JSON
+        })
+        .then(data => {
+            // Clear existing list items
+            document.getElementById("friendList").innerHTML = "";
+            data.forEach(friend => {
+                addFriend(friend.name, friend.age);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading friends:', error);
+        });
+}
+
+
 
 
 // Function to update user info
