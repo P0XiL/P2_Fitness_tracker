@@ -241,7 +241,7 @@ function open_modal_for_quest(questTimespan, type, user) {
                           }
                           return null; // Exercise not found in any category
                     }
-
+                    
                     //Gets a quest out of quest_template
                     //TODO, Uncomment when tobi fix
                     //let obj_Quest = choose_quest(data.quest_templates[get_overkey(type)][type]);
