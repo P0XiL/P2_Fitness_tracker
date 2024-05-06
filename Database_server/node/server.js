@@ -528,8 +528,8 @@ function write_survey_data_json(req, res) {
                 existingData.users_info[surveyData.userid].health = {
                     name: surveyData.name,
                     age: surveyData.age,
-                    height: surveyData.Height,
-                    weight: surveyData.Weight,
+                    height: surveyData.height,
+                    weight: surveyData.weight,
                     gender: surveyData.gender,
                     fitnessGoal: surveyData.fitnessGoal,
                     activityLevel: surveyData.activityLevel

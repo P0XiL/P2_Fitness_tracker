@@ -531,5 +531,137 @@
         "type": "core"
       }
     }
+  },
+  "lolol": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "dasboot": {
+    "daily": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "mokke": {
+    "daily": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    }
+  },
+  "can": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "ælæ": {
+    "daily": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "ccx": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "gggg": {
+    "daily": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "mil": {
+    "daily": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "nan": {
+    "daily": {
+      "6/5/2024": {
+        "type": "core",
+        "target": 27,
+        "amount": 67,
+        "text": "Do 27 backextentions",
+        "state": "incomplete",
+        "exercise": "backextentions"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio",
+        "target": 90,
+        "amount": 90,
+        "text": "Cycle 90 minutes",
+        "state": "incomplete",
+        "exercise": "cycling"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio",
+        "target": 5,
+        "amount": 5,
+        "text": "Go for a walk for 5 minutes",
+        "state": "incomplete",
+        "exercise": "walk"
+      }
+    }
   }
 }

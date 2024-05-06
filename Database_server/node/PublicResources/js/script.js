@@ -1013,13 +1013,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             console.log('Survey data:', surveyData);
-            sendSurveyData(surveyData, handleSurveyResponse);
+            sendSurveyData(surveyData);
 
             // Set a flag in local storage indicating that the user has completed the survey
             localStorage.setItem('surveyCompleted', 'true');
 
+            location.reload();
+
             document.getElementById('main').classList.add('active');
             document.getElementById('surveyForm').classList.remove('active');
+
         });
     }
 
@@ -1052,17 +1055,6 @@ function sendSurveyData(surveyData) {
     .catch(error => {
         console.error('Error sending survey data:', error);
     });
-}
-
-function handleSurveyResponse(response) {
-    if (response.success) {
-        // Reload the page or perform any other client-side action
-        window.location.reload();
-    } else {
-        // Handle error response from the server
-        console.error('Error:', response.message);
-        // Optionally, show an error message to the user
-    }
 }
 
 let lastActiveDates = {};
@@ -1122,7 +1114,7 @@ updateStreak(); // Call this function whenever user is active
 
 
 // Display PNG image if streak is active
-if (getStreakCount > 0) {
+if (getStreakCount < 1) {
   const img = document.createElement("img");
   img.src = "Database_server\node\PublicResources\image\Streak.png";
   document.body.appendChild(img);
