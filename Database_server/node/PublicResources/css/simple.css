@@ -109,22 +109,6 @@ footer {grid-area: f;}
 #side-nav a.active {
   color: #009FFD;
 }
-/*
-#sidenav {
-  grid-area: n;
-  background-color: red;
-  /* Flexbox styles for vertical centering */ /*
-  display: flex;
-  align-items: center;
-  font-size: 3em;
-}
-a   {
-  color: white;
-  font-family: monospace;
-  text-decoration: none;
-}
-*/
-
 
 /* Styles for the modal */
 .modal {
@@ -289,17 +273,15 @@ meter {
 
 .profileHeader-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  align-items: center; /* Align items vertically in the center */
+  justify-content: space-between; /* Spreads child elements horizontally */
   margin-bottom: 20px; /* Add some margin to separate from the content below */
 }
 .profileHeader-container h2 {
   margin: 0 auto; /* Center the header horizontally */
-}
+  padding-left: 97px; /* Add padding to the right side */
 
-#logout {
-  text-align: right;
-  margin-right: 20px;
+
 }
 
 #logoutBtn {
@@ -316,4 +298,5 @@ meter {
 #logoutBtn:hover {
   background-color: #45a049;
 }
+
 
