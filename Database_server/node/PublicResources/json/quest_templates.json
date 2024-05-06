@@ -44,6 +44,10 @@
 			"burpees": {
 				"base_target": 3,
 				"quest_text": "Do x burpees"
+			},
+			"crunches": {
+				"base_target": 3,
+				"quest_text": "Do x crunches"
 			}
 		},
 		"upperbody": {

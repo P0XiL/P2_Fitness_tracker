@@ -211,12 +211,20 @@
   "pogchamo": {
     "daily": {
       "6/5/2024": {
-        "type": "crunches"
+        "type": "crunches",
+        "target": 3,
+        "amount": 0,
+        "text": "Do 3 crunches",
+        "state": "incomplete"
       }
     },
     "weekly": {
       "6/5/2024": {
-        "type": "run"
+        "type": "run",
+        "target": 90,
+        "amount": 0,
+        "text": "Go for a run for 90 minutes",
+        "state": "incomplete"
       }
     },
     "monthly": {
