@@ -10,26 +10,22 @@
 <body>
     <header>Lets GO</header>
     <!-- Navigation links -->
-    <nav id="side-nav">
+    <nav id="side-nav" style="display: none;">
+        <ul id="side-navigation-links">
         <ul><br>
             <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
             <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
             <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
-            <li><a href="#page4">Exercise</a></li>
             <li><a href="#profilepage" id="profile-link">Profile</a></li>
-            <li><a href="#contacts"><img src="" class="nav-img">Contacts</a></li><br>
         </ul>
     </nav>
 
-    <nav id="top-nav">
-        <ul>
-            <li><a href="#main"><img src="image/home.png" alt="Home" class="top-img"></a></li>
+    <nav id="top-nav" style="display: none;">
+        <ul id="top-navigation-links">
+            <li><a href="#main"><img src="image/home.png" alt="Home" class="top-right-img"></a></li>
+            <li><a href="#profilepage"><img src="image/profile_image.png" alt="Profile" class="top-left-img"></a></li>
         </ul>
-        <ul>
-            <li><a href="#loginpage"><img src="image/profile_image.png" alt="Profile" class="top-img">
-                    <br><div class="login"></div></a></li>
-        </ul>
-    </nav>
+    </nav>    
 
     <!-- A popup when choosing new quest-->
     <div id="myModal" class="modal">
@@ -40,7 +36,7 @@
             <button class="difficulty-button" data-difficulty="3">Hard</button>
             <button id="close">Close</button>
         </div>
-      </div>
+    </div>
 
     <div id="inputModal" class="modal">
         <div class="modal-content">
@@ -52,91 +48,62 @@
             <button id="close_input">Close</button>
         </div>
     </div>
-      
+
     <!-- Page sections -->
-    <div id="main" class="page active">
+    <div id="main" class="page">
+        <div id="usernameDisplay" class="username-display"></div>
         <h2 class="heading">Quests</h2>
         <div class="questpage">
+            <div id="dailyQuestTier" class="tiers"></div>
+            <div id="weeklyQuestTier" class="tiers"></div>
+            <div id="monthlyQuestTier" class="tiers"></div>
+
             <div id="quest1" class="quest">
                 <h2>Daily</h2>
-                <meter id="meter1" value="0" min="0" max="1"></meter> 
+                <meter id="meter1" value="0" min="0" max="1"></meter>
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
                 <h2>Weekly</h2>
-                <meter id="meter2" value="0" min="0" max="1"></meter> 
+                <meter id="meter2" value="0" min="0" max="1"></meter>
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
                 <h2>Monthly</h2>
-                <meter id="meter3" value="0" min="0" max="1"></meter> 
+                <meter id="meter3" value="0" min="0" max="1"></meter>
                 <p id="quest3_type"></p>
             </div>
         </div>
     </div>
-    
-<!-- Contact List -->
-<div id="contacts" class="page">
-    <h2>Contactsss</h2>
-    
-    <!-- Form to add a friend -->
-    <form id="friendForm">
-        <input type="text" id="name" placeholder="Name" required>
-        <input type="text" id="age" placeholder="Age" required>
-        <button type="submit">Add Friend</button>
-    </form>
-
-    <!-- Display list of friends -->
-    <ul id="friendList">
-        <!-- Friends will be added here -->
-    </ul>
-</div>
 
 
-        <!-- End of friend list section -->
 
-
-    <div id="friends" class="page">
+    <div id="friends" class="page center">
         <h2>Friends</h2>
-        
         <p>The friends feature goes here</p>
-    
-        
-            
-                <div class="dropdown-container">
-                    <!-- Dropdowns and other content -->
-                </div>
-            
-                <div class="dropdown-container">
-                    <!-- Dropdowns and other content -->
-                </div>
-            
-                <p id="textfriend"> </p>
-            
-                <div>
-                    <h1>Graph with friends</h1>
-                    <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
-                </div>
-            </div>
-            
-            
-            </div>
+
+        <a href="#" id="toggleFriendPageLink" class="dropbtn">Show friends</a>
+
+    </div>
+
+    <div id="FriendsPlot" class="page center">
+
+        <h2>Friends</h2>
 
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
                 <div id="myDropdown2" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend('run', null)">Run</a>
-                    <a href="#" onclick="update_graph_friend('cycling', null)">Cycling</a>
-                    <a href="#" onclick="update_graph_friend('pushups', null)">Pushups</a>
-                    <a href="#" onclick="update_graph_friend('walk', null)">Walk</a>
+                    <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'lowerbody', null)">Lowerbody</a>
                 </div>
             </div>
         </div>
 
-    
+
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
@@ -152,28 +119,34 @@
         <p id="textfriend"> </p>
 
         <div>
-            <h1>Graph with friends</h1>
+            <h1>Graph with friends </h1>
             <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
         </div>
     </div>
 
-    <div id="stats" class="page">
+    <div id="stats" class="page center">
         <h2>Stats</h2>
-        <p id="text"> </p>
+        <a href="#" id="toggleStatsPageLink" class="dropbtn">User plot</a>
+        <p id="statsText"></p>
+    </div>
+
+
+    <div id="userstats" class="page center">
+        <h2>Stats Exercise</h2>
 
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close()" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" onclick="update_graph('run', null)">Run</a>
-                    <a href="#" onclick="update_graph('cycling', null)">Cycling</a>
-                    <a href="#" onclick="update_graph('pushups', null)">Pushups</a>
-                    <a href="#" onclick="update_graph('walk', null)">Walk</a>
+                    <a href="#" onclick="update_graph('cardio', null)">Cardio</a>
+                    <a href="#" onclick="update_graph('core', null)">Core</a>
+                    <a href="#" onclick="update_graph('lowerbody', null)">Lowerbody</a>
+                    <a href="#" onclick="update_graph('upperbody', null)">Upperbody</a>
                 </div>
             </div>
         </div>
 
-    
+
         <div class="dropdown-container">
             <div class="dropdown">
                 <button onclick="dropdown_close1()" class="dropbtn">Change period</button>
@@ -185,15 +158,12 @@
             </div>
         </div>
 
+        <p id="text"> </p>
+
         <div>
             <h1>Graph</h1>
             <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
         </div>
-    </div>
-
-    <div id =page4 class="page">
-            <h2>Stats Exercise</h2>
-            <p id="statsText"></p>
     </div>
 
     <div id="createAccount" class="page">
@@ -266,18 +236,27 @@
                 </div>
             </div>
 
-        <div id="profilePageContainer" class="profile"> 
 
             <div id="userInfo" class="profile_layout">
-                <h2 style= "text-align: center">User info</h2>
-                <p>User goes here</p>
+                <h2 style="text-align: center;">User info</h2>
+                <p>Height: <input type="number" id="height" value="${userInfo.health.height}"> cm</p>
+                <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}"> kg</p>
+                <button onclick="postUserInfo('${username}')">Save User Info</button>
+                <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
             </div>
 
             <div id="userPreferences" class="profile_layout">
-                <h2 style= "text-align: center">Preferences</h2>
+                <h2 style="text-align: center">Preferences</h2>
                 <p>Preferences goes here</p>
             </div>
         </div>
+    </div>
+
+    <div id="userfriend" class="page center">
+        <h2>User friend</h2>
+        <a href="#" id="toggleFriendPlotPageLink" class="dropbtn">Show friends plot</a>
+        <p id="statsText1"></p>
+
     </div>
 
     <!-- JavaScript to handle navigation -->
@@ -285,7 +264,7 @@
     <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/Graph.js"></script>
-    
+
 </body>
 
 </html>
