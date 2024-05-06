@@ -85,8 +85,6 @@ document.getElementById("friendForm").addEventListener("submit", function(event)
             displayCreateErrorMessage("Passwords do not match");
         }
         else {
-            clearCreateErrorMessage();
-
             // Create an object with username and password
             const userData = {
                 username: username,
@@ -114,30 +112,145 @@ document.getElementById("friendForm").addEventListener("submit", function(event)
         // Send the data to the server-side script for login authentication
         loginUser(loginData);
     });
-    
-    
-    function loginUser(loginData) {
-        fetch('https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(loginData)
-        })
+    document.getElementById('logoutBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        localStorage.removeItem('loginState'); // Remove the login state from localStorage
+
+        location.reload(); // Reload the page to reflect the logout
+    });
+
+
+    document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userstats');
+        const loginPage = document.getElementById('stats');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPlotPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('FriendsPlot');
+        const loginPage = document.getElementById('userfriend');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+
+    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        const createAccountPage = document.getElementById('userfriend');
+        const loginPage = document.getElementById('friends');
+
+        loginPage.classList.remove('active');
+        createAccountPage.classList.add('active');
+    });
+});
+
+//Function which highlights the link of the currently selected tab
+function highlightNavLink(pageId) {
+    // Remove 'active' class from all navigation links
+    const navLinks = document.querySelectorAll('#side-nav a');
+    navLinks.forEach(function (link) {
+        link.classList.remove('active');
+    });
+    // Add 'active' class to the corresponding navigation link
+    const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+    activeLink.classList.add('active');
+}
+
+// Function to handle storing login state
+function storeLoginState(username) {
+    const expirationTime = new Date().getTime() + (30 * 60 * 1000); // 30 minutes expiration
+    const loginState = {
+        username: username,
+        expiration: expirationTime
+    };
+    localStorage.setItem('loginState', JSON.stringify(loginState));
+    localStorage.setItem('username', username);
+}
+
+// Function to check and handle login state on page load
+function checkLoginState() {
+    const loginState = localStorage.getItem('loginState');
+    const sidenavigation = document.getElementById('side-nav');
+    const topnavigation = document.getElementById('top-nav');
+
+    if (loginState) {
+        const parsedLoginState = JSON.parse(loginState);
+        if (parsedLoginState.expiration > new Date().getTime()) {
+            // Log the user in automatically
+            const username = parsedLoginState.username;
+            loginUser({ username: username });
+
+            // Update UI to display logged-in username
+            document.getElementById('usernameDisplay').textContent = "Hello, " + username;
+            document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
+
+            sidenavigation.style.display = 'block';
+            topnavigation.style.display = 'block';
+            document.getElementById('main').classList.add('active');
+        } else {
+            // Clear expired login state
+            localStorage.removeItem('loginState');
+            loginPage.classList.add('active');
+        }
+    } else {
+        sidenavigation.style.display = 'none';
+        topnavigation.style.display = 'none';
+        loginPage.classList.add('active');
+    }
+}
+
+
+function loginUser(loginData) {
+    fetch(serverPath+'login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+    })
         .then(response => {
             if (response.ok) {
                 console.log('User successfully logged in');
-                // Reset input fields
-                document.querySelector('input[name="login_username"]').value = '';
-                document.querySelector('input[name="login_password"]').value = '';
-    
-                clearLoginErrorMessage();
-    
-                // Update UI to reflect logged-in status (e.g., display username in the top right)
-                // Redirect to home page or perform other actions as needed
+
+                storeLoginState(loginData.username);
+
+                location.reload();
+
             } else {
                 response.text().then(errorMessage => {
                     displayLoginErrorMessage(errorMessage);
+                });
+            }
+        });
+}
+
+// Function to send data to server-side script
+function createUser(userData) {
+    fetch(serverPath+'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Data successfully sent to server');
+
+                storeLoginState(userData.username);
+
+                location.reload();
+            } else {
+                response.text().then(errorMessage => {
+                    displayCreateErrorMessage(errorMessage);
                 });
             }
         })
@@ -203,7 +316,7 @@ document.getElementById("friendForm").addEventListener("submit", function(event)
         var activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
         activeLink.classList.add('active');
         }
-});
+;
 
 // Function to display login error message
 function displayLoginErrorMessage(message) {

@@ -228,7 +228,43 @@
     </div>
 
     <div id="profilepage" class="page">
-        <h2 class="heading">Profile</h2>
+        <div class="profileHeader-container" id="profile_Username">
+            <h2 class="heading"></h2>
+            <div id="logout">
+                <button id="logoutBtn" type="submit">Logout</button>
+            </div>
+        </div>
+
+        <div id="profilePageContainer" class="profile">
+            <h2 style="text-align: center;">Tiers</h2>
+
+            <div id="userTiers" class="profile_layout">
+                <div class="tiers">
+                    <div id="dailyTier" class="tier">
+                        <h2>Daily <span id="dailyTierInfo">Tier</span></h2>
+                        <img id="dailyTierImage" src="image/bronzeTier.png" alt="Daily Tier Image">
+                        <meter id="dailyMeter" value="0" min="0" max="100" style="width: 50%;"></meter>
+                    </div>
+
+                    <div id="weeklyTier" class="tier">
+                        <h2>Weekly <span id="weeklyTierInfo">Tier</span></h2>
+                        <img id="weeklyTierImage" src="image/silverTier.png" alt="Weekly Tier Image">
+                        <meter id="weeklyMeter" value="0" min="0" max="50" style="width: 50%;"></meter>
+                    </div>
+
+                    <div id="monthlyTier" class="tier">
+                        <h2>Monthly <span id="monthlyTierInfo">Tier</span></h2>
+                        <img id="monthlyTierImage" src="image/goldTier.png" alt="Monthly Tier Image">
+                        <meter id="monthlyMeter" value="0" min="0" max="20" style="width: 50%;"></meter>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h2 style="text-align: center;">Masteries</h2>
+            <div id="userMasteries" class="profile_layout">
+                <div class="tiers">
+                </div>
+            </div>
 
         <div id="profilePageContainer" class="profile"> 
 
