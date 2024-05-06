@@ -230,12 +230,15 @@ meter {
   align-items: center; /* Align items vertically in the center */
   justify-content: space-between; /* Spreads child elements horizontally */
   margin-bottom: 20px; /* Add some margin to separate from the content below */
+  margin-top: 5px;
 }
 .profileHeader-container h2 {
   margin: 0 auto; /* Center the header horizontally */
-  padding-left: 97px; /* Add padding to the right side */
+  padding-left: 100px; /* Add padding to the right side */
+}
 
-
+#logout{
+  margin-right: 10px;
 }
 
 #logoutBtn {
