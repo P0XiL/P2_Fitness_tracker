@@ -78,13 +78,6 @@
         </div>
     </div>
 
-    <script>
-        // Call setupTiersForQuestPage when the website is entered
-        document.addEventListener('DOMContentLoaded', function () {
-            setupTiersForQuestPage('idkey1');
-        });
-    </script>
-
 
 
     <div id="friends" class="page center">
@@ -103,9 +96,9 @@
             <div class="dropdown">
                 <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
                 <div id="myDropdown2" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend('cardio', null)">Carido</a>
-                    <a href="#" onclick="update_graph_friend('core', null)">Core</a>
-                    <a href="#" onclick="update_graph_friend('lowerbody', null)">Lowerbody</a>
+                    <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'lowerbody', null)">Lowerbody</a>
                 </div>
             </div>
         </div>
@@ -148,6 +141,7 @@
                     <a href="#" onclick="update_graph('cardio', null)">Cardio</a>
                     <a href="#" onclick="update_graph('core', null)">Core</a>
                     <a href="#" onclick="update_graph('lowerbody', null)">Lowerbody</a>
+                    <a href="#" onclick="update_graph('upperbody', null)">Upperbody</a>
                 </div>
             </div>
         </div>
