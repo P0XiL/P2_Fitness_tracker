@@ -19,7 +19,7 @@ function is_empty_object(obj) {
 
 
 function modify_quest(quest, rank, difficulty, mastery, timespan) {
-    //formular for scaling
+    console.log(quest);
     const min = quest["base_target"];
     switch (timespan) {
         case 'daily':
@@ -37,6 +37,7 @@ function modify_quest(quest, rank, difficulty, mastery, timespan) {
         quest["base_target"] = min
         quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     }
+   
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
 }
@@ -153,8 +154,21 @@ function open_modal_for_quest(quest, questTimespan, type, user) {
             const difficulty = event.target.dataset.difficulty;
             fetchJSON('json/quest_templates.json')
                 .then(data => {
-                    let obj_Quest = choose_quest(data.quest_templates[type]);
-                    obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6, questTimespan);
+                    function get_overkey(type){
+                        for (const category in data.quest_templates) {
+                            if (data.quest_templates[category][type]) {
+                                return category;
+                              }
+                          }
+                          return null; // Exercise not found in any category
+                    }
+                    console.log("Dav");
+                    //Gets a quest out of quest_template
+                    //TODO, Uncomment when tobi fix
+                    //let obj_Quest = choose_quest(data.quest_templates[get_overkey(type)][type]);
+                    //Modify the quest
+                    let obj_Quest = {};
+                    obj_Quest.quest = modify_quest(data.quest_templates[get_overkey(type)][type], 3, difficulty, 6, questTimespan);
                     obj_newQuest = new Object;
                     obj_currentDate = new Date;
                     const date = obj_currentDate.getDate() + '/' + (obj_currentDate.getMonth() + 1) + '/' + obj_currentDate.getFullYear();
@@ -451,10 +465,10 @@ try {
     const userx = localStorage.getItem('username');
     display_all_quest(userx);
 
-
+}catch (error){
 display_quest("quest1", "Add User Json Here", "assholeblaster69");
 display_quest("quest2", "Add User Json Here", "assholeblaster69");
 display_quest("quest3", "Add User Json Here", "assholeblaster69");
 
+}
 
-};
