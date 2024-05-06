@@ -110,6 +110,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // Send the data to the server-side script for login authentication
         loginUser(loginData);
     });
+    document.getElementById('logoutBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        localStorage.removeItem('loginState'); // Remove the login state from localStorage
+
+        location.reload(); // Reload the page to reflect the logout
+    });
+
 
     document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior

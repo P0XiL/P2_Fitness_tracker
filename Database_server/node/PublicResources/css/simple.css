@@ -286,3 +286,34 @@ meter {
   display: inline-block; /* Initially visible */
   margin-top: 10px;
 }
+
+.profileHeader-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px; /* Add some margin to separate from the content below */
+}
+.profileHeader-container h2 {
+  margin: 0 auto; /* Center the header horizontally */
+}
+
+#logout {
+  text-align: right;
+  margin-right: 20px;
+}
+
+#logoutBtn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Style the button on hover */
+#logoutBtn:hover {
+  background-color: #45a049;
+}
+
