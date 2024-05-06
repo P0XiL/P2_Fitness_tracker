@@ -207,5 +207,22 @@
         "exercise": "backextentions"
       }
     }
+  },
+  "pogchamo": {
+    "daily": {
+      "6/5/2024": {
+        "type": "crunches"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "run"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "run"
+      }
+    }
   }
 }

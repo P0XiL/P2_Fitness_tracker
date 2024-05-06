@@ -131,6 +131,9 @@
     },
     "champ": {
       "password": "1"
+    },
+    "pogchamo": {
+      "password": "pogchamo"
     }
   }
 }
