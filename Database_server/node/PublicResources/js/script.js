@@ -246,15 +246,10 @@ function createUser(userData) {
 
                 highlightNavLink('main');
 
-                // Redirect to home page
-                document.getElementById('main').classList.add('active');
-                document.getElementById('createAccount').classList.remove('active');
-
                 storeLoginState(userData.username);
-''
-                location.reload();
 
-                handleSurveyRedirect();
+                document.getElementById('surveyForm').classList.add('active');
+                document.getElementById('createAccount').classList.remove('active');
 
             } else {
                 response.text().then(errorMessage => {
@@ -1005,20 +1000,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(form);
             const surveyData = {};
             for (const [key, value] of formData.entries()) {
-                if (surveyData[key]) {
-                    if (!Array.isArray(surveyData[key])) {
-                        surveyData[key] = [surveyData[key]];
-                    }
-                    surveyData[key].push(value);
-                } else {
-                    surveyData[key] = value;
-                }
+                surveyData[key] = value;
             }
-            console.log(surveyData);
-            sendSurveyData(surveyData);
+            
+            // Retrieve user ID from local storage
+            const userId = localStorage.getItem("username");
+            if (userId) {
+                surveyData.userid = userId;
+            } else {
+                console.error('User ID not found in local storage');
+                return;
+            }
+            
+            console.log('Survey data:', surveyData);
+            sendSurveyData(surveyData, handleSurveyResponse);
 
             // Set a flag in local storage indicating that the user has completed the survey
             localStorage.setItem('surveyCompleted', 'true');
+
+            document.getElementById('main').classList.add('active');
+            document.getElementById('surveyForm').classList.remove('active');
         });
     }
 
@@ -1027,7 +1028,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function sendSurveyData(surveyData) {
-    fetch('http://127.0.0.1:3360/write_survey_data_json', {
+    fetch(serverPath+'write_survey_data_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -1052,21 +1053,17 @@ function sendSurveyData(surveyData) {
         console.error('Error sending survey data:', error);
     });
 }
-function handleSurveyRedirect() {
-    const surveyCompleted = localStorage.getItem('surveyCompleted');
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const surveyForm = document.getElementById('surveyForm');
-
-        if (!surveyCompleted) {
-            // Redirect the user to the survey page
-            window.location.href = "Letsgo.html";
-        }
-    });
+function handleSurveyResponse(response) {
+    if (response.success) {
+        // Reload the page or perform any other client-side action
+        window.location.reload();
+    } else {
+        // Handle error response from the server
+        console.error('Error:', response.message);
+        // Optionally, show an error message to the user
+    }
 }
-
-// Call handleSurveyRedirect to start the redirection logic
-handleSurveyRedirect();
 
 let lastActiveDates = {};
 

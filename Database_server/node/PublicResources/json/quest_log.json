@@ -34,6 +34,40 @@
     "weekly": {},
     "monthly": {}
   },
+  "551": {
+    "daily": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    }
+  },
+  "1111": {
+    "daily": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
   "1235": {
     "daily": {
       "1/5/2024": {
@@ -69,6 +103,125 @@
         "amount": 132,
         "text": "Do 175 situps",
         "state": "incomplete"
+      }
+    }
+  },
+  "3214": {
+    "daily": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    }
+  },
+  "3333": {
+    "daily": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "5555": {
+    "daily": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    }
+  },
+  "6464": {
+    "daily": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    }
+  },
+  "6666": {
+    "daily": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "7777": {
+    "daily": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "9090": {
+    "daily": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
       }
     }
   },
@@ -205,6 +358,177 @@
         "text": "Do 351 backextentions",
         "state": "incomplete",
         "exercise": "backextentions"
+      }
+    }
+  },
+  "000": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "oil": {
+    "daily": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "oily": {
+    "daily": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "pil": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "uil": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "mum": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "mnmn": {
+    "daily": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "hjhj": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "lingling": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "asdd": {
+    "daily": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    }
+  },
+  "User33": {
+    "daily": {
+      "6/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "pølle": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "mas": {
+    "daily": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "upperbody"
+      }
+    }
+  },
+  "lmao": {
+    "daily": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "gorøv": {
+    "daily": {
+      "6/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "core"
       }
     }
   }

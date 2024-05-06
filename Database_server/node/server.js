@@ -58,6 +58,9 @@ function processReq(req, res) {
             } else if (queryPath === "/write_user_info_json") { 
                 // Add new route for writing user info
                 write_user_info_json(req, res);
+            } else if (queryPath === "/write_survey_data_json") { 
+                // Add new route for writing user info
+                write_survey_data_json(req, res);
             } else {
                 errorResponse(res, 404, "not found")
             }
@@ -436,7 +439,6 @@ function write_user_info_json(req, res) {
                 errorResponse(res, 500, String(err));
                 return;
             }
-            let obj_survey = {};
 
             let existingData = JSON.parse(data);
             existingData.users_info[user_info.username].preset = user_info.preset;
@@ -501,56 +503,62 @@ function write_user_preferences_json(req, res) {
         });
     });
 }
-    function write_survey_data_json(req, res) {
-        let body = '';
-        req.on('data', (chunk) => {
-            body += chunk.toString();
-        });
-        req.on('end', () => {
-            let surveyData = JSON.parse(body);
-            console.log('Received survey data:', surveyData); // Log received survey data
+function write_survey_data_json(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let surveyData = JSON.parse(body);
+        console.log('Received survey data:', surveyData); // Log received survey data
     
-            // Read existing data from the file
-            fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error('Error reading existing data:', err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            let existingData = JSON.parse(data);
+            console.log('Existing data:', existingData); // Log existing data
+
+            // Check if the username exists in users_info before updating
+            if (existingData.users_info.hasOwnProperty(surveyData.userid)) {
+                existingData.users_info[surveyData.userid].health = {
+                    name: surveyData.name,
+                    age: surveyData.age,
+                    height: surveyData.Height,
+                    weight: surveyData.Weight,
+                    gender: surveyData.gender,
+                    fitnessGoal: surveyData.fitnessGoal,
+                    activityLevel: surveyData.activityLevel
+                };
+            } else {
+                // Handle the case where the username doesn't exist
+                console.error('User info not found for user ID:', surveyData.userid);
+                // Return an error response or take appropriate action
+            } 
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
                 if (err) {
-                    console.error('Error reading existing data:', err);
+                    console.error('Error writing data:', err);
                     errorResponse(res, 500, String(err));
-                    return;
+                } else {
+                    console.log('Survey data written to file');
+                    // Send a JSON response confirming the success of the operation
+                    const jsonResponse = {
+                        success: true,
+                        message: 'Survey data saved successfully'
+                    };
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(jsonResponse));
                 }
-    
-                let existingData = JSON.parse(data);
-                console.log('Existing data:', existingData); // Log existing data
-    
-                // Ensure users_info object exists
-                existingData.users_info = existingData.users_info || {};
-
-                // Fetch idkey from users_info or set a default value if not available
-                const idkey = existingData.users_info && existingData.users_info.idkey ? existingData.users_info.idkey : "defaultIdkey";
-
-                // Ensure the idkey exists within users_info
-                existingData.users_info[idkey] = existingData.users_info[idkey] || {};
-
-                // Add the surveyData to the specified idkey
-                 existingData.users_info[idkey].surveyData = surveyData;
-    
-                // Write updated data back to the file
-                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
-                    if (err) {
-                        console.error('Error writing data:', err);
-                        errorResponse(res, 500, String(err));
-                    } else {
-                        console.log('Survey data written to file');
-                        // Send a JSON response confirming the success of the operation
-                        const jsonResponse = {
-                            success: true,
-                            message: 'Survey data saved successfully'
-                        };
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.end(JSON.stringify(jsonResponse));
-                    }
-                });
             });
         });
-    }
+    });
+}
+
 startServer();
