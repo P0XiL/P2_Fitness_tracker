@@ -241,8 +241,11 @@ function createUser(userData) {
                 clearCreateErrorMessage();
 
                 storeLoginState(userData.username);
-
+''
                 location.reload();
+
+                handleSurveyRedirect();
+
             } else {
                 response.text().then(errorMessage => {
                     displayCreateErrorMessage(errorMessage);
@@ -1034,8 +1037,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(surveyData);
             sendSurveyData(surveyData);
 
-            document.getElementById('main').classList.add('active');
-            document.getElementById('surveyForm').classList.remove('active')
+            // Set a flag in local storage indicating that the user has completed the survey
+            localStorage.setItem('surveyCompleted', 'true');
         });
     }
 
@@ -1069,11 +1072,27 @@ function sendSurveyData(surveyData) {
         console.error('Error sending survey data:', error);
     });
 }
+function handleSurveyRedirect() {
+    const surveyCompleted = localStorage.getItem('surveyCompleted');
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const surveyForm = document.getElementById('surveyForm');
+        
+        if (!surveyCompleted) {
+            // Redirect the user to the survey page
+            window.location.href = "Letsgo.html";
+        }
+    });
+}
+
+// Call handleSurveyRedirect to start the redirection logic
+handleSurveyRedirect();
 
 let lastActiveDates = {};
 
-function updateStreak(userId) {
+function updateStreak() {
   const currentDate = new Date().toDateString();
+  let userId = localStorage.getItem("username");
   
   if (!lastActiveDates[userId]) {
     lastActiveDates[userId] = null;
@@ -1097,7 +1116,8 @@ function updateStreak(userId) {
   }
 }
 
-function getStreakCount(userId) {
+function getStreakCount() {
+  let userId = localStorage.getItem("username");
   let streakCount = 0;
   let currentDate = new Date().toDateString();
   let lastDate = null;
@@ -1114,15 +1134,18 @@ function getStreakCount(userId) {
     }
   }
 
+  streakCount = getStreakCount(userId);
+  console.log("Current streak for user", userId + ":", streakCount);
+
   return streakCount;
 }
 
-updateStreak(userId); // Call this function whenever user is active
-const streakCount = getStreakCount(userId);
-console.log("Current streak for user", userId + ":", streakCount);
+updateStreak(); // Call this function whenever user is active
+
+
 
 // Display PNG image if streak is active
-if (streakCount > 0) {
+if (getStreakCount > 0) {
   const img = document.createElement("img");
   img.src = "Database_server\node\PublicResources\image\Streak.png";
   document.body.appendChild(img);

@@ -1,5 +1,16 @@
 {
   "users_info": {
+    "321": {
+      "username": "321",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
     "1235": {
       "username": "1235",
       "health": {
@@ -58,6 +69,17 @@
           "crunches"
         ]
       }
+    },
+    "3213": {
+      "username": "3213",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
     },
     "idkey1": {
       "username": "Tobias",
@@ -207,6 +229,72 @@
     },
     "ggg": {
       "username": "ggg",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "xdxd": {
+      "username": "xdxd",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "tester": {
+      "username": "tester",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "ddd": {
+      "username": "ddd",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "0000": {
+      "username": "0000",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "lklk": {
+      "username": "lklk",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "lolol": {
+      "username": "lolol",
       "health": {
         "height": 0,
         "weight": 0
