@@ -431,6 +431,8 @@ userInfo = {
  * Displayes all the quest
  * @param {userID} user 
  */
+
+
 async function display_all_quest(user) {
     try {
         //Display the daily quest
