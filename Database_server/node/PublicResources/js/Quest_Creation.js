@@ -41,6 +41,7 @@ function is_empty_object(obj) {
  * @returns A obj mostifed basend on the parameters
  */
 function modify_quest(quest, rank, difficulty, mastery, timespan) {
+    console.log(quest);
     const min = quest["base_target"];
     //Modify the quest based on timesapan
     switch (timespan) {
@@ -60,6 +61,7 @@ function modify_quest(quest, rank, difficulty, mastery, timespan) {
         quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
         return quest;
     }
+   
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
 }
@@ -231,10 +233,21 @@ function open_modal_for_quest(questTimespan, type, user) {
             const difficulty = event.target.dataset.difficulty;
             fetchJSON('json/quest_templates.json')
                 .then(data => {
-                    //Gets a quest out of quest_templates
-                    let obj_Quest = choose_quest(data.quest_templates[type]);
+                    function get_overkey(type){
+                        for (const category in data.quest_templates) {
+                            if (data.quest_templates[category][type]) {
+                                return category;
+                              }
+                          }
+                          return null; // Exercise not found in any category
+                    }
+
+                    //Gets a quest out of quest_template
+                    //TODO, Uncomment when tobi fix
+                    //let obj_Quest = choose_quest(data.quest_templates[get_overkey(type)][type]);
                     //Modify the quest
-                    obj_Quest.quest = modify_quest(obj_Quest.quest, 3, difficulty, 6, questTimespan);
+                    let obj_Quest = {};
+                    obj_Quest.quest = modify_quest(data.quest_templates[get_overkey(type)][type], 3, difficulty, 6, questTimespan);
                     obj_newQuest = new Object;
                     const date = get_current_date_format();
                     //Make an obj which is used when adding the quest
