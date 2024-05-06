@@ -1057,7 +1057,7 @@ function handleSurveyRedirect() {
 
     document.addEventListener('DOMContentLoaded', function() {
         const surveyForm = document.getElementById('surveyForm');
-        
+
         if (!surveyCompleted) {
             // Redirect the user to the survey page
             window.location.href = "Letsgo.html";
