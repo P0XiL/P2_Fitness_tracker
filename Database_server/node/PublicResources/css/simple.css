@@ -271,6 +271,22 @@ meter {
   margin-top: 10px;
 }
 
+canvas {
+  border: 1px solid #ccc;
+  display: block;
+  margin: 0 auto; /* Center the canvas */
+}
+
+#userContainer {
+  display: grid;
+  grid-template-columns: 1fr auto; /* Adjust column widths as needed */
+  grid-column-gap: 20px; /* Adjust gap between columns as needed */
+  align-items: center; /* Center items vertically */
+}
+
+#bmiGraphContainer {
+  grid-column: 2;
+}
 .profileHeader-container {
   display: flex;
   align-items: center; /* Align items vertically in the center */
