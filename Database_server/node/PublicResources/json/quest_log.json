@@ -45,6 +45,9 @@
         "amount": 6,
         "text": "Do arm circles for 10 seconds",
         "state": "incomplete"
+      },
+      "7/5/2024": {
+        "type": "pushups"
       }
     },
     "weekly": {
@@ -70,6 +73,28 @@
         "text": "Do 175 situps",
         "state": "incomplete"
       }
+    }
+  },
+  "4129": {
+    "daily": {
+      "6/5/2024": {}
+    },
+    "weekly": {
+      "6/5/2024": {}
+    },
+    "monthly": {
+      "6/5/2024": {}
+    }
+  },
+  "6543": {
+    "daily": {
+      "6/5/2024": {}
+    },
+    "weekly": {
+      "6/5/2024": {}
+    },
+    "monthly": {
+      "6/5/2024": {}
     }
   },
   "assholeblaster69": {
@@ -205,6 +230,70 @@
         "text": "Do 351 backextentions",
         "state": "incomplete",
         "exercise": "backextentions"
+      }
+    }
+  },
+  "pogchamo": {
+    "daily": {
+      "6/5/2024": {
+        "type": "crunches",
+        "target": 3,
+        "amount": 0,
+        "text": "Do 3 crunches",
+        "state": "incomplete"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "run",
+        "target": 90,
+        "amount": 0,
+        "text": "Go for a run for 90 minutes",
+        "state": "incomplete"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "run"
+      }
+    }
+  },
+  "DDD": {
+    "daily": {
+      "6/5/2024": {}
+    },
+    "weekly": {
+      "6/5/2024": {}
+    },
+    "monthly": {
+      "6/5/2024": {}
+    }
+  },
+  "DDDDDDDDDDDDDDDD": {
+    "daily": {
+      "6/5/2024": {}
+    },
+    "weekly": {
+      "6/5/2024": {}
+    },
+    "monthly": {
+      "6/5/2024": {}
+    }
+  },
+  "Christiansmorerdejlig": {
+    "daily": {
+      "7/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "7/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "7/5/2024": {
+        "type": "cardio"
       }
     }
   }

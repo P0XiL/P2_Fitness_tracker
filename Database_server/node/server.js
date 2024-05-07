@@ -246,7 +246,15 @@ function addUserToUsers_info(username) {
                       elo: 0
                     }
                   },
-                preset: {}
+                preset: {
+                    name: "balance",
+                    conf: {
+                      cardio: 2,
+                      lowerbody: 2,
+                      core: 2,
+                      upperbody: 2
+                    }
+                }
             };
 
             // Add the new user to the users_info object
@@ -441,13 +449,12 @@ function write_user_info_json(req, res) {
                 errorResponse(res, 500, String(err));
                 return;
             }
-            let obj_survey = {};
 
             let existingData = JSON.parse(data);
-            existingData.users_info[user_info.username].preset = user_info.preset;
+            existingData.users_info[user_info.username] = user_info;
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
@@ -460,9 +467,10 @@ function write_user_info_json(req, res) {
                     };
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify(jsonResponse));
+                    res.end(JSON.stringify(jsonResponse, null, 2));
                 }
             });
+            
         });
     });
 }
