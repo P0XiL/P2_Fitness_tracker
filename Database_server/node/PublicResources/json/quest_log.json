@@ -355,5 +355,39 @@
         "exercise": "situps"
       }
     }
+  },
+  "TobiasOG": {
+    "daily": {
+      "7/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "7/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "7/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "TobiOGOG": {
+    "daily": {
+      "7/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "7/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "7/5/2024": {
+        "type": "upperbody"
+      }
+    }
   }
 }
