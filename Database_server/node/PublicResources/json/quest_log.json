@@ -45,6 +45,9 @@
         "amount": 6,
         "text": "Do arm circles for 10 seconds",
         "state": "incomplete"
+      },
+      "7/5/2024": {
+        "type": "walk"
       }
     },
     "weekly": {
