@@ -4,8 +4,8 @@ const serverPath = 'http://127.0.0.1:3360/';
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
     // Call checkLoginState() on page load
-    //window.addEventListener('load', checkLoginState);
     checkLoginState();
+    
     setupTiersForQuestPage(localStorage.getItem('username'));
 
     // Assigns all tabs to an array called links
