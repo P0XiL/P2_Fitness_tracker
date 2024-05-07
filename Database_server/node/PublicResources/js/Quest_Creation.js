@@ -535,12 +535,7 @@ async function display_quest(quest, user) {
 
 
 
-//example of output
-userInfo = {
-    rank: generate_random_number(43),
-    mastery: generate_random_number(3),
-    preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
-};
+
 /**
  * Displayes all the quest
  * @param {userID} user 
