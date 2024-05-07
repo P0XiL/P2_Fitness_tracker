@@ -454,18 +454,6 @@ function getTierRange(rank) {
     }
 }
 
-// Function to get the tier range
-function getTierRange(rank) {
-    if (rank >= 1 && rank <= 15) {
-        return '1-15';
-    } else if (rank >= 16 && rank <= 30) {
-        return '16-30';
-    } else if (rank >= 31 && rank <= 45) {
-        return '31-45';
-    }
-    // Add more ranges as needed
-}
-
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
     '16-30': 'image/silverTier.png',

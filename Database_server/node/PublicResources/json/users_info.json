@@ -174,12 +174,12 @@
         }
       },
       "preset": {
-        "name": "lose weight",
+        "name": "custom",
         "conf": {
-          "cardio": 7,
-          "lowerbody": 1,
-          "core": 1,
-          "upperbody": 1
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
         }
       }
     },
