@@ -140,6 +140,12 @@
     },
     "Hej": {
       "password": "123"
+    },
+    "test": {
+      "password": "test"
+    },
+    "Bob": {
+      "password": "123"
     }
   }
 }

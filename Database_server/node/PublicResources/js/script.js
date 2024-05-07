@@ -328,6 +328,8 @@ async function setupProfilePage(username) {
         // Process the JSON data here
         processData(userData, username);
 
+
+
         // Return the user info
         return userData;
     } catch (error) {
@@ -613,6 +615,7 @@ function displayUserInfo(username, userInfo) {
         <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
         <button onclick="postUserInfo('${username}')">Save User Info</button>
         <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
+        <canvas id="bmiGraph" width="600" height="400"></canvas>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 
@@ -664,6 +667,8 @@ async function postUserInfo(username) {
 
 // Function to update user info
 function update_users_info(newUserInfo) {
+    console.log("new user info:");
+    console.log(newUserInfo);
     fetch(serverPath+'write_user_info_json', {
         method: 'POST',
         headers: {
@@ -699,7 +704,23 @@ function updateBMI(height, weight) {
     const bmi = calculateBMI(height, weight);
     const bmiText = document.getElementById('bmiText');
     bmiText.textContent = `BMI: ${bmi}`;
+
+    // Display warning if BMI is over 25 or under 18.5
+    if (bmi > 30){
+        bmiText.innerHTML += '<br><span>BMI is over 30 leading to a lot higher possibily of diseases such as cardiovascular diseases. Try to limit calorie intake. This can be done by...</span>';
+    }
+    else if (bmi > 25) {
+        bmiText.innerHTML += '<br><span>BMI is over 25 leading to a sligtly higher possibily of diseases such as cardiovascular diseases. Try to limit calorie intake. This can be done by...</span>';
+    } else if (bmi < 18.5) {
+        bmiText.innerHTML += '<br><span>BMI is under 18.5. Try to ingest more calories. This can be done by... </span>';
+    } else {
+        // Clear any previous warnings
+        bmiText.innerHTML = `BMI: ${bmi}`;
+    }
+
+    drawGraph(bmi);
 }
+
 
 // Update BMI text after user inputs height or weight
 document.getElementById('height').addEventListener('input', function() {
@@ -792,13 +813,15 @@ function getSubTierRange(rank) {
 function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confObject = userInfo.preset.conf || {}; // Ensure confObject is an object
+    console.log("confObject");
+    console.log(confObject);
 
     // Generate sliders for exercise preferences
     const userInfoDiv = document.getElementById('userPreferences');
     let slidersHTML = '';
 
-    // Check if each exercise exists in the confObject, then include the slider
-    if (confObject['pushups'] !== undefined || preset === 'custom') {
+    // Check if each exercise exists in the confObject and if the preset is 'custom' or the exercise value is greater than 0, then include the slider
+    if ((confObject['pushups'] !== undefined && (preset === 'custom' || confObject['pushups'] > 0)) || preset === 'custom') {
         slidersHTML += `
             <div>
                 <label for="pushups">Pushups</label>
@@ -807,7 +830,8 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (confObject['run'] !== undefined || preset === 'custom') {
+    
+    if ((confObject['run'] !== undefined && (preset === 'custom' || confObject['run'] > 0)) || preset === 'custom') {
         slidersHTML += `
             <div>
                 <label for="run">Run</label>
@@ -816,7 +840,8 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (confObject['walk'] !== undefined || preset === 'custom') {
+    
+    if ((confObject['walk'] !== undefined && (preset === 'custom' || confObject['walk'] > 0)) || preset === 'custom') {
         slidersHTML += `
             <div>
                 <label for="walk">Walk</label>
@@ -825,7 +850,8 @@ function displayUserPreferences(username, userInfo) {
             </div>
         `;
     }
-    if (confObject['crunches'] !== undefined || preset === 'custom') {
+    
+    if ((confObject['crunches'] !== undefined && (preset === 'custom' || confObject['crunches'] > 0)) || preset === 'custom') {
         slidersHTML += `
             <div>
                 <label for="crunches">Crunches</label>
@@ -860,6 +886,8 @@ function displayUserPreferences(username, userInfo) {
 }
 
 
+
+
 function updateCounter(exercise, value) {
     document.getElementById(`${exercise}Counter`).textContent = value;
 }
@@ -884,12 +912,12 @@ async function postCustomData(username) {
                 tier: existingUserInfo.tier,
                 preset: {
                     name: 'custom',
-                    conf: [
-                        ...Array(Number(pushupsValue)).fill('push-ups'),
-                        ...Array(Number(runValue)).fill('run'),
-                        ...Array(Number(walkValue)).fill('walk'),
-                        ...Array(Number(crunchesValue)).fill('crunches')
-                    ]
+                    conf: {
+                        pushups: parseInt(pushupsValue),
+                        run: parseInt(runValue),
+                        walk: parseInt(walkValue),
+                        crunches: parseInt(crunchesValue)
+                    }
                 }
             };
 
@@ -992,3 +1020,76 @@ function calculateBMI(height, weight) {
     const bmi = weight / (heightMeters * heightMeters);
     return bmi.toFixed(1); // Round to 1 decimal place
 }
+
+// Function to draw the graph
+function drawGraph(bmiValue) {
+    // Define BMI categories and their ranges
+    var categories = [
+        { label: "Underweight", min: 0, max: 18.5, color: "#3498db" },
+        { label: "Normal", min: 18.5, max: 24.9, color: "#2ecc71" },
+        { label: "Overweight", min: 25, max: 29.9, color: "#f1c40f" },
+        { label: "Obese", min: 30, max: 100, color: "#e74c3c" } // Adjusted max value
+    ];
+
+    var canvas = document.getElementById("bmiGraph");
+    var ctx = canvas.getContext("2d");
+    var padding = 10;
+    var scaleFactor = 0.5; // Scale factor for resizing the canvas
+
+    // Adjust canvas size
+    canvas.width = canvas.width * scaleFactor;
+    canvas.height = canvas.height * scaleFactor;
+
+    var barWidth = (canvas.width - 2 * padding) / categories.length;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw bars for each category
+    categories.forEach(function(category, index) {
+        var barHeight = (canvas.height - padding * 2);
+        var y = padding;
+
+        // Calculate x position of the bar
+        var x = padding + index * barWidth;
+
+        // Draw filled rectangle for the bar
+        ctx.fillStyle = category.color;
+        ctx.fillRect(x, y, barWidth, barHeight);
+
+        // Set text color to white
+        ctx.fillStyle = "white";
+
+        // Draw category label in white
+        ctx.font = "12px Arial";
+        ctx.textAlign = "center"; // Center the text
+        ctx.fillText(category.label, x + barWidth / 2, canvas.height - 5);
+
+        // Check if the user's BMI value falls within this category
+        if (bmiValue >= category.min && bmiValue <= category.max) {
+            // Calculate the position of the red dot within this category
+            var progress = (bmiValue - category.min) / (category.max - category.min);
+            var dotX = x + progress * barWidth;
+            
+            // Draw red dot indicating the user's BMI value
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(dotX, canvas.height / 2, 5, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
