@@ -246,7 +246,15 @@ function addUserToUsers_info(username) {
                       elo: 0
                     }
                   },
-                preset: {}
+                preset: {
+                    name: "balance",
+                    conf: {
+                      cardio: 2,
+                      lowerbody: 2,
+                      core: 2,
+                      upperbody: 2
+                    }
+                }
             };
 
             // Add the new user to the users_info object

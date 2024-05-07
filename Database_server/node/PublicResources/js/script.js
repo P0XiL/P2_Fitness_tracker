@@ -808,9 +808,10 @@ function getSubTierRange(rank) {
 }
 
 
-function displayUserPreferences(username, userInfo) {
+async function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confObject = userInfo.preset.conf || {}; // Ensure confObject is an object
+
     console.log("confObject");
     console.log(confObject);
 
@@ -829,44 +830,19 @@ function displayUserPreferences(username, userInfo) {
         `;
     }
     
-    if ((confObject['run'] !== undefined && (preset === 'custom' || confObject['run'] > 0)) || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="run">Run</label>
-                <input type="range" id="run" name="run" min="0" max="10" value="${confObject['run'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
-                <span id="runCounter">${confObject['run'] || 0}</span>
-            </div>
-        `;
-    }
-    
-    if ((confObject['walk'] !== undefined && (preset === 'custom' || confObject['walk'] > 0)) || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="walk">Walk</label>
-                <input type="range" id="walk" name="walk" min="0" max="10" value="${confObject['walk'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
-                <span id="walkCounter">${confObject['walk'] || 0}</span>
-            </div>
-        `;
-    }
-    
-    if ((confObject['crunches'] !== undefined && (preset === 'custom' || confObject['crunches'] > 0)) || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="crunches">Crunches</label>
-                <input type="range" id="crunches" name="crunches" min="0" max="10" value="${confObject['crunches'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('crunches', this.value)">
-                <span id="crunchesCounter">${confObject['crunches'] || 0}</span>
-            </div>
-        `;
-    }
+    // Adjusted dropdown menu options
+    const presetDropdownmenu = `
+        <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
+        <option value="lose weight" ${preset === 'lose weight' ? 'selected' : ''}>Lose Weight</option>
+        <option value="balance" ${preset === 'balance' ? 'selected' : ''}>Balance</option>
+        <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
+    `;
 
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
         <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
-            <option value="run" ${preset === 'run' ? 'selected' : ''}>Run</option>
-            <option value="walk" ${preset === 'walk' ? 'selected' : ''}>Walk</option>
-            <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
-            <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
+            ${presetDropdownmenu}
         </select>
         <p>Exercise preferences:</p>
         ${slidersHTML}
@@ -883,6 +859,33 @@ function displayUserPreferences(username, userInfo) {
     }
 }
 
+
+async function fetchQuestCategories() {
+    try {
+        // Fetch the JSON data
+        const response = await fetch(serverPath+'json/quest_templates.json');
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch quest_templates.json: ${response.statusText}`);
+        }
+
+        // Parse response body as JSON
+        const data = await response.json();
+
+        // Find the user data by username
+        const questCategories = data.quest_templates;
+
+        if (!questCategories) {
+            throw new Error(`no questCategories found.`);
+        }
+
+        // Return the user data
+        return questCategories;
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Rethrow the error to propagate it to the caller
+    }
+}
 
 
 
@@ -950,34 +953,36 @@ async function updatePreset(username, preset) {
 
             let conf = [];
             switch (preset) {
-                case 'run':
+                case 'lose weight':
                     conf = {
-                        run: 10,
-                        walk: 4,
-                        crunches: 3
-                    }
-                    break;
-                case 'walk':
-                    conf = {
-                        run: 4,
-                        walk: 10,
-                        crunches: 3
+                        cardio: 7,
+                        lowerbody: 1,
+                        core: 1,
+                        upperbody: 1
                     }
                     break;
                 case 'strength':
                     conf = {
-                        run: 2,
-                        walk: 2,
-                        crunches: 6,
-                        pushUps: 4
+                        cardio: 1,
+                        lowerbody: 3,
+                        core: 3,
+                        upperbody: 3
+                    }
+                    break;
+                case 'balance':
+                    conf = {
+                        cardio: 2,
+                        lowerbody: 2,
+                        core: 2,
+                        upperbody: 2
                     }
                     break;
                 case 'custom':
                     conf = {
-                        run: 1,
-                        walk: 1,
-                        crunches: 1,
-                        pushUps: 1
+                        cardio: 2,
+                        lowerbody: 2,
+                        core: 2,
+                        upperbody: 2
                     }
                     break;
                 default:

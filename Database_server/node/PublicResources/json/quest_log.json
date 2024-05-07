@@ -45,6 +45,9 @@
         "amount": 6,
         "text": "Do arm circles for 10 seconds",
         "state": "incomplete"
+      },
+      "7/5/2024": {
+        "type": "pushups"
       }
     },
     "weekly": {
@@ -275,6 +278,23 @@
     },
     "monthly": {
       "6/5/2024": {}
+    }
+  },
+  "Christiansmorerdejlig": {
+    "daily": {
+      "7/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "7/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "7/5/2024": {
+        "type": "cardio"
+      }
     }
   }
 }
