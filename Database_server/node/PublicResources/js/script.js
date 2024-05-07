@@ -2,11 +2,12 @@ const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/';
 // LOCALHOST: https://127.0.0.1:3360
 // SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
 
+
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
     // Call checkLoginState() on page load
-    //window.addEventListener('load', checkLoginState);
     checkLoginState();
+    
     setupTiersForQuestPage(localStorage.getItem('username'));
 
     // Assigns all tabs to an array called links
@@ -87,8 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
             displayCreateErrorMessage("Username must be at least 1 character");
         }
         else {
-            clearCreateErrorMessage();
-
             // Create an object with username and password
             const userData = {
                 username: username,
@@ -117,6 +116,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // Send the data to the server-side script for login authentication
         loginUser(loginData);
     });
+    document.getElementById('logoutBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        localStorage.removeItem('loginState'); // Remove the login state from localStorage
+
+        location.reload(); // Reload the page to reflect the logout
+    });
+
 
     document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
@@ -216,7 +223,6 @@ function loginUser(loginData) {
         .then(response => {
             if (response.ok) {
                 console.log('User successfully logged in');
-                clearLoginErrorMessage();
 
                 storeLoginState(loginData.username);
 
@@ -242,14 +248,6 @@ function createUser(userData) {
         .then(response => {
             if (response.ok) {
                 console.log('Data successfully sent to server');
-
-                clearCreateErrorMessage();
-
-                highlightNavLink('main');
-
-                // Redirect to home page
-                document.getElementById('main').classList.add('active');
-                document.getElementById('createAccount').classList.remove('active');
 
                 storeLoginState(userData.username);
 

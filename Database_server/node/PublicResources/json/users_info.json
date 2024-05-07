@@ -1,5 +1,95 @@
 {
   "users_info": {
+    "321": {
+      "username": "321",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 1,
+          "elo": 0
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {}
+    },
+    "412": {
+      "username": "412",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 1,
+          "elo": 0
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {}
+    },
     "1235": {
       "username": "1235",
       "health": {
@@ -50,6 +140,104 @@
           "run": 3,
           "walk": 1,
           "crunches": 1
+        }
+      }
+    },
+    "4129": {
+      "username": "4129",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 1,
+          "elo": 0
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {}
+    },
+    "6543": {
+      "username": "6543",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 1,
+          "elo": 0
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {
+        "name": "strength",
+        "conf": {
+          "run": 2,
+          "walk": 2,
+          "crunches": 6,
+          "pushUps": 4
         }
       }
     },
@@ -150,8 +338,19 @@
       },
       "preset": {}
     },
-    "test": {
-      "username": "test",
+    "champ": {
+      "username": "champ",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {},
+      "hiddenRank": {},
+      "tier": {},
+      "preset": {}
+    },
+    "pogchamo": {
+      "username": "pogchamo",
       "health": {
         "height": 0,
         "weight": 0

@@ -12,10 +12,14 @@ function generate_random_number(max) {
 /**
  * Takes an obj and returns a random object key
  * @param {An obj} quests 
- * @returns A random object key 
+ * @returns An obj with a random quest, and the exercise 
  */
 function choose_quest(quests) {
-    return quests[Object.keys(quests)[generate_random_number(Object.keys(quests).length)]]
+    const quest = new Object;
+    const random = generate_random_number(Object.keys(quests).length);
+    quest.quest = quests[Object.keys(quests)[random]];
+    quest.exercise = Object.keys(quests)[random];
+    return quest;
 }
 
 /**
@@ -37,6 +41,7 @@ function is_empty_object(obj) {
  * @returns A obj mostifed basend on the parameters
  */
 function modify_quest(quest, rank, difficulty, mastery, timespan) {
+    console.log(quest);
     const min = quest["base_target"];
     //Modify the quest based on timesapan
     switch (timespan) {
@@ -56,6 +61,7 @@ function modify_quest(quest, rank, difficulty, mastery, timespan) {
         quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
         return quest;
     }
+   
     quest["quest_text"] = quest["quest_text"].replace("x", quest["base_target"])
     return quest;
 }
@@ -183,7 +189,7 @@ function check_current(timespan, quest_log, userID) {
  * @param {ojb containg the quest} quest 
  */
 function add_quest_json(quest) {
-    fetch(serverPath+'write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch(serverPath + 'write_quest_json', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -227,19 +233,31 @@ function open_modal_for_quest(questTimespan, type, user) {
             const difficulty = event.target.dataset.difficulty;
             fetchJSON('json/quest_templates.json')
                 .then(data => {
-                    //Gets a quest out of quest_templates
-                    let obj_Quest = choose_quest(data.quest_templates[type]);
+                    function get_overkey(type){
+                        for (const category in data.quest_templates) {
+                            if (data.quest_templates[category][type]) {
+                                return category;
+                              }
+                          }
+                          return null; // Exercise not found in any category
+                    }
+                    console.log("Dav");
+                    //Gets a quest out of quest_template
+                    //TODO, Uncomment when tobi fix
+                    //let obj_Quest = choose_quest(data.quest_templates[get_overkey(type)][type]);
                     //Modify the quest
-                    obj_Quest = modify_quest(obj_Quest, 3, difficulty, 6, questTimespan);
+                    let obj_Quest = {};
+                    obj_Quest.quest = modify_quest(data.quest_templates[get_overkey(type)][type], 3, difficulty, 6, questTimespan);
                     obj_newQuest = new Object;
                     const date = get_current_date_format();
                     //Make an obj which is used when adding the quest
                     obj_newQuest[date] = {};
                     obj_newQuest[date].type = type;
-                    obj_newQuest[date].target = obj_Quest["base_target"];
+                    obj_newQuest[date].target = obj_Quest.quest["base_target"];
                     obj_newQuest[date].amount = 0;
-                    obj_newQuest[date].text = obj_Quest.quest_text;
+                    obj_newQuest[date].text = obj_Quest.quest.quest_text;
                     obj_newQuest[date].state = "incomplete";
+                    obj_newQuest[date].exercise = obj_Quest.exercise;
                     obj_newQuest.timespan = questTimespan;
                     obj_newQuest.userID = user;
 
@@ -265,7 +283,7 @@ function open_modal_for_quest(questTimespan, type, user) {
  * @param {an object which contain parameters for change amount function} obj_para 
  */
 function change_amount(obj_para) {
-    fetch(serverPath+'change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+    fetch(serverPath + 'change_amount', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -388,99 +406,127 @@ function update_meter(ID, obj_quest) {
 
 }
 
+
+/**
+ * Choose a type based on a weighted obj
+ * @param {an obj with weighted keys} obj_conf 
+ * @returns A type
+ */
+function get_type(obj_conf) {
+    //Array for weightedKeys
+    let weightedKeys = [];
+
+    //Loop though each key
+    for (let key in obj_conf) {
+        for (let i = 0; i < obj_conf[key]; i++) {
+            weightedKeys.push(key);
+        }
+    }
+    return weightedKeys[generate_random_number(weightedKeys.length)];
+
+}
+
+
 /**
  * Display the quest
  * @param {questID} quest 
  * @param {userinfo} userInfox 
  * @param {username} user 
  */
-async function display_quest(quest, userInfox, user) {
+async function display_quest(quest, user) {
     return new Promise((resolve, reject) => {
-    //Based on ID figure out the timespan
-    const timespans = ["daily", "weekly", "monthly"];
-    const questTimespan = timespans[quest[5] - 1];
+        //Based on ID figure out the timespan
+        const timespans = ["daily", "weekly", "monthly"];
+        const questTimespan = timespans[quest[5] - 1];
 
-    /**
-     * Makes a new quest
-     * @param {the type of the current quest} type 
-     */
-    function new_quest(type) {
-        document.getElementById(quest + "_type").innerText = "Type: " + type;
+        /**
+         * Makes a new quest
+         * @param {the type of the current quest} type 
+         */
+        function new_quest(type) {
+            document.getElementById(quest + "_type").innerText = "Type: " + type;
 
-        //Create button
-        const button = document.createElement("button");
-        button.textContent = "Get new Quest!";
-        button.id = questTimespan;
+            //Create button
+            const button = document.createElement("button");
+            button.textContent = "Get new Quest!";
+            button.id = questTimespan;
 
-        //Append button
-        document.getElementById(quest + "_type").appendChild(button)
+            //Append button
+            document.getElementById(quest + "_type").appendChild(button)
 
-        //Add event listner to button
-        button.addEventListener("click", () => {
-            open_modal_for_quest(questTimespan, type, user);
-        });
-    }
+            //Add event listner to button
+            button.addEventListener("click", () => {
+                open_modal_for_quest(questTimespan, type, user);
+            });
+        }
 
-    //Fetch quest_log
-    fetchJSON('json/quest_log.json')
-        .then(quest_log => {
-            //Check the state of quest
-            const obj_stateQuest = check_current(questTimespan, quest_log, user);
-            //If there is no quest
-            if (obj_stateQuest["state"] == "None") {
-                //Chooses a type for userInfo
-                const type = userInfo["preset"][generate_random_number(userInfo["preset"].length)];
-                //Makes a obj with info for new quest
-                const date = get_current_date_format();
-                let obj_newQuest = {};
-                obj_newQuest[date] = {};
-                obj_newQuest[date].type = type;
-                obj_newQuest.timespan = questTimespan;
-                obj_newQuest.userID = user;
-                //Adds the type to Json file
-                add_quest_json(obj_newQuest);
-                //Make the new quest button appear
-                new_quest(type);
-                resolve();
-                return;
+        //Fetch quest_log
+        fetchJSON('json/quest_log.json')
+            .then(quest_log => {
+                //Check the state of quest
+                const obj_stateQuest = check_current(questTimespan, quest_log, user);
+                //If there is no quest
+                if (obj_stateQuest["state"] == "None") {
+                    //Chooses a type for userInfo
+                    fetchJSON('json/users_info.json')
+                        .then(userInfo => {
+                            const type = get_type(userInfo.users_info[user].preset["conf"]);
+                            //Makes a obj with info for new quest
+                            const date = get_current_date_format();
+                            let obj_newQuest = {};
+                            obj_newQuest[date] = {};
+                            obj_newQuest[date].type = type;
+                            obj_newQuest.timespan = questTimespan;
+                            obj_newQuest.userID = user;
+                            //Adds the type to Json file
+                            add_quest_json(obj_newQuest);
+                            //Make the new quest button appear
+                            new_quest(type);
+                            resolve();
+                            return;
+                        })
 
 
-                
-            } else if (obj_stateQuest["state"] == "Done") {
-                //If quest is done
-                document.getElementById(quest + "_type").innerText = "Quest done";
-                resolve();
-                return;
-            } else {
-                //If a quest is ongoing
 
-                //if only a type for the quest exits make a new quest
-                if (Object.keys(quest_log[user][questTimespan][obj_stateQuest["date"]]).length < 2) {
-                    new_quest(quest_log[user][questTimespan][obj_stateQuest["date"]]["type"]);
+
+
+
+
+                } else if (obj_stateQuest["state"] == "Done") {
+                    //If quest is done
+                    document.getElementById(quest + "_type").innerText = "Quest done";
                     resolve();
                     return;
+                } else {
+                    //If a quest is ongoing
+
+                    //if only a type for the quest exits make a new quest
+                    if (Object.keys(quest_log[user][questTimespan][obj_stateQuest["date"]]).length < 2) {
+                        new_quest(quest_log[user][questTimespan][obj_stateQuest["date"]]["type"]);
+                        resolve();
+                        return;
+                    }
+
+                    //Makes obj with parametes for other functions
+                    const obj_para = {
+                        questID: quest,
+                        timespan: questTimespan,
+                        date: obj_stateQuest["date"],
+                        user: user
+                    };
+
+                    //Add edit button
+                    add_edit_button(obj_para);
+                    const vaules = quest_log[user][questTimespan][obj_stateQuest["date"]];
+                    document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
+
+                    //Show meter and update it
+                    document.getElementById("meter" + quest[5]).style.display = "block"
+                    update_meter(quest[5], quest_log[user][questTimespan][obj_stateQuest["date"]]);
+                    resolve();
+
                 }
-
-                //Makes obj with parametes for other functions
-                const obj_para = {
-                    questID: quest,
-                    timespan: questTimespan,
-                    date: obj_stateQuest["date"],
-                    user: user
-                };
-
-                //Add edit button
-                add_edit_button(obj_para);
-                const vaules = quest_log[user][questTimespan][obj_stateQuest["date"]];
-                document.getElementById(quest + "_type").innerText = "Type: " + vaules.type + "\n" + vaules.text + "\nYou have done " + vaules.amount + " out of " + vaules.target;
-
-                //Show meter and update it
-                document.getElementById("meter" + quest[5]).style.display = "block"
-                update_meter(quest[5], quest_log[user][questTimespan][obj_stateQuest["date"]]);
-                resolve();
-
-            }
-        })
+            })
     })
 
 }
@@ -500,15 +546,15 @@ userInfo = {
  * Displayes all the quest
  * @param {userID} user 
  */
-async function display_all_quest(user){
+async function display_all_quest(user) {
     try {
         //Display the daily quest
-        await display_quest("quest1", "Add User Json Here", user);
+        await display_quest("quest1", user);
         //Display the weekly quest
-        await display_quest("quest2", "Add User Json Here", user);
+        await display_quest("quest2", user);
         //Display the monthly quest
-        await display_quest("quest3", "Add User Json Here", user);
-        
+        await display_quest("quest3", user);
+
     } catch (error) {
         console.error("Error displaing quests:", error);
     }
@@ -517,7 +563,6 @@ async function display_all_quest(user){
 try {
     const userx = localStorage.getItem('username');
     display_all_quest(userx);
-    console.log(userx);
 
 } catch (error) {
     console.log("User not logged in");
