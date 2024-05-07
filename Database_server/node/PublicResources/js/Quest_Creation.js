@@ -15,6 +15,7 @@ function generate_random_number(max) {
  * @returns An obj with a random quest, and the exercise 
  */
 function choose_quest(quests) {
+    console.log(quests)
     const quest = new Object;
     const random = generate_random_number(Object.keys(quests).length);
     quest.quest = quests[Object.keys(quests)[random]];
@@ -244,10 +245,10 @@ function open_modal_for_quest(questTimespan, type, user) {
                     console.log("Dav");
                     //Gets a quest out of quest_template
                     //TODO, Uncomment when tobi fix
-                    //let obj_Quest = choose_quest(data.quest_templates[get_overkey(type)][type]);
+                    let obj_Quest = choose_quest(data.quest_templates[type]);
                     //Modify the quest
-                    let obj_Quest = {};
-                    obj_Quest.quest = modify_quest(data.quest_templates[get_overkey(type)][type], 3, difficulty, 6, questTimespan);
+                    
+                    obj_Quest.quest = modify_quest(obj_Quest.quest, 3, difficulty, 6, questTimespan);
                     obj_newQuest = new Object;
                     const date = get_current_date_format();
                     //Make an obj which is used when adding the quest
