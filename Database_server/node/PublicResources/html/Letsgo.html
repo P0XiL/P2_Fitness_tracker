@@ -91,11 +91,11 @@
 
     <div id="stats" class="page center">
         <h2>Stats</h2>
-        <p id="statsText"></p>
+        <p id="statsTextUser"></p>
 
         <div class="dropdown-container">
             <div class="dropdown">
-                <button onclick="dropdown_close()" class="dropbtn">Change type</button>
+                <button onclick="dropdown_toggle('myDropdown')" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
                     <a href="#" onclick="update_graph('run', null)">Run</a>
                     <a href="#" onclick="update_graph('walk', null)">Walk</a>
@@ -118,7 +118,7 @@
 
         <div class="dropdown-container">
             <div class="dropdown">
-                <button onclick="dropdown_close1()" class="dropbtn">Change period</button>
+                <button onclick="dropdown_toggle('myDropdown1')" class="dropbtn">Change period</button>
                 <div id="myDropdown1" class="dropdown-content">
                     <a href="#" onclick="update_graph(null, 'daily')">Daily</a>
                     <a href="#" onclick="update_graph(null, 'weekly')">Weekly</a>
@@ -224,12 +224,12 @@
 
     <div id="userfriend" class="page center">
         <h2>Users friends name goes here + stats</h2>
-        <p id="statsText1"></p>
+        <p id="statsTextFriend"></p>
 
 
         <div class="dropdown-container">
             <div class="dropdown">
-                <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
+                <button onclick="dropdown_toggle('myDropdown2')" class="dropbtn">Change type</button>
                 <div id="myDropdown2" class="dropdown-content">
                     <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
                     <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
@@ -241,7 +241,7 @@
 
         <div class="dropdown-container">
             <div class="dropdown">
-                <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
+                <button onclick="dropdown_toggle('myDropdown3')" class="dropbtn">Change period</button>
                 <div id="myDropdown3" class="dropdown-content">
                     <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
                     <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
