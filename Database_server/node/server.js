@@ -93,9 +93,9 @@ function addFriend(req, res) {
 
             const currentUser = username; // Assuming you have a user session
 
-            // Check if the currentUser exists in users_info
-            if (!usersInfo.users_info[friendUsername]) {
-                errorResponse(res, 404, "User not found");
+            // Check if the friend username exists in users_info
+            if (!usersInfo.users_info.hasOwnProperty(friendUsername)) {
+                errorResponse(res, 400, "User not found");
                 return;
             }
 
@@ -126,8 +126,6 @@ function addFriend(req, res) {
         });
     });
 }
-
-
 
 
 // Function to handle user login

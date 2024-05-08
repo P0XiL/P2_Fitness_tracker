@@ -219,18 +219,34 @@ function saveFriend(friendData) {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            response.text().then(errorMessage => {
+                displayFriendErrorMessage(errorMessage); // Display error message for friend-related errors
+            });
+        } else {
+            clearFriendErrorMessage();
         }
-        return response.json();
     })
     .then(data => {
-        // Optionally, handle success response
+        // Handle success response here if needed
         console.log('Friend added successfully:', data);
     })
     .catch(error => {
         console.error('Error adding friend:', error);
     });
 }
+
+
+// Function to display login error message
+function displayFriendErrorMessage(message) {
+    const loginErrorMessage = document.getElementById('friendErrorMessage');
+    loginErrorMessage.textContent = message;
+    loginErrorMessage.style.color = 'red';
+}
+function clearFriendErrorMessage() {
+    const loginErrorMessage = document.getElementById('friendErrorMessage');
+    loginErrorMessage.textContent = '';
+}
+
 
 // Function to handle storing login state
 function storeLoginState(username) {

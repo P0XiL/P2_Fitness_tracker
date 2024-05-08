@@ -924,7 +924,15 @@
           "upperbody": 2
         }
       },
-      "friends": []
+      "friends": [
+        "Jacobkage",
+        "Rimmen",
+        "Rimmen",
+        "Rimmen",
+        "Rimmen",
+        "Rimmen",
+        "Rimmen"
+      ]
     },
     "Jacobkage": {
       "username": "Jacobkage",
@@ -1019,7 +1027,7 @@
         }
       },
       "friends": [
-        "kfajsaf"
+        "Rimmen"
       ]
     }
   }
