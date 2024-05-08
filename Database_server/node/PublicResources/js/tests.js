@@ -1,4 +1,5 @@
-scriptJS=require('./script');
+import * as scriptJS from './script.js';
+
 
 
  // Call the test functions
