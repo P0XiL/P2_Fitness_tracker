@@ -93,8 +93,8 @@
     "1235": {
       "username": "1235",
       "health": {
-        "height": 178,
-        "weight": 90
+        "height": 200,
+        "weight": 50
       },
       "mastery": {
         "run": {
@@ -105,13 +105,53 @@
           "rank": 10,
           "elo": 69
         },
-        "crunches": {
-          "rank": 30,
+        "cycling": {
+          "rank": 10,
+          "elo": 69
+        },
+        "squats": {
+          "rank": 10,
+          "elo": 69
+        },
+        "lunges": {
+          "rank": 11,
+          "elo": 69
+        },
+        "wallsit": {
+          "rank": 12,
+          "elo": 69
+        },
+        "plank": {
+          "rank": 10,
+          "elo": 69
+        },
+        "situps": {
+          "rank": 14,
+          "elo": 69
+        },
+        "backextentions": {
+          "rank": 17,
+          "elo": 69
+        },
+        "burpees": {
+          "rank": 3,
           "elo": 50
         },
-        "pushups": {
+        "crunches": {
           "rank": 40,
-          "elo": 90
+          "elo": 80
+        },
+        "pushups": {
+          "rank": 45,
+          "elo": 92
+        },
+        "dips": {
+          "rank": 2,
+          "elo": 30
+        },
+        "armcircles": {
+          "rank": 3,
+          "elo": 50
         }
       },
       "hiddenRank": {
@@ -134,12 +174,12 @@
         }
       },
       "preset": {
-        "name": "balance",
+        "name": "lose weight",
         "conf": {
-          "cardio": 2,
-          "lowerbody": 2,
-          "core": 2,
-          "upperbody": 2
+          "cardio": 7,
+          "lowerbody": 1,
+          "core": 1,
+          "upperbody": 1
         }
       }
     },
@@ -500,8 +540,8 @@
         }
       }
     },
-    "Tobi1": {
-      "username": "Tobi1",
+    "Christiansmorerdejlig2": {
+      "username": "Christiansmorerdejlig2",
       "health": {
         "height": 0,
         "weight": 0
@@ -520,6 +560,245 @@
           "elo": 0
         },
         "pushups": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 1,
+          "elo": 0
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {
+        "name": "balance",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      }
+    },
+    "Jacob": {
+      "username": "Jacob",
+      "health": {
+        "height": 200,
+        "weight": 40
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 1,
+          "elo": 0
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {
+        "name": "strength",
+        "conf": {
+          "cardio": 1,
+          "lowerbody": 3,
+          "core": 3,
+          "upperbody": 3
+        }
+      }
+    },
+    "TobiasOG": {
+      "username": "TobiasOG",
+      "health": {
+        "height": 0,
+        "weight": 0
+      },
+      "mastery": {
+        "run": {
+          "rank": 0,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 0,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 0,
+          "elo": 0
+        },
+        "squats": {
+          "rank": 0,
+          "elo": 0
+        },
+        "lunges": {
+          "rank": 0,
+          "elo": 0
+        },
+        "wallsit": {
+          "rank": 0,
+          "elo": 0
+        },
+        "plank": {
+          "rank": 0,
+          "elo": 0
+        },
+        "situps": {
+          "rank": 0,
+          "elo": 0
+        },
+        "backextentions": {
+          "rank": 0,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 0,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 0,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 0,
+          "elo": 0
+        },
+        "dips": {
+          "rank": 0,
+          "elo": 0
+        },
+        "armcircles": {
+          "rank": 0,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 1,
+          "elo": 0
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {
+        "name": "balance",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      }
+    },
+    "TobiOGOG": {
+      "username": "TobiOGOG",
+      "health": {
+        "height": 180,
+        "weight": 80
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 1,
+          "elo": 0
+        },
+        "squats": {
+          "rank": 1,
+          "elo": 0
+        },
+        "lunges": {
+          "rank": 1,
+          "elo": 0
+        },
+        "wallsit": {
+          "rank": 1,
+          "elo": 0
+        },
+        "plank": {
+          "rank": 1,
+          "elo": 0
+        },
+        "situps": {
+          "rank": 1,
+          "elo": 0
+        },
+        "backextentions": {
+          "rank": 1,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        },
+        "dips": {
+          "rank": 1,
+          "elo": 0
+        },
+        "armcircles": {
           "rank": 1,
           "elo": 0
         }
