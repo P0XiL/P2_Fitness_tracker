@@ -131,7 +131,60 @@ async function display_quest(quest, user) {
 
                 } else if (obj_stateQuest["state"] == "Done") {
                     //If quest is done
-                    document.getElementById(quest + "_type").innerText = "Quest done";
+                    const textContainer = document.getElementById(quest + "_type");
+                    textContainer.innerText = "Quest done";
+                    const procentElement = document.createElement("h3");
+                    const procentComplete = Math.floor(quest_log[user][questTimespan][obj_stateQuest.date].amount / quest_log[user][questTimespan][obj_stateQuest.date].target * 100);
+                    procentElement.textContent = procentComplete +"%";
+                    const min = 16;
+                    const max = 108;
+                    procentElement.style.fontSize =   + "px";
+                    let newFontSize = procentComplete * 0.1;
+                    if (newFontSize >= max){
+                        newFontSize = max
+                    } else if (newFontSize < min){
+                        newFontSize = min}
+                    
+                    const color = lerpColor("#00FF00", "#8B0000", (newFontSize - min) / (max - min));
+                    
+                    procentElement.style.fontSize = newFontSize + "px";
+                    procentElement.style.color = color;
+
+
+                    function lerpColor(a, b, t) {
+                        const ah = parseInt(a.replace(/#/g, ""), 16),
+                            ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+                            bh = parseInt(b.replace(/#/g, ""), 16),
+                            br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+                            rr = ar + t * (br - ar),
+                            rg = ag + t * (bg - ag),
+                            rb = ab + t * (bb - ab);
+                    
+                        return "#" + (((1 << 24) + (rr << 16) + (rg << 8) + rb) | 0).toString(16).slice(1);
+                    }
+
+
+                    procentElement.style.position ="absolute";
+                    procentElement.style.top = "30px";
+                    procentElement.style.left = "50%";
+                    procentElement.style.transform = "translateX(-50%)";
+
+                    textContainer.append(procentElement);
+
+                    
+                    
+                    
+                    
+                    
+                    
+                    //Makes obj with parametes for other functions
+                    const obj_para = {
+                        questID: quest,
+                        timespan: questTimespan,
+                        date: obj_stateQuest["date"],
+                        user: user
+                    };
+                    add_edit_button(obj_para);
                     resolve();
                     return;
                 } else {

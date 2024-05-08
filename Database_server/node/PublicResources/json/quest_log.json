@@ -45,7 +45,20 @@
   "sad": {
     "daily": {
       "8/5/2024": {
-        "type": "core"
+        "type": "lowerbody",
+        "target": 3,
+        "amount": 35,
+        "text": "Do 3 lunges",
+        "state": "incomplete",
+        "exercise": "lunges"
+      },
+      "9/5/2024": {
+        "type": "cardio",
+        "target": 5,
+        "amount": 30,
+        "text": "Go for a walk for 5 minutes",
+        "state": "incomplete",
+        "exercise": "walk"
       }
     },
     "weekly": {
