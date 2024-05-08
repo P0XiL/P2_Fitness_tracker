@@ -32,51 +32,35 @@ function dropdown_close3() {
   document.getElementById("myDropdown3").classList.toggle("show");
 }
 
-function individual_stats(user, type) {
-  return fetchJSON("json/quest_log.json")
-    .then(data => {
-      let amount = 0;
-      for (let period in data[user]) {
-        for (let key in data[user][period]) {
-          if (data[user][period][key].type === type) {
-            const currentAmount = data[user][period][key].amount;
-            if (!isNaN(currentAmount)) {
-              amount += currentAmount;
-            }
-          }
-        }
-      }
-      return amount;
-    })
-    .catch(error => {
-      console.error("Error fetching JSON:", error);
-    });
-}
 
 function individual_type(user) {
   fetchJSON("json/quest_log.json")
     .then(data => {
       let text = ""; // Initialize text variable
       const processedTypes = {}; // Object to keep track of processed types
+      let amount;
 
       for (let period in data[user]) {
         for (let key in data[user][period]) {
-          const type = data[user][period][key].type;
-          if (!processedTypes[type]) { // Check if type has already been processed
-            processedTypes[type] = true;
-            individual_stats(user, type).then(amount => {
-              if (amount !== 0) {
-                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+          const exercise = data[user][period][key].exercise;
+          amount = data[user][period][key].amount;
+          if (!processedTypes[exercise]) { // Check if type has already been processed
+            processedTypes[exercise] = true;
+              if (amount !== 0 && !isNaN(amount)) {
                 const element = document.getElementById("statsText");
                 try {
-                  element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
+                  element.innerHTML += `<pre id=${exercise} sum=${amount}>Amount of ${exercise} = ${amount} \n\n</pre>`;
                 } catch (error) {
                   console.error("Error setting innerHTML:", error);
                 }
               }
-            }).catch(error => {
-              console.error("Error in individual_stats:", error);
-            });
+          } else {
+            if(amount !== 0 && !isNaN(amount)){
+              const path = document.getElementById(exercise);
+              const newsum = parseInt(path.getAttribute("sum")) + amount;
+              path.setAttribute("sum", newsum);              
+              path.textContent = `Amount of ${exercise} = ${newsum} \n\n`;
+            }
           }
         }
       }
@@ -91,25 +75,30 @@ function individual_type_friend(user) {
     .then(data => {
       let text = ""; // Initialize text variable
       const processedTypes = {}; // Object to keep track of processed types
+      const processedPeriod = {}
+      let amount;
 
       for (let period in data[user]) {
         for (let key in data[user][period]) {
-          const type = data[user][period][key].type;
-          if (!processedTypes[type]) { // Check if type has already been processed
-            processedTypes[type] = true;
-            individual_stats(user, type).then(amount => {
-              if (amount !== 0) {
-                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
+          const exercise = data[user][period][key].exercise;
+          amount = data[user][period][key].amount;
+          if (!processedTypes[exercise]) { // Check if type has already been processed
+            processedTypes[exercise] = true;
+              if (amount !== 0 && !isNaN(amount)) {
                 const element1 = document.getElementById("statsText1");
                 try {
-                  element1.innerHTML = "<pre>" + text + "</pre>";
+                  element1.innerHTML += `<pre id=${exercise} sum=${amount}>Amount of ${exercise} = ${amount} \n\n</pre>`;
                 } catch (error) {
                   console.error("Error setting innerHTML:", error);
                 }
               }
-            }).catch(error => {
-              console.error("Error in individual_stats:", error);
-            });
+          } else {
+            if(amount !== 0 && !isNaN(amount)){
+              const path = document.getElementById(exercise);
+              const newsum = parseInt(path.getAttribute("sum")) + amount;
+              path.setAttribute("sum", newsum);              
+              path.textContent = `Amount of ${exercise} = ${newsum} \n\n`;
+            }
           }
         }
       }
@@ -159,13 +148,13 @@ function plot(user, type, period) {
     .then(([labels, data]) => {
       let maxVal = data.length > 0 ? Math.max(...data) + 1 : 10;
       let myChart = new Chart(ctx, {
-        type: "line",
+        type: "bar",
         data: {
           labels: labels,
           datasets: [{
             fill: false,
             lineTension: 0,
-            backgroundColor: "rgba(255,255,255,1)",
+            backgroundColor: "rgba(255,164,0,255)",
             borderColor: "rgba(0,0,255,0.5)",
             data: data,
           }]
@@ -184,12 +173,12 @@ function plot(user, type, period) {
 }
 
 
-function user_data_x(user, type, period) {
+function user_data_x(user, exercise, period) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
       let x = ["01/1/2024"];
       for (let key in data[user][period]) {
-        if (data[user][period][key].type === type) {
+        if (data[user][period][key].exercise === exercise) {
           x.push(key);
         }
       }
@@ -201,13 +190,12 @@ function user_data_x(user, type, period) {
     });
 }
 
-function user_data_y(user, type, period) {
+function user_data_y(user, exercise, period) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
       let amountsWithType = [0];
       for (let date in data[user][period]) {
-        if (data[user][period][date].type === type) {
-          console.log(data[user][period][date].type);
+        if (data[user][period][date].exercise === exercise) {
           amountsWithType.push(data[user][period][date].amount);
         }
       }
