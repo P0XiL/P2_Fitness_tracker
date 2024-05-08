@@ -242,7 +242,6 @@ function open_modal_for_quest(questTimespan, type, user) {
                           }
                           return null; // Exercise not found in any category
                     }
-                    console.log("Dav");
                     //Gets a quest out of quest_template
                     //TODO, Uncomment when tobi fix
                     let obj_Quest = choose_quest(data.quest_templates[type]);
@@ -523,7 +522,7 @@ async function display_quest(quest, user) {
 
                     //Show meter and update it
                     document.getElementById("meter" + quest[5]).style.display = "block"
-                    update_meter(quest[5], quest_log[user][questTimespan][obj_stateQuest["date"]]);
+                    update_meter(quest[5], vaules);
                     resolve();
 
                 }
@@ -537,12 +536,7 @@ async function display_quest(quest, user) {
 
 
 
-//example of output
-userInfo = {
-    rank: generate_random_number(43),
-    mastery: generate_random_number(3),
-    preset: ["cardio", "cardio", "cardio", "core", "core", "upperbody", "lowerbody"],
-};
+
 /**
  * Displayes all the quest
  * @param {userID} user 
@@ -563,11 +557,18 @@ async function display_all_quest(user) {
 
 try {
     const userx = localStorage.getItem('username');
-    display_all_quest(userx);
-
+    if (typeof userx === 'undefined'){
+        display_all_quest(userx);
+    }
+    else {
+        document.getElementById("quest1_type").innerText = "Please, login";
+        document.getElementById("quest1_type").innerText = "Please, login";
+        document.getElementById("quest1_type").innerText = "Please, login";
+    }
+    
 } catch (error) {
     console.log("User not logged in");
-    document.getElementById("quest1_type").innerText = "Please login"
-    document.getElementById("quest1_type").innerText = "Please login"
-    document.getElementById("quest1_type").innerText = "Please login"
+    document.getElementById("quest1_type").innerText = "Error, please reload site";
+    document.getElementById("quest1_type").innerText = "Error, please reload site";
+    document.getElementById("quest1_type").innerText = "Error, please reload site";
 }
