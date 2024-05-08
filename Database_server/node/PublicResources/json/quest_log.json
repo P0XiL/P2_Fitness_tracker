@@ -290,5 +290,115 @@
     "monthly": {
       "6/5/2024": {}
     }
+  },
+  "Christiansmorerdejlig": {
+    "daily": {
+      "7/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "7/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "7/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "Christiansmorerdejlig2": {
+    "daily": {
+      "7/5/2024": {
+        "type": "core",
+        "target": 27,
+        "amount": 28,
+        "text": "Do 27 crunches",
+        "state": "incomplete",
+        "exercise": "crunches"
+      }
+    },
+    "weekly": {
+      "7/5/2024": {
+        "type": "lowerbody",
+        "target": 54,
+        "amount": 0,
+        "text": "Do 54 squats",
+        "state": "incomplete",
+        "exercise": "squats"
+      }
+    },
+    "monthly": {
+      "7/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "Jacob": {
+    "daily": {
+      "7/5/2024": {
+        "type": "upperbody",
+        "target": 90,
+        "amount": 90,
+        "text": "Do arm circles for 90 seconds",
+        "state": "incomplete",
+        "exercise": "armcircles"
+      }
+    },
+    "weekly": {
+      "7/5/2024": {
+        "type": "upperbody",
+        "target": 54,
+        "amount": 54,
+        "text": "Do 54 pushups",
+        "state": "incomplete",
+        "exercise": "pushups"
+      }
+    },
+    "monthly": {
+      "7/5/2024": {
+        "type": "core",
+        "target": 3,
+        "amount": 20,
+        "text": "Do 3 situps",
+        "state": "incomplete",
+        "exercise": "situps"
+      }
+    }
+  },
+  "TobiasOG": {
+    "daily": {
+      "7/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "7/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "7/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "TobiOGOG": {
+    "daily": {
+      "7/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "7/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "7/5/2024": {
+        "type": "upperbody"
+      }
+    }
   }
 }

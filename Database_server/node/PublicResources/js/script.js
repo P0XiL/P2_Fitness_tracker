@@ -1,11 +1,13 @@
-const serverPath = 'http://127.0.0.1:3360/';
+const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/';
+// LOCALHOST: https://127.0.0.1:3360
+// SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
 
 
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
     // Call checkLoginState() on page load
-    //window.addEventListener('load', checkLoginState);
     checkLoginState();
+    
     setupTiersForQuestPage(localStorage.getItem('username'));
 
     // Assigns all tabs to an array called links
@@ -93,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Send the data to the server-side script for file writing
-            console.log(username);
+            //console.log(username);
             createUser(userData);
         }
     });
@@ -319,10 +321,12 @@ async function setupProfilePage(username) {
         const userData = await fetchUserData(username);
 
         // Log the fetched JSON data to the console
-        console.log('Fetched JSON data:', userData);
+        //console.log('Fetched JSON data:', userData);
 
         // Process the JSON data here
         processData(userData, username);
+
+
 
         // Return the user info
         return userData;
@@ -450,18 +454,6 @@ function getTierRange(rank) {
     }
 }
 
-// Function to get the tier range
-function getTierRange(rank) {
-    if (rank >= 1 && rank <= 15) {
-        return '1-15';
-    } else if (rank >= 16 && rank <= 30) {
-        return '16-30';
-    } else if (rank >= 31 && rank <= 45) {
-        return '31-45';
-    }
-    // Add more ranges as needed
-}
-
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
     '16-30': 'image/silverTier.png',
@@ -494,25 +486,24 @@ function displayUserMasteries(masteryInfo) {
     // Clear existing content inside userMasteriesDiv
     userMasteriesDiv.innerHTML = '';
 
-    // Sort masteryInfo based on rank in descending order
+    // Convert the masteryInfo object to an array of key-value pairs
     const sortedMasteries = Object.entries(masteryInfo).sort((a, b) => b[1].rank - a[1].rank);
 
     // Array to store all created mastery divs
     const masteryDivs = [];
 
-    // Iterate over the first three sorted masteries
-    for (let i = 0; i < Math.min(3, sortedMasteries.length); i++) {
-        const [masteryKey, mastery] = sortedMasteries[i];
+    // Iterate over the top 3 masteries
+    sortedMasteries.slice(0, 3).forEach(([masteryKey, mastery]) => {
+        // Create a mastery div for each mastery
         const masteryDiv = createMasteryItem(masteryKey, mastery);
         userMasteriesDiv.appendChild(masteryDiv);
         masteryDivs.push(masteryDiv);
-    }
+    });
 
     // Create button to reveal hidden masteries
-    // Check if the revealButton already exists
     let revealButton = document.getElementById('revealButton');
 
-// If revealButton doesn't exist, create it
+    // If revealButton doesn't exist, create it
     if (!revealButton) {
         revealButton = document.createElement('button');
         revealButton.id = 'revealButton';
@@ -522,19 +513,17 @@ function displayUserMasteries(masteryInfo) {
         // Add event listener only once
         revealButton.addEventListener('click', () => {
             // Append the rest of the masteries
-            for (let i = 3; i < sortedMasteries.length; i++) {
-                const [masteryKey, mastery] = sortedMasteries[i];
+            sortedMasteries.slice(3).forEach(([masteryKey, mastery]) => {
                 const masteryDiv = createMasteryItem(masteryKey, mastery);
                 userMasteriesDiv.appendChild(masteryDiv);
                 masteryDivs.push(masteryDiv);
-            }
+            });
             // Show the hide button
             hideButton.style.display = 'inline-block';
             // Hide the reveal button
             revealButton.style.display = 'none';
-    });
-}
-
+        });
+    }
 
     // Create button to hide extra masteries
     const hideButton = document.createElement('button');
@@ -552,6 +541,8 @@ function displayUserMasteries(masteryInfo) {
         hideButton.style.display = 'none';
     });
 }
+
+
 
 // Helper function to create mastery item
 function createMasteryItem(masteryKey, mastery) {
@@ -609,6 +600,7 @@ function displayUserInfo(username, userInfo) {
         <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
         <button onclick="postUserInfo('${username}')">Save User Info</button>
         <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
+        <canvas id="bmiGraph" width="600" height="400"></canvas>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
 
@@ -621,8 +613,13 @@ function displayUserInfo(username, userInfo) {
 }
 
 async function postUserInfo(username) {
-    const height = parseFloat(document.getElementById('height').value);
-    const weight = parseFloat(document.getElementById('weight').value);
+    validateIntegerInput(parseInt(document.getElementById('height').value))
+    const height = parseInt(document.getElementById('height').value);
+    
+    
+    validateIntegerInput(parseInt(document.getElementById('weight').value))
+    const weight = parseInt(document.getElementById('weight').value);
+    
 
     try {
         const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
@@ -660,6 +657,8 @@ async function postUserInfo(username) {
 
 // Function to update user info
 function update_users_info(newUserInfo) {
+    //console.log("new user info:");
+    //console.log(newUserInfo);
     fetch(serverPath+'write_user_info_json', {
         method: 'POST',
         headers: {
@@ -671,11 +670,11 @@ function update_users_info(newUserInfo) {
             if (!response.ok) {
                 throw new Error('Failed to fetch POST');
             }
-            console.log(response);
+            //console.log(response);
             return response.json(); // Read response JSON
         })
         .then(responseJson => {
-            console.log('Response from POST:', responseJson);
+            //console.log('Response from POST:', responseJson);
             if (responseJson.success) {
                 console.log('User info updated successfully');
                 // Fetch user data again after successful update
@@ -695,7 +694,34 @@ function updateBMI(height, weight) {
     const bmi = calculateBMI(height, weight);
     const bmiText = document.getElementById('bmiText');
     bmiText.textContent = `BMI: ${bmi}`;
+
+    // Display warning if BMI is over 25 or under 18.5
+    if (bmi > 30){
+        bmiText.innerHTML += `<br><span>BMI is over 30 leading to a lot higher possibily of diseases 
+        such as cardiovascular diseases. Try to limit calorie intake. This can be done by drinking more water, 
+        eating less fatty foods, using smaller plates among many other ways of reducing body weight. For more information on how to 
+        lose weight, visit <a href="https://www.health.harvard.edu/topics/diet-and-weight-loss" target="_blank">
+        Harvard Health Publishing</a>.</span>`;
+    }
+    else if (bmi > 25) {
+        bmiText.innerHTML += `<br><span>BMI is over 25 leading to a sligtly higher possibily of diseases
+         such as cardiovascular diseases. Try to limit calorie intake. This can be done by drinking more water, 
+         eating less fatty foods, using smaller plates among many other ways of reducing body weight. For more information on how to 
+         lose weight, visit <a href="https://www.health.harvard.edu/topics/diet-and-weight-loss" target="_blank">
+         Harvard Health Publishing</a>.</span>`;
+    } else if (bmi < 18.5) {
+        bmiText.innerHTML += `<br><span>BMI is under 18.5. Try to ingest more calories. 
+        This can be done by adding in small extra meals around 300-500 calories, drinking high-calorie drinks such as milkshakes,
+        adding more protein to your diet among other things. For more information on how to 
+        gain weight, visit <a href="https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/healthy-ways-to-gain-weight/" target="_blank">
+        The National Health Service</a>.</span>`;
+    } else {
+        // Clear any previous warnings
+        bmiText.innerHTML = `BMI: ${bmi}`;
+    }
+    drawBMIGraph(bmi);
 }
+
 
 // Update BMI text after user inputs height or weight
 document.getElementById('height').addEventListener('input', function() {
@@ -719,7 +745,7 @@ async function setupTiersForQuestPage(username) {
         const userData = await fetchUserData(username);
 
         // Log the JSON object fetched to the console
-        console.log('Fetched JSON data:', userData);
+        //console.log('Fetched JSON data:', userData);
 
         // Check if the user object exists
         if (userData) {
@@ -785,60 +811,39 @@ function getSubTierRange(rank) {
 }
 
 
-function displayUserPreferences(username, userInfo) {
+async function displayUserPreferences(username, userInfo) {
     const preset = userInfo.preset.name;
     const confObject = userInfo.preset.conf || {}; // Ensure confObject is an object
+
 
     // Generate sliders for exercise preferences
     const userInfoDiv = document.getElementById('userPreferences');
     let slidersHTML = '';
 
-    // Check if each exercise exists in the confObject, then include the slider
-    if (confObject['pushups'] !== undefined || preset === 'custom') {
+    // Iterate through each key in confObject and generate sliders dynamically
+    Object.keys(confObject).forEach(exercise => {
         slidersHTML += `
             <div>
-                <label for="pushups">Pushups</label>
-                <input type="range" id="pushups" name="pushups" min="0" max="10" value="${confObject['pushups'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
-                <span id="pushupsCounter">${confObject['pushups'] || 0}</span>
+                <label for="${exercise}">${exercise}</label>
+                <input type="range" id="${exercise}" name="${exercise}" min="0" max="10" value="${confObject[exercise]}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('${exercise}', this.value)">
+                <span id="${exercise}Counter">${confObject[exercise]}</span>
             </div>
         `;
-    }
-    if (confObject['run'] !== undefined || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="run">Run</label>
-                <input type="range" id="run" name="run" min="0" max="10" value="${confObject['run'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
-                <span id="runCounter">${confObject['run'] || 0}</span>
-            </div>
-        `;
-    }
-    if (confObject['walk'] !== undefined || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="walk">Walk</label>
-                <input type="range" id="walk" name="walk" min="0" max="10" value="${confObject['walk'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
-                <span id="walkCounter">${confObject['walk'] || 0}</span>
-            </div>
-        `;
-    }
-    if (confObject['crunches'] !== undefined || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="crunches">Crunches</label>
-                <input type="range" id="crunches" name="crunches" min="0" max="10" value="${confObject['crunches'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('crunches', this.value)">
-                <span id="crunchesCounter">${confObject['crunches'] || 0}</span>
-            </div>
-        `;
-    }
+    });
+
+    // Adjusted dropdown menu options
+    const presetDropdownmenu = `
+        <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
+        <option value="lose weight" ${preset === 'lose weight' ? 'selected' : ''}>Lose Weight</option>
+        <option value="balance" ${preset === 'balance' ? 'selected' : ''}>Balance</option>
+        <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
+    `;
 
     const userInfoHTML = `
         <h2 style="text-align: center;">Preferences</h2>
         <label for="presetDropdown">Choose a preset:</label>
         <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
-            <option value="run" ${preset === 'run' ? 'selected' : ''}>Run</option>
-            <option value="walk" ${preset === 'walk' ? 'selected' : ''}>Walk</option>
-            <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
-            <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
+            ${presetDropdownmenu}
         </select>
         <p>Exercise preferences:</p>
         ${slidersHTML}
@@ -848,29 +853,33 @@ function displayUserPreferences(username, userInfo) {
 
     // Update counter values for custom preset
     if (preset === 'custom') {
-        updateCounter('pushups', confObject['pushups'] || 0);
-        updateCounter('run', confObject['run'] || 0);
-        updateCounter('walk', confObject['walk'] || 0);
-        updateCounter('crunches', confObject['crunches'] || 0);
+        Object.keys(confObject).forEach(exercise => {
+            updateCounter(exercise, confObject[exercise]);
+        });
     }
 }
-
 
 function updateCounter(exercise, value) {
     document.getElementById(`${exercise}Counter`).textContent = value;
 }
 
 async function postCustomData(username) {
-    const pushupsValue = document.getElementById('pushups').value;
-    const runValue = document.getElementById('run').value;
-    const walkValue = document.getElementById('walk').value;
-    const crunchesValue = document.getElementById('crunches').value;
-
     try {
         const userData = await fetchUserData(username);
 
         if (userData && userData.username === username) {
             const existingUserInfo = userData;
+
+            // Get all sliders dynamically generated by displayUserPreferences
+            const sliders = document.querySelectorAll('input[type="range"]');
+            const conf = {};
+
+            // Iterate through sliders and extract values for each exercise
+            sliders.forEach(slider => {
+                const exercise = slider.id;
+                const value = parseInt(slider.value);
+                conf[exercise] = value;
+            });
 
             const newUserInfo = {
                 username: username,
@@ -880,12 +889,7 @@ async function postCustomData(username) {
                 tier: existingUserInfo.tier,
                 preset: {
                     name: 'custom',
-                    conf: [
-                        ...Array(Number(pushupsValue)).fill('push-ups'),
-                        ...Array(Number(runValue)).fill('run'),
-                        ...Array(Number(walkValue)).fill('walk'),
-                        ...Array(Number(crunchesValue)).fill('crunches')
-                    ]
+                    conf: conf
                 }
             };
 
@@ -898,6 +902,7 @@ async function postCustomData(username) {
         console.error('Error fetching user data:', error.message);
     }
 }
+
 
 
 // Function to generate sliders for exercise preferences
@@ -920,34 +925,36 @@ async function updatePreset(username, preset) {
 
             let conf = [];
             switch (preset) {
-                case 'run':
+                case 'lose weight':
                     conf = {
-                        run: 10,
-                        walk: 4,
-                        crunches: 3
-                    }
-                    break;
-                case 'walk':
-                    conf = {
-                        run: 4,
-                        walk: 10,
-                        crunches: 3
+                        cardio: 7,
+                        lowerbody: 1,
+                        core: 1,
+                        upperbody: 1
                     }
                     break;
                 case 'strength':
                     conf = {
-                        run: 2,
-                        walk: 2,
-                        crunches: 6,
-                        pushUps: 4
+                        cardio: 1,
+                        lowerbody: 3,
+                        core: 3,
+                        upperbody: 3
+                    }
+                    break;
+                case 'balance':
+                    conf = {
+                        cardio: 2,
+                        lowerbody: 2,
+                        core: 2,
+                        upperbody: 2
                     }
                     break;
                 case 'custom':
                     conf = {
-                        run: 1,
-                        walk: 1,
-                        crunches: 1,
-                        pushUps: 1
+                        cardio: 2,
+                        lowerbody: 2,
+                        core: 2,
+                        upperbody: 2
                     }
                     break;
                 default:
@@ -967,7 +974,6 @@ async function updatePreset(username, preset) {
                     conf: conf
                 }
             };
-            console.log(newUserInfo.preset);
 
             // Update the user info on the server
             update_users_info(newUserInfo);
@@ -988,3 +994,94 @@ function calculateBMI(height, weight) {
     const bmi = weight / (heightMeters * heightMeters);
     return bmi.toFixed(1); // Round to 1 decimal place
 }
+
+// Function to draw the graph
+function drawBMIGraph(bmiValue) {
+    // Define BMI categories and their ranges
+    var categories = [
+        { label: "Underweight", min: 0, max: 18.5, color: "#3498db" },
+        { label: "Normal", min: 18.5, max: 24.9, color: "#2ecc71" },
+        { label: "Overweight", min: 25, max: 29.9, color: "#f1c40f" },
+        { label: "Obese", min: 30, max: 100, color: "#e74c3c" } // Adjusted max value
+    ];
+
+    var canvas = document.getElementById("bmiGraph");
+    var ctx = canvas.getContext("2d");
+    var padding = 10;
+    var scaleFactor = 0.5; // Scale factor for resizing the canvas
+
+    // Adjust canvas size
+    canvas.width = canvas.width * scaleFactor;
+    canvas.height = canvas.height * scaleFactor;
+
+    var barWidth = (canvas.width - 2 * padding) / categories.length;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw bars for each category
+    categories.forEach(function(category, index) {
+        var barHeight = (canvas.height - padding * 2);
+        var y = padding;
+
+        // Calculate x position of the bar
+        var x = padding + index * barWidth;
+
+        // Draw filled rectangle for the bar
+        ctx.fillStyle = category.color;
+        ctx.fillRect(x, y, barWidth, barHeight);
+
+        // Set text color to white
+        ctx.fillStyle = "white";
+
+        // Draw category label in white
+        ctx.font = "12px Arial";
+        ctx.textAlign = "center"; // Center the text
+        ctx.fillText(category.label, x + barWidth / 2, canvas.height - 5);
+
+        // Check if the user's BMI value falls within this category
+        if (bmiValue >= category.min && bmiValue <= category.max) {
+            // Calculate the position of the red dot within this category
+            var progress = (bmiValue - category.min) / (category.max - category.min);
+            var dotX = x + progress * barWidth;
+            
+            // Draw red dot indicating the user's BMI value
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(dotX, canvas.height / 2, 5, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    });
+}
+
+function validateIntegerInput(value) {
+    // Check if the value is a valid number and an integer
+    if (!isNaN(value) && Number.isInteger(value)) {
+        // Check if the value is greater than or equal to 0
+        if (value >= 0) {
+            // Input is valid
+            return true;
+        } else {
+            // Input is negative
+            console.error('Input must be a positive integer.');
+            return false;
+        }
+    } else {
+        // Input is not a valid integer
+        console.error('Input must be a valid integer.');
+        return false;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

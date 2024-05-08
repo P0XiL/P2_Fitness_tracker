@@ -271,17 +271,36 @@ meter {
   margin-top: 10px;
 }
 
+canvas {
+  border: 1px solid #ccc;
+  display: block;
+  margin: 0 auto; /* Center the canvas */
+}
+
+#userContainer {
+  display: grid;
+  grid-template-columns: 1fr auto; /* Adjust column widths as needed */
+  grid-column-gap: 20px; /* Adjust gap between columns as needed */
+  align-items: center; /* Center items vertically */
+}
+
+#bmiGraphContainer {
+  grid-column: 2;
+}
 .profileHeader-container {
   display: flex;
   align-items: center; /* Align items vertically in the center */
   justify-content: space-between; /* Spreads child elements horizontally */
   margin-bottom: 20px; /* Add some margin to separate from the content below */
+  margin-top: 5px;
 }
 .profileHeader-container h2 {
   margin: 0 auto; /* Center the header horizontally */
-  padding-left: 97px; /* Add padding to the right side */
+  padding-left: 100px; /* Add padding to the right side */
+}
 
-
+#logout{
+  margin-right: 10px;
 }
 
 #logoutBtn {
