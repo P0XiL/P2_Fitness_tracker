@@ -403,5 +403,15 @@
         "type": "upperbody"
       }
     }
+  },
+  "Rimmen": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  },
+  "Jacobkage": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
   }
 }

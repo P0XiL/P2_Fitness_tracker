@@ -1,4 +1,4 @@
-const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/';
+const serverPath = 'http://127.0.0.1:3360/';
 
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
@@ -180,7 +180,33 @@ document.addEventListener('DOMContentLoaded', function () {
         loginPage.classList.remove('active');
         createAccountPage.classList.add('active');
     });
+
+    document.getElementById('friendSubmitBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const friend_username = document.querySelector('input[name="friend_username"]').value;
+        
+        const friend_data = {
+            friends: friend_username
+        }
+
+        saveFriend(friend_data);
+    });
+
+
 });
+
+document.getElementById('toggleAddFriendsPage').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const addFriendsPage = document.getElementById('addFriends');
+    const friendsPage = document.getElementById('friends');
+
+    friendsPage.classList.remove('active');
+    addFriendsPage.classList.add('active');
+
+
+})
 
 // Function to check and handle login state on page load
 function checkLoginState() {
@@ -213,6 +239,30 @@ function checkLoginState() {
         loginPage.classList.add('active');
     }
 }
+
+function saveFriend(friendData) {
+    fetch('/addFriend', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(friendData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Optionally, handle success response
+        console.log('Friend added successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error adding friend:', error);
+    });
+}
+
 
 function loginUser(loginData) {
     fetch(serverPath+'login', {

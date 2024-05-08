@@ -58,6 +58,8 @@ function processReq(req, res) {
             } else if (queryPath === "/write_user_info_json") { 
                 // Add new route for writing user info
                 write_user_info_json(req, res);
+            } else if (queryPath === "/saveFriend"){
+                addFriend(req, res)
             } else {
                 errorResponse(res, 404, "not found")
             }
@@ -67,6 +69,57 @@ function processReq(req, res) {
             break;
     }
 }
+
+function addFriend(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const friendData = JSON.parse(body);
+        const friendUsername = friendData.friends;
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error(err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            let usersInfo = JSON.parse(data);
+
+            // Check if the user exists
+            if (!usersInfo.users_info.hasOwnProperty(friendUsername)) {
+                errorResponse(res, 404, "Friend not found");
+                return;
+            }
+
+            // Append friend to user's friend list
+            const currentUser = req.session.user; // Assuming you have a user session
+            usersInfo.users_info[currentUser].friends.push(friendUsername);
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(usersInfo, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('Friend added successfully');
+                    // Send a JSON response confirming the success of the operation
+                    const jsonResponse = {
+                        success: true,
+                        message: 'Friend added successfully'
+                    };
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(jsonResponse));
+                }
+            });
+        });
+    });
+}
+
 
 // Function to handle user login
 function loginUser(req, res) {
@@ -294,7 +347,9 @@ function addUserToUsers_info(username) {
                       core: 2,
                       upperbody: 2
                     }
-                }
+                },
+                friends: []
+            
             };
 
             // Add the new user to the users_info object
