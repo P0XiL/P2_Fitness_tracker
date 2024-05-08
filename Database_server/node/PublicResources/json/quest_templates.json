@@ -3,65 +3,65 @@
 		"cardio": {
 			"run": {
 				"base_target": 5,
-				"quest_text": "Go for a run for x minutes"
+				"quest_text": "Go for a run for ${base_target} minutes"
 			},
 			"walk": {
 				"base_target": 5,
-				"quest_text": "Go for a walk for x minutes"
+				"quest_text": "Go for a walk for ${base_target} minutes"
 			},
 			"cycling": {
 				"base_target": 5,
-				"quest_text": "Cycle x minutes"
+				"quest_text": "Cycle ${base_target} minutes"
 			}
 		},
 		"lowerbody": {
 			"squats": {
 				"base_target": 3,
-				"quest_text": "Do x squats"
+				"quest_text": "Do ${base_target} squats"
 			},
 			"lunges": {
 				"base_target": 3,
-				"quest_text": "Do x lunges"
+				"quest_text": "Do ${base_target} lunges"
 			},
 			"wallsit": {
 				"base_target": 10,
-				"quest_text": "Do the wallsit for x seconds"
+				"quest_text": "Do the wallsit for ${base_target} seconds"
 			}
 		},
 		"core": {
 			"plank": {
 				"base_target": 10,
-				"quest_text": "Do the plank for x seconds"
+				"quest_text": "Do the plank for ${base_target} seconds"
 			},
 			"situps": {
 				"base_target": 3,
-				"quest_text": "Do x situps"
+				"quest_text": "Do ${base_target} situps"
 			},
 			"backextentions": {
 				"base_target": 3,
-				"quest_text": "Do x backextentions"
+				"quest_text": "Do ${base_target} backextentions"
 			},
 			"burpees": {
 				"base_target": 3,
-				"quest_text": "Do x burpees"
+				"quest_text": "Do ${base_target} burpees"
 			},
 			"crunches": {
 				"base_target": 3,
-				"quest_text": "Do x crunches"
+				"quest_text": "Do ${base_target} crunches"
 			}
 		},
 		"upperbody": {
 			"pushups": {
 				"base_target": 3,
-				"quest_text": "Do x pushups"
+				"quest_text": "Do ${base_target} pushups"
 			},
 			"dips": {
 				"base_target": 3,
-				"quest_text": "Do x dips"
+				"quest_text": "Do ${base_target} dips"
 			},
 			"armcircles": {
 				"base_target": 10,
-				"quest_text": "Do arm circles for x seconds"
+				"quest_text": "Do arm circles for ${base_target} seconds"
 			}
 		}
 	}
