@@ -43,33 +43,27 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
-            switch (queryPath) {
-                case "/createUser":
-                    // Handle the POST request to write user data to a file
-                    createUser(req, res);
-                    break;
-                case "/login":
-                    // Handle the POST request to write user data to a file
-                    loginUser(req, res);
-                    break;
-                case "/write_quest_json":
-                    // Handle the POST request to write user data to a file
-                    write_quest_json(req, res);
-                    break;
-                case "/change_amount":
-                    // Handle the POST request to write user data to a file
-                    change_amount(req, res);
-                    break;
-                case "/write_user_info_json":
-                    // Handle the POST request to write user data to a file
-                    write_user_info_json(req, res);
-                    break;
-                default:
-                    // Handle the POST request to write user data to a file
-                    errorResponse(res, 404, "not found")
-                    break;
-                }
-                break;
+            if (queryPath === "/createUser") {
+                // Handle the POST request to write user data to a file
+                createUser(req, res);
+            }
+            else if (queryPath === "/login") {
+                loginUser(req, res);
+            }
+            else if (queryPath === "/write_quest_json") {
+                write_quest_json(req, res);
+            } else if (queryPath === "/change_amount") {
+                // Add new route for changing quest amount
+                change_amount(req, res);
+            } else if (queryPath === "/write_user_info_json") {
+                // Add new route for writing user info
+                write_user_info_json(req, res);
+            } else if (queryPath === "/addFriend") {
+                addFriend(req, res)
+            } else {
+                errorResponse(res, 404, "not found")
+            }
+            break;
         default:
             // Set headers for unsupported methods
             res.setHeader('Content-Type', 'text/plain');
@@ -78,6 +72,70 @@ function processReq(req, res) {
             break;            
     }
 }
+
+function addFriend(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const friendData = JSON.parse(body);
+        const friendUsername = friendData.friends;
+
+        const username = friendData.username;
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error(err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            let usersInfo = JSON.parse(data);
+
+            const currentUser = username; // Assuming you have a user session
+
+            // Check if the friend username exists in users_info and handle other conditions
+            if (!usersInfo.users_info.hasOwnProperty(friendUsername)) {
+                errorResponse(res, 400, "User not found");
+                return;
+            } else if (usersInfo.users_info[currentUser].friends.includes(friendUsername)) {
+                errorResponse(res, 400, "User is already your friend");
+                return;
+            } else if (currentUser === friendUsername) {
+                errorResponse(res, 400, "Thou may not add oneself as oneselves friend");
+                return;
+            } else {
+                // Append friend to user's friend list
+                if (!usersInfo.users_info[currentUser].friends) {
+                    // Initialize friends array if it doesn't exist
+                    usersInfo.users_info[currentUser].friends = [];
+                }
+                usersInfo.users_info[currentUser].friends.push(friendUsername);
+
+                // Write updated data back to the file
+                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(usersInfo, null, 2), (err) => {
+                    if (err) {
+                        console.error(err);
+                        errorResponse(res, 500, String(err));
+                    } else {
+                        console.log('Friend added successfully');
+                        // Send a JSON response confirming the success of the operation
+                        const jsonResponse = {
+                            success: true,
+                            message: 'Friend added successfully'
+                        };
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.end(JSON.stringify(jsonResponse));
+                    }
+                });
+            }
+        });
+    });
+}
+
 
 // Function to handle user login
 function loginUser(req, res) {
@@ -305,7 +363,9 @@ function addUserToUsers_info(username) {
                         core: 2,
                         upperbody: 2
                     }
-                }
+                },
+                friends: []
+
             };
 
             // Add the new user to the users_info object

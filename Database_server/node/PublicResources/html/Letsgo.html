@@ -88,8 +88,57 @@
 
         <a href="#" id="toggleFriendPageLink" class="dropbtn">Show friends</a>
 
+        <button id="toggleAddFriendsPage">Add friends</button>
+
     </div>
 
+    <div id="addFriends" class="page center">
+        <h2>Add friends</h2>
+
+        <input type="text" name="friend_username" placeholder="Name">
+        <button type="submit" id="friendSubmitBtn">Add Friend</button>
+        <br>
+        <span id="friendErrorMessage"></span>
+
+
+    </div>
+
+
+    <div id="FriendsPlot" class="page center">
+
+        <h2>Friends</h2>
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
+                <div id="myDropdown2" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'lowerbody', null)">Lowerbody</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
+                <div id="myDropdown3" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
+                    <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
+                    <a href="#" onclick="update_graph_friend(null, 'monthly')">Monthly</a>
+                </div>
+            </div>
+        </div>
+
+
+        <p id="textfriend"> </p>
+
+        <div>
+            <h1>Graph with friends </h1>
+            <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
+        </div>
+    </div>
 
     <div id="stats" class="page center">
         <h2>Stats</h2>
