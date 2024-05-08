@@ -30,5 +30,22 @@
         "exercise": "walk"
       }
     }
+  },
+  "WWW": {
+    "daily": {
+      "8/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "8/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "8/5/2024": {
+        "type": "cardio"
+      }
+    }
   }
 }
