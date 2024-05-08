@@ -55,7 +55,7 @@
       "9/5/2024": {
         "type": "cardio",
         "target": 5,
-        "amount": 30,
+        "amount": 5,
         "text": "Go for a walk for 5 minutes",
         "state": "incomplete",
         "exercise": "walk"

@@ -135,18 +135,19 @@ async function display_quest(quest, user) {
                     textContainer.innerText = "Quest done";
                     const procentElement = document.createElement("h3");
                     const procentComplete = Math.floor(quest_log[user][questTimespan][obj_stateQuest.date].amount / quest_log[user][questTimespan][obj_stateQuest.date].target * 100);
-                    procentElement.textContent = procentComplete +"%";
+                    procentElement.textContent = procentComplete + "%";
                     const min = 16;
                     const max = 108;
-                    procentElement.style.fontSize =   + "px";
+                    procentElement.style.fontSize = + "px";
                     let newFontSize = procentComplete * 0.1;
-                    if (newFontSize >= max){
+                    if (newFontSize >= max) {
                         newFontSize = max
-                    } else if (newFontSize < min){
-                        newFontSize = min}
-                    
+                    } else if (newFontSize < min) {
+                        newFontSize = min
+                    }
+
                     const color = lerpColor("#00FF00", "#8B0000", (newFontSize - min) / (max - min));
-                    
+
                     procentElement.style.fontSize = newFontSize + "px";
                     procentElement.style.color = color;
 
@@ -159,24 +160,25 @@ async function display_quest(quest, user) {
                             rr = ar + t * (br - ar),
                             rg = ag + t * (bg - ag),
                             rb = ab + t * (bb - ab);
-                    
+
                         return "#" + (((1 << 24) + (rr << 16) + (rg << 8) + rb) | 0).toString(16).slice(1);
                     }
 
 
-                    procentElement.style.position ="absolute";
-                    procentElement.style.top = "30px";
+                    procentElement.style.position = "absolute";
+                    procentElement.style.top = "50%";
                     procentElement.style.left = "50%";
-                    procentElement.style.transform = "translateX(-50%)";
+                    procentElement.style.transform = "translate(-50%, -50%)";
+                    procentElement.style.margin = "auto";
 
-                    textContainer.append(procentElement);
+                    document.getElementById(quest).append(procentElement);
 
-                    
-                    
-                    
-                    
-                    
-                    
+
+
+
+
+
+
                     //Makes obj with parametes for other functions
                     const obj_para = {
                         questID: quest,
