@@ -34,6 +34,17 @@
     "weekly": {},
     "monthly": {}
   },
+  "326": {
+    "daily": {
+      "7/5/2024": {}
+    },
+    "weekly": {
+      "7/5/2024": {}
+    },
+    "monthly": {
+      "7/5/2024": {}
+    }
+  },
   "1235": {
     "daily": {
       "1/5/2024": {
@@ -47,7 +58,7 @@
         "state": "incomplete"
       },
       "7/5/2024": {
-        "type": "pushups"
+        "type": "walk"
       }
     },
     "weekly": {
@@ -57,7 +68,7 @@
       "2/5/2024": {
         "type": "lowerbody",
         "target": 54,
-        "amount": 44,
+        "amount": 167,
         "text": "Do 54 squats",
         "state": "incomplete"
       }
