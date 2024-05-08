@@ -91,11 +91,10 @@
           "core": 2,
           "upperbody": 2
         }
-      },
-      "friends": []
+      }
     },
-    "WWW": {
-      "username": "WWW",
+    "sad": {
+      "username": "sad",
       "health": {
         "height": 0,
         "weight": 0
@@ -185,10 +184,7 @@
           "core": 2,
           "upperbody": 2
         }
-      },
-      "friends": [
-        "user"
-      ]
+      }
     }
   }
 }

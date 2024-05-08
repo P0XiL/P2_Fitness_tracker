@@ -12,12 +12,12 @@
     <!-- Navigation links -->
     <nav id="side-nav" style="display: none;">
         <ul id="side-navigation-links">
-        <ul><br>
-            <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
-            <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
-            <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
-            <li><a href="#profilepage" id="profile-link">Profile</a></li>
-        </ul>
+            <ul><br>
+                <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
+                <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
+                <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
+                <li><a href="#profilepage" id="profile-link">Profile</a></li>
+            </ul>
     </nav>
 
     <nav id="top-nav" style="display: none;">
@@ -25,16 +25,18 @@
             <li><a href="#main"><img src="image/home.png" alt="Home" class="top-right-img"></a></li>
             <li><a href="#profilepage"><img src="image/profile_image.png" alt="Profile" class="top-left-img"></a></li>
         </ul>
-    </nav>    
+    </nav>
 
     <!-- A popup when choosing new quest-->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <p id="popupText"></p>
-            <button class="difficulty-button" data-difficulty="-3">Easy</button>
-            <button class="difficulty-button" data-difficulty="0">Medium</button>
-            <button class="difficulty-button" data-difficulty="3">Hard</button>
-            <button id="close">Close</button>
+            <button id="close" class="close-button">&#x2715;</button>
+            <h2 id="popupText"></h2>
+            <div class="buttons-wrapper">
+                <button class="difficulty-button" data-difficulty="-3">Easy</button>
+                <button class="difficulty-button" data-difficulty="0">Medium</button>
+                <button class="difficulty-button" data-difficulty="3">Hard</button>
+            </div>
         </div>
     </div>
 
@@ -59,19 +61,19 @@
             <div id="monthlyQuestTier" class="tiers"></div>
 
             <div id="quest1" class="quest">
-                <h2>Daily</h2>
+                <h2 class="center-heading">Daily</h2>
                 <meter id="meter1" value="0" min="0" max="1"></meter>
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
-                <h2>Weekly</h2>
+                <h2 class="center-heading">Weekly</h2>
                 <meter id="meter2" value="0" min="0" max="1"></meter>
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
-                <h2>Monthly</h2>
+                <h2 class="center-heading">Monthly</h2>
                 <meter id="meter3" value="0" min="0" max="1"></meter>
                 <p id="quest3_type"></p>
             </div>
@@ -304,7 +306,7 @@
             <p id="textfriend"> </p>
             <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
         </div>
-        
+
     </div>
 
     <!-- JavaScript to handle navigation -->
