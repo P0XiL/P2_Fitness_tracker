@@ -1,5 +1,31 @@
 const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/';
-// LOCALHOST: https://127.0.0.1:3360/
+
+const tierImages = {
+    '1-15': 'image/bronzeTier.png',
+    '16-30': 'image/silverTier.png',
+    '31-45': 'image/goldTier.png',
+    // Add more mappings as needed
+};
+
+const tierNames = {
+    '1-3': 'Bronze 5',
+    '4-6': 'Bronze 4',
+    '7-9': 'Bronze 3',
+    '10-12': 'Bronze 2',
+    '13-15': 'Bronze 1',
+    '16-18': 'Silver 5',
+    '19-21': 'Silver 4',
+    '22-24': 'Silver 3',
+    '25-27': 'Silver 2',
+    '28-30': 'Silver 1',
+    '31-33': 'Gold 5',
+    '34-36': 'Gold 4',
+    '37-39': 'Gold 3',
+    '40-42': 'Gold 2',
+    '43-45': 'Gold 1',
+};
+
+// LOCALHOST: https://127.0.0.1:3360
 // SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
 
 
@@ -95,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Send the data to the server-side script for file writing
-            console.log(username);
+            //console.log(username);
             createUser(userData);
         }
     });
@@ -156,29 +182,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-//Function which highlights the link of the currently selected tab
-function highlightNavLink(pageId) {
-    // Remove 'active' class from all navigation links
-    const navLinks = document.querySelectorAll('#side-nav a');
-    navLinks.forEach(function (link) {
-        link.classList.remove('active');
-    });
-    // Add 'active' class to the corresponding navigation link
-    const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
-    activeLink.classList.add('active');
-}
-
-// Function to handle storing login state
-function storeLoginState(username) {
-    const expirationTime = new Date().getTime() + (30 * 60 * 1000); // 30 minutes expiration
-    const loginState = {
-        username: username,
-        expiration: expirationTime
-    };
-    localStorage.setItem('loginState', JSON.stringify(loginState));
-    localStorage.setItem('username', username);
-}
-
 // Function to check and handle login state on page load
 function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
@@ -211,7 +214,6 @@ function checkLoginState() {
     }
 }
 
-
 function loginUser(loginData) {
     fetch(serverPath+'login', {
         method: 'POST',
@@ -236,42 +238,15 @@ function loginUser(loginData) {
         });
 }
 
-// Function to send data to server-side script
-function createUser(userData) {
-    fetch(serverPath+'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    })
-        .then(response => {
-            if (response.ok) {
-                console.log('Data successfully sent to server');
-
-                storeLoginState(userData.username);
-
-                location.reload();
-            } else {
-                response.text().then(errorMessage => {
-                    displayCreateErrorMessage(errorMessage);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-
-function displayCreateErrorMessage(message) {
-    const errorMessage = document.getElementById('createErrorMessage');
-    errorMessage.textContent = message;
-    errorMessage.style.color = 'red';
-}
-
-function clearCreateErrorMessage() {
-    const errorMessage = document.getElementById('createErrorMessage');
-    errorMessage.textContent = '';
+// Function to handle storing login state
+function storeLoginState(username) {
+    const expirationTime = new Date().getTime() + (30 * 60 * 1000); // 30 minutes expiration
+    const loginState = {
+        username: username,
+        expiration: expirationTime
+    };
+    localStorage.setItem('loginState', JSON.stringify(loginState));
+    localStorage.setItem('username', username);
 }
 
 // Function to display login error message
@@ -281,10 +256,29 @@ function displayLoginErrorMessage(message) {
     loginErrorMessage.style.color = 'red';
 }
 
-// Function to clear login error message
-function clearLoginErrorMessage() {
-    const loginErrorMessage = document.getElementById('loginErrorMessage');
-    loginErrorMessage.textContent = '';
+async function setupTiersForQuestPage(username) {
+    try {
+        const userData = await fetchUserData(username);
+
+        // Log the JSON object fetched to the console
+        //console.log('Fetched JSON data:', userData);
+
+        // Check if the user object exists
+        if (userData) {
+            // Display user tiers if the user object contains the necessary information
+            if (userData.mastery && userData.tier) {
+                displayUserTiers(userData, 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
+                return userData; // Return the user info
+            } else {
+                console.error('Mastery or tier information not found in user data');
+            }
+        } else {
+            console.error('User data not found');
+        }
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Re-throw the error for handling by the caller
+    }
 }
 
 async function fetchUserData(username) {
@@ -313,63 +307,6 @@ async function fetchUserData(username) {
         throw error; // Rethrow the error to propagate it to the caller
     }
 }
-
-
-async function setupProfilePage(username) {
-    try {
-        // Fetch user data using fetchUserData
-        const userData = await fetchUserData(username);
-
-        // Log the fetched JSON data to the console
-        console.log('Fetched JSON data:', userData);
-
-        // Process the JSON data here
-        processData(userData, username);
-
-
-
-        // Return the user info
-        return userData;
-    } catch (error) {
-        console.error('Error fetching JSON:', error);
-        throw error; // Re-throw the error for handling by the caller
-    }
-}
-
-function processData(data, username) {
-    // Check if the data is not null or undefined
-    if (data) {
-        // Extract user information
-        const userInfo = data;
-
-        // Check if userInfo contains 'tier' property before calling displayUserTiers
-        if (userInfo.tier) {
-            displayUserTiers(userInfo, 'dailyTier', 'weeklyTier', 'monthlyTier');
-        } else {
-            console.error(`'tier' property not found in ${username}'s information`);
-        }
-
-        // Check if userInfo contains 'mastery' property before calling displayUserMasteries
-        if (userInfo.mastery) {
-            displayUserMasteries(userInfo.mastery);
-        } else {
-            console.error(`'mastery' property not found in ${username}'s information`);
-        }
-
-        // Display the user information
-        displayUserInfo(username, userInfo);
-
-        // Check if userInfo contains 'preset' property before calling displayUserPreferences
-        if (userInfo.preset) {
-            displayUserPreferences(username, userInfo);
-        } else {
-            console.error(`'preset' property not found in ${username}'s information`);
-        }
-    } else {
-        console.error('User data is null or undefined');
-    }
-}
-
 
 function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     // Check if userInfo is not null or undefined
@@ -438,7 +375,6 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     }
 }
 
-
 // Function to get the tier range
 function getTierRange(rank) {
     switch (true) {
@@ -454,42 +390,98 @@ function getTierRange(rank) {
     }
 }
 
-// Function to get the tier range
-function getTierRange(rank) {
-    if (rank >= 1 && rank <= 15) {
-        return '1-15';
-    } else if (rank >= 16 && rank <= 30) {
-        return '16-30';
-    } else if (rank >= 31 && rank <= 45) {
-        return '31-45';
+// Function to get the sub-tier range
+function getSubTierRange(rank) {
+    switch (true) {
+        case rank >= 1 && rank <= 3:
+            return '1-3';
+        case rank >= 4 && rank <= 6:
+            return '4-6';
+        case rank >= 7 && rank <= 9:
+            return '7-9';
+        case rank >= 10 && rank <= 12:
+            return '10-12';
+        case rank >= 13 && rank <= 15:
+            return '13-15';
+        case rank >= 16 && rank <= 18:
+            return '16-18';
+        case rank >= 19 && rank <= 21:
+            return '19-21';
+        case rank >= 22 && rank <= 24:
+            return '22-24';
+        case rank >= 25 && rank <= 27:
+            return '25-27';
+        case rank >= 28 && rank <= 30:
+            return '28-30';
+        case rank >= 31 && rank <= 33:
+            return '31-33';
+        case rank >= 34 && rank <= 36:
+            return '34-36';
+        case rank >= 37 && rank <= 39:
+            return '37-39';
+        case rank >= 40 && rank <= 42:
+            return '40-42';
+        case rank >= 43 && rank <= 45:
+            return '43-45';
+        default:
+            return 'Unknown';
     }
-    // Add more ranges as needed
 }
 
-const tierImages = {
-    '1-15': 'image/bronzeTier.png',
-    '16-30': 'image/silverTier.png',
-    '31-45': 'image/goldTier.png',
-    // Add more mappings as needed
-};
+async function setupProfilePage(username) {
+    try {
+        // Fetch user data using fetchUserData
+        const userData = await fetchUserData(username);
 
-const tierNames = {
-    '1-3': 'Bronze 5',
-    '4-6': 'Bronze 4',
-    '7-9': 'Bronze 3',
-    '10-12': 'Bronze 2',
-    '13-15': 'Bronze 1',
-    '16-18': 'Silver 5',
-    '19-21': 'Silver 4',
-    '22-24': 'Silver 3',
-    '25-27': 'Silver 2',
-    '28-30': 'Silver 1',
-    '31-33': 'Gold 5',
-    '34-36': 'Gold 4',
-    '37-39': 'Gold 3',
-    '40-42': 'Gold 2',
-    '43-45': 'Gold 1',
-};
+        // Log the fetched JSON data to the console
+        //console.log('Fetched JSON data:', userData);
+
+        // Process the JSON data here
+        displayProfile(userData, username);
+
+
+
+        // Return the user info
+        return userData;
+    } catch (error) {
+        console.error('Error fetching JSON:', error);
+        throw error; // Re-throw the error for handling by the caller
+    }
+}
+
+function displayProfile(data, username) {
+    // Check if the data is not null or undefined
+    if (data) {
+        // Extract user information
+        const userInfo = data;
+
+        // Check if userInfo contains 'tier' property before calling displayUserTiers
+        if (userInfo.tier) {
+            displayUserTiers(userInfo, 'dailyTier', 'weeklyTier', 'monthlyTier');
+        } else {
+            console.error(`'tier' property not found in ${username}'s information`);
+        }
+
+        // Check if userInfo contains 'mastery' property before calling displayUserMasteries
+        if (userInfo.mastery) {
+            displayUserMasteries(userInfo.mastery);
+        } else {
+            console.error(`'mastery' property not found in ${username}'s information`);
+        }
+
+        // Display the user information
+        displayUserInfo(username, userInfo);
+
+        // Check if userInfo contains 'preset' property before calling displayUserPreferences
+        if (userInfo.preset) {
+            displayUserPreferences(username, userInfo);
+        } else {
+            console.error(`'preset' property not found in ${username}'s information`);
+        }
+    } else {
+        console.error('User data is null or undefined');
+    }
+}
 
 function displayUserMasteries(masteryInfo) {
     const userMasteriesDiv = document.getElementById('userMasteries');
@@ -498,25 +490,24 @@ function displayUserMasteries(masteryInfo) {
     // Clear existing content inside userMasteriesDiv
     userMasteriesDiv.innerHTML = '';
 
-    // Sort masteryInfo based on rank in descending order
+    // Convert the masteryInfo object to an array of key-value pairs
     const sortedMasteries = Object.entries(masteryInfo).sort((a, b) => b[1].rank - a[1].rank);
 
     // Array to store all created mastery divs
     const masteryDivs = [];
 
-    // Iterate over the first three sorted masteries
-    for (let i = 0; i < Math.min(3, sortedMasteries.length); i++) {
-        const [masteryKey, mastery] = sortedMasteries[i];
+    // Iterate over the top 3 masteries
+    sortedMasteries.slice(0, 3).forEach(([masteryKey, mastery]) => {
+        // Create a mastery div for each mastery
         const masteryDiv = createMasteryItem(masteryKey, mastery);
         userMasteriesDiv.appendChild(masteryDiv);
         masteryDivs.push(masteryDiv);
-    }
+    });
 
     // Create button to reveal hidden masteries
-    // Check if the revealButton already exists
     let revealButton = document.getElementById('revealButton');
 
-// If revealButton doesn't exist, create it
+    // If revealButton doesn't exist, create it
     if (!revealButton) {
         revealButton = document.createElement('button');
         revealButton.id = 'revealButton';
@@ -526,19 +517,17 @@ function displayUserMasteries(masteryInfo) {
         // Add event listener only once
         revealButton.addEventListener('click', () => {
             // Append the rest of the masteries
-            for (let i = 3; i < sortedMasteries.length; i++) {
-                const [masteryKey, mastery] = sortedMasteries[i];
+            sortedMasteries.slice(3).forEach(([masteryKey, mastery]) => {
                 const masteryDiv = createMasteryItem(masteryKey, mastery);
                 userMasteriesDiv.appendChild(masteryDiv);
                 masteryDivs.push(masteryDiv);
-            }
+            });
             // Show the hide button
             hideButton.style.display = 'inline-block';
             // Hide the reveal button
             revealButton.style.display = 'none';
-    });
-}
-
+        });
+    }
 
     // Create button to hide extra masteries
     const hideButton = document.createElement('button');
@@ -605,6 +594,11 @@ function createMasteryItem(masteryKey, mastery) {
     return masteryDiv;
 }
 
+// Function to capitalize the first letter of a string
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function displayUserInfo(username, userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
     let userInfoHTML = `
@@ -625,78 +619,6 @@ function displayUserInfo(username, userInfo) {
     }
 }
 
-async function postUserInfo(username) {
-    const height = parseFloat(document.getElementById('height').value);
-    const weight = parseFloat(document.getElementById('weight').value);
-
-    try {
-        const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
-
-        if (userData && userData.username === username) {
-            const existingUserInfo = userData;
-
-            // Create a new user info object with the updated health information
-            const newUserInfo = {
-                username: username,
-                health: {
-                    height: height,
-                    weight: weight
-                },
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
-                preset: existingUserInfo.preset
-            };
-
-            // Update the user info on the server
-            update_users_info(newUserInfo);
-
-            // Calculate and display BMI
-            const bmi = calculateBMI(height, weight);
-            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
-        } else {
-            console.error('User info not found for username:', username);
-        }
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-    }
-}
-
-
-// Function to update user info
-function update_users_info(newUserInfo) {
-    console.log("new user info:");
-    console.log(newUserInfo);
-    fetch(serverPath+'write_user_info_json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newUserInfo, null, 2) // Include the entire user information
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch POST');
-            }
-            console.log(response);
-            return response.json(); // Read response JSON
-        })
-        .then(responseJson => {
-            console.log('Response from POST:', responseJson);
-            if (responseJson.success) {
-                console.log('User info updated successfully');
-                // Fetch user data again after successful update
-                setupProfilePage(newUserInfo.username);
-            } else {
-                console.error('User info update failed:', responseJson.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching POST users_info:', error);
-        });
-}
-
-
 // Function to update BMI text
 function updateBMI(height, weight) {
     const bmi = calculateBMI(height, weight);
@@ -705,310 +627,30 @@ function updateBMI(height, weight) {
 
     // Display warning if BMI is over 25 or under 18.5
     if (bmi > 30){
-        bmiText.innerHTML += '<br><span>BMI is over 30 leading to a lot higher possibily of diseases such as cardiovascular diseases. Try to limit calorie intake. This can be done by...</span>';
+        bmiText.innerHTML += `<br><span>BMI is over 30 leading to a lot higher possibily of diseases 
+        such as cardiovascular diseases. Try to limit calorie intake. This can be done by drinking more water, 
+        eating less fatty foods, using smaller plates among many other ways of reducing body weight. For more information on how to 
+        lose weight, visit <a href="https://www.health.harvard.edu/topics/diet-and-weight-loss" target="_blank">
+        Harvard Health Publishing</a>.</span>`;
     }
     else if (bmi > 25) {
-        bmiText.innerHTML += '<br><span>BMI is over 25 leading to a sligtly higher possibily of diseases such as cardiovascular diseases. Try to limit calorie intake. This can be done by...</span>';
+        bmiText.innerHTML += `<br><span>BMI is over 25 leading to a sligtly higher possibily of diseases
+         such as cardiovascular diseases. Try to limit calorie intake. This can be done by drinking more water, 
+         eating less fatty foods, using smaller plates among many other ways of reducing body weight. For more information on how to 
+         lose weight, visit <a href="https://www.health.harvard.edu/topics/diet-and-weight-loss" target="_blank">
+         Harvard Health Publishing</a>.</span>`;
     } else if (bmi < 18.5) {
-        bmiText.innerHTML += '<br><span>BMI is under 18.5. Try to ingest more calories. This can be done by... </span>';
+        bmiText.innerHTML += `<br><span>BMI is under 18.5. Try to ingest more calories. 
+        This can be done by adding in small extra meals around 300-500 calories, drinking high-calorie drinks such as milkshakes,
+        adding more protein to your diet among other things. For more information on how to 
+        gain weight, visit <a href="https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/healthy-ways-to-gain-weight/" target="_blank">
+        The National Health Service</a>.</span>`;
     } else {
         // Clear any previous warnings
         bmiText.innerHTML = `BMI: ${bmi}`;
     }
-
-    drawGraph(bmi);
+    drawBMIGraph(bmi);
 }
-
-
-// Update BMI text after user inputs height or weight
-document.getElementById('height').addEventListener('input', function() {
-    const height = parseFloat(this.value);
-    const weight = parseFloat(document.getElementById('weight').value);
-    if (!isNaN(height) && !isNaN(weight)) {
-        updateBMI(height, weight);
-    }
-});
-
-document.getElementById('weight').addEventListener('input', function() {
-    const height = parseFloat(document.getElementById('height').value);
-    const weight = parseFloat(this.value);
-    if (!isNaN(height) && !isNaN(weight)) {
-        updateBMI(height, weight);
-    }
-});
-
-async function setupTiersForQuestPage(username) {
-    try {
-        const userData = await fetchUserData(username);
-
-        // Log the JSON object fetched to the console
-        console.log('Fetched JSON data:', userData);
-
-        // Check if the user object exists
-        if (userData) {
-            // Display user tiers if the user object contains the necessary information
-            if (userData.mastery && userData.tier) {
-                displayUserTiers(userData, 'dailyQuestTier', 'weeklyQuestTier', 'monthlyQuestTier');
-                return userData; // Return the user info
-            } else {
-                console.error('Mastery or tier information not found in user data');
-            }
-        } else {
-            console.error('User data not found');
-        }
-    } catch (error) {
-        console.error('Error fetching JSON:', error);
-        throw error; // Re-throw the error for handling by the caller
-    }
-}
-
-
-
-// Function to capitalize the first letter of a string
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-// Function to get the sub-tier range
-function getSubTierRange(rank) {
-    switch (true) {
-        case rank >= 1 && rank <= 3:
-            return '1-3';
-        case rank >= 4 && rank <= 6:
-            return '4-6';
-        case rank >= 7 && rank <= 9:
-            return '7-9';
-        case rank >= 10 && rank <= 12:
-            return '10-12';
-        case rank >= 13 && rank <= 15:
-            return '13-15';
-        case rank >= 16 && rank <= 18:
-            return '16-18';
-        case rank >= 19 && rank <= 21:
-            return '19-21';
-        case rank >= 22 && rank <= 24:
-            return '22-24';
-        case rank >= 25 && rank <= 27:
-            return '25-27';
-        case rank >= 28 && rank <= 30:
-            return '28-30';
-        case rank >= 31 && rank <= 33:
-            return '31-33';
-        case rank >= 34 && rank <= 36:
-            return '34-36';
-        case rank >= 37 && rank <= 39:
-            return '37-39';
-        case rank >= 40 && rank <= 42:
-            return '40-42';
-        case rank >= 43 && rank <= 45:
-            return '43-45';
-        default:
-            return 'Unknown';
-    }
-}
-
-
-function displayUserPreferences(username, userInfo) {
-    const preset = userInfo.preset.name;
-    const confObject = userInfo.preset.conf || {}; // Ensure confObject is an object
-    console.log("confObject");
-    console.log(confObject);
-
-    // Generate sliders for exercise preferences
-    const userInfoDiv = document.getElementById('userPreferences');
-    let slidersHTML = '';
-
-    // Check if each exercise exists in the confObject and if the preset is 'custom' or the exercise value is greater than 0, then include the slider
-    if ((confObject['pushups'] !== undefined && (preset === 'custom' || confObject['pushups'] > 0)) || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="pushups">Pushups</label>
-                <input type="range" id="pushups" name="pushups" min="0" max="10" value="${confObject['pushups'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('pushups', this.value)">
-                <span id="pushupsCounter">${confObject['pushups'] || 0}</span>
-            </div>
-        `;
-    }
-    
-    if ((confObject['run'] !== undefined && (preset === 'custom' || confObject['run'] > 0)) || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="run">Run</label>
-                <input type="range" id="run" name="run" min="0" max="10" value="${confObject['run'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('run', this.value)">
-                <span id="runCounter">${confObject['run'] || 0}</span>
-            </div>
-        `;
-    }
-    
-    if ((confObject['walk'] !== undefined && (preset === 'custom' || confObject['walk'] > 0)) || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="walk">Walk</label>
-                <input type="range" id="walk" name="walk" min="0" max="10" value="${confObject['walk'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('walk', this.value)">
-                <span id="walkCounter">${confObject['walk'] || 0}</span>
-            </div>
-        `;
-    }
-    
-    if ((confObject['crunches'] !== undefined && (preset === 'custom' || confObject['crunches'] > 0)) || preset === 'custom') {
-        slidersHTML += `
-            <div>
-                <label for="crunches">Crunches</label>
-                <input type="range" id="crunches" name="crunches" min="0" max="10" value="${confObject['crunches'] || 0}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('crunches', this.value)">
-                <span id="crunchesCounter">${confObject['crunches'] || 0}</span>
-            </div>
-        `;
-    }
-
-    const userInfoHTML = `
-        <h2 style="text-align: center;">Preferences</h2>
-        <label for="presetDropdown">Choose a preset:</label>
-        <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
-            <option value="run" ${preset === 'run' ? 'selected' : ''}>Run</option>
-            <option value="walk" ${preset === 'walk' ? 'selected' : ''}>Walk</option>
-            <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
-            <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
-        </select>
-        <p>Exercise preferences:</p>
-        ${slidersHTML}
-        ${preset === 'custom' ? '<button onclick="postCustomData(\'' + username + '\')">Save Preset</button>' : ''}
-    `;
-    userInfoDiv.innerHTML = userInfoHTML;
-
-    // Update counter values for custom preset
-    if (preset === 'custom') {
-        updateCounter('pushups', confObject['pushups'] || 0);
-        updateCounter('run', confObject['run'] || 0);
-        updateCounter('walk', confObject['walk'] || 0);
-        updateCounter('crunches', confObject['crunches'] || 0);
-    }
-}
-
-
-
-
-function updateCounter(exercise, value) {
-    document.getElementById(`${exercise}Counter`).textContent = value;
-}
-
-async function postCustomData(username) {
-    const pushupsValue = document.getElementById('pushups').value;
-    const runValue = document.getElementById('run').value;
-    const walkValue = document.getElementById('walk').value;
-    const crunchesValue = document.getElementById('crunches').value;
-
-    try {
-        const userData = await fetchUserData(username);
-
-        if (userData && userData.username === username) {
-            const existingUserInfo = userData;
-
-            const newUserInfo = {
-                username: username,
-                health: existingUserInfo.health,
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
-                preset: {
-                    name: 'custom',
-                    conf: {
-                        pushups: parseInt(pushupsValue),
-                        run: parseInt(runValue),
-                        walk: parseInt(walkValue),
-                        crunches: parseInt(crunchesValue)
-                    }
-                }
-            };
-
-            // Call function to update user info
-            update_users_info(newUserInfo);
-        } else {
-            console.error('User info not found for username:', username);
-        }
-    } catch (error) {
-        console.error('Error fetching user data:', error.message);
-    }
-}
-
-
-// Function to generate sliders for exercise preferences
-function generateSliders(countMap) {
-    return Object.entries(countMap).map(([exercise, count]) => `
-        <div>
-            <label for="${exercise}">${exercise}</label>
-            <input type="range" id="${exercise}" name="${exercise}" min="0" max="10" value="${count}" disabled>
-            <span>${count}</span>
-        </div>
-    `).join('');
-}
-
-async function updatePreset(username, preset) {
-    try {
-        const userData = await fetchUserData(username);
-
-        if (userData && userData.username === username) {
-            const existingUserInfo = userData;
-
-            let conf = [];
-            switch (preset) {
-                case 'run':
-                    conf = {
-                        run: 10,
-                        walk: 4,
-                        crunches: 3
-                    }
-                    break;
-                case 'walk':
-                    conf = {
-                        run: 4,
-                        walk: 10,
-                        crunches: 3
-                    }
-                    break;
-                case 'strength':
-                    conf = {
-                        run: 2,
-                        walk: 2,
-                        crunches: 6,
-                        pushUps: 4
-                    }
-                    break;
-                case 'custom':
-                    conf = {
-                        run: 1,
-                        walk: 1,
-                        crunches: 1,
-                        pushUps: 1
-                    }
-                    break;
-                default:
-                    console.error(`Invalid preset: ${preset}`);
-                    return;
-            }
-
-            // Update only the preset while retaining other information
-            const newUserInfo = {
-                username: existingUserInfo.username,
-                health: existingUserInfo.health,
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
-                preset: {
-                    name: preset,
-                    conf: conf
-                }
-            };
-            console.log(newUserInfo.preset);
-
-            // Update the user info on the server
-            update_users_info(newUserInfo);
-        } else {
-            console.error('User info not found for username:', username);
-        }
-    } catch (error) {
-        console.error('Error fetching user data:', error.message);
-    }
-}
-
 
 // Calculate BMI function
 function calculateBMI(height, weight) {
@@ -1020,7 +662,7 @@ function calculateBMI(height, weight) {
 }
 
 // Function to draw the graph
-function drawGraph(bmiValue) {
+function drawBMIGraph(bmiValue) {
     // Define BMI categories and their ranges
     var categories = [
         { label: "Underweight", min: 0, max: 18.5, color: "#3498db" },
@@ -1077,6 +719,335 @@ function drawGraph(bmiValue) {
         }
     });
 }
+
+async function displayUserPreferences(username, userInfo) {
+    const preset = userInfo.preset.name;
+    const confObject = userInfo.preset.conf || {}; // Ensure confObject is an object
+
+
+    // Generate sliders for exercise preferences
+    const userInfoDiv = document.getElementById('userPreferences');
+    let slidersHTML = '';
+
+    // Iterate through each key in confObject and generate sliders dynamically
+    Object.keys(confObject).forEach(exercise => {
+        slidersHTML += `
+            <div>
+                <label for="${exercise}">${exercise}</label>
+                <input type="range" id="${exercise}" name="${exercise}" min="0" max="10" value="${confObject[exercise]}" ${preset !== 'custom' ? 'disabled' : ''} onchange="updateCounter('${exercise}', this.value)">
+                <span id="${exercise}Counter">${confObject[exercise]}</span>
+            </div>
+        `;
+    });
+
+    // Adjusted dropdown menu options
+    const presetDropdownmenu = `
+        <option value="strength" ${preset === 'strength' ? 'selected' : ''}>Strength</option>
+        <option value="lose weight" ${preset === 'lose weight' ? 'selected' : ''}>Lose Weight</option>
+        <option value="balance" ${preset === 'balance' ? 'selected' : ''}>Balance</option>
+        <option value="custom" ${preset === 'custom' ? 'selected' : ''}>Custom</option>
+    `;
+
+    const userInfoHTML = `
+        <h2 style="text-align: center;">Preferences</h2>
+        <label for="presetDropdown">Choose a preset:</label>
+        <select id="presetDropdown" onchange="updatePreset('${username}', this.value)"> <!-- Pass 'username' as parameter -->
+            ${presetDropdownmenu}
+        </select>
+        <p>Exercise preferences:</p>
+        ${slidersHTML}
+        ${preset === 'custom' ? '<button onclick="postCustomData(\'' + username + '\')">Save Preset</button>' : ''}
+    `;
+    userInfoDiv.innerHTML = userInfoHTML;
+
+    // Update counter values for custom preset
+    if (preset === 'custom') {
+        Object.keys(confObject).forEach(exercise => {
+            updateCounter(exercise, confObject[exercise]);
+        });
+    }
+}
+
+async function updatePreset(username, preset) {
+    try {
+        const userData = await fetchUserData(username);
+
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
+
+            let conf = [];
+            switch (preset) {
+                case 'lose weight':
+                    conf = {
+                        cardio: 7,
+                        lowerbody: 1,
+                        core: 1,
+                        upperbody: 1
+                    }
+                    break;
+                case 'strength':
+                    conf = {
+                        cardio: 1,
+                        lowerbody: 3,
+                        core: 3,
+                        upperbody: 3
+                    }
+                    break;
+                case 'balance':
+                    conf = {
+                        cardio: 2,
+                        lowerbody: 2,
+                        core: 2,
+                        upperbody: 2
+                    }
+                    break;
+                case 'custom':
+                    conf = {
+                        cardio: 2,
+                        lowerbody: 2,
+                        core: 2,
+                        upperbody: 2
+                    }
+                    break;
+                default:
+                    console.error(`Invalid preset: ${preset}`);
+                    return;
+            }
+
+            // Update only the preset while retaining other information
+            const newUserInfo = {
+                username: existingUserInfo.username,
+                health: existingUserInfo.health,
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: {
+                    name: preset,
+                    conf: conf
+                }
+            };
+
+            // Update the user info on the server
+            update_users_info(newUserInfo);
+        } else {
+            console.error('User info not found for username:', username);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error.message);
+    }
+}
+
+async function postCustomData(username) {
+    try {
+        const userData = await fetchUserData(username);
+
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
+
+            // Get all sliders dynamically generated by displayUserPreferences
+            const sliders = document.querySelectorAll('input[type="range"]');
+            const conf = {};
+
+            // Iterate through sliders and extract values for each exercise
+            sliders.forEach(slider => {
+                const exercise = slider.id;
+                const value = parseInt(slider.value);
+                conf[exercise] = value;
+            });
+
+            const newUserInfo = {
+                username: username,
+                health: existingUserInfo.health,
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: {
+                    name: 'custom',
+                    conf: conf
+                }
+            };
+
+            // Call function to update user info
+            update_users_info(newUserInfo);
+        } else {
+            console.error('User info not found for username:', username);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error.message);
+    }
+}
+
+function updateCounter(exercise, value) {
+    document.getElementById(`${exercise}Counter`).textContent = value;
+}
+
+//Function which highlights the link of the currently selected tab
+function highlightNavLink(pageId) {
+    // Remove 'active' class from all navigation links
+    const navLinks = document.querySelectorAll('#side-nav a');
+    navLinks.forEach(function (link) {
+        link.classList.remove('active');
+    });
+    // Add 'active' class to the corresponding navigation link
+    const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+    activeLink.classList.add('active');
+}
+
+function clearCreateErrorMessage() {
+    const errorMessage = document.getElementById('createErrorMessage');
+    errorMessage.textContent = '';
+}
+
+// Function to clear login error message
+function clearLoginErrorMessage() {
+    const loginErrorMessage = document.getElementById('loginErrorMessage');
+    loginErrorMessage.textContent = '';
+}
+
+function displayCreateErrorMessage(message) {
+    const errorMessage = document.getElementById('createErrorMessage');
+    errorMessage.textContent = message;
+    errorMessage.style.color = 'red';
+}
+
+// Function to send data to server-side script
+function createUser(userData) {
+    fetch(serverPath+'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Data successfully sent to server');
+
+                storeLoginState(userData.username);
+
+                location.reload();
+            } else {
+                response.text().then(errorMessage => {
+                    displayCreateErrorMessage(errorMessage);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+async function postUserInfo(username) {
+    validateIntegerInput(parseInt(document.getElementById('height').value))
+    const height = parseInt(document.getElementById('height').value);
+    
+    
+    validateIntegerInput(parseInt(document.getElementById('weight').value))
+    const weight = parseInt(document.getElementById('weight').value);
+    
+
+    try {
+        const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
+
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
+
+            // Create a new user info object with the updated health information
+            const newUserInfo = {
+                username: username,
+                health: {
+                    height: height,
+                    weight: weight
+                },
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: existingUserInfo.preset
+            };
+
+            // Update the user info on the server
+            update_users_info(newUserInfo);
+
+            // Calculate and display BMI
+            const bmi = calculateBMI(height, weight);
+            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
+        } else {
+            console.error('User info not found for username:', username);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
+function validateIntegerInput(value) {
+    // Check if the value is a valid number and an integer
+    if (!isNaN(value) && Number.isInteger(value)) {
+        // Check if the value is greater than or equal to 0
+        if (value >= 0) {
+            // Input is valid
+            return true;
+        } else {
+            // Input is negative
+            console.error('Input must be a positive integer.');
+            return false;
+        }
+    } else {
+        // Input is not a valid integer
+        console.error('Input must be a valid integer.');
+        return false;
+    }
+}
+
+
+// Function to update user info
+function update_users_info(newUserInfo) {
+    //console.log("new user info:");
+    //console.log(newUserInfo);
+    fetch(serverPath+'write_user_info_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newUserInfo, null, 2) // Include the entire user information
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch POST');
+            }
+            //console.log(response);
+            return response.json(); // Read response JSON
+        })
+        .then(responseJson => {
+            //console.log('Response from POST:', responseJson);
+            if (responseJson.success) {
+                console.log('User info updated successfully');
+                // Fetch user data again after successful update
+                setupProfilePage(newUserInfo.username);
+            } else {
+                console.error('User info update failed:', responseJson.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching POST users_info:', error);
+        });
+}
+
+// Update BMI text after user inputs height or weight
+document.getElementById('height').addEventListener('input', function() {
+    const height = parseFloat(this.value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    if (!isNaN(height) && !isNaN(weight)) {
+        updateBMI(height, weight);
+    }
+});
+
+document.getElementById('weight').addEventListener('input', function() {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(this.value);
+    if (!isNaN(height) && !isNaN(weight)) {
+        updateBMI(height, weight);
+    }
+});
 
 
 

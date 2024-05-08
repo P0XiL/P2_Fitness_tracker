@@ -6,6 +6,9 @@
     "321": {
       "password": "321"
     },
+    "326": {
+      "password": "1"
+    },
     "412": {
       "password": "1"
     },
@@ -151,6 +154,21 @@
       "password": "test"
     },
     "Bob": {
+      "password": "123"
+    },
+    "Christiansmorerdejlig": {
+      "password": "123"
+    },
+    "Christiansmorerdejlig2": {
+      "password": "123"
+    },
+    "Jacob": {
+      "password": "123"
+    },
+    "TobiasOG": {
+      "password": "123"
+    },
+    "TobiOGOG": {
       "password": "123"
     }
   }

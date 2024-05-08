@@ -218,11 +218,51 @@ function addUserToUsers_info(username) {
                       rank: 1,
                       elo: 0
                     },
+                    cycling: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    squats: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    lunges: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    wallsit: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    plank: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    situps: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    backextentions: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    burpees: {
+                      rank: 1,
+                      elo: 0
+                    },
                     crunches: {
                       rank: 1,
                       elo: 0
                     },
                     pushups: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    dips: {
+                      rank: 1,
+                      elo: 0
+                    },
+                    armcircles: {
                       rank: 1,
                       elo: 0
                     }
@@ -246,7 +286,15 @@ function addUserToUsers_info(username) {
                       elo: 0
                     }
                   },
-                preset: {}
+                preset: {
+                    name: "balance",
+                    conf: {
+                      cardio: 2,
+                      lowerbody: 2,
+                      core: 2,
+                      upperbody: 2
+                    }
+                }
             };
 
             // Add the new user to the users_info object
