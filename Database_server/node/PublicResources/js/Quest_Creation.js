@@ -1,6 +1,6 @@
 try {
     const userx = localStorage.getItem('username');
-    if (typeof userx !== 'undefined'){
+    if (typeof userx !== 'undefined') {
         display_all_quest(userx);
     }
     else {
@@ -9,7 +9,7 @@ try {
         document.getElementById("quest1_type").innerText = "Please, login";
         document.getElementById("quest1_type").innerText = "Please, login";
     }
-    
+
 } catch (error) {
     document.getElementById("quest1_type").innerText = "Error, please reload site";
     document.getElementById("quest1_type").innerText = "Error, please reload site";
@@ -169,38 +169,38 @@ function open_modal_for_quest(questTimespan, type, user) {
                 .then(data => {
                     //Gets a quest out of quest_template
                     let obj_Quest = choose_quest(data.quest_templates[type]);
-                    
-                    //Modify the quest
-                    obj_Quest.quest = modify_quest(obj_Quest.quest, 3, difficulty, 6, questTimespan);
-                    let obj_newQuest = new Object;
-                    const date = get_current_date_format();
-                    
-                    //Make an obj which is used when adding the quest
-                    obj_newQuest[date] = new Object;
-                    obj_newQuest[date].type = type;
-                    obj_newQuest[date].target = obj_Quest.quest["base_target"];
-                    obj_newQuest[date].amount = 0;
-                    obj_newQuest[date].text = obj_Quest.quest.quest_text;
-                    obj_newQuest[date].state = "incomplete";
-                    obj_newQuest[date].exercise = obj_Quest.exercise;
-                    obj_newQuest.timespan = questTimespan;
-                    obj_newQuest.userID = user;
 
-                    //Add quest to json file
-                    add_quest_json(obj_newQuest);
-                    //remove popup window
-                    document.getElementById("myModal").style.display = "none";
-                    //Reload the page
-                    location.reload();
+                    fetchJSON('json/users_info.json')
+                        .then(userInfo => {
+                            //Modify the quest
+                            obj_Quest.quest = modify_quest(obj_Quest.quest, userInfo.users_info[user].tier[questTimespan].rank, difficulty, userInfo.users_info[user].mastery[obj_Quest.exercise].rank, questTimespan);
+                            let obj_newQuest = new Object;
+                            const date = get_current_date_format();
+
+                            //Make an obj which is used when adding the quest
+                            obj_newQuest[date] = new Object;
+                            obj_newQuest[date].type = type;
+                            obj_newQuest[date].target = obj_Quest.quest["base_target"];
+                            obj_newQuest[date].amount = 0;
+                            obj_newQuest[date].text = obj_Quest.quest.quest_text;
+                            obj_newQuest[date].state = "incomplete";
+                            obj_newQuest[date].exercise = obj_Quest.exercise;
+                            obj_newQuest.timespan = questTimespan;
+                            obj_newQuest.userID = user;
+
+                            //Add quest to json file
+                            add_quest_json(obj_newQuest);
+                            //remove popup window
+                            document.getElementById("myModal").style.display = "none";
+                            //Reload the page
+                            location.reload();
+                        })
                 });
-
         });
     })
     //add functionality to close button
     document.getElementById("close").addEventListener("click", () => {
-        document.getElementById("myModal").style.display = "none";
-    });
-
+        document.getElementById("myModal").style.display = "none";});
 }
 
 /**
@@ -345,7 +345,7 @@ function modify_quest(quest, rank, difficulty, mastery, timespan) {
         quest["quest_text"] = quest["quest_text"].replace("${base_target}", quest["base_target"])
         return quest;
     }
-   
+
     quest["quest_text"] = quest["quest_text"].replace("${base_target}", quest["base_target"])
     return quest;
 }

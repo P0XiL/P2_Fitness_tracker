@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3360; 
+const port = 3360;
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -43,25 +43,33 @@ function processReq(req, res) {
         case "POST":
             // Handle POST requests
             // Add your POST request handling logic here
-            if (queryPath === "/createUser") {
-                // Handle the POST request to write user data to a file
-                createUser(req, res);
-            } 
-            else if (queryPath === "/login") {
-                loginUser(req, res);
-            }
-            else if (queryPath === "/write_quest_json") {
-                write_quest_json(req, res);
-            } else if (queryPath === "/change_amount") { 
-                // Add new route for changing quest amount
-                change_amount(req, res);
-            } else if (queryPath === "/write_user_info_json") { 
-                // Add new route for writing user info
-                write_user_info_json(req, res);
-            } else {
-                errorResponse(res, 404, "not found")
-            }
-            break;
+            switch (queryPath) {
+                case "/createUser":
+                    // Handle the POST request to write user data to a file
+                    createUser(req, res);
+                    break;
+                case "/login":
+                    // Handle the POST request to write user data to a file
+                    loginUser(req, res);
+                    break;
+                case "/write_quest_json":
+                    // Handle the POST request to write user data to a file
+                    write_quest_json(req, res);
+                    break;
+                case "/change_amount":
+                    // Handle the POST request to write user data to a file
+                    change_amount(req, res);
+                    break;
+                case "/write_user_info_json":
+                    // Handle the POST request to write user data to a file
+                    write_user_info_json(req, res);
+                    break;
+                default:
+                    // Handle the POST request to write user data to a file
+                    errorResponse(res, 404, "not found")
+                    break;
+                }
+                break;
         default:
             errorResponse(res, 405, "Method Not Allowed");
             break;
@@ -168,7 +176,7 @@ function createUser(req, res) {
                             weekly: {},
                             monthly: {}
                         };
-                    
+
                         fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                             if (err) {
                                 console.error(err);
@@ -180,11 +188,11 @@ function createUser(req, res) {
                                 res.end('User added to quest_log');
                             }
                         });
-                        
+
                     });
                 }
             });
-            
+
         });
         addUserToUsers_info(userData.username);
     });
@@ -211,62 +219,62 @@ function addUserToUsers_info(username) {
                 },
                 mastery: {
                     run: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     walk: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     cycling: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     squats: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     lunges: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     wallsit: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     plank: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     situps: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     backextentions: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     burpees: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     crunches: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     pushups: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     dips: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     armcircles: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     }
-                  },
+                },
                 hiddenRank: {
                     daily: 0,
                     weekly: 0,
@@ -274,25 +282,25 @@ function addUserToUsers_info(username) {
                 },
                 tier: {
                     daily: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     weekly: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     monthly: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     }
-                  },
+                },
                 preset: {
                     name: "balance",
                     conf: {
-                      cardio: 2,
-                      lowerbody: 2,
-                      core: 2,
-                      upperbody: 2
+                        cardio: 2,
+                        lowerbody: 2,
+                        core: 2,
+                        upperbody: 2
                     }
                 }
             };
@@ -401,7 +409,7 @@ function write_quest_json(req, res) {
             const user = obj_quest.userID;
             delete obj_quest.userID;
             obj_questLog[user][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
-           
+
             // Write updated data back to the file
             fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
@@ -510,7 +518,7 @@ function write_user_info_json(req, res) {
                     res.end(JSON.stringify(jsonResponse, null, 2));
                 }
             });
-            
+
         });
     });
 }
@@ -554,56 +562,56 @@ function write_user_preferences_json(req, res) {
         });
     });
 }
-    function write_survey_data_json(req, res) {
-        let body = '';
-        req.on('data', (chunk) => {
-            body += chunk.toString();
-        });
-        req.on('end', () => {
-            let surveyData = JSON.parse(body);
-            console.log('Received survey data:', surveyData); // Log received survey data
-    
-            // Read existing data from the file
-            fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+function write_survey_data_json(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let surveyData = JSON.parse(body);
+        console.log('Received survey data:', surveyData); // Log received survey data
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error('Error reading existing data:', err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            let existingData = JSON.parse(data);
+            console.log('Existing data:', existingData); // Log existing data
+
+            // Ensure users_info object exists
+            existingData.users_info = existingData.users_info || {};
+
+            // Fetch idkey from users_info or set a default value if not available
+            const idkey = existingData.users_info && existingData.users_info.idkey ? existingData.users_info.idkey : "defaultIdkey";
+
+            // Ensure the idkey exists within users_info
+            existingData.users_info[idkey] = existingData.users_info[idkey] || {};
+
+            // Add the surveyData to the specified idkey
+            existingData.users_info[idkey].surveyData = surveyData;
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
                 if (err) {
-                    console.error('Error reading existing data:', err);
+                    console.error('Error writing data:', err);
                     errorResponse(res, 500, String(err));
-                    return;
+                } else {
+                    console.log('Survey data written to file');
+                    // Send a JSON response confirming the success of the operation
+                    const jsonResponse = {
+                        success: true,
+                        message: 'Survey data saved successfully'
+                    };
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(jsonResponse));
                 }
-    
-                let existingData = JSON.parse(data);
-                console.log('Existing data:', existingData); // Log existing data
-    
-                // Ensure users_info object exists
-                existingData.users_info = existingData.users_info || {};
-
-                // Fetch idkey from users_info or set a default value if not available
-                const idkey = existingData.users_info && existingData.users_info.idkey ? existingData.users_info.idkey : "defaultIdkey";
-
-                // Ensure the idkey exists within users_info
-                existingData.users_info[idkey] = existingData.users_info[idkey] || {};
-
-                // Add the surveyData to the specified idkey
-                 existingData.users_info[idkey].surveyData = surveyData;
-    
-                // Write updated data back to the file
-                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
-                    if (err) {
-                        console.error('Error writing data:', err);
-                        errorResponse(res, 500, String(err));
-                    } else {
-                        console.log('Survey data written to file');
-                        // Send a JSON response confirming the success of the operation
-                        const jsonResponse = {
-                            success: true,
-                            message: 'Survey data saved successfully'
-                        };
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.end(JSON.stringify(jsonResponse));
-                    }
-                });
             });
         });
-    }
+    });
+}
 startServer();

@@ -12,7 +12,7 @@
       "8/5/2024": {
         "type": "upperbody",
         "target": 13,
-        "amount": 0,
+        "amount": 2,
         "text": "Do 13 pushups",
         "state": "incomplete",
         "exercise": "pushups"
@@ -29,13 +29,21 @@
       }
     },
     "monthly": {
-      "8/5/2024": {
+      "8/4/2024": {
         "type": "upperbody",
         "target": 3,
         "amount": 3,
         "text": "Do 3 dips",
         "state": "incomplete",
         "exercise": "dips"
+      },
+      "8/5/2024": {
+        "type": "lowerbody",
+        "target": 9,
+        "amount": 32,
+        "text": "Do 9 squats",
+        "state": "incomplete",
+        "exercise": "squats"
       }
     }
   }
