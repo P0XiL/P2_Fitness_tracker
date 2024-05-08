@@ -395,5 +395,22 @@
         "type": "upperbody"
       }
     }
+  },
+  "exampleUsername": {
+    "daily": {
+      "8/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "8/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "8/5/2024": {
+        "type": "lowerbody"
+      }
+    }
   }
 }

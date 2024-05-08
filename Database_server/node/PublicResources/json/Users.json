@@ -167,6 +167,9 @@
     },
     "TobiOGOG": {
       "password": "123"
+    },
+    "exampleUsername": {
+      "password": "123"
     }
   }
 }

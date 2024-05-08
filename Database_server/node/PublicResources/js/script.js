@@ -1,10 +1,11 @@
 const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/';
+// LOCALHOST: https://127.0.0.1:3360
+// SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
 
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
     '16-30': 'image/silverTier.png',
     '31-45': 'image/goldTier.png',
-    // Add more mappings as needed
 };
 
 const tierNames = {
@@ -24,10 +25,6 @@ const tierNames = {
     '40-42': 'Gold 2',
     '43-45': 'Gold 1',
 };
-
-// LOCALHOST: https://127.0.0.1:3360
-// SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
-
 
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
@@ -997,7 +994,6 @@ function validateIntegerInput(value) {
         return false;
     }
 }
-
 
 // Function to update user info
 function update_users_info(newUserInfo) {
