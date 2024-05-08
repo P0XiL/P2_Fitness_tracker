@@ -181,6 +181,18 @@ document.addEventListener('DOMContentLoaded', function () {
         createAccountPage.classList.add('active');
     });
 
+    document.getElementById('toggleAddFriendsPage').addEventListener('click', function (e) {
+        e.preventDefault();
+    
+        const addFriendsPage = document.getElementById('addFriends');
+        const friendsPage = document.getElementById('friends');
+    
+        friendsPage.classList.remove('active');
+        addFriendsPage.classList.add('active');
+    
+    
+    });
+
     document.getElementById('friendSubmitBtn').addEventListener('click', function (e) {
         e.preventDefault();
 
@@ -193,20 +205,43 @@ document.addEventListener('DOMContentLoaded', function () {
         saveFriend(friend_data);
     });
 
-
 });
 
-document.getElementById('toggleAddFriendsPage').addEventListener('click', function (e) {
-    e.preventDefault();
+function saveFriend(friendData) {
+    const username = localStorage.getItem('username'); // Retrieve the username from local storage
+    friendData.username = username; // Add the username to the friendData object
+    fetch(serverPath + 'addFriend', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(friendData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Optionally, handle success response
+        console.log('Friend added successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error adding friend:', error);
+    });
+}
 
-    const addFriendsPage = document.getElementById('addFriends');
-    const friendsPage = document.getElementById('friends');
-
-    friendsPage.classList.remove('active');
-    addFriendsPage.classList.add('active');
-
-
-})
+// Function to handle storing login state
+function storeLoginState(username) {
+    const expirationTime = new Date().getTime() + (30 * 60 * 1000); // 30 minutes expiration
+    const loginState = {
+        username: username,
+        expiration: expirationTime
+    };
+    localStorage.setItem('loginState', JSON.stringify(loginState));
+    localStorage.setItem('username', username);
+}
 
 // Function to check and handle login state on page load
 function checkLoginState() {
@@ -240,30 +275,6 @@ function checkLoginState() {
     }
 }
 
-function saveFriend(friendData) {
-    fetch('/addFriend', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(friendData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Optionally, handle success response
-        console.log('Friend added successfully:', data);
-    })
-    .catch(error => {
-        console.error('Error adding friend:', error);
-    });
-}
-
-
 function loginUser(loginData) {
     fetch(serverPath+'login', {
         method: 'POST',
@@ -288,15 +299,31 @@ function loginUser(loginData) {
         });
 }
 
-// Function to handle storing login state
-function storeLoginState(username) {
-    const expirationTime = new Date().getTime() + (30 * 60 * 1000); // 30 minutes expiration
-    const loginState = {
-        username: username,
-        expiration: expirationTime
-    };
-    localStorage.setItem('loginState', JSON.stringify(loginState));
-    localStorage.setItem('username', username);
+// Function to send data to server-side script
+function createUser(userData) {
+    fetch(serverPath+'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Data successfully sent to server');
+
+                storeLoginState(userData.username);
+
+                location.reload();
+            } else {
+                response.text().then(errorMessage => {
+                    displayCreateErrorMessage(errorMessage);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 // Function to display login error message
@@ -958,33 +985,6 @@ function displayCreateErrorMessage(message) {
     const errorMessage = document.getElementById('createErrorMessage');
     errorMessage.textContent = message;
     errorMessage.style.color = 'red';
-}
-
-// Function to send data to server-side script
-function createUser(userData) {
-    fetch(serverPath+'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    })
-        .then(response => {
-            if (response.ok) {
-                console.log('Data successfully sent to server');
-
-                storeLoginState(userData.username);
-
-                location.reload();
-            } else {
-                response.text().then(errorMessage => {
-                    displayCreateErrorMessage(errorMessage);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
 }
 
 async function postUserInfo(username) {

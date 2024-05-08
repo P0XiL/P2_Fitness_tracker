@@ -58,7 +58,7 @@ function processReq(req, res) {
             } else if (queryPath === "/write_user_info_json") { 
                 // Add new route for writing user info
                 write_user_info_json(req, res);
-            } else if (queryPath === "/saveFriend"){
+            } else if (queryPath === "/addFriend"){
                 addFriend(req, res)
             } else {
                 errorResponse(res, 404, "not found")
@@ -79,6 +79,8 @@ function addFriend(req, res) {
         const friendData = JSON.parse(body);
         const friendUsername = friendData.friends;
 
+        const username = friendData.username;
+
         // Read existing data from the file
         fs.readFile('PublicResources/json/users_info.json', (err, data) => {
             if (err) {
@@ -89,14 +91,19 @@ function addFriend(req, res) {
 
             let usersInfo = JSON.parse(data);
 
-            // Check if the user exists
-            if (!usersInfo.users_info.hasOwnProperty(friendUsername)) {
-                errorResponse(res, 404, "Friend not found");
+            const currentUser = username; // Assuming you have a user session
+
+            // Check if the currentUser exists in users_info
+            if (!usersInfo.users_info[friendUsername]) {
+                errorResponse(res, 404, "User not found");
                 return;
             }
 
             // Append friend to user's friend list
-            const currentUser = req.session.user; // Assuming you have a user session
+            if (!usersInfo.users_info[currentUser].friends) {
+                // Initialize friends array if it doesn't exist
+                usersInfo.users_info[currentUser].friends = [];
+            }
             usersInfo.users_info[currentUser].friends.push(friendUsername);
 
             // Write updated data back to the file
@@ -119,6 +126,8 @@ function addFriend(req, res) {
         });
     });
 }
+
+
 
 
 // Function to handle user login
@@ -369,11 +378,6 @@ function addUserToUsers_info(username) {
         }
     });
 }
-
-
-
-
-
 
 function errorResponse(res, code, reason) {
     res.statusCode = code;
