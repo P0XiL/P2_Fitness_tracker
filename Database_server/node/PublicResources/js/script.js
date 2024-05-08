@@ -149,27 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
         location.reload(); // Reload the page to reflect the logout
     });
 
-
-    document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const createAccountPage = document.getElementById('userstats');
-        const loginPage = document.getElementById('stats');
-
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
-    });
-
-    document.getElementById('toggleFriendPlotPageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const createAccountPage = document.getElementById('FriendsPlot');
-        const loginPage = document.getElementById('userfriend');
-
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
-    });
-
     document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
 
