@@ -92,6 +92,8 @@ footer {grid-area: f;}
   margin-right: 10px;
 }
 
+
+
 #side-nav ul {
   list-style: none;
   padding: 0; /* Remove default padding from the <ul> element */
@@ -110,6 +112,12 @@ footer {grid-area: f;}
   color: #009FFD;
 }
 
+
+.center-heading{
+  text-align: center;
+}
+
+
 /* Styles for the modal */
 .modal {
   display: none; /* Hide the modal by default */
@@ -120,14 +128,14 @@ footer {grid-area: f;}
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4); /* Overlay background */
+  background-color: rgba(0, 0, 0, 0.488); /* Overlay background */
 }
 
 .modal-content {
-  background-color: #1f6bb2;
+  background-color: rgb(29, 37, 134);;
   margin: 15% auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 1px solid #888888;
   width: calc(30% - 10px);;
 }
 
@@ -140,9 +148,49 @@ meter {
   /* Add any other styling properties as needed */
 }
 
-/* Style for the buttons */
+.asphalt-button {
+  background-image: url('../image/asphalt2.jpg');
+  background-size: cover;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.asphalt-button:hover {
+  background-color: rgba(0, 0, 0, 0.3); /* Adding a semi-transparent overlay on hover */
+}
+
+/* Button style */
 .difficulty-button {
-  margin: 5%;
+  background-color: #007bff; /* Default button color */
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Button hover effect */
+.difficulty-button:hover {
+  background-color: #0056b3; /* Button color on hover */
+  color: #fff; /* Text color on hover */
+}
+
+/* Button active effect */
+.difficulty-button:active {
+  background-color: #004080; /* Button color when active (clicked) */
 }
 
 /* Styles for the drop-down button */

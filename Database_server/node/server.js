@@ -71,8 +71,11 @@ function processReq(req, res) {
                 }
                 break;
         default:
-            errorResponse(res, 405, "Method Not Allowed");
-            break;
+            // Set headers for unsupported methods
+            res.setHeader('Content-Type', 'text/plain');
+            res.statusCode = 405; // Method Not Allowed
+            res.end('Method Not Allowed');
+            break;            
     }
 }
 
@@ -323,11 +326,6 @@ function addUserToUsers_info(username) {
     });
 }
 
-
-
-
-
-
 function errorResponse(res, code, reason) {
     res.statusCode = code;
     res.setHeader('Content-Type', 'text/txt');
@@ -371,6 +369,7 @@ function guessMimeType(fileName) {
         "css": "text/css",
         "png": "image/png",
         "jpg": "image/jpeg",
+        "gif": "image/gif",
         "wav": "audio/wav",
         "mp3": "audio/mpeg",
         "svg": "image/svg+xml",

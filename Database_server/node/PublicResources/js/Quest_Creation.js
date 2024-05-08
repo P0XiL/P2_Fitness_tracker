@@ -52,15 +52,50 @@ async function display_quest(quest, user) {
          * @param {the type of the current quest} type 
          */
         function new_quest(type) {
-            document.getElementById(quest + "_type").innerText = "Type: " + type;
-
-            //Create button
+            const questContainer = document.getElementById(quest);
+            // Create button
             const button = document.createElement("button");
             button.textContent = "Get new Quest!";
             button.id = questTimespan;
+            button.classList.add("asphalt-button");
 
-            //Append button
-            document.getElementById(quest + "_type").appendChild(button)
+            //Size
+            button.style.width = "80%"
+            button.style.height = "10%"
+
+            // Position button
+            button.style.position = "absolute";
+            button.style.bottom = "5%"; // Adjust as needed
+            button.style.left = "50%";
+            button.style.transform = "translateX(-50%)";
+
+            // Add event listeners
+            button.addEventListener('mouseover', function () {
+                // Change the text content when hovered
+                this.textContent = "Type: " + type;
+            });
+            button.addEventListener('mouseout', function () {
+                // Change the text content back to original when not hovered
+                this.textContent = 'Get new Quest!';
+            });
+
+            // Create gif
+            const gif = document.createElement("img");
+            gif.src = "gif/" + type + ".gif";
+            gif.style.width = "80%";
+            gif.style.height = "48%";
+            gif.style.position = "absolute";
+            gif.style.bottom = "15%";
+            gif.style.left = "50%";
+            gif.style.transform = "translateX(-50%)";
+
+            // Append elements to questContainer
+            questContainer.style.position = 'relative';
+            questContainer.appendChild(gif);
+            questContainer.appendChild(button);
+
+
+
 
             //Add event listner to button
             button.addEventListener("click", () => {
@@ -200,7 +235,8 @@ function open_modal_for_quest(questTimespan, type, user) {
     })
     //add functionality to close button
     document.getElementById("close").addEventListener("click", () => {
-        document.getElementById("myModal").style.display = "none";});
+        document.getElementById("myModal").style.display = "none";
+    });
 }
 
 /**
