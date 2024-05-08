@@ -1,3 +1,7 @@
 {
-  "obj_users": {}
+  "obj_users": {
+    "user": {
+      "password": "123"
+    }
+  }
 }
