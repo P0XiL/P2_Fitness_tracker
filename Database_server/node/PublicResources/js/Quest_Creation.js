@@ -434,7 +434,7 @@ function get_type(obj_conf) {
  * @param {username} user 
  */
 async function display_quest(quest, user) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         //Based on ID figure out the timespan
         const timespans = ["daily", "weekly", "monthly"];
         const questTimespan = timespans[quest[5] - 1];
