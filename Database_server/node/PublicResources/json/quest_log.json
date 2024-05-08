@@ -38,37 +38,5 @@
         "exercise": "dips"
       }
     }
-  },
-  "pog": {
-    "daily": {
-      "8/5/2024": {
-        "type": "upperbody",
-        "target": 13,
-        "amount": 0,
-        "text": "Do 13 pushups",
-        "state": "incomplete",
-        "exercise": "pushups"
-      }
-    },
-    "weekly": {
-      "8/5/2024": {
-        "type": "cardio",
-        "target": 5,
-        "amount": 0,
-        "text": "Go for a run for 5 minutes",
-        "state": "incomplete",
-        "exercise": "run"
-      }
-    },
-    "monthly": {
-      "8/5/2024": {
-        "type": "cardio",
-        "target": 585,
-        "amount": 1231,
-        "text": "Cycle 585 minutes",
-        "state": "incomplete",
-        "exercise": "cycling"
-      }
-    }
   }
 }
