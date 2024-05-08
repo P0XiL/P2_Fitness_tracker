@@ -184,12 +184,12 @@ function plot(user, type, period) {
 }
 
 
-function user_data_x(user, type, period) {
+function user_data_x(user, exercise, period) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
       let x = ["01/1/2024"];
       for (let key in data[user][period]) {
-        if (data[user][period][key].type === type) {
+        if (data[user][period][key].exercise === exercise) {
           x.push(key);
         }
       }
@@ -201,13 +201,12 @@ function user_data_x(user, type, period) {
     });
 }
 
-function user_data_y(user, type, period) {
+function user_data_y(user, exercise, period) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
       let amountsWithType = [0];
       for (let date in data[user][period]) {
-        if (data[user][period][date].type === type) {
-          console.log(data[user][period][date].type);
+        if (data[user][period][date].exercise === exercise) {
           amountsWithType.push(data[user][period][date].amount);
         }
       }

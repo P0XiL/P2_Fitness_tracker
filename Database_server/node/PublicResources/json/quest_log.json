@@ -299,5 +299,22 @@
         "type": "cardio"
       }
     }
+  },
+  "Tobi1": {
+    "daily": {
+      "8/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "8/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "8/5/2024": {
+        "type": "cardio"
+      }
+    }
   }
 }
