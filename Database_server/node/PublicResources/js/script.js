@@ -1,4 +1,4 @@
-const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/';
+const serverPath = 'http://127.0.0.1:3360/';
 
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
@@ -25,7 +25,7 @@ const tierNames = {
     '43-45': 'Gold 1',
 };
 
-// LOCALHOST: https://127.0.0.1:3360
+// LOCALHOST: http://127.0.0.1:3360/
 // SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
 
 
@@ -148,27 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.removeItem('loginState'); // Remove the login state from localStorage
 
         location.reload(); // Reload the page to reflect the logout
-    });
-
-
-    document.getElementById('toggleStatsPageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const createAccountPage = document.getElementById('userstats');
-        const loginPage = document.getElementById('stats');
-
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
-    });
-
-    document.getElementById('toggleFriendPlotPageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const createAccountPage = document.getElementById('FriendsPlot');
-        const loginPage = document.getElementById('userfriend');
-
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
     });
 
     document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {

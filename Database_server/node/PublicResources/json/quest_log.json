@@ -115,7 +115,8 @@
         "target": 10,
         "amount": 10,
         "text": "Do the wallsit for 10 seconds",
-        "state": "incomplete"
+        "state": "incomplete",
+        "exercise": "Pog"
       }
     },
     "weekly": {
@@ -317,13 +318,53 @@
         "text": "Do 27 crunches",
         "state": "incomplete",
         "exercise": "crunches"
+      },
+      "8/5/2024": {
+        "type": "core",
+        "target": 27,
+        "amount": 14,
+        "text": "Do 27 crunches",
+        "state": "incomplete",
+        "exercise": "crunches"
+      },
+      "1/5/2024": {
+        "type": "core",
+        "target": 27,
+        "amount": 28,
+        "text": "Do 27 crunches",
+        "state": "incomplete",
+        "exercise": "crunches"
+      },
+      "2/5/2024": {
+        "type": "core",
+        "target": 27,
+        "amount": 14,
+        "text": "Do 27 crunches",
+        "state": "incomplete",
+        "exercise": "crunches"
+      },
+      "3/5/2024": {
+        "type": "core",
+        "target": 27,
+        "amount": 28,
+        "text": "Do 27 crunches",
+        "state": "incomplete",
+        "exercise": "crunches"
+      },
+      "4/5/2024": {
+        "type": "core",
+        "target": 27,
+        "amount": 14,
+        "text": "Do 27 crunches",
+        "state": "incomplete",
+        "exercise": "crunches"
       }
     },
     "weekly": {
       "7/5/2024": {
         "type": "lowerbody",
         "target": 54,
-        "amount": 0,
+        "amount": 40,
         "text": "Do 54 squats",
         "state": "incomplete",
         "exercise": "squats"
