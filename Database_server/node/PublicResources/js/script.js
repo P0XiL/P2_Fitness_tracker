@@ -158,7 +158,84 @@ document.addEventListener('DOMContentLoaded', function () {
         loginPage.classList.remove('active');
         createAccountPage.classList.add('active');
     });
+
+    document.getElementById('toggleAddFriendsPage').addEventListener('click', function (e) {
+        e.preventDefault();
+    
+        const addFriendsPage = document.getElementById('addFriends');
+        const friendsPage = document.getElementById('friends');
+    
+        friendsPage.classList.remove('active');
+        addFriendsPage.classList.add('active');
+    
+    
+    });
+
+    document.getElementById('friendSubmitBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const friend_username = document.querySelector('input[name="friend_username"]').value;
+        
+        const friend_data = {
+            friends: friend_username
+        }
+
+        saveFriend(friend_data);
+    });
+
 });
+
+function saveFriend(friendData) {
+    const username = localStorage.getItem('username'); // Retrieve the username from local storage
+    friendData.username = username; // Add the username to the friendData object
+    fetch(serverPath + 'addFriend', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(friendData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            response.text().then(errorMessage => {
+                displayFriendErrorMessage(errorMessage); // Display error message for friend-related errors
+            });
+        } else {
+            clearFriendErrorMessage();
+        }
+    })
+    .then(data => {
+        // Handle success response here if needed
+        console.log('Friend added successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error adding friend:', error);
+    });
+}
+
+
+// Function to display login error message
+function displayFriendErrorMessage(message) {
+    const loginErrorMessage = document.getElementById('friendErrorMessage');
+    loginErrorMessage.textContent = message;
+    loginErrorMessage.style.color = 'red';
+}
+function clearFriendErrorMessage() {
+    const loginErrorMessage = document.getElementById('friendErrorMessage');
+    loginErrorMessage.textContent = '';
+}
+
+
+// Function to handle storing login state
+function storeLoginState(username) {
+    const expirationTime = new Date().getTime() + (30 * 60 * 1000); // 30 minutes expiration
+    const loginState = {
+        username: username,
+        expiration: expirationTime
+    };
+    localStorage.setItem('loginState', JSON.stringify(loginState));
+    localStorage.setItem('username', username);
+}
 
 // Function to check and handle login state on page load
 function checkLoginState() {
@@ -216,15 +293,31 @@ function loginUser(loginData) {
         });
 }
 
-// Function to handle storing login state
-function storeLoginState(username) {
-    const expirationTime = new Date().getTime() + (30 * 60 * 1000); // 30 minutes expiration
-    const loginState = {
-        username: username,
-        expiration: expirationTime
-    };
-    localStorage.setItem('loginState', JSON.stringify(loginState));
-    localStorage.setItem('username', username);
+// Function to send data to server-side script
+function createUser(userData) {
+    fetch(serverPath+'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Data successfully sent to server');
+
+                storeLoginState(userData.username);
+
+                location.reload();
+            } else {
+                response.text().then(errorMessage => {
+                    displayCreateErrorMessage(errorMessage);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 // Function to display login error message
@@ -886,33 +979,6 @@ function displayCreateErrorMessage(message) {
     const errorMessage = document.getElementById('createErrorMessage');
     errorMessage.textContent = message;
     errorMessage.style.color = 'red';
-}
-
-// Function to send data to server-side script
-function createUser(userData) {
-    fetch(serverPath+'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    })
-        .then(response => {
-            if (response.ok) {
-                console.log('Data successfully sent to server');
-
-                storeLoginState(userData.username);
-
-                location.reload();
-            } else {
-                response.text().then(errorMessage => {
-                    displayCreateErrorMessage(errorMessage);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
 }
 
 async function postUserInfo(username) {

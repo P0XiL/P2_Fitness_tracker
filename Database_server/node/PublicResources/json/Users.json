@@ -1,7 +1,10 @@
 {
   "obj_users": {
-    "Tobi": {
+    "user": {
       "password": "123"
+    },
+    "sad": {
+      "password": "1"
     }
   }
 }

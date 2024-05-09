@@ -12,12 +12,12 @@
     <!-- Navigation links -->
     <nav id="side-nav" style="display: none;">
         <ul id="side-navigation-links">
-        <ul><br>
-            <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
-            <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
-            <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
-            <li><a href="#profilepage" id="profile-link">Profile</a></li>
-        </ul>
+            <ul><br>
+                <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
+                <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
+                <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
+                <li><a href="#profilepage" id="profile-link">Profile</a></li>
+            </ul>
     </nav>
 
     <nav id="top-nav" style="display: none;">
@@ -25,16 +25,18 @@
             <li><a href="#main"><img src="image/home.png" alt="Home" class="top-right-img"></a></li>
             <li><a href="#profilepage"><img src="image/profile_image.png" alt="Profile" class="top-left-img"></a></li>
         </ul>
-    </nav>    
+    </nav>
 
     <!-- A popup when choosing new quest-->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <p id="popupText"></p>
-            <button class="difficulty-button" data-difficulty="-3">Easy</button>
-            <button class="difficulty-button" data-difficulty="0">Medium</button>
-            <button class="difficulty-button" data-difficulty="3">Hard</button>
-            <button id="close">Close</button>
+            <button id="close" class="close-button">&#x2715;</button>
+            <h2 id="popupText"></h2>
+            <div class="buttons-wrapper">
+                <button class="difficulty-button" data-difficulty="-3">Easy</button>
+                <button class="difficulty-button" data-difficulty="0">Medium</button>
+                <button class="difficulty-button" data-difficulty="3">Hard</button>
+            </div>
         </div>
     </div>
 
@@ -59,19 +61,19 @@
             <div id="monthlyQuestTier" class="tiers"></div>
 
             <div id="quest1" class="quest">
-                <h2>Daily</h2>
+                <h2 class="center-heading">Daily</h2>
                 <meter id="meter1" value="0" min="0" max="1"></meter>
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
-                <h2>Weekly</h2>
+                <h2 class="center-heading">Weekly</h2>
                 <meter id="meter2" value="0" min="0" max="1"></meter>
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
-                <h2>Monthly</h2>
+                <h2 class="center-heading">Monthly</h2>
                 <meter id="meter3" value="0" min="0" max="1"></meter>
                 <p id="quest3_type"></p>
             </div>
@@ -86,16 +88,65 @@
 
         <a href="#" id="toggleFriendPageLink" class="dropbtn">Show friends</a>
 
+        <button id="toggleAddFriendsPage">Add friends</button>
+
+    </div>
+
+    <div id="addFriends" class="page center">
+        <h2>Add friends</h2>
+
+        <input type="text" name="friend_username" placeholder="Name">
+        <button type="submit" id="friendSubmitBtn">Add Friend</button>
+        <br>
+        <span id="friendErrorMessage"></span>
+
+
     </div>
 
 
-    <div id="stats" class="page center">
-        <h2>Stats</h2>
-        <p id="statsText"></p>
+    <div id="FriendsPlot" class="page center">
+
+        <h2>Friends</h2>
 
         <div class="dropdown-container">
             <div class="dropdown">
-                <button onclick="dropdown_close()" class="dropbtn">Change type</button>
+                <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
+                <div id="myDropdown2" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'lowerbody', null)">Lowerbody</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
+                <div id="myDropdown3" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
+                    <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
+                    <a href="#" onclick="update_graph_friend(null, 'monthly')">Monthly</a>
+                </div>
+            </div>
+        </div>
+
+
+        <p id="textfriend"> </p>
+
+        <div>
+            <h1>Graph with friends </h1>
+            <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
+        </div>
+    </div>
+
+    <div id="stats" class="page center">
+        <h2>Stats</h2>
+        <p id="statsTextUser"></p>
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_toggle('myDropdown')" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
                     <a href="#" onclick="update_graph('run')">Run</a>
                     <a href="#" onclick="update_graph('walk')">Walk</a>
@@ -212,12 +263,12 @@
 
     <div id="userfriend" class="page center">
         <h2>Users friends name goes here + stats</h2>
-        <p id="statsText1"></p>
+        <p id="statsTextFriend"></p>
 
 
         <div class="dropdown-container">
             <div class="dropdown">
-                <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
+                <button onclick="dropdown_toggle('myDropdown2')" class="dropbtn">Change type</button>
                 <div id="myDropdown2" class="dropdown-content">
                     <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
                     <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
@@ -229,7 +280,7 @@
 
         <div class="dropdown-container">
             <div class="dropdown">
-                <button onclick="dropdown_close3()" class="dropbtn">Change Timespan</button>
+                <button onclick="dropdown_toggle('myDropdown3')" class="dropbtn">Change period</button>
                 <div id="myDropdown3" class="dropdown-content">
                     <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
                     <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
@@ -243,7 +294,7 @@
             <p id="textfriend"> </p>
             <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
         </div>
-        
+
     </div>
 
     <!-- JavaScript to handle navigation -->

@@ -1,33 +1,74 @@
 {
-  "Tobi": {
+  "user": {
     "daily": {
-      "8/5/2024": {
+      "7/5/2024": {
         "type": "core",
         "target": 10,
-        "amount": 15,
+        "amount": 32,
         "text": "Do the plank for 10 seconds",
         "state": "incomplete",
         "exercise": "plank"
+      },
+      "8/5/2024": {
+        "type": "upperbody"
       }
     },
     "weekly": {
-      "8/5/2024": {
-        "type": "cardio",
-        "target": 5,
-        "amount": 5,
-        "text": "Go for a run for 5 minutes",
+      "1/5/2024": {
+        "type": "core",
+        "target": 3,
+        "amount": 4,
+        "text": "Do 3 burpees",
         "state": "incomplete",
-        "exercise": "run"
+        "exercise": "burpees"
+      },
+      "8/5/2024": {
+        "type": "lowerbody",
+        "target": 10,
+        "amount": 0,
+        "text": "Do the wallsit for 10 seconds",
+        "state": "incomplete",
+        "exercise": "wallsit"
       }
     },
     "monthly": {
       "8/5/2024": {
+        "type": "cardio",
+        "target": 65,
+        "amount": 100,
+        "text": "Go for a walk for 65 minutes",
+        "state": "incomplete",
+        "exercise": "walk"
+      }
+    }
+  },
+  "sad": {
+    "daily": {
+      "8/5/2024": {
         "type": "lowerbody",
         "target": 3,
-        "amount": 3,
+        "amount": 35,
         "text": "Do 3 lunges",
         "state": "incomplete",
         "exercise": "lunges"
+      },
+      "9/5/2024": {
+        "type": "cardio",
+        "target": 5,
+        "amount": 5,
+        "text": "Go for a walk for 5 minutes",
+        "state": "incomplete",
+        "exercise": "walk"
+      }
+    },
+    "weekly": {
+      "8/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "8/5/2024": {
+        "type": "cardio"
       }
     }
   }
