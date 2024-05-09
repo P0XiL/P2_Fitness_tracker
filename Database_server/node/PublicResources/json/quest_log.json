@@ -11,6 +11,14 @@
       },
       "8/5/2024": {
         "type": "upperbody"
+      },
+      "9/5/2024": {
+        "type": "lowerbody",
+        "target": 10,
+        "amount": 0,
+        "text": "Do the wallsit for 10 seconds",
+        "state": "incomplete",
+        "exercise": "wallsit"
       }
     },
     "weekly": {
