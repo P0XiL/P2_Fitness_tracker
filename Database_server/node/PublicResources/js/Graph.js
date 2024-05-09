@@ -82,8 +82,9 @@ function individual_type_friend(user) {
         for (let key in data[user][period]) {
           const exercise = data[user][period][key].exercise;
           amount = data[user][period][key].amount;
-          if (!processedTypes[exercise]) { // Check if type has already been processed
+          if (!processedTypes[exercise] && !processedPeriod[period]) { // Check if type has already been processed
             processedTypes[exercise] = true;
+            processedPeriod[period] = true;
               if (amount !== 0 && !isNaN(amount)) {
                 const element1 = document.getElementById("statsText1");
                 try {
@@ -138,7 +139,7 @@ function change_text(type, period) {
   // Get the element with the id "text"
   const element = document.getElementById("text");
   // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + type + " in period: " + period;
+  element.innerHTML = "This Graph is based on type:  " + type + " in Timespan: " + period;
 }
 
 function plot(user, type, period) {
@@ -176,7 +177,7 @@ function plot(user, type, period) {
 function user_data_x(user, exercise, period) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
-      let x = ["01/1/2024"];
+      let x = [];
       for (let key in data[user][period]) {
         if (data[user][period][key].exercise === exercise) {
           x.push(key);
@@ -193,7 +194,7 @@ function user_data_x(user, exercise, period) {
 function user_data_y(user, exercise, period) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
-      let amountsWithType = [0];
+      let amountsWithType = [];
       for (let date in data[user][period]) {
         if (data[user][period][date].exercise === exercise) {
           amountsWithType.push(data[user][period][date].amount);
@@ -284,5 +285,5 @@ function change_text_friend(value, period) {
   // Get the element with the id "text"
   const element = document.getElementById("textfriend");
   // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + value + " in period: " + period;
+  element.innerHTML = "This Graph is based on type:  " + value + " in Time: " + period;
 }
