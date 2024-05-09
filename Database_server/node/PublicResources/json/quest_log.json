@@ -254,5 +254,37 @@
     "monthly": {
       "6/5/2024": {}
     }
+  },
+  "staehr": {
+    "daily": {
+      "6/5/2024": {
+        "type": "crunches",
+        "difficulty": "0",
+        "target": 13,
+        "amount": 0,
+        "text": "Do 13 crunches",
+        "state": "incomplete"
+      }
+    },
+    "weekly": {
+      "6/5/2024": {
+        "type": "run",
+        "difficulty": "-3",
+        "target": 5,
+        "amount": 20,
+        "text": "Go for a run for 5 minutes",
+        "state": "complete"
+      }
+    },
+    "monthly": {
+      "6/5/2024": {
+        "type": "walk",
+        "difficulty": "3",
+        "target": 585,
+        "amount": 0,
+        "text": "Go for a walk for 585 minutes",
+        "state": "incomplete"
+      }
+    }
   }
 }

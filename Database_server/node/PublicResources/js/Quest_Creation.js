@@ -253,6 +253,7 @@ function open_modal_for_quest(questTimespan, type, user) {
                     //Make an obj which is used when adding the quest
                     obj_newQuest[date] = {};
                     obj_newQuest[date].type = type;
+                    obj_newQuest[date].difficulty = difficulty;
                     obj_newQuest[date].target = obj_Quest.quest["base_target"];
                     obj_newQuest[date].amount = 0;
                     obj_newQuest[date].text = obj_Quest.quest.quest_text;
@@ -425,7 +426,24 @@ function get_type(obj_conf) {
     return weightedKeys[generate_random_number(weightedKeys.length)];
 
 }
-
+function award_elo(obj_para) {
+    fetch(serverPath + 'award_elo', { //Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node or http://127.0.0.1:3366
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj_para)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No response fetch POST amount');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error fetch Post (change amount):', error);
+        });
+}
 
 /**
  * Display the quest
@@ -485,16 +503,18 @@ async function display_quest(quest, user) {
                             resolve();
                             return;
                         })
-
-
-
-
-
-
-
                 } else if (obj_stateQuest["state"] == "Done") {
                     //If quest is done
                     document.getElementById(quest + "_type").innerText = "Quest done";
+                    if ("incomplete" === quest_log[user][questTimespan][obj_stateQuest.date].state){
+                        let obj_award = {};
+                        obj_award.user = user;
+                        obj_award.timespan = questTimespan;
+                        obj_award.date = obj_stateQuest.date;
+                        obj_award.difficulty = quest_log[user][questTimespan][obj_stateQuest["date"]].difficulty;
+                        obj_award.type = quest_log[user][questTimespan][obj_stateQuest["date"]].type;
+                        award_elo(obj_award);
+                    }
                     resolve();
                     return;
                 } else {

@@ -58,6 +58,8 @@ function processReq(req, res) {
             } else if (queryPath === "/write_user_info_json") { 
                 // Add new route for writing user info
                 write_user_info_json(req, res);
+            } else if (queryPath === "/award_elo") {
+                award_elo(req, res);
             } else {
                 errorResponse(res, 404, "not found")
             }
@@ -352,6 +354,7 @@ function write_quest_json(req, res) {
             delete obj_quest.timespan;
             const user = obj_quest.userID;
             delete obj_quest.userID;
+            console.log(obj_quest)
             obj_questLog[user][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
            
             // Write updated data back to the file
@@ -422,6 +425,105 @@ function change_amount(req, res) {
 }
 
 
+//Function that gives elo
+function award_elo(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_award = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+            let obj_questLog = {}; // Initialize quest_log object
+
+            if (!err) {
+                try {
+                    obj_questLog = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing quest_log:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing quest_log:", err);
+            }
+
+            obj_questLog[obj_award.user][obj_award.timespan][obj_award.date].state = "complete";
+            
+
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                }
+            });
+        });
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            let obj_usersInfo = {}; // Initialize users_info object
+
+            if (!err) {
+                try {
+                    obj_usersInfo = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing usersInfo:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing usersinfo:", err);
+            }
+            let award = 0;
+            if (obj_award.difficulty == -3){
+                award = 25;
+            }
+            else if (obj_award.difficulty == 0) {
+                award = 50;
+            }
+            else if (obj_award.difficulty == 3) {
+                award = 100;
+            }
+            else {
+                console.error("Error, could not determine difficulty of completed task")
+            }
+        
+            obj_usersInfo["users_info"][obj_award.user]["mastery"][obj_award.type]["elo"] += award;
+            if (obj_usersInfo["users_info"][obj_award.user]["mastery"][obj_award.type]["elo"] >= 100) {
+                obj_usersInfo["users_info"][obj_award.user]["mastery"][obj_award.type]["rank"]++
+                obj_usersInfo["users_info"][obj_award.user]["mastery"][obj_award.type]["elo"] -= 100
+            }
+            obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["elo"] += award;
+
+            if (obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["elo"] >= 20 && obj_award.timespan == "monthly") {
+                obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["rank"]++
+                obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["elo"] -= 20
+            }
+            if (obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["elo"] >= 40 && obj_award.timespan == "weekly") {
+                obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["rank"]++
+                obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["elo"] -= 40
+            }
+            if (obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["elo"] >= 100 && obj_award.timespan == "daily") {
+                obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["rank"]++
+                obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan]["elo"] -=100
+            }
+
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(obj_usersInfo, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User data appended to file');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
+        });
+    });
+}
 
 
 
@@ -447,7 +549,7 @@ function write_user_info_json(req, res) {
             existingData.users_info[user_info.username].preset = user_info.preset;
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
@@ -487,7 +589,7 @@ function write_user_preferences_json(req, res) {
             existingData.users_info[user_info.username].preset = user_info.preset;
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
@@ -539,7 +641,7 @@ function write_user_preferences_json(req, res) {
                  existingData.users_info[idkey].surveyData = surveyData;
     
                 // Write updated data back to the file
-                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
                     if (err) {
                         console.error('Error writing data:', err);
                         errorResponse(res, 500, String(err));
