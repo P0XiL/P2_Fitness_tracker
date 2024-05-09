@@ -1,33 +1,33 @@
 {
-  "tobi": {
+  "Tobi": {
     "daily": {
       "8/5/2024": {
-        "type": "upperbody",
+        "type": "core",
         "target": 10,
-        "amount": 10,
-        "text": "Do arm circles for 10 seconds",
+        "amount": 15,
+        "text": "Do the plank for 10 seconds",
         "state": "incomplete",
-        "exercise": "armcircles"
+        "exercise": "plank"
       }
     },
     "weekly": {
       "8/5/2024": {
-        "type": "core",
-        "target": 3,
-        "amount": 3,
-        "text": "Do 3 burpees",
+        "type": "cardio",
+        "target": 5,
+        "amount": 5,
+        "text": "Go for a run for 5 minutes",
         "state": "incomplete",
-        "exercise": "burpees"
+        "exercise": "run"
       }
     },
     "monthly": {
       "8/5/2024": {
-        "type": "core",
+        "type": "lowerbody",
         "target": 3,
         "amount": 3,
-        "text": "Do 3 situps",
+        "text": "Do 3 lunges",
         "state": "incomplete",
-        "exercise": "situps"
+        "exercise": "lunges"
       }
     }
   }

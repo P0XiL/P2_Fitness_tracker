@@ -118,50 +118,54 @@ let prePeriod = "daily";
 let pretype = "cardio";
 
 function update_graph(type, period) {
-      let user = localStorage.getItem("username");
-  if (type === null && period !== null) {
-    plot(user, pretype, period);
-    change_text(pretype, period);
-    prePeriod = period;
-  }
-  else if (type !== null && period === null) {
-    plot(user, type, prePeriod);
-    change_text(type, prePeriod);
-    pretype = type;
-  } else {
-    plot(user, pretype, prePeriod);
-    change_text(pretype, preperiod);
-  }
+    let user = localStorage.getItem("username");
+    plot(user, type);
+    change_text(type);
 }
 
 
-function change_text(type, period) {
+function change_text(type) {
   // Get the element with the id "text"
   const element = document.getElementById("text");
   // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + type + " in Timespan: " + period;
+  element.innerHTML = "This Graph is based on type:  " + type ;
 }
 
 function plot(user, type, period) {
   let ctx = document.getElementById("myChart");
 
-  Promise.all([user_data_x(user, type, period), user_data_y(user, type, period)])
+  Promise.all([user_data_x(user, type), user_data_y(user, type)])
     .then(([labels, data]) => {
       let maxVal = data.length > 0 ? Math.max(...data) + 1 : 10;
+
+      // Calculate the average of the data
+      let average = 10;
+      maxVal = Math.max(maxVal, average + 1);
+
       let myChart = new Chart(ctx, {
-        type: "bar",
+        type: "line",
         data: {
           labels: labels,
           datasets: [{
             fill: false,
+            label: user,
             lineTension: 0,
             backgroundColor: "rgba(255,164,0,255)",
-            borderColor: "rgba(0,0,255,0.5)",
+            borderColor: "rgba(255,164,0,255)",
             data: data,
+          },
+          {
+            type: 'line',
+            label: 'Recommended',
+            borderColor: 'rgba(255, 99, 132, 0.5)',
+            borderWidth: 2,
+            data: Array(data.length).fill(average), // Array of average values
+            fill: false,
+            borderDash: [5, 5] // Add dashed border for distinction
           }]
         },
         options: {
-          legend: { display: false },
+          legend: { display: true },
           scales: {
             yAxes: [{ ticks: { min: 0, max: maxVal } }],
           }
@@ -174,36 +178,51 @@ function plot(user, type, period) {
 }
 
 
-function user_data_x(user, exercise, period) {
+function user_data_x(user, exercise) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
-      let x = [];
-      for (let key in data[user][period]) {
-        if (data[user][period][key].exercise === exercise) {
-          x.push(key);
+      let dates = ["1/1/2024"];
+      for (let period in data[user]) {
+        for (let date in data[user][period]) {
+          if (data[user][period][date].exercise === exercise && !dates.includes(date)) {
+            // Check if any other exercise type exists for this date
+            let otherTypes = Object.values(data[user][period][date])
+              .filter(item => typeof item === 'object' && item.exercise !== exercise);
+            if (otherTypes.length === 0) {
+              dates.push(date);
+            }
+          }
         }
       }
-      return x;
+      return dates;
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
-      return []; // return an empty array in case of an error
+      return []; // Return an empty array in case of an error
     });
 }
 
-function user_data_y(user, exercise, period) {
+function user_data_y(user, exercise) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
-      let amountsWithType = [];
-      for (let date in data[user][period]) {
-        if (data[user][period][date].exercise === exercise) {
-          amountsWithType.push(data[user][period][date].amount);
+      let amounts = [0];
+      for (let period in data[user]) {
+        for (let date in data[user][period]) {
+          if (data[user][period][date].exercise === exercise) {
+            // Check if any other exercise type exists for this date
+            let otherTypes = Object.values(data[user][period][date])
+              .filter(item => typeof item === 'object' && item.exercise !== exercise);
+            if (otherTypes.length === 0) {
+              amounts.push(data[user][period][date].amount);
+            }
+          }
         }
       }
-      return amountsWithType;
+      return amounts;
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
+      return []; // Return an empty array in case of an error
     });
 }
 
