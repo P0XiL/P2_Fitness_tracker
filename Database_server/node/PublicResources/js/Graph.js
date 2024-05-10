@@ -68,7 +68,7 @@ function individual_type_friend(user) {
           amount = data[user][period][key].amount;
           if (!processedTypes[exercise]) { // Check if type has already been processed
             processedTypes[exercise] = true;
-              if (!isNaN(amount) ) {
+              if (amount !== 0 && !isNaN(amount) ) {
                 const element1 = document.getElementById("statsText1");
                 try {
                   element1.innerHTML += `<pre id=${exercise} sum=${amount}>Amount of ${exercise} = ${amount} \n\n</pre>`;
@@ -77,7 +77,7 @@ function individual_type_friend(user) {
                 }
               }
           } else {
-            if(!isNaN(amount)){
+            if(amount !== 0 && !isNaN(amount)){
               const path = document.getElementById(exercise);
               const newsum = parseInt(path.getAttribute("sum")) + amount;
               path.setAttribute("sum", newsum);
@@ -326,8 +326,23 @@ function recommended(type){
 }
 
 
-function make_href(){
+function insertDOM(parentNode, id, altUrl, title) {
 
+  // create <a> tag and <img> tag
+  var aTag = document.createElement(a);
+  var imgTag = document.createElement(img);
+
+  // set the appropriate properties
+  aTag.setAttribute(href, id);
+  aTag.setAttribute(target,'_self');
+
+  imgTag.setAttribute(src, altUrl);
+  imgTag.setAttribute(alt, alt);
+  imgTag.setAttribute(width, 400);
+
+  // attach the img tag to a, then a to the parent
+  aTag.appendChild(imgTag);
+  parentNode.appendChild(aTag);
 }
 
 /**
