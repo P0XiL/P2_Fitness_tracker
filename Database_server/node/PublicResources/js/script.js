@@ -220,7 +220,7 @@ function displayFriendErrorMessage(message) {
     loginErrorMessage.textContent = message;
     loginErrorMessage.style.color = 'red';
 }
-function clearFriendErrorMessage() {
+function    clearFriendErrorMessage() {
     const loginErrorMessage = document.getElementById('friendErrorMessage');
     loginErrorMessage.textContent = '';
 }

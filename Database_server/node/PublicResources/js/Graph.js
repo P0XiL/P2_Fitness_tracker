@@ -4,7 +4,7 @@ try {
     // Close the dropdowns if the user clicks outside of it
 
   individual_type(user, "statsTextUser");
-  individual_type("user", "statsTextFriend" );
+  individual_type("sad", "statsTextFriend" );
 
   } else {
     console.error("Failed getting user")
@@ -31,7 +31,7 @@ function individual_type(user, elementID) {
           amount = data[user][period][key].amount;
           if (!processedTypes[exercise]) { // Check if type has already been processed
             processedTypes[exercise] = true;
-            if (amount !== 0 && !isNaN(amount)) {
+            if (!isNaN(amount)) {
               const element = document.getElementById(elementID);
               try {
                 element.innerHTML += `<pre id=${exercise} sum=${amount}>Amount of ${exercise} = ${amount} \n\n</pre>`;
@@ -40,7 +40,7 @@ function individual_type(user, elementID) {
               }
             }
           } else {
-            if(amount !== 0 && !isNaN(amount)){
+            if(!isNaN(amount)){
               const path = document.getElementById(exercise);
               const newsum = parseInt(path.getAttribute("sum")) + amount;
               path.setAttribute("sum", newsum);              
@@ -60,17 +60,15 @@ function individual_type_friend(user) {
     .then(data => {
       let text = ""; // Initialize text variable
       const processedTypes = {}; // Object to keep track of processed types
-      const processedPeriod = {}
       let amount;
 
       for (let period in data[user]) {
         for (let key in data[user][period]) {
           const exercise = data[user][period][key].exercise;
           amount = data[user][period][key].amount;
-          if (!processedTypes[exercise] && !processedPeriod[period]) { // Check if type has already been processed
+          if (!processedTypes[exercise]) { // Check if type has already been processed
             processedTypes[exercise] = true;
-            processedPeriod[period] = true;
-              if (amount !== 0 && !isNaN(amount)) {
+              if (!isNaN(amount) ) {
                 const element1 = document.getElementById("statsText1");
                 try {
                   element1.innerHTML += `<pre id=${exercise} sum=${amount}>Amount of ${exercise} = ${amount} \n\n</pre>`;
@@ -79,7 +77,7 @@ function individual_type_friend(user) {
                 }
               }
           } else {
-            if(amount !== 0 && !isNaN(amount)){
+            if(!isNaN(amount)){
               const path = document.getElementById(exercise);
               const newsum = parseInt(path.getAttribute("sum")) + amount;
               path.setAttribute("sum", newsum);
@@ -117,9 +115,8 @@ function change_text(type) {
  * Plots the graph for user
  * @param {string} user - User ID 
  * @param {string} type
- * @param {string} period - Quest timespan 
  */
-function plot(user, type, period) {
+function plot(user, type) {
   const ctx = document.getElementById("myChart");
 
   Promise.all([user_data_x(user, type), user_data_y(user, type)])
@@ -127,7 +124,7 @@ function plot(user, type, period) {
       let maxVal = data.length > 0 ? Math.max(...data) + 1 : 10;
 
       // Calculate the average of the data
-      let average = 10;
+      let average = recommended(type);
       maxVal = Math.max(maxVal, average + 1);
 
       let myChart = new Chart(ctx, {
@@ -170,13 +167,12 @@ function plot(user, type, period) {
  * @param {string} user - User ID 
  * @param {string} friend - Friend ID
  * @param {string} type - Type of quest
- * @param {string} period - The timespan
  */
-function plot_with_friends(user, user2, type, period) {
+function plot_with_friends(user, user2, type) {
   // Get the canvas element
   let ctx = document.getElementById("myChart2").getContext("2d");
 
-  Promise.all([user_data_x(user, type, period), user_data_x(friend, type, period), user_data_y(user, type, period), user_data_y(friend, type, period)])
+  Promise.all([user_data_x(user, type), user_data_x(friend, type), user_data_y(user, type), user_data_y(friend, type)])
     .then(([labels_user1, labels_user2, data_user1, data_user2]) => {
       //Sort the two x data
       const all_labels = [...new Set([...labels_user1, ...labels_user2])].sort();
@@ -252,6 +248,7 @@ function user_data_y(user, exercise) {
           }
         }
       }
+      console.log(amounts);
       return amounts;
     })
     .catch(error => {
@@ -283,12 +280,54 @@ function user_data_x(user, exercise) {
           }
         }
       }
+      console.log(dates);
       return dates;
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
       return []; // Return an empty array in case of an error
     });
+}
+
+
+function recommended(type){
+  switch(type) {
+    case 'run':
+      return 15
+    case 'walk':
+      return 10
+    case 'cycling':
+      return 30
+    case 'plank':
+      return 1
+    case 'situp':
+      return 10
+    case 'backextentions':
+      return 10
+    case 'burpees':
+      return 15
+    case 'crunches':
+      return 15
+    case 'squats':
+      return 15
+    case 'lunges':
+      return 10
+    case 'wallsit':
+      return 15
+    case 'pushup':
+      return 15
+    case 'dips':
+      return 10
+    case 'armcircles':
+      return 10
+    default:
+      console.log("type not vailded");
+  }
+}
+
+
+function make_href(){
+
 }
 
 /**
