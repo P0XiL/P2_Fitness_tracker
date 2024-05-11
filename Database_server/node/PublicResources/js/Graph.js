@@ -381,5 +381,5 @@ function change_text(type, elemetID) {
   // Get the element with the id "text"
   const element = document.getElementById(elemetID);
   // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + type +;
+  element.innerHTML = "This Graph is based on type:  " + type;
 }
