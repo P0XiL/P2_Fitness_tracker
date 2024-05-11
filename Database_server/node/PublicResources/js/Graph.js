@@ -98,18 +98,15 @@ let pretype = "run";
  * Updates the graph
  * @param {string} type
  */
-function update_graph(type) {
+function update_graph(type, id) {
     let user = localStorage.getItem("username");
     plot(user, type);
-    change_text(type);
+    change_text(type, id);
 }
 
-
-function change_text(type) {
-  // Get the element with the id "text"
-  const element = document.getElementById("text");
-  // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + type ;
+function update_graph_friend(type, id){
+  plot_with_friends(type);
+  change_text(type, id);
 }
 /**
  * Plots the graph for user
@@ -168,8 +165,9 @@ function plot(user, type) {
  * @param {string} friend - Friend ID
  * @param {string} type - Type of quest
  */
-function plot_with_friends(user, user2, type) {
+function plot_with_friends(type) {
   // Get the canvas element
+  let user = localStorage.getItem("username");
   let ctx = document.getElementById("myChart2").getContext("2d");
 
   Promise.all([user_data_x(user, type), user_data_x(friend, type), user_data_y(user, type), user_data_y(friend, type)])
@@ -324,25 +322,23 @@ function recommended(type){
       console.log("type not vailded");
   }
 }
+var friend
 
+function Make_href(divId, userName, name, friend) {
+  var div = document.getElementById(divId);
+  var atag = document.createElement('a');
+  atag.setAttribute('href', userName);
+  atag.textContent = "Add Friend"; // Text for the link
+  
+  atag.onclick = function() {
+    assign_friend(name);
+  }; // Assigning a function that calls the provided function with the parameter
 
-function insertDOM(parentNode, id, altUrl, title) {
+  div.appendChild(atag);
+}
 
-  // create <a> tag and <img> tag
-  var aTag = document.createElement(a);
-  var imgTag = document.createElement(img);
-
-  // set the appropriate properties
-  aTag.setAttribute(href, id);
-  aTag.setAttribute(target,'_self');
-
-  imgTag.setAttribute(src, altUrl);
-  imgTag.setAttribute(alt, alt);
-  imgTag.setAttribute(width, 400);
-
-  // attach the img tag to a, then a to the parent
-  aTag.appendChild(imgTag);
-  parentNode.appendChild(aTag);
+function asign_friend(name){
+  friend = name;
 }
 
 /**
@@ -381,9 +377,9 @@ function dropdown_window_click() {
  * @param {string} period - Quest timespan
  * @param {string} elemetID - ID to element
  */
-function change_text(type, period, elemetID) {
+function change_text(type, elemetID) {
   // Get the element with the id "text"
   const element = document.getElementById(elemetID);
   // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + value + " in Time: " + period;
+  element.innerHTML = "This Graph is based on type:  " + type +;
 }

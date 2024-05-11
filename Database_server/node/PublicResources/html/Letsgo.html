@@ -95,7 +95,7 @@
         <h2>Add friends</h2>
 
         <input type="text" name="friend_username" placeholder="Name">
-        <button type="submit" id="friendSubmitBtn">Add Friend</button>
+        <button type="submit" id="friendSubmitBtn" onclick="Make_href('friends', name)">Add Friend</button>
         <br>
         <span id="friendErrorMessage"></span>
 
@@ -110,20 +110,20 @@
             <div class="dropdown">
                 <button onclick="dropdown_toggle('myDropdown')" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" onclick="update_graph('run')">Run</a>
-                    <a href="#" onclick="update_graph('walk')">Walk</a>
-                    <a href="#" onclick="update_graph('cycling')">Cycling</a>
-                    <a href="#" onclick="update_graph('plank')">Plank</a>
-                    <a href="#" onclick="update_graph('situp')">Situp</a>
-                    <a href="#" onclick="update_graph('backextentions')">Backextentions</a>
-                    <a href="#" onclick="update_graph('burpees')">Burpees</a>
-                    <a href="#" onclick="update_graph('crunches')">Crunches</a>
-                    <a href="#" onclick="update_graph('squats')">Squats</a>
-                    <a href="#" onclick="update_graph('lunges')">Lunges</a>
-                    <a href="#" onclick="update_graph('wallsit')">Wallsit</a>
-                    <a href="#" onclick="update_graph('pushups')">Pushups</a>
-                    <a href="#" onclick="update_graph('dips')">Dips</a>
-                    <a href="#" onclick="update_graph('armcircles')">Armcircles</a>
+                    <a href="#" onclick="update_graph('run','text')">Run</a>
+                    <a href="#" onclick="update_graph('walk','text')">Walk</a>
+                    <a href="#" onclick="update_graph('cycling','text')">Cycling</a>
+                    <a href="#" onclick="update_graph('plank','text')">Plank</a>
+                    <a href="#" onclick="update_graph('situp','text')">Situp</a>
+                    <a href="#" onclick="update_graph('backextentions','text')">Backextentions</a>
+                    <a href="#" onclick="update_graph('burpees','text')">Burpees</a>
+                    <a href="#" onclick="update_graph('crunches','text')">Crunches</a>
+                    <a href="#" onclick="update_graph('squats','text')">Squats</a>
+                    <a href="#" onclick="update_graph('lunges','text')">Lunges</a>
+                    <a href="#" onclick="update_graph('wallsit','text')">Wallsit</a>
+                    <a href="#" onclick="update_graph('pushups','text')">Pushups</a>
+                    <a href="#" onclick="update_graph('dips','text')">Dips</a>
+                    <a href="#" onclick="update_graph('armcircles','text')">Armcircles</a>
                 </div>
             </div>
         </div>
@@ -232,20 +232,20 @@
             <div class="dropdown">
                 <button onclick="dropdown_toggle('myDropdown2')" class="dropbtn">Change type</button>
                 <div id="myDropdown2" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend(user, friend,'run')">Run</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'walk')">Walk</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'cycling')">Cycling</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'plank')">Plank</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'situp')">Situp</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'backextentions')">Backextentions</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'burpees')">Burpees</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'crunches')">Crunches</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'squats')">Squats</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'lunges')">Lunges</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'wallsit')">Wallsit</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'pushups')">Pushups</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'dips')">Dips</a>
-                    <a href="#" onclick="update_graph_friend(user, friend,'armcircles')">Armcircles</a>
+                    <a href="#" onclick="update_graph_friend('run','textfriend')">Run</a>
+                    <a href="#" onclick="update_graph_friend('walk','textfriend')">Walk</a>
+                    <a href="#" onclick="update_graph_friend('cycling','textfriend')">Cycling</a>
+                    <a href="#" onclick="update_graph_friend('plank','textfriend')">Plank</a>
+                    <a href="#" onclick="update_graph_friend('situp','textfriend')">Situp</a>
+                    <a href="#" onclick="update_graph_friend('backextentions','textfriend')">Backextentions</a>
+                    <a href="#" onclick="update_graph_friend('burpees','textfriend')">Burpees</a>
+                    <a href="#" onclick="update_graph_friend('crunches','textfriend')">Crunches</a>
+                    <a href="#" onclick="update_graph_friend('squats','textfriend')">Squats</a>
+                    <a href="#" onclick="update_graph_friend('lunges','textfriend')">Lunges</a>
+                    <a href="#" onclick="update_graph_friend('wallsit','textfriend')">Wallsit</a>
+                    <a href="#" onclick="update_graph_friend('pushups','textfriend')">Pushups</a>
+                    <a href="#" onclick="update_graph_friend('dips','textfriend')">Dips</a>
+                    <a href="#" onclick="update_graph_friend('armcircles','textfriend')">Armcircles</a>
                 </div>
             </div>
         </div>

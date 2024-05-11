@@ -27,6 +27,9 @@
         "text": "Do 3 burpees",
         "state": "incomplete",
         "exercise": "burpees"
+      },
+      "11/5/2024": {
+        "type": "core"
       }
     },
     "weekly": {
