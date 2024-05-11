@@ -60,6 +60,8 @@ function processReq(req, res) {
                 write_user_info_json(req, res);
             } else if (queryPath === "/addFriend") {
                 addFriend(req, res)
+            } else if (queryPath === "/award_elo") {
+                award_elo(req, res);
             } else {
                 errorResponse(res, 404, "not found")
             }
@@ -69,7 +71,7 @@ function processReq(req, res) {
             res.setHeader('Content-Type', 'text/plain');
             res.statusCode = 405; // Method Not Allowed
             res.end('Method Not Allowed');
-            break;            
+            break;
     }
 }
 
@@ -535,6 +537,121 @@ function change_amount(req, res) {
         });
     });
 }
+
+//Function that gives elo
+function award_elo(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_award = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+            let obj_questLog = {}; // Initialize quest_log object
+
+            if (!err) {
+                try {
+                    obj_questLog = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing quest_log:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing quest_log:", err);
+            }
+
+            obj_questLog[obj_award.user][obj_award.timespan][obj_award.date].state = "complete";
+
+
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                }
+            });
+        });
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            let obj_usersInfo = {}; // Initialize users_info object
+
+            if (!err) {
+                try {
+                    obj_usersInfo = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing usersInfo:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing usersinfo:", err);
+            }
+            let award = 0;
+            if (obj_award.difficulty == -3) {
+                award = 25;
+            }
+            else if (obj_award.difficulty == 0) {
+                award = 50;
+            }
+            else if (obj_award.difficulty == 3) {
+                award = 100;
+            }
+            else {
+                console.error("Error, could not determine difficulty of completed task")
+            }
+            const pathMatery = obj_usersInfo["users_info"][obj_award.user]["mastery"][obj_award.type];
+            pathMatery["elo"] += award;
+            if (pathMatery["elo"] >= 500) {
+                pathMatery["rank"]++;
+                pathMatery["elo"] -= 500;
+            }
+            award = (Math.log10(parseInt(pathMatery["rank"])) + 1) * award;
+            console.log(pathMatery["rank"] +"="+ award, Math.log10(parseInt(pathMatery["rank"]))) ;
+            const pathTier = obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan];
+            pathTier["elo"] += award;
+
+            switch (obj_award.timespan) {
+                case "daily":
+                    while (pathTier["elo"] >= 100) {
+                        pathTier["rank"]++;
+                        pathTier["elo"] -= 100;
+                    }                     
+                    break;
+                case "weekly":
+                    while(pathTier["elo"] >= 40){
+                        pathTier["rank"]++;
+                        pathTier["elo"] -= 40;
+                    }
+                    break;
+                case "monthly":
+                    while(pathTier["elo"] >= 20){
+                        pathTier["rank"]++;
+                        pathTier["elo"] -= 20;
+                    }
+                    break;
+
+                default:
+                    console.error("Could not determine timespan")
+                    break;
+            }
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(obj_usersInfo, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    console.log('User data appended to file');
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('User data appended to file');
+                }
+            });
+        });
+    });
+}
+
 
 
 

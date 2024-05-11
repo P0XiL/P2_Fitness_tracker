@@ -131,6 +131,20 @@ async function display_quest(quest, user) {
 
                 } else if (obj_stateQuest["state"] == "Done") {
                     //If quest is done
+
+                    //Change Json and add rewards
+                    const pathQuest = quest_log[user][questTimespan][obj_stateQuest.date];
+                    if ("incomplete" === pathQuest.state) {
+                        let obj_award = {};
+                        obj_award.user = user;
+                        obj_award.timespan = questTimespan;
+                        obj_award.date = obj_stateQuest.date;
+                        obj_award.difficulty = pathQuest.difficulty;
+                        obj_award.type = pathQuest.exercise;
+                        award_elo(obj_award);
+                    }
+
+                    //Visual part
                     const textContainer = document.getElementById(quest + "_type");
                     textContainer.innerText = "Quest done";
                     const procentElement = document.createElement("h3");
@@ -270,6 +284,7 @@ function open_modal_for_quest(questTimespan, type, user) {
                             //Make an obj which is used when adding the quest
                             obj_newQuest[date] = new Object;
                             obj_newQuest[date].type = type;
+                            obj_newQuest[date].difficulty = difficulty;
                             obj_newQuest[date].target = obj_Quest.quest["base_target"];
                             obj_newQuest[date].amount = 0;
                             obj_newQuest[date].text = obj_Quest.quest.quest_text;
@@ -496,6 +511,35 @@ function change_amount(obj_para) {
             console.error('Error fetch Post (change amount):', error);
         });
 }
+
+/**
+ * Adds elo to user
+ * @param {object} obj_para
+ * @param {string} obj_para.user - User ID
+ * @param {string} obj_para.timespan - Quest Type
+ * @param {string} obj_para.date - Date of quest
+ * @param {int} obj_para.difficulty - The difficulty of quest esay(-3), medium(0), hard(3) 
+ * @param {string} obj_para.type - The type of exercise
+ */
+function award_elo(obj_para) {
+    fetch(serverPath + 'award_elo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj_para)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No response fetch POST amount');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error fetch Post (change amount):', error);
+        });
+}
+
 
 /**
  * Makes the edit button

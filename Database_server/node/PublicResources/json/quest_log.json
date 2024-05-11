@@ -2,15 +2,13 @@
   "user": {
     "daily": {
       "7/5/2024": {
-        "type": "core",
-        "target": 10,
-        "amount": 32,
-        "text": "Do the plank for 10 seconds",
-        "state": "incomplete",
-        "exercise": "plank"
+        "type": "core"
       },
       "8/5/2024": {
         "type": "upperbody"
+      },
+      "11/5/2024": {
+        "type": "lowerbody"
       }
     },
     "weekly": {
@@ -69,6 +67,41 @@
     "monthly": {
       "8/5/2024": {
         "type": "cardio"
+      }
+    }
+  },
+  "pog": {
+    "daily": {
+      "11/5/2024": {
+        "type": "cardio",
+        "difficulty": "-3",
+        "target": 5,
+        "amount": 10,
+        "text": "Go for a walk for 5 minutes",
+        "state": "complete",
+        "exercise": "walk"
+      }
+    },
+    "weekly": {
+      "11/5/2024": {
+        "type": "core",
+        "difficulty": "0",
+        "target": 120,
+        "amount": 120,
+        "text": "Do 120 burpees",
+        "state": "complete",
+        "exercise": "burpees"
+      }
+    },
+    "monthly": {
+      "11/5/2024": {
+        "type": "core",
+        "difficulty": "0",
+        "target": 39,
+        "amount": 40,
+        "text": "Do 39 backextentions",
+        "state": "complete",
+        "exercise": "backextentions"
       }
     }
   }
