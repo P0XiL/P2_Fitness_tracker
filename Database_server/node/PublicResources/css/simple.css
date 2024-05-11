@@ -186,11 +186,6 @@ meter {
   display: inline-block;
 }
 
-.asphalt-button:hover {
-  background-color: rgba(0, 0, 0, 0.3);
-  /* Adding a semi-transparent overlay on hover */
-}
-
 .close-button {
   width: 30px;
   height: 30px;
@@ -239,7 +234,22 @@ meter {
   color: #fff; /* White text color when clicked */
 }
 
+/* Input field style */
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px; /* Adjust margin as needed */
+  border: 2px solid #ccc; /* Add border */
+  border-radius: 4px; /* Add border radius */
+  box-sizing: border-box; /* Ensure padding and border are included in the width */
+  font-size: 16px; /* Adjust font size */
+}
 
+/* Focus styles for the input field */
+.input-field:focus {
+  border-color: #FFA400; /* Green border color when focused */
+  outline: none; /* Remove default focus outline */
+}
 
 /* Styles for the dropdown container */
 .dropdown {

@@ -43,11 +43,14 @@
     <div id="inputModal" class="modal">
         <div class="modal-content">
             <h2 id="InputHeader"></h2>
-            <p id="InputPopupText"></p>
-            <input type="text" id="InputInputfield" name="InputInputfield" placeholder="Enter amount here" value="">
-            <button id="add">add</button>
-            <button id="subtract">subtract</button>
-            <button id="close_input">Close</button>
+            <h3 id="InputPopupText">Enter a number below to change the amount done:</h3>
+            <input type="text" class="input-field" id="InputInputfield" name="InputInputfield" placeholder="Enter amount here" value="">
+            <button id="close_input" class="close-button">&#x2715;</button>
+            <div class="buttons-wrapper">
+                <button id="subtract" class="difficulty-button">Subtract</button>
+                <button id="add" class="difficulty-button">Add</button>
+
+            </div>
         </div>
     </div>
 
