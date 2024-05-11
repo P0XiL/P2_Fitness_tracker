@@ -144,29 +144,41 @@ async function display_quest(quest, user) {
                         award_elo(obj_award);
                     }
 
-                    //Visual part
-                    const textContainer = document.getElementById(quest + "_type");
-                    textContainer.innerText = "Quest done";
+                    // Visual part
+                    // Change Caption
+                    const capitalizedQuestTimespan = questTimespan.charAt(0).toUpperCase() + questTimespan.slice(1);
+                    document.getElementById(quest).querySelector('h2').innerText = capitalizedQuestTimespan + " - Complete";
+
+                    // Add text
+                    const values = quest_log[user][questTimespan][obj_stateQuest["date"]];
+                    document.getElementById(quest + "_type").innerText = "Type: " + values.type + "\n" + values.text + "\nYou have done " + values.amount + " out of " + values.target;
+
+                    // Add percentage completion
                     const procentElement = document.createElement("h3");
-                    const procentComplete = Math.floor(quest_log[user][questTimespan][obj_stateQuest.date].amount / quest_log[user][questTimespan][obj_stateQuest.date].target * 100);
-                    procentElement.textContent = procentComplete + "%";
-                    const min = 16;
-                    const max = 108;
-                    procentElement.style.fontSize = + "px";
-                    let newFontSize = procentComplete * 0.1;
-                    if (newFontSize >= max) {
-                        newFontSize = max
-                    } else if (newFontSize < min) {
-                        newFontSize = min
+                    let procentComplete = Math.floor(quest_log[user][questTimespan][obj_stateQuest.date].amount / quest_log[user][questTimespan][obj_stateQuest.date].target * 100);
+
+
+                    const min = 100;
+                    const max = 1000;
+
+                    // Handle completion percentages greater than or equal to 1000
+                    let color;
+                    if (procentComplete >= 1000) {
+                        color = lerpColor("#00FF00", "#8B0000", (max - min) / (max - min));
+                        procentComplete = "&ge; 1000";
+                    } else {
+                        color = lerpColor("#00FF00", "#8B0000", (procentComplete - min) / (max - min));
                     }
+                    procentElement.innerHTML = procentComplete + "%";                    
 
-                    const color = lerpColor("#00FF00", "#8B0000", (newFontSize - min) / (max - min));
-
-                    procentElement.style.fontSize = newFontSize + "px";
+                    procentElement.style.fontSize = 50 + "px";
                     procentElement.style.color = color;
 
-
+                    // Function for color interpolation
                     function lerpColor(a, b, t) {
+                        const min = 100;
+                        const max = 1000;
+
                         const ah = parseInt(a.replace(/#/g, ""), 16),
                             ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
                             bh = parseInt(b.replace(/#/g, ""), 16),
@@ -179,14 +191,8 @@ async function display_quest(quest, user) {
                     }
 
 
-                    procentElement.style.position = "absolute";
-                    procentElement.style.top = "50%";
-                    procentElement.style.left = "50%";
-                    procentElement.style.transform = "translate(-50%, -50%)";
-                    procentElement.style.margin = "auto";
 
                     document.getElementById(quest).append(procentElement);
-
 
 
 
@@ -503,9 +509,8 @@ function change_amount(obj_para) {
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error('No response fetch POST amount');
+                throw new Error('No response fetch POST Change_Amount');
             }
-            return response.json();
         })
         .catch(error => {
             console.error('Error fetch Post (change amount):', error);
@@ -531,12 +536,11 @@ function award_elo(obj_para) {
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error('No response fetch POST amount');
+                throw new Error('No response fetch POST award Elo');
             }
-            return response.json();
         })
         .catch(error => {
-            console.error('Error fetch Post (change amount):', error);
+            console.error('Error fetch Post (award_elo):', error);
         });
 }
 
@@ -583,7 +587,6 @@ function input_data(obj_para) {
     document.getElementById("inputModal").style.display = "block";
     const inputField = document.getElementById("InputInputfield");
     document.getElementById("InputHeader").innerText = obj_para["timespan"].charAt(0).toUpperCase() + obj_para["timespan"].slice(1);
-    document.getElementById("InputPopupText").innerText = "Enter a number below to change the amount done";
     //Functions for add button
     document.getElementById("add").addEventListener("click", () => {
         if (validate_input(inputField.value)) {
