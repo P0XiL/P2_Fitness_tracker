@@ -1324,13 +1324,8 @@
     "JohnLennyJohn": {
       "username": "JohnLennyJohn",
       "health": {
-        "name": "John",
-        "age": "19",
-        "height": "200",
-        "weight": "100",
-        "gender": "male",
-        "fitnessGoal": "weightLoss",
-        "activityLevel": "veryActive"
+        "height": 200,
+        "weight": 90
       },
       "mastery": {
         "run": {
@@ -1410,15 +1405,14 @@
         }
       },
       "preset": {
-        "name": "balance",
+        "name": "custom",
         "conf": {
           "cardio": 2,
           "lowerbody": 2,
           "core": 2,
           "upperbody": 2
         }
-      },
-      "friends": []
+      }
     }
   }
 }
