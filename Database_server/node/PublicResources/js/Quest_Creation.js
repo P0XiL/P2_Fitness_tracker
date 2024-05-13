@@ -35,7 +35,6 @@ async function display_all_quest(user) {
     }
 }
 
-
 /**
  * Display the quest
  * @param {string} quest - Quest ID 
@@ -93,9 +92,6 @@ async function display_quest(quest, user) {
             questContainer.style.position = 'relative';
             questContainer.appendChild(gif);
             questContainer.appendChild(button);
-
-
-
 
             //Add event listner to button
             button.addEventListener("click", () => {
