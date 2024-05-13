@@ -233,6 +233,9 @@
     },
     "nan": {
       "password": "nan"
+    },
+    "tester321": {
+      "password": "tester321"
     }
   }
 }

@@ -1018,7 +1018,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set a flag in local storage indicating that the user has completed the survey
             localStorage.setItem('surveyCompleted', 'true');
 
-            location.reload();
+             location.reload();
 
             document.getElementById('main').classList.add('active');
             document.getElementById('surveyForm').classList.remove('active');
@@ -1114,7 +1114,7 @@ updateStreak(); // Call this function whenever user is active
 
 
 // Display PNG image if streak is active
-if (getStreakCount < 1) {
+if (getStreakCount > 0) {
   const img = document.createElement("img");
   img.src = "Database_server\node\PublicResources\image\Streak.png";
   document.body.appendChild(img);

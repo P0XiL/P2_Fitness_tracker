@@ -641,6 +641,12 @@
         "text": "Do 27 backextentions",
         "state": "incomplete",
         "exercise": "backextentions"
+      },
+      "7/5/2024": {
+        "type": "core"
+      },
+      "13/5/2024": {
+        "type": "cardio"
       }
     },
     "weekly": {
@@ -651,6 +657,9 @@
         "text": "Cycle 90 minutes",
         "state": "incomplete",
         "exercise": "cycling"
+      },
+      "13/5/2024": {
+        "type": "core"
       }
     },
     "monthly": {
@@ -661,6 +670,23 @@
         "text": "Go for a walk for 5 minutes",
         "state": "incomplete",
         "exercise": "walk"
+      }
+    }
+  },
+  "tester321": {
+    "daily": {
+      "13/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "cardio"
       }
     }
   }
