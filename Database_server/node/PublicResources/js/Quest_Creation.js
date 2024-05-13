@@ -106,6 +106,27 @@ async function display_quest(quest, user) {
                 const obj_stateQuest = check_current(questTimespan, quest_log[user]);
                 //If there is no quest
                 if (obj_stateQuest["state"] == "None") {
+                    //Check if they completed last quest
+                    try {
+                        const lastestQuestDate = Object.keys(quest_log[user][questTimespan])[Object.keys(quest_log[user][questTimespan]).length-1];
+                        const stateOfLastQuest = quest_log[user][questTimespan][lastestQuestDate].state;
+                        if (stateOfLastQuest === "incomplete"){
+                            const obj_para = {
+                                user: user,
+                                type: quest_log[user][questTimespan][lastestQuestDate].exercise,
+                                timespan: questTimespan,
+                                date: lastestQuestDate
+                            };
+                            remove_elo(obj_para);
+                            location.reload();
+                        }
+                    } catch (error) {
+                        //If there exit a prevous quest console the error
+                        if (Object.keys(quest_log[user][questTimespan]) > 0){
+                            console.error(error);
+                        }
+                        
+                    }
                     //Chooses a type for userInfo
                     fetchJSON('json/users_info.json')
                         .then(userInfo => {
@@ -138,6 +159,7 @@ async function display_quest(quest, user) {
                         obj_award.difficulty = pathQuest.difficulty;
                         obj_award.type = pathQuest.exercise;
                         award_elo(obj_award);
+                        location.reload();
                     }
 
                     // Visual part
@@ -504,6 +526,32 @@ function change_amount(obj_para) {
         })
         .catch(error => {
             console.error('Error fetch Post (change amount):', error);
+        });
+}
+
+/**
+ * Removes elo from user
+ * @param {object} obj_para
+ * @param {string} obj_para.user - User ID
+ * @param {string} obj_para.type - The type of exercise
+ * @param {string} obj_para.timesapan - The timespan of quest
+ * @param {string} obj_para.date - The date of failed quest 
+ */
+function remove_elo(obj_para){
+    fetch(serverPath + 'remove_elo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj_para)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No response fetch POST remove elo');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetch Post (remove_elo):', error);
         });
 }
 
