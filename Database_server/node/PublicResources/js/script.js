@@ -475,32 +475,52 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     function createTierGridItem(container, title, imageSrc, elo, period) {
         const gridItem = document.createElement('div');
         gridItem.classList.add('tier-grid-item');
-
+    
         // Create and append tier title
         const tierTitle = document.createElement('h3');
         tierTitle.textContent = `${period}: ${title}`;
         gridItem.appendChild(tierTitle);
-
+    
         // Create and append tier image
         const tierImage = document.createElement('img');
         tierImage.src = imageSrc;
         tierImage.alt = `${title} Tier Image`;
         gridItem.appendChild(tierImage);
-
+    
         // Create and append progress bar
         const progressBar = document.createElement('div');
         progressBar.classList.add('progress-bar');
-
+    
+        const maxElo = getMaxElo(period); // Get the maximum Elo for the period
+    
         const eloProgress = document.createElement('div');
         eloProgress.classList.add('elo-progress');
-        eloProgress.style.width = `${elo}%`; // Set width based on elo
+    
+        // Calculate percentage based on maximum Elo for the period
+        const eloPercentage = (elo / maxElo) * 100;
+        eloProgress.style.width = `${eloPercentage}%`; // Set width based on elo
+    
         progressBar.appendChild(eloProgress);
-
         gridItem.appendChild(progressBar);
-
+    
         // Append grid item to container
         container.appendChild(gridItem);
     }
+    
+    // Function to get maximum Elo based on period
+    function getMaxElo(period) {
+        switch (period) {
+            case 'Daily':
+                return 100;
+            case 'Weekly':
+                return 40;
+            case 'Monthly':
+                return 20;
+            default:
+                return 100; // Default to daily if period is unknown
+        }
+    }
+    
 }
 
 // Function to get the tier range
