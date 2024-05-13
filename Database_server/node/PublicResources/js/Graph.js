@@ -63,7 +63,7 @@ let pretype = "run";
  */
 function update_graph(type, id) {
     let user = localStorage.getItem("username");
-    plot(user, type);
+    plot(type);
     change_text(type, id);
 }
 
@@ -76,8 +76,9 @@ function update_graph_friend(type, id){
  * @param {string} user - User ID 
  * @param {string} type
  */
-function plot(user, type) {
+function plot(type) {
   const ctx = document.getElementById("myChart");
+  const user = localStorage.getItem("username");
 
   Promise.all([user_data_x(user, type), user_data_y(user, type)])
     .then(([labels, data]) => {
@@ -284,24 +285,6 @@ function recommended(type){
     default:
       console.log("type not vailded");
   }
-}
-var friend
-
-function Make_href(divId, userName, name, friend) {
-  var div = document.getElementById(divId);
-  var atag = document.createElement('a');
-  atag.setAttribute('href', userName);
-  atag.textContent = "Add Friend"; // Text for the link
-  
-  atag.onclick = function() {
-    assign_friend(name);
-  }; // Assigning a function that calls the provided function with the parameter
-
-  div.appendChild(atag);
-}
-
-function asign_friend(name){
-  friend = name;
 }
 
 /**
