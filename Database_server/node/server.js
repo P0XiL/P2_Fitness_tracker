@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3369; 
+const port = 3360;
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -46,27 +46,101 @@ function processReq(req, res) {
             if (queryPath === "/createUser") {
                 // Handle the POST request to write user data to a file
                 createUser(req, res);
-            } 
+            }
             else if (queryPath === "/login") {
                 loginUser(req, res);
             }
             else if (queryPath === "/write_quest_json") {
                 write_quest_json(req, res);
-            } else if (queryPath === "/change_amount") { 
+            } else if (queryPath === "/change_amount") {
                 // Add new route for changing quest amount
                 change_amount(req, res);
-            } else if (queryPath === "/write_user_info_json") { 
+            } else if (queryPath === "/write_user_info_json") {
                 // Add new route for writing user info
                 write_user_info_json(req, res);
+            } else if (queryPath === "/addFriend") {
+                addFriend(req, res)
+            } else if (queryPath === "/award_elo") {
+                award_elo(req, res);
+            } else if (queryPath === "/write_survey_data_json") { 
+                // Add new route for writing user info
+                write_survey_data_json(req, res);
             } else {
                 errorResponse(res, 404, "not found")
             }
             break;
         default:
-            errorResponse(res, 405, "Method Not Allowed");
+            // Set headers for unsupported methods
+            res.setHeader('Content-Type', 'text/plain');
+            res.statusCode = 405; // Method Not Allowed
+            res.end('Method Not Allowed');
             break;
     }
 }
+
+function addFriend(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const friendData = JSON.parse(body);
+        const friendUsername = friendData.friends;
+
+        const username = friendData.username;
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error(err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            let usersInfo = JSON.parse(data);
+
+            const currentUser = username; // Assuming you have a user session
+
+            // Check if the friend username exists in users_info and handle other conditions
+            if (!usersInfo.users_info.hasOwnProperty(friendUsername)) {
+                errorResponse(res, 400, "User not found");
+                return;
+            } else if (usersInfo.users_info[currentUser].friends.includes(friendUsername)) {
+                errorResponse(res, 400, "User is already your friend");
+                return;
+            } else if (currentUser === friendUsername) {
+                errorResponse(res, 400, "Thou may not add oneself as oneselves friend");
+                return;
+            } else {
+                // Append friend to user's friend list
+                if (!usersInfo.users_info[currentUser].friends) {
+                    // Initialize friends array if it doesn't exist
+                    usersInfo.users_info[currentUser].friends = [];
+                }
+                usersInfo.users_info[currentUser].friends.push(friendUsername);
+
+                // Write updated data back to the file
+                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(usersInfo, null, 2), (err) => {
+                    if (err) {
+                        console.error(err);
+                        errorResponse(res, 500, String(err));
+                    } else {
+                        console.log('Friend added successfully');
+                        // Send a JSON response confirming the success of the operation
+                        const jsonResponse = {
+                            success: true,
+                            message: 'Friend added successfully'
+                        };
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.end(JSON.stringify(jsonResponse));
+                    }
+                });
+            }
+        });
+    });
+}
+
 
 // Function to handle user login
 function loginUser(req, res) {
@@ -168,7 +242,7 @@ function createUser(req, res) {
                             weekly: {},
                             monthly: {}
                         };
-                    
+
                         fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                             if (err) {
                                 console.error(err);
@@ -180,11 +254,11 @@ function createUser(req, res) {
                                 res.end('User added to quest_log');
                             }
                         });
-                        
+
                     });
                 }
             });
-            
+
         });
         addUserToUsers_info(userData.username);
     });
@@ -211,62 +285,62 @@ function addUserToUsers_info(username) {
                 },
                 mastery: {
                     run: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     walk: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     cycling: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     squats: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     lunges: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     wallsit: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     plank: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     situps: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     backextentions: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     burpees: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     crunches: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     pushups: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     dips: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     armcircles: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     }
-                  },
+                },
                 hiddenRank: {
                     daily: 0,
                     weekly: 0,
@@ -274,27 +348,29 @@ function addUserToUsers_info(username) {
                 },
                 tier: {
                     daily: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     weekly: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     },
                     monthly: {
-                      rank: 1,
-                      elo: 0
+                        rank: 1,
+                        elo: 0
                     }
-                  },
+                },
                 preset: {
                     name: "balance",
                     conf: {
-                      cardio: 2,
-                      lowerbody: 2,
-                      core: 2,
-                      upperbody: 2
+                        cardio: 2,
+                        lowerbody: 2,
+                        core: 2,
+                        upperbody: 2
                     }
-                }
+                },
+                friends: []
+
             };
 
             // Add the new user to the users_info object
@@ -314,11 +390,6 @@ function addUserToUsers_info(username) {
         }
     });
 }
-
-
-
-
-
 
 function errorResponse(res, code, reason) {
     res.statusCode = code;
@@ -363,6 +434,7 @@ function guessMimeType(fileName) {
         "css": "text/css",
         "png": "image/png",
         "jpg": "image/jpeg",
+        "gif": "image/gif",
         "wav": "audio/wav",
         "mp3": "audio/mpeg",
         "svg": "image/svg+xml",
@@ -401,7 +473,7 @@ function write_quest_json(req, res) {
             const user = obj_quest.userID;
             delete obj_quest.userID;
             obj_questLog[user][timespan][Object.keys(obj_quest)[0]] = obj_quest[Object.keys(obj_quest)[0]];
-           
+
             // Write updated data back to the file
             fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
                 if (err) {
@@ -459,6 +531,119 @@ function change_amount(req, res) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
                 } else {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('Amount changed');
+                }
+            });
+        });
+    });
+}
+
+//Function that gives elo
+function award_elo(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_award = JSON.parse(body);
+
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+            let obj_questLog = {}; // Initialize quest_log object
+
+            if (!err) {
+                try {
+                    obj_questLog = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing quest_log:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing quest_log:", err);
+            }
+
+            obj_questLog[obj_award.user][obj_award.timespan][obj_award.date].state = "complete";
+
+
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                }
+            });
+        });
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            let obj_usersInfo = {}; // Initialize users_info object
+
+            if (!err) {
+                try {
+                    obj_usersInfo = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing usersInfo:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing usersinfo:", err);
+            }
+            let award = 0;
+            if (obj_award.difficulty == -3) {
+                award = 25;
+            }
+            else if (obj_award.difficulty == 0) {
+                award = 50;
+            }
+            else if (obj_award.difficulty == 3) {
+                award = 100;
+            }
+            else {
+                console.error("Error, could not determine difficulty of completed task")
+            }
+            const pathMatery = obj_usersInfo["users_info"][obj_award.user]["mastery"][obj_award.type];
+            pathMatery["elo"] += award;
+            if (pathMatery["elo"] >= 500) {
+                pathMatery["rank"]++;
+                pathMatery["elo"] -= 500;
+            }
+            award = (Math.log10(parseInt(pathMatery["rank"])) + 1) * award;
+            console.log(pathMatery["rank"] +"="+ award, Math.log10(parseInt(pathMatery["rank"]))) ;
+            const pathTier = obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan];
+            pathTier["elo"] += award;
+
+            switch (obj_award.timespan) {
+                case "daily":
+                    while (pathTier["elo"] >= 100) {
+                        pathTier["rank"]++;
+                        pathTier["elo"] -= 100;
+                    }                     
+                    break;
+                case "weekly":
+                    while(pathTier["elo"] >= 40){
+                        pathTier["rank"]++;
+                        pathTier["elo"] -= 40;
+                    }
+                    break;
+                case "monthly":
+                    while(pathTier["elo"] >= 20){
+                        pathTier["rank"]++;
+                        pathTier["elo"] -= 20;
+                    }
+                    break;
+
+                default:
+                    console.error("Could not determine timespan")
+                    break;
+            }
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(obj_usersInfo, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
                     console.log('User data appended to file');
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
@@ -468,6 +653,7 @@ function change_amount(req, res) {
         });
     });
 }
+
 
 
 
@@ -510,7 +696,7 @@ function write_user_info_json(req, res) {
                     res.end(JSON.stringify(jsonResponse, null, 2));
                 }
             });
-            
+
         });
     });
 }
@@ -554,56 +740,62 @@ function write_user_preferences_json(req, res) {
         });
     });
 }
-    function write_survey_data_json(req, res) {
-        let body = '';
-        req.on('data', (chunk) => {
-            body += chunk.toString();
-        });
-        req.on('end', () => {
-            let surveyData = JSON.parse(body);
-            console.log('Received survey data:', surveyData); // Log received survey data
+function write_survey_data_json(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let surveyData = JSON.parse(body);
+        console.log('Received survey data:', surveyData); // Log received survey data
     
-            // Read existing data from the file
-            fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error('Error reading existing data:', err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            let existingData = JSON.parse(data);
+            console.log('Existing data:', existingData); // Log existing data
+
+            // Check if the username exists in users_info before updating
+            if (existingData.users_info.hasOwnProperty(surveyData.userid)) {
+                existingData.users_info[surveyData.userid].health = {
+                    name: surveyData.name,
+                    age: surveyData.age,
+                    height: surveyData.height,
+                    weight: surveyData.weight,
+                    gender: surveyData.gender,
+                    fitnessGoal: surveyData.fitnessGoal,
+                    activityLevel: surveyData.activityLevel
+                };
+            } else {
+                // Handle the case where the username doesn't exist
+                console.error('User info not found for user ID:', surveyData.userid);
+                // Return an error response or take appropriate action
+            } 
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
                 if (err) {
-                    console.error('Error reading existing data:', err);
+                    console.error('Error writing data:', err);
                     errorResponse(res, 500, String(err));
-                    return;
+                } else {
+                    console.log('Survey data written to file');
+                    // Send a JSON response confirming the success of the operation
+                    const jsonResponse = {
+                        success: true,
+                        message: 'Survey data saved successfully'
+                    };
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(jsonResponse));
                 }
-    
-                let existingData = JSON.parse(data);
-                console.log('Existing data:', existingData); // Log existing data
-    
-                // Ensure users_info object exists
-                existingData.users_info = existingData.users_info || {};
-
-                // Fetch idkey from users_info or set a default value if not available
-                const idkey = existingData.users_info && existingData.users_info.idkey ? existingData.users_info.idkey : "defaultIdkey";
-
-                // Ensure the idkey exists within users_info
-                existingData.users_info[idkey] = existingData.users_info[idkey] || {};
-
-                // Add the surveyData to the specified idkey
-                 existingData.users_info[idkey].surveyData = surveyData;
-    
-                // Write updated data back to the file
-                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
-                    if (err) {
-                        console.error('Error writing data:', err);
-                        errorResponse(res, 500, String(err));
-                    } else {
-                        console.log('Survey data written to file');
-                        // Send a JSON response confirming the success of the operation
-                        const jsonResponse = {
-                            success: true,
-                            message: 'Survey data saved successfully'
-                        };
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.end(JSON.stringify(jsonResponse));
-                    }
-                });
             });
         });
-    }
+    });
+}
+
 startServer();

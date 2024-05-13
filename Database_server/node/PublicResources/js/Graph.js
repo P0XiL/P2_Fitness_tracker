@@ -1,171 +1,104 @@
-const user = localStorage.getItem("username");
+try {
+  const user = localStorage.getItem("username");
+  if (typeof(user)!== "undefined") {
+    // Close the dropdowns if the user clicks outside of it
 
+  individual_type(user, "statsTextUser");
+  individual_type("user", "statsTextFriend" );
 
-/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
-function dropdown_close() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
-
-// Close the dropdown if the user clicks outside of it
-window.onclick = function (event) {
-  if (!event.target.matches('.dropbtn')) {
-    const dropdowns = document.getElementsByClassName("dropdown-content");
-    for (let i = 0; i < dropdowns.length; i++) {
-      const openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
+  } else {
+    console.error("Failed getting user")
   }
+
+} catch (error) {
+  console.error("Error in Graph script", error)
 }
 
-function dropdown_close1() {
-  document.getElementById("myDropdown1").classList.toggle("show");
-}
-
-function dropdown_close2() {
-  document.getElementById("myDropdown2").classList.toggle("show");
-}
-
-function dropdown_close3() {
-  document.getElementById("myDropdown3").classList.toggle("show");
-}
-
-function individual_stats(user, type) {
-  return fetchJSON("json/quest_log.json")
+/**
+ * Makes rows of text, with the stats of a given user
+ * @param {string} user - ID on the user you want stats on
+ * @param {string} elementID - The ID on the element where the text goes 
+ */
+function individual_type(user, elementID) {
+  fetchJSON("json/quest_log.json")
     .then(data => {
-      let amount = 0;
+      const processedTypes = {}; // Object to keep track of processed types
+      let amount;
+
       for (let period in data[user]) {
         for (let key in data[user][period]) {
-          if (data[user][period][key].type === type) {
-            const currentAmount = data[user][period][key].amount;
-            if (!isNaN(currentAmount)) {
-              amount += currentAmount;
+          const exercise = data[user][period][key].exercise;
+          amount = data[user][period][key].amount;
+          if (!processedTypes[exercise]) { // Check if type has already been processed
+            processedTypes[exercise] = true;
+            if (amount !== 0 && !isNaN(amount)) {
+              const element = document.getElementById(elementID);
+              try {
+                element.innerHTML += `<pre id=${exercise} sum=${amount}>Amount of ${exercise} = ${amount} \n\n</pre>`;
+              } catch (error) {
+                console.error("Error setting innerHTML:", error);
+              }
+            }
+          } else {
+            if (amount !== 0 && !isNaN(amount)) {
+              const path = document.getElementById(exercise);
+              const newsum = parseInt(path.getAttribute("sum")) + amount;
+              path.setAttribute("sum", newsum);
+              path.textContent = `Amount of ${exercise} = ${newsum} \n\n`;
             }
           }
         }
       }
-      return amount;
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
     });
 }
-
-function individual_type(user) {
-  fetchJSON("json/quest_log.json")
-    .then(data => {
-      let text = ""; // Initialize text variable
-      const processedTypes = {}; // Object to keep track of processed types
-
-      for (let period in data[user]) {
-        for (let key in data[user][period]) {
-          const type = data[user][period][key].type;
-          if (!processedTypes[type]) { // Check if type has already been processed
-            processedTypes[type] = true;
-            individual_stats(user, type).then(amount => {
-              if (amount !== 0) {
-                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
-                const element = document.getElementById("statsText");
-                try {
-                  element.innerHTML = "<pre>" + text + "</pre>"; // Use textContent to set text with new lines
-                } catch (error) {
-                  console.error("Error setting innerHTML:", error);
-                }
-              }
-            }).catch(error => {
-              console.error("Error in individual_stats:", error);
-            });
-          }
-        }
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching JSON:", error);
-    });
-}
-
-function individual_type_friend(user) {
-  fetchJSON("json/quest_log.json")
-    .then(data => {
-      let text = ""; // Initialize text variable
-      const processedTypes = {}; // Object to keep track of processed types
-
-      for (let period in data[user]) {
-        for (let key in data[user][period]) {
-          const type = data[user][period][key].type;
-          if (!processedTypes[type]) { // Check if type has already been processed
-            processedTypes[type] = true;
-            individual_stats(user, type).then(amount => {
-              if (amount !== 0) {
-                text += "Amount of " + type + " = " + amount + " \n\n"; // Append stats to text
-                const element1 = document.getElementById("statsText1");
-                try {
-                  element1.innerHTML = "<pre>" + text + "</pre>";
-                } catch (error) {
-                  console.error("Error setting innerHTML:", error);
-                }
-              }
-            }).catch(error => {
-              console.error("Error in individual_stats:", error);
-            });
-          }
-        }
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching JSON:", error);
-    });
-}
-
-
-individual_type(user);
-individual_type_friend("assholeblaster69");
-
 
 let prePeriod = "daily";
-let pretype = "cardio";
-
+let pretype = "run";
+/**
+ * Updates the graph
+ * @param {string} type
+ * @param {string} period - Quest timespan
+ */
 function update_graph(type, period) {
-      let user = localStorage.getItem("username");
+  const user = localStorage.getItem("username");
   if (type === null && period !== null) {
     plot(user, pretype, period);
-    change_text(pretype, period);
+    change_text(pretype, period, "text");
     prePeriod = period;
   }
   else if (type !== null && period === null) {
     plot(user, type, prePeriod);
-    change_text(type, prePeriod);
+    change_text(type, prePeriod, "text");
     pretype = type;
   } else {
     plot(user, pretype, prePeriod);
-    change_text(pretype, preperiod);
+    change_text(pretype, preperiod, "text");
   }
 }
 
-
-function change_text(type, period) {
-  // Get the element with the id "text"
-  const element = document.getElementById("text");
-  // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + type + " in period: " + period;
-}
-
+/**
+ * Plots the graph for user
+ * @param {string} user - User ID 
+ * @param {string} type
+ * @param {string} period - Quest timespan 
+ */
 function plot(user, type, period) {
-  let ctx = document.getElementById("myChart");
+  const ctx = document.getElementById("myChart");
 
   Promise.all([user_data_x(user, type, period), user_data_y(user, type, period)])
     .then(([labels, data]) => {
-      let maxVal = data.length > 0 ? Math.max(...data) + 1 : 10;
-      let myChart = new Chart(ctx, {
-        type: "line",
+      const maxVal = data.length > 0 ? Math.max(...data) + 1 : 10;
+      const myChart = new Chart(ctx, {
+        type: "bar",
         data: {
           labels: labels,
           datasets: [{
             fill: false,
             lineTension: 0,
-            backgroundColor: "rgba(255,255,255,1)",
+            backgroundColor: "rgba(255,164,0,255)",
             borderColor: "rgba(0,0,255,0.5)",
             data: data,
           }]
@@ -184,50 +117,51 @@ function plot(user, type, period) {
 }
 
 
-function user_data_x(user, type, period) {
-  return fetchJSON("json/quest_log.json")
-    .then(data => {
-      let x = ["01/1/2024"];
-      for (let key in data[user][period]) {
-        if (data[user][period][key].type === type) {
-          x.push(key);
-        }
-      }
-      return x;
-    })
-    .catch(error => {
-      console.error("Error fetching JSON:", error);
-      return []; // return an empty array in case of an error
-    });
+
+
+// TODO when friends json is done
+let prePeriodFriend = "daily";
+let pretypeFriend = "run";
+/**
+ * Updates the friend graph
+ * @param {string} user - ID for the user 
+ * @param {string} friend - ID for friend 
+ * @param {string} [type] - Type of exercise 
+ * @param {string} [period] - Quest timespan 
+ */
+function update_graph_friend(user, friend, type, period) {
+  if (type === null && period !== null) {
+    plot_with_friends(user, friend, pretypeFriend, period);
+    change_text(pretypeFriend, period, "textfriend");
+    prePeriodFriend = period;
+  }
+  else if (type !== null && period === null) {
+    plot_with_friends(user, friend, type, prePeriodFriend);
+    change_text(type, prePeriodFriend, "textfriend");
+    pretypeFriend = type;
+  } else {
+    plot_with_friends(user, friend, pretypeFriend, prePeriodFriend);
+    change_text(type, period, "textfriend");
+  }
 }
 
-function user_data_y(user, type, period) {
-  return fetchJSON("json/quest_log.json")
-    .then(data => {
-      let amountsWithType = [0];
-      for (let date in data[user][period]) {
-        if (data[user][period][date].type === type) {
-          console.log(data[user][period][date].type);
-          amountsWithType.push(data[user][period][date].amount);
-        }
-      }
-      return amountsWithType;
-    })
-    .catch(error => {
-      console.error("Error fetching JSON:", error);
-    });
-}
+/**
+ * Plot the graph with friends
+ * @param {string} user - User ID 
+ * @param {string} friend - Friend ID
+ * @param {string} type - Type of quest
+ * @param {string} period - The timespan
+ */
+function plot_with_friends(user, friend, type, period) {
+  //Get the canvas element
+  const ctx = document.getElementById("myChart2").getContext("2d");
 
-function plot_with_friends(user, user2, type, period) {
-  // Get the canvas element
-  let ctx = document.getElementById("myChart2").getContext("2d");
-
-  Promise.all([user_data_x(user, type, period), user_data_x(user2, type, period), user_data_y(user, type, period), user_data_y(user2, type, period)])
+  Promise.all([user_data_x(user, type, period), user_data_x(friend, type, period), user_data_y(user, type, period), user_data_y(friend, type, period)])
     .then(([labels_user1, labels_user2, data_user1, data_user2]) => {
-      //sort the two x data
-      let all_labels = [...new Set([...labels_user1, ...labels_user2])].sort();
+      //Sort the two x data
+      const all_labels = [...new Set([...labels_user1, ...labels_user2])].sort();
 
-      let dataset_user1 = {
+      const dataset_user1 = {
         label: user,
         fill: false,
         lineTension: 0,
@@ -235,7 +169,7 @@ function plot_with_friends(user, user2, type, period) {
         borderColor: "rgba(0,0,255,0.5)",
         data: [],
       };
-      let dataset_user2 = {
+      const dataset_user2 = {
         label: user2,
         fill: false,
         lineTension: 0,
@@ -244,14 +178,14 @@ function plot_with_friends(user, user2, type, period) {
         data: [],
       };
 
-      //push data into datasets and if no data then set to 0
+      //Push data into datasets and if no data then set to 0
       all_labels.forEach(label => {
         dataset_user1.data.push(labels_user1.includes(label) ? data_user1[labels_user1.indexOf(label)] : 0);
         dataset_user2.data.push(labels_user2.includes(label) ? data_user2[labels_user2.indexOf(label)] : 0);
       });
 
-      //creat the chart
-      let myChart = new Chart(ctx, {
+      //Create the chart
+      const myChart = new Chart(ctx, {
         type: "line",
         data: {
           labels: all_labels,
@@ -272,29 +206,94 @@ function plot_with_friends(user, user2, type, period) {
     });
 }
 
-// TODO when friends json is done
-let prePeriodFriend = "daily";
-let pretypeFriend = "cardio";
 
-function update_graph_friend(user, user1, type, period) {
-  if (type === null && period !== null) {
-    plot_with_friends(user, user1, pretypeFriend, period);
-    change_text_friend(pretypeFriend, period);
-    prePeriodFriend = period;
-  }
-  else if (type !== null && period === null) {
-    plot_with_friends(user, user1, type, prePeriodFriend);
-    change_text_friend(type, prePeriodFriend);
-    pretypeFriend = type;
+
+
+/**
+ * Gets data for the y-axis
+ * @param {string} user - User ID
+ * @param {string} exercise - Exercise type
+ * @param {string} period - Quest timespan
+ * @returns {array} An array, with data for y-axis
+ */
+function user_data_y(user, exercise, period) {
+  return fetchJSON("json/quest_log.json")
+    .then(data => {
+      const y = [];
+      for (let date in data[user][period]) {
+        if (data[user][period][date].exercise === exercise) {
+          y.push(data[user][period][date].amount);
+        }
+      }
+      return y;
+    })
+    .catch(error => {
+      console.error("Error fetching JSON:", error);
+    });
+}
+
+/**
+ * Gets data for x-axis
+ * @param {string} user - User ID
+ * @param {string} exercise - Exercise type
+ * @param {string} period - Quest timespan
+ * @returns {array}  An array, with data for y-axis
+ */
+function user_data_x(user, exercise, period) {
+  return fetchJSON("json/quest_log.json")
+    .then(data => {
+      const x = [];
+      for (let key in data[user][period]) {
+        if (data[user][period][key].exercise === exercise) {
+          x.push(key);
+        }
+      }
+      return x;
+    })
+    .catch(error => {
+      console.error("Error fetching JSON:", error);
+    });
+}
+
+/**
+ * Opens the dropdown
+ * @param {String} ID - Opens a dropdown for a given ID
+ */
+function dropdown_toggle(ID) {
+  if (document.getElementById(ID).classList.toggle("show")){
+    window.addEventListener("click", dropdown_window_click);
   } else {
-    plot_with_friends(user, user1, pretypeFriend, prePeriodFriend);
-    change_text_friend(type, period);
+    window.removeEventListener("click", dropdown_window_click);
   }
 }
 
-function change_text_friend(value, period) {
+/**
+ * Checks if a click is outside of of dropdown menus, and if closes dropdowns
+ */
+function dropdown_window_click() {
+  if (!event.target.matches('.dropbtn')) {
+    const dropdowns = document.getElementsByClassName("dropdown-content");
+    //Cycles though each dropdown and closes them
+    for (let i = 0; i < dropdowns.length; i++) {
+      //If the drop down is showing, remove show
+      if (dropdowns[i].classList.contains('show')) {
+        dropdowns[i].classList.remove('show');
+      }
+    }
+    window.removeEventListener("click", dropdown_window_click);
+  }
+}
+
+
+/**
+ * Changes text for user graph
+ * @param {string} type 
+ * @param {string} period - Quest timespan
+ * @param {string} elemetID - ID to element
+ */
+function change_text(type, period, elemetID) {
   // Get the element with the id "text"
-  const element = document.getElementById("textfriend");
+  const element = document.getElementById(elemetID);
   // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + value + " in period: " + period;
+  element.innerHTML = "This Graph is based on type:  " + type + " in period: " + period;
 }

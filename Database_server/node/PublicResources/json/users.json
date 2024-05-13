@@ -170,6 +170,9 @@
     },
     "exampleUsername": {
       "password": "123"
+    },
+    "magnusacc": {
+      "password": "magnusacc"
     }
   }
 }
