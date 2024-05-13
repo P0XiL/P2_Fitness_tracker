@@ -701,45 +701,6 @@ function write_user_info_json(req, res) {
     });
 }
 
-function write_user_preferences_json(req, res) {
-    let body = '';
-    req.on('data', (chunk) => {
-        body += chunk.toString();
-    });
-    req.on('end', () => {
-        let user_info = JSON.parse(body);
-
-        // Read existing data from the file
-        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
-            if (err) {
-                console.error(err);
-                errorResponse(res, 500, String(err));
-                return;
-            }
-
-            let existingData = JSON.parse(data);
-            existingData.users_info[user_info.username].preset = user_info.preset;
-
-            // Write updated data back to the file
-            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
-                if (err) {
-                    console.error(err);
-                    errorResponse(res, 500, String(err));
-                } else {
-                    console.log('User info written to file');
-                    // Send a JSON response confirming the success of the operation
-                    const jsonResponse = {
-                        success: true,
-                        message: 'User info updated successfully'
-                    };
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify(jsonResponse));
-                }
-            });
-        });
-    });
-}
 function write_survey_data_json(req, res) {
     let body = '';
     req.on('data', (chunk) => {
@@ -778,7 +739,7 @@ function write_survey_data_json(req, res) {
             } 
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
                 if (err) {
                     console.error('Error writing data:', err);
                     errorResponse(res, 500, String(err));
