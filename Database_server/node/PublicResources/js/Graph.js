@@ -55,43 +55,6 @@ function individual_type(user, elementID) {
     });
 }
 
-function individual_type_friend(user) {
-  fetchJSON("json/quest_log.json")
-    .then(data => {
-      let text = ""; // Initialize text variable
-      const processedTypes = {}; // Object to keep track of processed types
-      let amount;
-
-      for (let period in data[user]) {
-        for (let key in data[user][period]) {
-          const exercise = data[user][period][key].exercise;
-          amount = data[user][period][key].amount;
-          if (!processedTypes[exercise]) { // Check if type has already been processed
-            processedTypes[exercise] = true;
-              if (amount !== 0 && !isNaN(amount) ) {
-                const element1 = document.getElementById("statsText1");
-                try {
-                  element1.innerHTML += `<pre id=${exercise} sum=${amount}>Amount of ${exercise} = ${amount} \n\n</pre>`;
-                } catch (error) {
-                  console.error("Error setting innerHTML:", error);
-                }
-              }
-          } else {
-            if(amount !== 0 && !isNaN(amount)){
-              const path = document.getElementById(exercise);
-              const newsum = parseInt(path.getAttribute("sum")) + amount;
-              path.setAttribute("sum", newsum);
-              path.textContent = `Amount of ${exercise} = ${newsum} \n\n`;
-            }
-          }
-        }
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching JSON:", error);
-    });
-}
-
 let prePeriod = "daily";
 let pretype = "run";
 /**
