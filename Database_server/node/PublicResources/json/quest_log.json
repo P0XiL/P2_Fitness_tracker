@@ -1,0 +1,37 @@
+{
+  "magnusacc": {
+    "daily": {
+      "13/5/2024": {
+        "type": "cardio",
+        "difficulty": "-3",
+        "target": 5,
+        "amount": 0,
+        "text": "Go for a walk for 5 minutes",
+        "state": "incomplete",
+        "exercise": "walk"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "core",
+        "difficulty": "0",
+        "target": 3,
+        "amount": 0,
+        "text": "Do 3 burpees",
+        "state": "incomplete",
+        "exercise": "burpees"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "3",
+        "target": 130,
+        "amount": 0,
+        "text": "Do the wallsit for 130 seconds",
+        "state": "incomplete",
+        "exercise": "wallsit"
+      }
+    }
+  }
+}
