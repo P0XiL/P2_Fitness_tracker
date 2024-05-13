@@ -92,7 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
             sendSurveyData(surveyData);
 
             // Set a flag in local storage indicating that the user has completed the survey
-            localStorage.setItem('surveyCompleted', 'true');
+            const userSurveyKey = `surveyCompleted_${userId}`;
+            localStorage.setItem(userSurveyKey, 'true');
 
             location.reload();
 
@@ -279,9 +280,6 @@ function checkLoginState() {
     const sidenavigation = document.getElementById('side-nav');
     const topnavigation = document.getElementById('top-nav');
 
-    // Retrieve survey completion status from local storage
-    const surveyCompleted = localStorage.getItem('surveyCompleted');
-
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -296,6 +294,10 @@ function checkLoginState() {
             sidenavigation.style.display = 'block';
             topnavigation.style.display = 'block';
             document.getElementById('main').classList.add('active');
+            
+            // Retrieve survey completion status from local storage
+            const userSurveyKey = `surveyCompleted_${username}`;
+            const surveyCompleted = localStorage.getItem(userSurveyKey);
 
             // Check if survey is completed, and update UI accordingly
             if (surveyCompleted === 'true') {
