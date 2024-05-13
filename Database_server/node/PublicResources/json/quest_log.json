@@ -3,5 +3,40 @@
     "daily": {},
     "weekly": {},
     "monthly": {}
+  },
+  "Tobias": {
+    "daily": {
+      "13/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "-3",
+        "target": 3,
+        "amount": 10,
+        "text": "Do 3 lunges",
+        "state": "complete",
+        "exercise": "lunges"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "0",
+        "target": 10,
+        "amount": 10,
+        "text": "Do the wallsit for 10 seconds",
+        "state": "complete",
+        "exercise": "wallsit"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "core",
+        "difficulty": "3",
+        "target": 39,
+        "amount": 39,
+        "text": "Do 39 backextentions",
+        "state": "complete",
+        "exercise": "backextentions"
+      }
+    }
   }
 }
