@@ -69,8 +69,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleSurveyFormSubmit() {
         const form = document.getElementById('surveyForm');
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var NameInput = document.getElementById('name');
+
+            if (/\d/.test(NameInput.value)) {
+                alert('Username cannot contain numbers.');
+                return;
+            }
 
             // Extracting specific parameters from form data
             const formData = new FormData(form);
