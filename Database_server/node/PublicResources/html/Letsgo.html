@@ -100,48 +100,11 @@
         <h2>Add friends</h2>
 
         <input type="text" name="friend_username" placeholder="Name">
-        <button type="submit" id="friendSubmitBtn">Add Friend</button>
+        <button type="submit" id="friendSubmitBtn" onclick="Make_href('friends', name)">Add Friend</button>
         <br>
         <span id="friendErrorMessage"></span>
 
 
-    </div>
-
-
-    <div id="FriendsPlot" class="page center">
-
-        <h2>Friends</h2>
-
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
-                <div id="myDropdown2" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
-                    <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
-                    <a href="#" onclick="update_graph_friend(null, null,'lowerbody', null)">Lowerbody</a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
-                <div id="myDropdown3" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
-                    <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
-                    <a href="#" onclick="update_graph_friend(null, 'monthly')">Monthly</a>
-                </div>
-            </div>
-        </div>
-
-
-        <p id="textfriend"> </p>
-
-        <div>
-            <h1>Graph with friends </h1>
-            <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
-        </div>
     </div>
 
     <div id="stats" class="page center">
@@ -152,32 +115,20 @@
             <div class="dropdown">
                 <button onclick="dropdown_toggle('myDropdown')" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" onclick="update_graph('run', null)">Run</a>
-                    <a href="#" onclick="update_graph('walk', null)">Walk</a>
-                    <a href="#" onclick="update_graph('cycling', null)">Cycling</a>
-                    <a href="#" onclick="update_graph('plank', null)">Plank</a>
-                    <a href="#" onclick="update_graph('situp', null)">Situp</a>
-                    <a href="#" onclick="update_graph('backextentions', null)">Backextentions</a>
-                    <a href="#" onclick="update_graph('burpees', null)">Burpees</a>
-                    <a href="#" onclick="update_graph('crunches', null)">Crunches</a>
-                    <a href="#" onclick="update_graph('squats', null)">Squats</a>
-                    <a href="#" onclick="update_graph('lunges', null)">Lunges</a>
-                    <a href="#" onclick="update_graph('wallsit', null)">Wallsit</a>
-                    <a href="#" onclick="update_graph('pushups', null)">Pushups</a>
-                    <a href="#" onclick="update_graph('dips', null)">Dips</a>
-                    <a href="#" onclick="update_graph('armcircles', null)">Armcircles</a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="dropdown_toggle('myDropdown1')" class="dropbtn">Change period</button>
-                <div id="myDropdown1" class="dropdown-content">
-                    <a href="#" onclick="update_graph(null, 'daily')">Daily</a>
-                    <a href="#" onclick="update_graph(null, 'weekly')">Weekly</a>
-                    <a href="#" onclick="update_graph(null, 'monthly')">Monthly</a>
+                    <a href="#" onclick="update_graph('run','text')">Run</a>
+                    <a href="#" onclick="update_graph('walk','text')">Walk</a>
+                    <a href="#" onclick="update_graph('cycling','text')">Cycling</a>
+                    <a href="#" onclick="update_graph('plank','text')">Plank</a>
+                    <a href="#" onclick="update_graph('situp','text')">Situp</a>
+                    <a href="#" onclick="update_graph('backextentions','text')">Backextentions</a>
+                    <a href="#" onclick="update_graph('burpees','text')">Burpees</a>
+                    <a href="#" onclick="update_graph('crunches','text')">Crunches</a>
+                    <a href="#" onclick="update_graph('squats','text')">Squats</a>
+                    <a href="#" onclick="update_graph('lunges','text')">Lunges</a>
+                    <a href="#" onclick="update_graph('wallsit','text')">Wallsit</a>
+                    <a href="#" onclick="update_graph('pushups','text')">Pushups</a>
+                    <a href="#" onclick="update_graph('dips','text')">Dips</a>
+                    <a href="#" onclick="update_graph('armcircles','text')">Armcircles</a>
                 </div>
             </div>
         </div>
@@ -293,21 +244,20 @@
             <div class="dropdown">
                 <button onclick="dropdown_toggle('myDropdown2')" class="dropbtn">Change type</button>
                 <div id="myDropdown2" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
-                    <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
-                    <a href="#" onclick="update_graph_friend(null, null,'lowerbody', null)">Lowerbody</a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="dropdown_toggle('myDropdown3')" class="dropbtn">Change period</button>
-                <div id="myDropdown3" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
-                    <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
-                    <a href="#" onclick="update_graph_friend(null, 'monthly')">Monthly</a>
+                    <a href="#" onclick="update_graph_friend('run','textfriend')">Run</a>
+                    <a href="#" onclick="update_graph_friend('walk','textfriend')">Walk</a>
+                    <a href="#" onclick="update_graph_friend('cycling','textfriend')">Cycling</a>
+                    <a href="#" onclick="update_graph_friend('plank','textfriend')">Plank</a>
+                    <a href="#" onclick="update_graph_friend('situp','textfriend')">Situp</a>
+                    <a href="#" onclick="update_graph_friend('backextentions','textfriend')">Backextentions</a>
+                    <a href="#" onclick="update_graph_friend('burpees','textfriend')">Burpees</a>
+                    <a href="#" onclick="update_graph_friend('crunches','textfriend')">Crunches</a>
+                    <a href="#" onclick="update_graph_friend('squats','textfriend')">Squats</a>
+                    <a href="#" onclick="update_graph_friend('lunges','textfriend')">Lunges</a>
+                    <a href="#" onclick="update_graph_friend('wallsit','textfriend')">Wallsit</a>
+                    <a href="#" onclick="update_graph_friend('pushups','textfriend')">Pushups</a>
+                    <a href="#" onclick="update_graph_friend('dips','textfriend')">Dips</a>
+                    <a href="#" onclick="update_graph_friend('armcircles','textfriend')">Armcircles</a>
                 </div>
             </div>
         </div>
