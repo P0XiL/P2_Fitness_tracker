@@ -1,0 +1,215 @@
+{
+  "4129": {
+    "daily": {
+      "6/5/2024": {}
+    },
+    "weekly": {
+      "6/5/2024": {}
+    },
+    "monthly": {
+      "6/5/2024": {}
+    }
+  },
+  "6543": {
+    "daily": {
+      "6/5/2024": {}
+    },
+    "weekly": {
+      "6/5/2024": {}
+    },
+    "monthly": {
+      "6/5/2024": {}
+    }
+  },
+  "magnusacc": {
+    "daily": {
+      "1/5/2024": {
+        "type": "cardio"
+      },
+      "2/5/2024": {
+        "type": "upperbody",
+        "target": 10,
+        "amount": 6,
+        "text": "Do arm circles for 10 seconds",
+        "state": "incomplete"
+      },
+      "7/5/2024": {
+        "type": "pushups"
+      },
+      "8/5/2024": {
+        "type": "cardio"
+      },
+      "13/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "1/5/2024": {
+        "type": "lowerbody"
+      },
+      "2/5/2024": {
+        "type": "lowerbody",
+        "target": 54,
+        "amount": 44,
+        "text": "Do 54 squats",
+        "state": "incomplete"
+      },
+      "13/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "1/5/2024": {
+        "type": "core"
+      },
+      "2/5/2024": {
+        "type": "core",
+        "target": 175,
+        "amount": 132,
+        "text": "Do 175 situps",
+        "state": "incomplete"
+      }
+    }
+  },
+  "assholeblaster69": {
+    "daily": {
+      "2/5/2024": {
+        "type": "lowerbody",
+        "target": 10,
+        "amount": 10,
+        "text": "Do the wallsit for 10 seconds",
+        "state": "incomplete"
+      }
+    },
+    "weekly": {
+      "2/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "2/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "poggo2": {
+    "daily": {
+      "1/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "1/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "1/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "poggo3": {
+    "daily": {
+      "1/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "1/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "1/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "sejt": {
+    "daily": {
+      "1/5/2024": {
+        "type": "cardio",
+        "difficulty": "-3",
+        "target": 5,
+        "amount": 0,
+        "text": "Go for a walk for 5 minutes",
+        "state": "incomplete",
+        "exercise": "walk"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "core",
+        "difficulty": "0",
+        "target": 3,
+        "amount": 0,
+        "text": "Do 3 burpees",
+        "state": "incomplete",
+        "exercise": "burpees"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "3",
+        "target": 130,
+        "amount": 0,
+        "text": "Do the wallsit for 130 seconds",
+        "state": "incomplete",
+        "exercise": "wallsit"
+      }
+    }
+  },
+  "exampleUsername": {
+    "daily": {
+      "8/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "8/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "8/5/2024": {
+        "type": "lowerbody"
+      }
+    }
+  },
+  "Lenny": {
+    "daily": {
+      "13/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "John": {
+    "daily": {
+      "13/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "cardio"
+      }
+    }
+  }
+}

@@ -62,6 +62,9 @@ function processReq(req, res) {
                 addFriend(req, res)
             } else if (queryPath === "/award_elo") {
                 award_elo(req, res);
+            } else if (queryPath === "/write_survey_data_json") { 
+                // Add new route for writing user info
+                write_survey_data_json(req, res);
             } else {
                 errorResponse(res, 404, "not found")
             }
@@ -149,7 +152,7 @@ function loginUser(req, res) {
         const loginData = JSON.parse(body);
 
         // Read existing user data from the file
-        fs.readFile('PublicResources/json/Users.json', (err, data) => {
+        fs.readFile('PublicResources/json/users.json', (err, data) => {
             if (err) {
                 console.error("Error reading user data:", err);
                 errorResponse(res, 500, String(err));
@@ -185,7 +188,7 @@ function createUser(req, res) {
         const userData = JSON.parse(body);
 
         // Read existing data from the file
-        fs.readFile('PublicResources/json/Users.json', (err, data) => {
+        fs.readFile('PublicResources/json/users.json', (err, data) => {
             let users = {}; // Initialize users object
 
             if (!err) {
@@ -216,7 +219,7 @@ function createUser(req, res) {
             };
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/Users.json', JSON.stringify(users, null, 2), (err) => {
+            fs.writeFile('PublicResources/json/users.json', JSON.stringify(users, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
@@ -745,7 +748,7 @@ function write_survey_data_json(req, res) {
     req.on('end', () => {
         let surveyData = JSON.parse(body);
         console.log('Received survey data:', surveyData); // Log received survey data
-
+    
         // Read existing data from the file
         fs.readFile('PublicResources/json/users_info.json', (err, data) => {
             if (err) {
@@ -757,17 +760,22 @@ function write_survey_data_json(req, res) {
             let existingData = JSON.parse(data);
             console.log('Existing data:', existingData); // Log existing data
 
-            // Ensure users_info object exists
-            existingData.users_info = existingData.users_info || {};
-
-            // Fetch idkey from users_info or set a default value if not available
-            const idkey = existingData.users_info && existingData.users_info.idkey ? existingData.users_info.idkey : "defaultIdkey";
-
-            // Ensure the idkey exists within users_info
-            existingData.users_info[idkey] = existingData.users_info[idkey] || {};
-
-            // Add the surveyData to the specified idkey
-            existingData.users_info[idkey].surveyData = surveyData;
+            // Check if the username exists in users_info before updating
+            if (existingData.users_info.hasOwnProperty(surveyData.userid)) {
+                existingData.users_info[surveyData.userid].health = {
+                    name: surveyData.name,
+                    age: surveyData.age,
+                    height: surveyData.height,
+                    weight: surveyData.weight,
+                    gender: surveyData.gender,
+                    fitnessGoal: surveyData.fitnessGoal,
+                    activityLevel: surveyData.activityLevel
+                };
+            } else {
+                // Handle the case where the username doesn't exist
+                console.error('User info not found for user ID:', surveyData.userid);
+                // Return an error response or take appropriate action
+            } 
 
             // Write updated data back to the file
             fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData), (err) => {
@@ -789,4 +797,5 @@ function write_survey_data_json(req, res) {
         });
     });
 }
+
 startServer();
