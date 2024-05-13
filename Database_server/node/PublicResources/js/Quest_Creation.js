@@ -35,7 +35,6 @@ async function display_all_quest(user) {
     }
 }
 
-
 /**
  * Display the quest
  * @param {string} quest - Quest ID 
@@ -93,9 +92,6 @@ async function display_quest(quest, user) {
             questContainer.style.position = 'relative';
             questContainer.appendChild(gif);
             questContainer.appendChild(button);
-
-
-
 
             //Add event listner to button
             button.addEventListener("click", () => {
@@ -174,6 +170,7 @@ async function display_quest(quest, user) {
                     procentElement.style.fontSize = 50 + "px";
                     procentElement.style.color = color;
 
+                    document.getElementById(quest).append(procentElement);5
                     // Function for color interpolation
                     function lerpColor(a, b, t) {
                         const min = 100;
@@ -190,14 +187,7 @@ async function display_quest(quest, user) {
                         return "#" + (((1 << 24) + (rr << 16) + (rg << 8) + rb) | 0).toString(16).slice(1);
                     }
 
-
-
-                    document.getElementById(quest).append(procentElement);
-
-
-
-
-
+                    
 
                     //Makes obj with parametes for other functions
                     const obj_para = {
