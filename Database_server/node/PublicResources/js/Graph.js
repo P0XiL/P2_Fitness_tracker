@@ -287,6 +287,7 @@ function recommended(type){
   }
 }
 
+
 /**
  * Opens the dropdown
  * @param {String} ID - Opens a dropdown for a given ID

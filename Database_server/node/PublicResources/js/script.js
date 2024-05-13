@@ -188,11 +188,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
 
-        const createAccountPage = document.getElementById('userfriend');
-        const loginPage = document.getElementById('friends');
+        const userfriendpage = document.getElementById('userfriend');
+        const friendPage = document.getElementById('friends');
 
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
+        friendPage.classList.remove('active');
+        userfriendpage.classList.add('active');
     });
 
     document.getElementById('toggleAddFriendsPage').addEventListener('click', function (e) {
@@ -261,6 +261,37 @@ function    clearFriendErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
+function friendList(user) {
+    fetchJSON("json/users_info.json")
+    .then(data => {
+        var container = document.getElementById("friends");
+        container.innerHTML = "";
+
+        var friends = data[users_info][user][friends];
+
+        friends.forEach(function(friend) {
+            var button = document.createElement("button");
+            button.textContent = friend;
+            button.addEventListener("click", function() {
+                buttonClicked(friend);
+            });
+            container.appendChild(button);
+        });
+    });
+}
+
+function buttonClicked(friend){
+    const addFriendsPage = document.getElementById('userfriend');
+    const friendsPage = document.getElementById('friends');
+
+    friendsPage.classList.remove('active');
+    addFriendsPage.classList.add('active');
+
+    if(localStorage.getItem("friend") !== null){
+        localStorage.removeItem("friend")
+    }
+    localStorage.setItem("friend", friend);
+}
 
 // Function to handle storing login state
 function storeLoginState(username) {
