@@ -12,12 +12,12 @@
     <!-- Navigation links -->
     <nav id="side-nav" style="display: none;">
         <ul id="side-navigation-links">
-        <ul><br>
-            <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
-            <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
-            <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
-            <li><a href="#profilepage" id="profile-link">Profile</a></li>
-        </ul>
+            <ul><br>
+                <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
+                <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
+                <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
+                <li><a href="#profilepage" id="profile-link">Profile</a></li>
+            </ul>
     </nav>
 
     <nav id="top-nav" style="display: none;">
@@ -25,27 +25,32 @@
             <li><a href="#main"><img src="image/home.png" alt="Home" class="top-right-img"></a></li>
             <li><a href="#profilepage"><img src="image/profile_image.png" alt="Profile" class="top-left-img"></a></li>
         </ul>
-    </nav>    
+    </nav>
 
     <!-- A popup when choosing new quest-->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <p id="popupText"></p>
-            <button class="difficulty-button" data-difficulty="-3">Easy</button>
-            <button class="difficulty-button" data-difficulty="0">Medium</button>
-            <button class="difficulty-button" data-difficulty="3">Hard</button>
-            <button id="close">Close</button>
+            <button id="close" class="close-button">&#x2715;</button>
+            <h2 id="popupText"></h2>
+            <div class="buttons-wrapper">
+                <button class="difficulty-button" data-difficulty="-3">Easy</button>
+                <button class="difficulty-button" data-difficulty="0">Medium</button>
+                <button class="difficulty-button" data-difficulty="3">Hard</button>
+            </div>
         </div>
     </div>
 
     <div id="inputModal" class="modal">
         <div class="modal-content">
             <h2 id="InputHeader"></h2>
-            <p id="InputPopupText"></p>
-            <input type="text" id="InputInputfield" name="InputInputfield" placeholder="Enter amount here" value="">
-            <button id="add">add</button>
-            <button id="subtract">subtract</button>
-            <button id="close_input">Close</button>
+            <h3 id="InputPopupText">Enter a number below to change the amount done:</h3>
+            <input type="text" class="input-field" id="InputInputfield" name="InputInputfield" placeholder="Enter amount here" value="">
+            <button id="close_input" class="close-button">&#x2715;</button>
+            <div class="buttons-wrapper">
+                <button id="subtract" class="difficulty-button">Subtract</button>
+                <button id="add" class="difficulty-button">Add</button>
+
+            </div>
         </div>
     </div>
 
@@ -59,19 +64,19 @@
             <div id="monthlyQuestTier" class="tiers"></div>
 
             <div id="quest1" class="quest">
-                <h2>Daily</h2>
+                <h2 class="center-heading">Daily</h2>
                 <meter id="meter1" value="0" min="0" max="1"></meter>
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
-                <h2>Weekly</h2>
+                <h2 class="center-heading">Weekly</h2>
                 <meter id="meter2" value="0" min="0" max="1"></meter>
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
-                <h2>Monthly</h2>
+                <h2 class="center-heading">Monthly</h2>
                 <meter id="meter3" value="0" min="0" max="1"></meter>
                 <p id="quest3_type"></p>
             </div>
@@ -87,7 +92,21 @@
 
         <a href="#" id="toggleFriendPageLink" class="dropbtn">Show friends</a>
 
+        <button id="toggleAddFriendsPage">Add friends</button>
+
     </div>
+
+    <div id="addFriends" class="page center">
+        <h2>Add friends</h2>
+
+        <input type="text" name="friend_username" placeholder="Name">
+        <button type="submit" id="friendSubmitBtn">Add Friend</button>
+        <br>
+        <span id="friendErrorMessage"></span>
+
+
+    </div>
+
 
     <div id="FriendsPlot" class="page center">
 
@@ -127,22 +146,26 @@
 
     <div id="stats" class="page center">
         <h2>Stats</h2>
-        <a href="#" id="toggleStatsPageLink" class="dropbtn">User plot</a>
-        <p id="statsText"></p>
-    </div>
-
-
-    <div id="userstats" class="page center">
-        <h2>Stats Exercise</h2>
+        <p id="statsTextUser"></p>
 
         <div class="dropdown-container">
             <div class="dropdown">
-                <button onclick="dropdown_close()" class="dropbtn">Change type</button>
+                <button onclick="dropdown_toggle('myDropdown')" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" onclick="update_graph('cardio', null)">Cardio</a>
-                    <a href="#" onclick="update_graph('core', null)">Core</a>
-                    <a href="#" onclick="update_graph('lowerbody', null)">Lowerbody</a>
-                    <a href="#" onclick="update_graph('upperbody', null)">Upperbody</a>
+                    <a href="#" onclick="update_graph('run', null)">Run</a>
+                    <a href="#" onclick="update_graph('walk', null)">Walk</a>
+                    <a href="#" onclick="update_graph('cycling', null)">Cycling</a>
+                    <a href="#" onclick="update_graph('plank', null)">Plank</a>
+                    <a href="#" onclick="update_graph('situp', null)">Situp</a>
+                    <a href="#" onclick="update_graph('backextentions', null)">Backextentions</a>
+                    <a href="#" onclick="update_graph('burpees', null)">Burpees</a>
+                    <a href="#" onclick="update_graph('crunches', null)">Crunches</a>
+                    <a href="#" onclick="update_graph('squats', null)">Squats</a>
+                    <a href="#" onclick="update_graph('lunges', null)">Lunges</a>
+                    <a href="#" onclick="update_graph('wallsit', null)">Wallsit</a>
+                    <a href="#" onclick="update_graph('pushups', null)">Pushups</a>
+                    <a href="#" onclick="update_graph('dips', null)">Dips</a>
+                    <a href="#" onclick="update_graph('armcircles', null)">Armcircles</a>
                 </div>
             </div>
         </div>
@@ -150,7 +173,7 @@
 
         <div class="dropdown-container">
             <div class="dropdown">
-                <button onclick="dropdown_close1()" class="dropbtn">Change period</button>
+                <button onclick="dropdown_toggle('myDropdown1')" class="dropbtn">Change period</button>
                 <div id="myDropdown1" class="dropdown-content">
                     <a href="#" onclick="update_graph(null, 'daily')">Daily</a>
                     <a href="#" onclick="update_graph(null, 'weekly')">Weekly</a>
@@ -159,10 +182,10 @@
             </div>
         </div>
 
-        <p id="text"> </p>
 
         <div>
             <h1>Graph</h1>
+            <p id="text"> </p>
             <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
         </div>
     </div>
@@ -199,8 +222,11 @@
     </div>
 
     <div id="profilepage" class="page">
-        <div id="profile_Username">
+        <div class="profileHeader-container" id="profile_Username">
             <h2 class="heading"></h2>
+            <div id="logout">
+                <button id="logoutBtn" type="submit">Logout</button>
+            </div>
         </div>
 
         <div id="profilePageContainer" class="profile">
@@ -241,6 +267,7 @@
                 <p>Weight: <input type="text" id="Weight" value="${userInfo.health.weight}"> kg</p>
                 <button onclick="postUserInfo('${username}')">Save User Info</button>
                 <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
+                <canvas id="bmiGraph" width="30" height="20"></canvas>
             </div>
 
             <div id="userPreferences" class="profile_layout">
@@ -251,9 +278,38 @@
     </div>
 
     <div id="userfriend" class="page center">
-        <h2>User friend</h2>
-        <a href="#" id="toggleFriendPlotPageLink" class="dropbtn">Show friends plot</a>
-        <p id="statsText1"></p>
+        <h2>Users friends name goes here + stats</h2>
+        <p id="statsTextFriend"></p>
+
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_toggle('myDropdown2')" class="dropbtn">Change type</button>
+                <div id="myDropdown2" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
+                    <a href="#" onclick="update_graph_friend(null, null,'lowerbody', null)">Lowerbody</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="dropdown_toggle('myDropdown3')" class="dropbtn">Change period</button>
+                <div id="myDropdown3" class="dropdown-content">
+                    <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
+                    <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
+                    <a href="#" onclick="update_graph_friend(null, 'monthly')">Monthly</a>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h1>Comparing graph with !friends name goes here! </h1>
+            <p id="textfriend"> </p>
+            <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
+        </div>
 
     </div>
 
