@@ -32,7 +32,7 @@ const tierNames = {
 document.addEventListener('DOMContentLoaded', function () {
     // Call checkLoginState() on page load
     checkLoginState();
-    
+
     setupTiersForQuestPage(localStorage.getItem('username'));
 
     // Assigns all tabs to an array called links
@@ -68,6 +68,44 @@ document.addEventListener('DOMContentLoaded', function () {
             highlightNavLink(targetId);
         });
     });
+
+    function handleSurveyFormSubmit() {
+        const form = document.getElementById('surveyForm');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Extracting specific parameters from form data
+            const formData = new FormData(form);
+            const surveyData = {};
+            for (const [key, value] of formData.entries()) {
+                surveyData[key] = value;
+            }
+
+            // Retrieve user ID from local storage
+            const userId = localStorage.getItem("username");
+            if (userId) {
+                surveyData.userid = userId;
+            } else {
+                console.error('User ID not found in local storage');
+                return;
+            }
+
+            console.log('Survey data:', surveyData);
+            sendSurveyData(surveyData);
+
+            // Set a flag in local storage indicating that the user has completed the survey
+            localStorage.setItem('surveyCompleted', 'true');
+
+            location.reload();
+
+            document.getElementById('main').classList.add('active');
+            document.getElementById('surveyForm').classList.remove('active');
+
+        });
+    }
+
+    // Call the function to attach the event listener
+    handleSurveyFormSubmit();
 
     document.getElementById('toggleCreatePageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
@@ -161,21 +199,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('toggleAddFriendsPage').addEventListener('click', function (e) {
         e.preventDefault();
-    
+
         const addFriendsPage = document.getElementById('addFriends');
         const friendsPage = document.getElementById('friends');
-    
+
         friendsPage.classList.remove('active');
         addFriendsPage.classList.add('active');
-    
-    
+
+
     });
 
     document.getElementById('friendSubmitBtn').addEventListener('click', function (e) {
         e.preventDefault();
 
         const friend_username = document.querySelector('input[name="friend_username"]').value;
-        
+
         const friend_data = {
             friends: friend_username
         }
@@ -195,22 +233,22 @@ function saveFriend(friendData) {
         },
         body: JSON.stringify(friendData)
     })
-    .then(response => {
-        if (!response.ok) {
-            response.text().then(errorMessage => {
-                displayFriendErrorMessage(errorMessage); // Display error message for friend-related errors
-            });
-        } else {
-            clearFriendErrorMessage();
-        }
-    })
-    .then(data => {
-        // Handle success response here if needed
-        console.log('Friend added successfully:', data);
-    })
-    .catch(error => {
-        console.error('Error adding friend:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                response.text().then(errorMessage => {
+                    displayFriendErrorMessage(errorMessage); // Display error message for friend-related errors
+                });
+            } else {
+                clearFriendErrorMessage();
+            }
+        })
+        .then(data => {
+            // Handle success response here if needed
+            console.log('Friend added successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error adding friend:', error);
+        });
 }
 
 
@@ -243,6 +281,9 @@ function checkLoginState() {
     const sidenavigation = document.getElementById('side-nav');
     const topnavigation = document.getElementById('top-nav');
 
+    // Retrieve survey completion status from local storage
+    const surveyCompleted = localStorage.getItem('surveyCompleted');
+
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -257,20 +298,32 @@ function checkLoginState() {
             sidenavigation.style.display = 'block';
             topnavigation.style.display = 'block';
             document.getElementById('main').classList.add('active');
+
+            // Check if survey is completed, and update UI accordingly
+            if (surveyCompleted === 'true') {
+                document.getElementById('surveyForm').classList.remove('active');
+            } else {
+                document.getElementById('main').classList.remove('active');
+                document.getElementById('surveyForm').classList.add('active');
+                sidenavigation.style.display = 'none';
+                topnavigation.style.display = 'none';
+            }
         } else {
             // Clear expired login state
             localStorage.removeItem('loginState');
             loginPage.classList.add('active');
         }
     } else {
+        // No login state found, show login page
         sidenavigation.style.display = 'none';
         topnavigation.style.display = 'none';
         loginPage.classList.add('active');
     }
 }
 
+
 function loginUser(loginData) {
-    fetch(serverPath+'login', {
+    fetch(serverPath + 'login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -295,7 +348,7 @@ function loginUser(loginData) {
 
 // Function to send data to server-side script
 function createUser(userData) {
-    fetch(serverPath+'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
+    fetch(serverPath + 'createUser', { // Change this to either https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/writeUserData, or http://127.0.0.1:3364/writeUserData depending on localhost or server host
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -361,8 +414,8 @@ async function setupTiersForQuestPage(username) {
 async function fetchUserData(username) {
     try {
         // Fetch the JSON data
-        const response = await fetch(serverPath+'json/users_info.json');
-        
+        const response = await fetch(serverPath + 'json/users_info.json');
+
         if (!response.ok) {
             throw new Error(`Failed to fetch userinfo.json: ${response.statusText}`);
         }
@@ -703,7 +756,7 @@ function updateBMI(height, weight) {
     bmiText.textContent = `BMI: ${bmi}`;
 
     // Display warning if BMI is over 25 or under 18.5
-    if (bmi > 30){
+    if (bmi > 30) {
         bmiText.innerHTML += `<br><span>BMI is over 30 leading to a lot higher possibily of diseases 
         such as cardiovascular diseases. Try to limit calorie intake. This can be done by drinking more water, 
         eating less fatty foods, using smaller plates among many other ways of reducing body weight. For more information on how to 
@@ -763,7 +816,7 @@ function drawBMIGraph(bmiValue) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw bars for each category
-    categories.forEach(function(category, index) {
+    categories.forEach(function (category, index) {
         var barHeight = (canvas.height - padding * 2);
         var y = padding;
 
@@ -787,7 +840,7 @@ function drawBMIGraph(bmiValue) {
             // Calculate the position of the red dot within this category
             var progress = (bmiValue - category.min) / (category.max - category.min);
             var dotX = x + progress * barWidth;
-            
+
             // Draw red dot indicating the user's BMI value
             ctx.fillStyle = "red";
             ctx.beginPath();
@@ -990,11 +1043,11 @@ function displayCreateErrorMessage(message) {
 async function postUserInfo(username) {
     validateIntegerInput(parseInt(document.getElementById('height').value))
     const height = parseInt(document.getElementById('height').value);
-    
-    
+
+
     validateIntegerInput(parseInt(document.getElementById('weight').value))
     const weight = parseInt(document.getElementById('weight').value);
-    
+
 
     try {
         const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
@@ -1053,7 +1106,7 @@ function validateIntegerInput(value) {
 function update_users_info(newUserInfo) {
     //console.log("new user info:");
     //console.log(newUserInfo);
-    fetch(serverPath+'write_user_info_json', {
+    fetch(serverPath + 'write_user_info_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -1083,7 +1136,7 @@ function update_users_info(newUserInfo) {
 }
 
 // Update BMI text after user inputs height or weight
-document.getElementById('height').addEventListener('input', function() {
+document.getElementById('height').addEventListener('input', function () {
     const height = parseFloat(this.value);
     const weight = parseFloat(document.getElementById('weight').value);
     if (!isNaN(height) && !isNaN(weight)) {
@@ -1091,7 +1144,7 @@ document.getElementById('height').addEventListener('input', function() {
     }
 });
 
-document.getElementById('weight').addEventListener('input', function() {
+document.getElementById('weight').addEventListener('input', function () {
     const height = parseFloat(document.getElementById('height').value);
     const weight = parseFloat(this.value);
     if (!isNaN(height) && !isNaN(weight)) {
@@ -1099,146 +1152,90 @@ document.getElementById('weight').addEventListener('input', function() {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    function handleSurveyFormSubmit() {
-        const form = document.getElementById('surveyForm');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Extracting specific parameters from form data
-            const formData = new FormData(form);
-            const surveyData = {};
-            for (const [key, value] of formData.entries()) {
-                surveyData[key] = value;
-            }
-            
-            // Retrieve user ID from local storage
-            const userId = localStorage.getItem("username");
-            if (userId) {
-                surveyData.userid = userId;
-            } else {
-                console.error('User ID not found in local storage');
-                return;
-            }
-            
-            console.log('Survey data:', surveyData);
-            sendSurveyData(surveyData);
-
-            // Set a flag in local storage indicating that the user has completed the survey
-            localStorage.setItem('surveyCompleted', 'true');
-
-             location.reload();
-
-            document.getElementById('main').classList.add('active');
-            document.getElementById('surveyForm').classList.remove('active');
-
-        });
-    }
-
-    // Call the function to attach the event listener
-    handleSurveyFormSubmit();
-});
-
 function sendSurveyData(surveyData) {
-    fetch(serverPath+'write_survey_data_json', {
+    fetch(serverPath + 'write_survey_data_json', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(surveyData)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch POST');
-        }
-        return response.json();
-    })
-    .then(responseJson => {
-        console.log('Response from POST:', responseJson);
-        if (responseJson.success) {
-            console.log('Survey data sent successfully');
-        } else {
-            console.error('Failed to send survey data:', responseJson.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error sending survey data:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch POST');
+            }
+            return response.json();
+        })
+        .then(responseJson => {
+            console.log('Response from POST:', responseJson);
+            if (responseJson.success) {
+                console.log('Survey data sent successfully');
+            } else {
+                console.error('Failed to send survey data:', responseJson.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error sending survey data:', error);
+        });
 }
 
 let lastActiveDates = {};
 
 function updateStreak() {
-  const currentDate = new Date().toDateString();
-  let userId = localStorage.getItem("username");
-  
-  if (!lastActiveDates[userId]) {
-    lastActiveDates[userId] = null;
-  }
-  
-  if (currentDate === lastActiveDates[userId]) {
-    return; // Already active today
-  }
-  
-  const lastDate = new Date();
-  lastDate.setDate(lastDate.getDate() - 1);
-  
-  const lastDateString = lastDate.toDateString();
-  
-  if (currentDate === lastDateString) {
-    if (lastActiveDates[userId] !== currentDate) {
-      lastActiveDates[userId] = currentDate;
+    const currentDate = new Date().toDateString();
+    let userId = localStorage.getItem("username");
+
+    if (!lastActiveDates[userId]) {
+        lastActiveDates[userId] = null;
     }
-  } else {
-    lastActiveDates[userId] = currentDate;
-  }
+
+    if (currentDate === lastActiveDates[userId]) {
+        return; // Already active today
+    }
+
+    const lastDate = new Date();
+    lastDate.setDate(lastDate.getDate() - 1);
+
+    const lastDateString = lastDate.toDateString();
+
+    if (currentDate === lastDateString) {
+        if (lastActiveDates[userId] !== currentDate) {
+            lastActiveDates[userId] = currentDate;
+        }
+    } else {
+        lastActiveDates[userId] = currentDate;
+    }
 }
 
 function getStreakCount() {
-  let userId = localStorage.getItem("username");
-  let streakCount = 0;
-  let currentDate = new Date().toDateString();
-  let lastDate = null;
+    let userId = localStorage.getItem("username");
+    let streakCount = 0;
+    let currentDate = new Date().toDateString();
+    let lastDate = null;
 
-  if (lastActiveDates[userId]) {
-    lastDate = new Date(lastActiveDates[userId]);
-  }
-
-  if (lastDate) {
-    while (currentDate === lastDate.toDateString()) {
-      streakCount++;
-      lastDate.setDate(lastDate.getDate() - 1);
-      currentDate = lastDate.toDateString();
+    if (lastActiveDates[userId]) {
+        lastDate = new Date(lastActiveDates[userId]);
     }
-  }
 
-  streakCount = getStreakCount(userId);
-  console.log("Current streak for user", userId + ":", streakCount);
+    if (lastDate) {
+        while (currentDate === lastDate.toDateString()) {
+            streakCount++;
+            lastDate.setDate(lastDate.getDate() - 1);
+            currentDate = lastDate.toDateString();
+        }
+    }
 
-  return streakCount;
+    streakCount = getStreakCount(userId);
+    console.log("Current streak for user", userId + ":", streakCount);
+
+    return streakCount;
 }
 
 updateStreak(); // Call this function whenever user is active
 
-
-
 // Display PNG image if streak is active
 if (getStreakCount > 0) {
-  const img = document.createElement("img");
-  img.src = "Database_server\node\PublicResources\image\Streak.png";
-  document.body.appendChild(img);
+    const img = document.createElement("img");
+    img.src = "Database_server\node\PublicResources\image\Streak.png";
+    document.body.appendChild(img);
 }
