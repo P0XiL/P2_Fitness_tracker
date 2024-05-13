@@ -94,7 +94,7 @@
       "username": "1235",
       "health": {
         "height": 200,
-        "weight": 50
+        "weight": 100
       },
       "mastery": {
         "run": {
@@ -174,12 +174,12 @@
         }
       },
       "preset": {
-        "name": "lose weight",
+        "name": "strength",
         "conf": {
-          "cardio": 7,
-          "lowerbody": 1,
-          "core": 1,
-          "upperbody": 1
+          "cardio": 1,
+          "lowerbody": 3,
+          "core": 3,
+          "upperbody": 3
         }
       }
     },

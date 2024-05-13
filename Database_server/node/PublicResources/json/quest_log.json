@@ -51,6 +51,9 @@
       },
       "8/5/2024": {
         "type": "cardio"
+      },
+      "13/5/2024": {
+        "type": "cardio"
       }
     },
     "weekly": {
@@ -63,6 +66,9 @@
         "amount": 44,
         "text": "Do 54 squats",
         "state": "incomplete"
+      },
+      "13/5/2024": {
+        "type": "core"
       }
     },
     "monthly": {
