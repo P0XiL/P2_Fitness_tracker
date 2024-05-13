@@ -35,7 +35,6 @@ async function display_all_quest(user) {
     }
 }
 
-
 /**
  * Display the quest
  * @param {string} quest - Quest ID 
@@ -94,9 +93,6 @@ async function display_quest(quest, user) {
             questContainer.appendChild(gif);
             questContainer.appendChild(button);
 
-
-
-
             //Add event listner to button
             button.addEventListener("click", () => {
                 open_modal_for_quest(questTimespan, type, user);
@@ -110,6 +106,27 @@ async function display_quest(quest, user) {
                 const obj_stateQuest = check_current(questTimespan, quest_log[user]);
                 //If there is no quest
                 if (obj_stateQuest["state"] == "None") {
+                    //Check if they completed last quest
+                    try {
+                        const lastestQuestDate = Object.keys(quest_log[user][questTimespan])[Object.keys(quest_log[user][questTimespan]).length-1];
+                        const stateOfLastQuest = quest_log[user][questTimespan][lastestQuestDate].state;
+                        if (stateOfLastQuest === "incomplete"){
+                            const obj_para = {
+                                user: user,
+                                type: quest_log[user][questTimespan][lastestQuestDate].exercise,
+                                timespan: questTimespan,
+                                date: lastestQuestDate
+                            };
+                            remove_elo(obj_para);
+                            location.reload();
+                        }
+                    } catch (error) {
+                        //If there exit a prevous quest console the error
+                        if (Object.keys(quest_log[user][questTimespan]) > 0){
+                            console.error(error);
+                        }
+                        
+                    }
                     //Chooses a type for userInfo
                     fetchJSON('json/users_info.json')
                         .then(userInfo => {
@@ -131,28 +148,56 @@ async function display_quest(quest, user) {
 
                 } else if (obj_stateQuest["state"] == "Done") {
                     //If quest is done
-                    const textContainer = document.getElementById(quest + "_type");
-                    textContainer.innerText = "Quest done";
-                    const procentElement = document.createElement("h3");
-                    const procentComplete = Math.floor(quest_log[user][questTimespan][obj_stateQuest.date].amount / quest_log[user][questTimespan][obj_stateQuest.date].target * 100);
-                    procentElement.textContent = procentComplete + "%";
-                    const min = 16;
-                    const max = 108;
-                    procentElement.style.fontSize = + "px";
-                    let newFontSize = procentComplete * 0.1;
-                    if (newFontSize >= max) {
-                        newFontSize = max
-                    } else if (newFontSize < min) {
-                        newFontSize = min
+
+                    //Change Json and add rewards
+                    const pathQuest = quest_log[user][questTimespan][obj_stateQuest.date];
+                    if ("incomplete" === pathQuest.state) {
+                        let obj_award = {};
+                        obj_award.user = user;
+                        obj_award.timespan = questTimespan;
+                        obj_award.date = obj_stateQuest.date;
+                        obj_award.difficulty = pathQuest.difficulty;
+                        obj_award.type = pathQuest.exercise;
+                        award_elo(obj_award);
+                        location.reload();
                     }
 
-                    const color = lerpColor("#00FF00", "#8B0000", (newFontSize - min) / (max - min));
+                    // Visual part
+                    // Change Caption
+                    const capitalizedQuestTimespan = questTimespan.charAt(0).toUpperCase() + questTimespan.slice(1);
+                    document.getElementById(quest).querySelector('h2').innerText = capitalizedQuestTimespan + " - Complete";
 
-                    procentElement.style.fontSize = newFontSize + "px";
+                    // Add text
+                    const values = quest_log[user][questTimespan][obj_stateQuest["date"]];
+                    document.getElementById(quest + "_type").innerText = "Type: " + values.type + "\n" + values.text + "\nYou have done " + values.amount + " out of " + values.target;
+
+                    // Add percentage completion
+                    const procentElement = document.createElement("h3");
+                    let procentComplete = Math.floor(quest_log[user][questTimespan][obj_stateQuest.date].amount / quest_log[user][questTimespan][obj_stateQuest.date].target * 100);
+
+
+                    const min = 100;
+                    const max = 1000;
+
+                    // Handle completion percentages greater than or equal to 1000
+                    let color;
+                    if (procentComplete >= 1000) {
+                        color = lerpColor("#00FF00", "#8B0000", (max - min) / (max - min));
+                        procentComplete = "&ge; 1000";
+                    } else {
+                        color = lerpColor("#00FF00", "#8B0000", (procentComplete - min) / (max - min));
+                    }
+                    procentElement.innerHTML = procentComplete + "%";                    
+
+                    procentElement.style.fontSize = 50 + "px";
                     procentElement.style.color = color;
 
-
+                    document.getElementById(quest).append(procentElement);5
+                    // Function for color interpolation
                     function lerpColor(a, b, t) {
+                        const min = 100;
+                        const max = 1000;
+
                         const ah = parseInt(a.replace(/#/g, ""), 16),
                             ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
                             bh = parseInt(b.replace(/#/g, ""), 16),
@@ -164,20 +209,7 @@ async function display_quest(quest, user) {
                         return "#" + (((1 << 24) + (rr << 16) + (rg << 8) + rb) | 0).toString(16).slice(1);
                     }
 
-
-                    procentElement.style.position = "absolute";
-                    procentElement.style.top = "50%";
-                    procentElement.style.left = "50%";
-                    procentElement.style.transform = "translate(-50%, -50%)";
-                    procentElement.style.margin = "auto";
-
-                    document.getElementById(quest).append(procentElement);
-
-
-
-
-
-
+                    
 
                     //Makes obj with parametes for other functions
                     const obj_para = {
@@ -270,6 +302,7 @@ function open_modal_for_quest(questTimespan, type, user) {
                             //Make an obj which is used when adding the quest
                             obj_newQuest[date] = new Object;
                             obj_newQuest[date].type = type;
+                            obj_newQuest[date].difficulty = difficulty;
                             obj_newQuest[date].target = obj_Quest.quest["base_target"];
                             obj_newQuest[date].amount = 0;
                             obj_newQuest[date].text = obj_Quest.quest.quest_text;
@@ -488,14 +521,67 @@ function change_amount(obj_para) {
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error('No response fetch POST amount');
+                throw new Error('No response fetch POST Change_Amount');
             }
-            return response.json();
         })
         .catch(error => {
             console.error('Error fetch Post (change amount):', error);
         });
 }
+
+/**
+ * Removes elo from user
+ * @param {object} obj_para
+ * @param {string} obj_para.user - User ID
+ * @param {string} obj_para.type - The type of exercise
+ * @param {string} obj_para.timesapan - The timespan of quest
+ * @param {string} obj_para.date - The date of failed quest 
+ */
+function remove_elo(obj_para){
+    fetch(serverPath + 'remove_elo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj_para)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No response fetch POST remove elo');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetch Post (remove_elo):', error);
+        });
+}
+
+/**
+ * Adds elo to user
+ * @param {object} obj_para
+ * @param {string} obj_para.user - User ID
+ * @param {string} obj_para.timespan - Quest Type
+ * @param {string} obj_para.date - Date of quest
+ * @param {int} obj_para.difficulty - The difficulty of quest esay(-3), medium(0), hard(3) 
+ * @param {string} obj_para.type - The type of exercise
+ */
+function award_elo(obj_para) {
+    fetch(serverPath + 'award_elo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj_para)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No response fetch POST award Elo');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetch Post (award_elo):', error);
+        });
+}
+
 
 /**
  * Makes the edit button
@@ -539,7 +625,6 @@ function input_data(obj_para) {
     document.getElementById("inputModal").style.display = "block";
     const inputField = document.getElementById("InputInputfield");
     document.getElementById("InputHeader").innerText = obj_para["timespan"].charAt(0).toUpperCase() + obj_para["timespan"].slice(1);
-    document.getElementById("InputPopupText").innerText = "Enter a number below to change the amount done";
     //Functions for add button
     document.getElementById("add").addEventListener("click", () => {
         if (validate_input(inputField.value)) {
