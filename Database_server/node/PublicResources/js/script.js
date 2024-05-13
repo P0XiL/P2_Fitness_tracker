@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.getElementById('loginBtn').addEventListener('click', function (e) {
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
 
         // Get username and password values
@@ -264,7 +264,7 @@ function displayFriendErrorMessage(message) {
     loginErrorMessage.textContent = message;
     loginErrorMessage.style.color = 'red';
 }
-function    clearFriendErrorMessage() {
+function clearFriendErrorMessage() {
     const loginErrorMessage = document.getElementById('friendErrorMessage');
     loginErrorMessage.textContent = '';
 }
@@ -301,7 +301,7 @@ function checkLoginState() {
             sidenavigation.style.display = 'block';
             topnavigation.style.display = 'block';
             document.getElementById('main').classList.add('active');
-            
+
             // Retrieve survey completion status from local storage
             const userSurveyKey = `surveyCompleted_${username}`;
             const surveyCompleted = localStorage.getItem(userSurveyKey);
@@ -484,38 +484,38 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     function createTierGridItem(container, title, imageSrc, elo, period) {
         const gridItem = document.createElement('div');
         gridItem.classList.add('tier-grid-item');
-    
+
         // Create and append tier title
         const tierTitle = document.createElement('h3');
         tierTitle.textContent = `${period}: ${title}`;
         gridItem.appendChild(tierTitle);
-    
+
         // Create and append tier image
         const tierImage = document.createElement('img');
         tierImage.src = imageSrc;
         tierImage.alt = `${title} Tier Image`;
         gridItem.appendChild(tierImage);
-    
+
         // Create and append progress bar
         const progressBar = document.createElement('div');
         progressBar.classList.add('progress-bar');
-    
+
         const maxElo = getMaxElo(period); // Get the maximum Elo for the period
-    
+
         const eloProgress = document.createElement('div');
         eloProgress.classList.add('elo-progress');
-    
+
         // Calculate percentage based on maximum Elo for the period
         const eloPercentage = (elo / maxElo) * 100;
         eloProgress.style.width = `${eloPercentage}%`; // Set width based on elo
-    
+
         progressBar.appendChild(eloProgress);
         gridItem.appendChild(progressBar);
-    
+
         // Append grid item to container
         container.appendChild(gridItem);
     }
-    
+
     // Function to get maximum Elo based on period
     function getMaxElo(period) {
         switch (period) {
@@ -529,7 +529,7 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
                 return 100; // Default to daily if period is unknown
         }
     }
-    
+
 }
 
 // Function to get the tier range
@@ -743,7 +743,7 @@ function createMasteryItem(masteryKey, mastery) {
 
     const eloProgress = document.createElement('div');
     eloProgress.classList.add('elo-progress');
-    
+
     // Scale Elo progress to fit out of 500
     const eloOutOf500 = Math.min(500, mastery.elo); // Ensure elo is capped at 500
     const eloPercentage = (eloOutOf500 / 500) * 100; // Calculate Elo percentage out of 500
