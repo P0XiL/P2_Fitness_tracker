@@ -1,6 +1,6 @@
 // LOCALHOST: http://127.0.0.1:3360/
 // SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
-const serverPath = 'http://127.0.0.1:3360/';
+const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/';
 
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
@@ -714,13 +714,19 @@ function createMasteryItem(masteryKey, mastery) {
 
     const eloProgress = document.createElement('div');
     eloProgress.classList.add('elo-progress');
-    eloProgress.style.width = `${mastery.elo}%`; // Set width based on Elo percentage
+    
+    // Scale Elo progress to fit out of 500
+    const eloOutOf500 = Math.min(500, mastery.elo); // Ensure elo is capped at 500
+    const eloPercentage = (eloOutOf500 / 500) * 100; // Calculate Elo percentage out of 500
+    eloProgress.style.width = `${eloPercentage}%`; // Set width based on Elo percentage
+
     progressBar.appendChild(eloProgress);
 
     masteryDiv.appendChild(progressBar);
 
     return masteryDiv;
 }
+
 
 // Function to capitalize the first letter of a string
 function capitalizeFirstLetter(string) {
