@@ -138,6 +138,7 @@ async function display_quest(quest, user) {
                         obj_award.difficulty = pathQuest.difficulty;
                         obj_award.type = pathQuest.exercise;
                         award_elo(obj_award);
+                        location.reload();
                     }
 
                     // Visual part
