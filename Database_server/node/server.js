@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3369;
+const port = 3360;
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -29,50 +29,52 @@ function processReq(req, res) {
 
     switch (req.method) {
         case "GET":
-            // Handle GET requests
             switch (queryPath) {
                 case "/":
                     fileResponse(res, "html/Letsgo.html");
                     break;
-                // Add more cases for different routes if needed
                 default:
                     fileResponse(res, req.url);
                     break;
             }
             break;
         case "POST":
-            // Handle POST requests
-            // Add your POST request handling logic here
-            if (queryPath === "/createUser") {
-                // Handle the POST request to write user data to a file
-                createUser(req, res);
-            }
-            else if (queryPath === "/login") {
-                loginUser(req, res);
-            }
-            else if (queryPath === "/write_quest_json") {
-                write_quest_json(req, res);
-            } else if (queryPath === "/change_amount") {
-                // Add new route for changing quest amount
-                change_amount(req, res);
-            } else if (queryPath === "/write_user_info_json") {
-                // Add new route for writing user info
-                write_user_info_json(req, res);
-            } else if (queryPath === "/addFriend") {
-                addFriend(req, res)
-            } else if (queryPath === "/award_elo") {
-                award_elo(req, res);
-            } else if (queryPath === "/write_survey_data_json") { 
-                // Add new route for writing user info
-                write_survey_data_json(req, res);
-            } else {
-                errorResponse(res, 404, "not found")
+            switch (queryPath) {
+                case "/createUser":
+                    createUser(req, res);
+                    break;
+                case "/login":
+                    loginUser(req, res);
+                    break;
+                case "/write_quest_json":
+                    write_quest_json(req, res);
+                    break;
+                case "/change_amount":
+                    change_amount(req, res);
+                    break;
+                case "/write_user_info_json":
+                    write_user_info_json(req, res);
+                    break;
+                case "/addFriend":
+                    addFriend(req, res);
+                    break;
+                case "/award_elo":
+                    award_elo(req, res);
+                    break;
+                case "/write_survey_data_json":
+                    write_survey_data_json(req, res);
+                    break;
+                case "/remove_elo":
+                    remove_elo(req, res);
+                    break;
+                default:
+                    errorResponse(res, 404, "not found");
+                    break;
             }
             break;
         default:
-            // Set headers for unsupported methods
             res.setHeader('Content-Type', 'text/plain');
-            res.statusCode = 405; // Method Not Allowed
+            res.statusCode = 405;
             res.end('Method Not Allowed');
             break;
     }
@@ -540,6 +542,85 @@ function change_amount(req, res) {
     });
 }
 
+
+//Function the removes elo 
+function remove_elo(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_remove = JSON.parse(body);
+
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            let obj_usersInfo = {}; // Initialize users_info object
+
+            if (!err) {
+                try {
+                    obj_usersInfo = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing usersInfo:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing usersinfo:", err);
+            }
+            // Read existing data from the file
+            fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
+                let obj_questLog = {}; // Initialize quest_log object
+
+                if (!err) {
+                    try {
+                        obj_questLog = JSON.parse(data);
+                    } catch (parseError) {
+                        console.error("Error parsing existing quest_log:", parseError);
+                    }
+                } else {
+                    // Handle file not found or empty
+                    console.error("Error reading existing quest_log:", err);
+                }
+
+                obj_questLog[obj_remove.user][obj_remove.timespan][obj_remove.date].state = "failed";
+
+                fs.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
+                    if (err) {
+                        console.error(err);
+                        errorResponse(res, 500, String(err));
+                    }
+                });
+            });
+
+            const pathMatery = obj_usersInfo["users_info"][obj_remove.user]["mastery"][obj_remove.type];
+            const pathTier = obj_usersInfo["users_info"][obj_remove.user]["tier"][obj_remove.timespan];
+            //Remove mastery elo
+            if (pathMatery["elo"] <= 25) {
+                pathMatery["elo"] = 0
+            } else {
+                pathMatery["elo"] -= 25
+            }
+
+            //Remove tier elo
+            if (pathTier["elo"] <= 25) {
+                pathTier["elo"] = 0
+            } else {
+                pathTier["elo"] -= 25
+            }
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(obj_usersInfo, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('Rewarded Elo');
+                }
+            });
+        });
+    });
+}
+
 //Function that gives elo
 function award_elo(req, res) {
     let body = '';
@@ -605,30 +686,30 @@ function award_elo(req, res) {
             const pathMatery = obj_usersInfo["users_info"][obj_award.user]["mastery"][obj_award.type];
             pathMatery["elo"] += award;
             if (pathMatery["elo"] >= 500) {
-                pathMatery["rank"]++;
+                pathMatery["rank"] += 3;
                 pathMatery["elo"] -= 500;
             }
             award = (Math.log10(parseInt(pathMatery["rank"])) + 1) * award;
-            console.log(pathMatery["rank"] +"="+ award, Math.log10(parseInt(pathMatery["rank"]))) ;
+            console.log(pathMatery["rank"] + "=" + award, Math.log10(parseInt(pathMatery["rank"])));
             const pathTier = obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan];
             pathTier["elo"] += award;
 
             switch (obj_award.timespan) {
                 case "daily":
                     while (pathTier["elo"] >= 100) {
-                        pathTier["rank"]++;
+                        pathTier["rank"] += 3;
                         pathTier["elo"] -= 100;
-                    }                     
+                    }
                     break;
                 case "weekly":
-                    while(pathTier["elo"] >= 40){
-                        pathTier["rank"]++;
+                    while (pathTier["elo"] >= 40) {
+                        pathTier["rank"] += 3;
                         pathTier["elo"] -= 40;
                     }
                     break;
                 case "monthly":
-                    while(pathTier["elo"] >= 20){
-                        pathTier["rank"]++;
+                    while (pathTier["elo"] >= 20) {
+                        pathTier["rank"] += 3;
                         pathTier["elo"] -= 20;
                     }
                     break;
@@ -644,10 +725,9 @@ function award_elo(req, res) {
                     console.error(err);
                     errorResponse(res, 500, String(err));
                 } else {
-                    console.log('User data appended to file');
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
-                    res.end('User data appended to file');
+                    res.end('Rewarded Elo');
                 }
             });
         });
@@ -709,7 +789,7 @@ function write_survey_data_json(req, res) {
     req.on('end', () => {
         let surveyData = JSON.parse(body);
         console.log('Received survey data:', surveyData); // Log received survey data
-    
+
         // Read existing data from the file
         fs.readFile('PublicResources/json/users_info.json', (err, data) => {
             if (err) {
@@ -736,7 +816,7 @@ function write_survey_data_json(req, res) {
                 // Handle the case where the username doesn't exist
                 console.error('User info not found for user ID:', surveyData.userid);
                 // Return an error response or take appropriate action
-            } 
+            }
 
             // Write updated data back to the file
             fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(existingData, null, 2), (err) => {
