@@ -122,7 +122,7 @@ async function display_quest(quest, user) {
                         }
                     } catch (error) {
                         //If there exit a prevous quest console the error
-                        if (Object.keys(quest_log[user][questTimespan] > 0)){
+                        if (Object.keys(quest_log[user][questTimespan]) > 0){
                             console.error(error);
                         }
                         
