@@ -38,5 +38,57 @@
         "exercise": "backextentions"
       }
     }
+  },
+  "Tobi": {
+    "daily": {
+      "13/5/2024": {
+        "type": "upperbody",
+        "difficulty": "0",
+        "target": 10,
+        "amount": 10,
+        "text": "Do arm circles for 10 seconds",
+        "state": "complete",
+        "exercise": "armcircles"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "cardio",
+        "difficulty": "-3",
+        "target": 5,
+        "amount": 5,
+        "text": "Go for a walk for 5 minutes",
+        "state": "complete",
+        "exercise": "walk"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 16,
+        "amount": 32,
+        "text": "Cycle 16 minutes",
+        "state": "complete",
+        "exercise": "cycling"
+      }
+    }
+  },
+  "sad": {
+    "daily": {
+      "13/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "lowerbody"
+      }
+    }
   }
 }

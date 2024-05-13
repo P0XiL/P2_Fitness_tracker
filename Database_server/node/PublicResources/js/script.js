@@ -261,26 +261,44 @@ function    clearFriendErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
-function friendList(user) {
+document.getElementById('friendSubmitBtn').addEventListener('click', function() {
+    friendList(); // Call the friendList function
+});
+
+function friendList() {
     fetchJSON("json/users_info.json")
     .then(data => {
+        let username = localStorage.getItem("username");
         var container = document.getElementById("friends");
-        container.innerHTML = "";
 
-        var friends = data[users_info][user][friends];
+        var friends = data.users_info[username].friends;
+
+        var list = document.createElement("ul");
+        list.classList.add("friend-list");
 
         friends.forEach(function(friend) {
-            var button = document.createElement("button");
-            button.textContent = friend;
-            button.addEventListener("click", function() {
+            var listItem = document.createElement("li");
+            listItem.classList.add("friend-item");
+
+            var link = document.createElement("a");
+            link.href = "#";
+            link.textContent = friend;
+
+            link.addEventListener("click", function(event) {
+                event.preventDefault();
                 buttonClicked(friend);
             });
-            container.appendChild(button);
+
+            listItem.appendChild(link);
+
+            list.appendChild(listItem);
         });
+
+        container.appendChild(list);
     });
 }
 
-function buttonClicked(friend){
+function buttonClicked(friend) {
     const addFriendsPage = document.getElementById('userfriend');
     const friendsPage = document.getElementById('friends');
 
