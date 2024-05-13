@@ -152,7 +152,7 @@ function loginUser(req, res) {
         const loginData = JSON.parse(body);
 
         // Read existing user data from the file
-        fs.readFile('PublicResources/json/Users.json', (err, data) => {
+        fs.readFile('PublicResources/json/users.json', (err, data) => {
             if (err) {
                 console.error("Error reading user data:", err);
                 errorResponse(res, 500, String(err));
@@ -188,7 +188,7 @@ function createUser(req, res) {
         const userData = JSON.parse(body);
 
         // Read existing data from the file
-        fs.readFile('PublicResources/json/Users.json', (err, data) => {
+        fs.readFile('PublicResources/json/users.json', (err, data) => {
             let users = {}; // Initialize users object
 
             if (!err) {
@@ -219,7 +219,7 @@ function createUser(req, res) {
             };
 
             // Write updated data back to the file
-            fs.writeFile('PublicResources/json/Users.json', JSON.stringify(users, null, 2), (err) => {
+            fs.writeFile('PublicResources/json/users.json', JSON.stringify(users, null, 2), (err) => {
                 if (err) {
                     console.error(err);
                     errorResponse(res, 500, String(err));

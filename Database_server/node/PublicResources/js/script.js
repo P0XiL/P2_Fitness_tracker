@@ -6,7 +6,6 @@ const tierImages = {
     '1-15': 'image/bronzeTier.png',
     '16-30': 'image/silverTier.png',
     '31-45': 'image/goldTier.png',
-    // Add more mappings as needed
 };
 
 const tierNames = {
@@ -26,7 +25,6 @@ const tierNames = {
     '40-42': 'Gold 2',
     '43-45': 'Gold 1',
 };
-
 
 // The function which enables tab switching
 document.addEventListener('DOMContentLoaded', function () {
@@ -716,13 +714,19 @@ function createMasteryItem(masteryKey, mastery) {
 
     const eloProgress = document.createElement('div');
     eloProgress.classList.add('elo-progress');
-    eloProgress.style.width = `${mastery.elo}%`; // Set width based on Elo percentage
+    
+    // Scale Elo progress to fit out of 500
+    const eloOutOf500 = Math.min(500, mastery.elo); // Ensure elo is capped at 500
+    const eloPercentage = (eloOutOf500 / 500) * 100; // Calculate Elo percentage out of 500
+    eloProgress.style.width = `${eloPercentage}%`; // Set width based on Elo percentage
+
     progressBar.appendChild(eloProgress);
 
     masteryDiv.appendChild(progressBar);
 
     return masteryDiv;
 }
+
 
 // Function to capitalize the first letter of a string
 function capitalizeFirstLetter(string) {
@@ -1100,7 +1104,6 @@ function validateIntegerInput(value) {
         return false;
     }
 }
-
 
 // Function to update user info
 function update_users_info(newUserInfo) {
