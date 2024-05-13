@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Add 'active' class to tab which has been clicked
             document.getElementById(targetId).classList.add('active');
 
+            if(targetId === 'friends'){
+                friendList();
+            }
+
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
                 setupProfilePage(localStorage.getItem('username'));
@@ -262,14 +266,15 @@ function    clearFriendErrorMessage() {
 }
 
 document.getElementById('friendSubmitBtn').addEventListener('click', function() {
-    friendList(); // Call the friendList function
+    friendList();
 });
 
 function friendList() {
     fetchJSON("json/users_info.json")
     .then(data => {
         let username = localStorage.getItem("username");
-        var container = document.getElementById("friends");
+        var container = document.getElementById("friendslist")
+        container.innerHTML = "";
 
         var friends = data.users_info[username].friends;
 
@@ -309,6 +314,8 @@ function buttonClicked(friend) {
         localStorage.removeItem("friend")
     }
     localStorage.setItem("friend", friend);
+
+    friendtext("Friendheader", "friendheader2");
 }
 
 // Function to handle storing login state
