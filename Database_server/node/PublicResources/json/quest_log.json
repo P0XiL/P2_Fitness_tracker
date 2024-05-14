@@ -38,5 +38,39 @@
         "exercise": "backextentions"
       }
     }
+  },
+  "Tobi": {
+    "daily": {
+      "13/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "Lenny": {
+    "daily": {
+      "14/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "14/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "14/5/2024": {
+        "type": "lowerbody"
+      }
+    }
   }
 }
