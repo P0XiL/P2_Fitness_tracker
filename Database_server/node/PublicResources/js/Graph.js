@@ -232,12 +232,8 @@ function user_data_x(user, exercise) {
       let dates = ["1/1/2024"];
       for (let period in data[user]) {
         for (let date in data[user][period]) {
-          if (data[user][period][date].exercise === exercise && !dates.includes(date)) {
-            let otherTypes = Object.values(data[user][period][date])
-              .filter(item => typeof item === 'object' && item.exercise !== exercise);
-            if (otherTypes.length === 0) {
+          if (data[user][period][date].exercise === exercise) {
               dates.push(date);
-            }
           }
         }
       }
