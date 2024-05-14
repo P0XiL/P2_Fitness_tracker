@@ -107,7 +107,7 @@ async function display_quest(quest, user) {
                 //If there is no quest
                 if (obj_stateQuest["state"] == "None") {
                     //Check if they completed last quest
-                    try {
+                    try {   
                         const lastestQuestDate = Object.keys(quest_log[user][questTimespan])[Object.keys(quest_log[user][questTimespan]).length-1];
                         const stateOfLastQuest = quest_log[user][questTimespan][lastestQuestDate].state;
                         if (stateOfLastQuest === "incomplete"){
@@ -419,9 +419,8 @@ function check_current(timespan, usersQuest) {
             obj_state.state = "None";
             return obj_state;
         default:
+            console.error("Failed to check current state of" + timespan);
             return "Fail"
-
-
     }
 }
 

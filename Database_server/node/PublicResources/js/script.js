@@ -1,6 +1,6 @@
 // LOCALHOST: http://127.0.0.1:3360/
-// SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
-const serverPath = 'http://127.0.0.1:3360/';
+// SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/
+const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/';
 
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
@@ -73,8 +73,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleSurveyFormSubmit() {
         const form = document.getElementById('surveyForm');
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var NameInput = document.getElementById('name');
+
+            if (/\d/.test(NameInput.value)) {
+                alert('Username cannot contain numbers.');
+                return;
+            }
 
             // Extracting specific parameters from form data
             const formData = new FormData(form);
@@ -96,7 +103,8 @@ document.addEventListener('DOMContentLoaded', function () {
             sendSurveyData(surveyData);
 
             // Set a flag in local storage indicating that the user has completed the survey
-            localStorage.setItem('surveyCompleted', 'true');
+            const userSurveyKey = `surveyCompleted_${userId}`;
+            localStorage.setItem(userSurveyKey, 'true');
 
             location.reload();
 
@@ -165,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.getElementById('loginBtn').addEventListener('click', function (e) {
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
 
         // Get username and password values
@@ -260,7 +268,7 @@ function displayFriendErrorMessage(message) {
     loginErrorMessage.textContent = message;
     loginErrorMessage.style.color = 'red';
 }
-function    clearFriendErrorMessage() {
+function clearFriendErrorMessage() {
     const loginErrorMessage = document.getElementById('friendErrorMessage');
     loginErrorMessage.textContent = '';
 }
@@ -272,22 +280,23 @@ document.getElementById('friendSubmitBtn').addEventListener('click', function() 
 function friendList() {
     fetchJSON("json/users_info.json")
     .then(data => {
-        let username = localStorage.getItem("username");
-        var container = document.getElementById("friendslist")
+        const username = localStorage.getItem("username");
+        const container = document.getElementById("friendslist")
         container.innerHTML = "";
 
-        var friends = data.users_info[username].friends;
+        const friends = data.users_info[username].friends;
 
-        var list = document.createElement("ul");
+        const list = document.createElement("ul");
         list.classList.add("friend-list");
 
         friends.forEach(function(friend) {
-            var listItem = document.createElement("li");
+            const listItem = document.createElement("li");
             listItem.classList.add("friend-item");
 
-            var link = document.createElement("a");
+            const link = document.createElement("a");
             link.href = "#";
-            link.textContent = friend;
+            link.textContent = "- " + friend.charAt(0).toUpperCase() + friend.slice(1);
+            link.className = "friend-link";
 
             link.addEventListener("click", function(event) {
                 event.preventDefault();
@@ -316,10 +325,9 @@ function buttonClicked(friend) {
     localStorage.setItem("friend", friend);
 
     friendtext("Friendheader", "friendheader2");
-
     const container = document.getElementById("statsTextFriend")
     container.innerHTML = "";
-    individual_type(friend, "statsTextFriend" );
+    individual_type(friend, "statsTextFriend");
 }
 
 // Function to handle storing login state
@@ -339,9 +347,6 @@ function checkLoginState() {
     const sidenavigation = document.getElementById('side-nav');
     const topnavigation = document.getElementById('top-nav');
 
-    // Retrieve survey completion status from local storage
-    const surveyCompleted = localStorage.getItem('surveyCompleted');
-
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -356,6 +361,10 @@ function checkLoginState() {
             sidenavigation.style.display = 'block';
             topnavigation.style.display = 'block';
             document.getElementById('main').classList.add('active');
+
+            // Retrieve survey completion status from local storage
+            const userSurveyKey = `surveyCompleted_${username}`;
+            const surveyCompleted = localStorage.getItem(userSurveyKey);
 
             // Check if survey is completed, and update UI accordingly
             if (surveyCompleted === 'true') {
@@ -535,38 +544,38 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     function createTierGridItem(container, title, imageSrc, elo, period) {
         const gridItem = document.createElement('div');
         gridItem.classList.add('tier-grid-item');
-    
+
         // Create and append tier title
         const tierTitle = document.createElement('h3');
         tierTitle.textContent = `${period}: ${title}`;
         gridItem.appendChild(tierTitle);
-    
+
         // Create and append tier image
         const tierImage = document.createElement('img');
         tierImage.src = imageSrc;
         tierImage.alt = `${title} Tier Image`;
         gridItem.appendChild(tierImage);
-    
+
         // Create and append progress bar
         const progressBar = document.createElement('div');
         progressBar.classList.add('progress-bar');
-    
+
         const maxElo = getMaxElo(period); // Get the maximum Elo for the period
-    
+
         const eloProgress = document.createElement('div');
         eloProgress.classList.add('elo-progress');
-    
+
         // Calculate percentage based on maximum Elo for the period
         const eloPercentage = (elo / maxElo) * 100;
         eloProgress.style.width = `${eloPercentage}%`; // Set width based on elo
-    
+
         progressBar.appendChild(eloProgress);
         gridItem.appendChild(progressBar);
-    
+
         // Append grid item to container
         container.appendChild(gridItem);
     }
-    
+
     // Function to get maximum Elo based on period
     function getMaxElo(period) {
         switch (period) {
@@ -580,7 +589,7 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
                 return 100; // Default to daily if period is unknown
         }
     }
-    
+
 }
 
 // Function to get the tier range
@@ -794,7 +803,7 @@ function createMasteryItem(masteryKey, mastery) {
 
     const eloProgress = document.createElement('div');
     eloProgress.classList.add('elo-progress');
-    
+
     // Scale Elo progress to fit out of 500
     const eloOutOf500 = Math.min(500, mastery.elo); // Ensure elo is capped at 500
     const eloPercentage = (eloOutOf500 / 500) * 100; // Calculate Elo percentage out of 500
@@ -816,14 +825,21 @@ function capitalizeFirstLetter(string) {
 function displayUserInfo(username, userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
     let userInfoHTML = `
-        <h2 style="text-align: center;">User info</h2>
-        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
-        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
-        <button onclick="postUserInfo('${username}')">Save User Info</button>
-        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
-        <canvas id="bmiGraph" width="600" height="400"></canvas>
+    <h2 style="text-align: center;">User info</h2>
+    <form id="userInfoForm">
+        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" required> cm</p>
+        <p>Weight: <input type="number" id="weight" value="${userInfo.health.weight}" required> kg</p>
+        <button type="submit">Save User Info</button>
+    </form>
+    <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
+    <canvas id="bmiGraph" width="600" height="400"></canvas>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
+
+    document.getElementById('userInfoForm').addEventListener('submit', async function (e) {
+        e.preventDefault(); // Prevent default form submission
+        await postUserInfo(username);
+    });
 
     // Calculate and display initial BMI if height and weight are present
     const height = parseFloat(userInfo.health.height);
@@ -873,6 +889,53 @@ function calculateBMI(height, weight) {
     // Calculate BMI
     const bmi = weight / (heightMeters * heightMeters);
     return bmi.toFixed(1); // Round to 1 decimal place
+}
+
+async function postUserInfo(username) {
+    validateIntegerInput(parseInt(document.getElementById('height').value))
+    const height = parseInt(document.getElementById('height').value);
+
+
+    validateIntegerInput(parseInt(document.getElementById('weight').value))
+    const weight = parseInt(document.getElementById('weight').value);
+
+
+    try {
+        const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
+
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
+
+            // Create a new user info object with the updated health information
+            const newUserInfo = {
+                username: username,
+                health: {
+                    name: existingUserInfo.health.name,
+                    age: existingUserInfo.health.age,
+                    height: height,
+                    weight: weight,
+                    gender: existingUserInfo.health.gender,
+                    fitnessGoal: existingUserInfo.health.fitnessGoal,
+                    activityLevel: existingUserInfo.health.activityLevel
+                },
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: existingUserInfo.preset
+            };
+
+            // Update the user info on the server
+            update_users_info(newUserInfo);
+
+            // Calculate and display BMI
+            const bmi = calculateBMI(height, weight);
+            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
+        } else {
+            console.error('User info not found for username:', username);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
 }
 
 // Function to draw the graph
@@ -1122,48 +1185,6 @@ function displayCreateErrorMessage(message) {
     const errorMessage = document.getElementById('createErrorMessage');
     errorMessage.textContent = message;
     errorMessage.style.color = 'red';
-}
-
-async function postUserInfo(username) {
-    validateIntegerInput(parseInt(document.getElementById('height').value))
-    const height = parseInt(document.getElementById('height').value);
-
-
-    validateIntegerInput(parseInt(document.getElementById('weight').value))
-    const weight = parseInt(document.getElementById('weight').value);
-
-
-    try {
-        const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
-
-        if (userData && userData.username === username) {
-            const existingUserInfo = userData;
-
-            // Create a new user info object with the updated health information
-            const newUserInfo = {
-                username: username,
-                health: {
-                    height: height,
-                    weight: weight
-                },
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
-                preset: existingUserInfo.preset
-            };
-
-            // Update the user info on the server
-            update_users_info(newUserInfo);
-
-            // Calculate and display BMI
-            const bmi = calculateBMI(height, weight);
-            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
-        } else {
-            console.error('User info not found for username:', username);
-        }
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-    }
 }
 
 function validateIntegerInput(value) {
