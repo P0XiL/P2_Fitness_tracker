@@ -1,6 +1,15 @@
 {
   "obj_users": {
-    "Tobias": {
+    "sad": {
+      "password": "1"
+    },
+    "pog": {
+      "password": "1"
+    },
+    "Lenny": {
+      "password": "123"
+    },
+    "Lenny2": {
       "password": "123"
     },
     "Tobi": {

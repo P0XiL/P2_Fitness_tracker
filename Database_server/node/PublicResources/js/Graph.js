@@ -4,7 +4,6 @@ try {
     // Close the dropdowns if the user clicks outside of it
 
   individual_type(user, "statsTextUser");
-  individual_type("sad", "statsTextFriend" );
 
   } else {
     console.error("Failed getting user")
@@ -22,38 +21,33 @@ try {
 function individual_type(user, elementID) {
   fetchJSON("json/quest_log.json")
     .then(data => {
-      const processedTypes = {}; // Object to keep track of processed types
-      let amount;
+      const processedTypes = {}; 
 
       for (let period in data[user]) {
         for (let key in data[user][period]) {
           const exercise = data[user][period][key].exercise;
-          amount = data[user][period][key].amount;
-          if (!processedTypes[exercise]) { // Check if type has already been processed
-            processedTypes[exercise] = true;
-            if (!isNaN(amount)) {
-              const element = document.getElementById(elementID);
-              try {
-                element.innerHTML += `<pre id=${exercise} sum=${amount}>Amount of ${exercise} = ${amount} \n\n</pre>`;
-              } catch (error) {
-                console.error("Error setting innerHTML:", error);
-              }
+          const amount = data[user][period][key].amount;
+          if (amount !== undefined) {
+            if (!processedTypes[exercise]) { 
+              processedTypes[exercise] = { sum: 0 };
             }
-          } else {
-            if(!isNaN(amount)){
-              const path = document.getElementById(exercise);
-              const newsum = parseInt(path.getAttribute("sum")) + amount;
-              path.setAttribute("sum", newsum);              
-              path.textContent = `Amount of ${exercise} = ${newsum} \n\n`;
+            if (!isNaN(amount)) {
+              processedTypes[exercise].sum += amount;
             }
           }
         }
+      }
+      const element = document.getElementById(elementID);
+      for (let exercise in processedTypes) {
+        const totalAmount = processedTypes[exercise].sum;
+        element.innerHTML += `<pre id="${exercise}" sum="${totalAmount}">Amount of ${exercise} = ${totalAmount} \n\n</pre>`;
       }
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
     });
 }
+
 
 let prePeriod = "daily";
 let pretype = "run";
@@ -132,6 +126,7 @@ function plot(type) {
 function plot_with_friends(type) {
   // Get the canvas element
   let user = localStorage.getItem("username");
+  let friend = localStorage.getItem("friend");
   let ctx = document.getElementById("myChart2").getContext("2d");
 
   Promise.all([user_data_x(user, type), user_data_x(friend, type), user_data_y(user, type), user_data_y(friend, type)])
@@ -148,7 +143,7 @@ function plot_with_friends(type) {
         data: [],
       };
       const dataset_user2 = {
-        label: user2,
+        label: friend,
         fill: false,
         lineTension: 0,
         backgroundColor: "rgba(255,255,255,1)",
@@ -198,24 +193,29 @@ function user_data_y(user, exercise) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
       let amounts = [0];
+      let totalAmounts = {}; 
       for (let period in data[user]) {
         for (let date in data[user][period]) {
-          if (data[user][period][date].exercise === exercise) {
-            // Check if any other exercise type exists for this date
-            let otherTypes = Object.values(data[user][period][date])
-              .filter(item => typeof item === 'object' && item.exercise !== exercise);
-            if (otherTypes.length === 0) {
-              amounts.push(data[user][period][date].amount);
+          const entry = data[user][period][date];
+          if (entry.exercise === exercise) {
+            if (!totalAmounts[date]) {
+              totalAmounts[date] = entry.amount;
+            } else {
+              totalAmounts[date] += entry.amount;
             }
           }
         }
       }
+      for (let date in totalAmounts) {
+        amounts.push(totalAmounts[date]);
+      }
+
       console.log(amounts);
       return amounts;
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
-      return []; // Return an empty array in case of an error
+      return [];
     });
 }
 
@@ -232,22 +232,16 @@ function user_data_x(user, exercise) {
       let dates = ["1/1/2024"];
       for (let period in data[user]) {
         for (let date in data[user][period]) {
-          if (data[user][period][date].exercise === exercise && !dates.includes(date)) {
-            // Check if any other exercise type exists for this date
-            let otherTypes = Object.values(data[user][period][date])
-              .filter(item => typeof item === 'object' && item.exercise !== exercise);
-            if (otherTypes.length === 0) {
+          if (data[user][period][date].exercise === exercise) {
               dates.push(date);
-            }
           }
         }
       }
-      console.log(dates);
       return dates;
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
-      return []; // Return an empty array in case of an error
+      return [];
     });
 }
 
@@ -286,6 +280,7 @@ function recommended(type){
       console.log("type not vailded");
   }
 }
+
 
 /**
  * Opens the dropdown
@@ -328,4 +323,13 @@ function change_text(type, elemetID) {
   const element = document.getElementById(elemetID);
   // Change the text content
   element.innerHTML = "This Graph is based on type:  " + type;
+}
+
+function friendtext(elementID1, elementID2){
+  friend = localStorage.getItem("friend");
+  const element1 = document.getElementById(elementID1);
+  const element2 = document.getElementById(elementID2);
+
+  element1.innerHTML = " " + friend + " Stats";
+  element2.innerHTML = "Comparing graph with " + friend;
 }

@@ -142,7 +142,7 @@ footer {
   /* Hide the modal by default */
   position: fixed;
   z-index: 1;
-  left:0;
+  left: 0;
   top: 0;
   width: 100%;
   height: 100%;
@@ -190,14 +190,19 @@ meter {
   width: 30px;
   height: 30px;
   position: absolute;
-  top: 10px; /* Adjust top position */
-  right: 10px; /* Adjust right position */
+  top: 10px;
+  /* Adjust top position */
+  right: 10px;
+  /* Adjust right position */
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 24px; /* Adjust font size for the close symbol */
-  color: white; /* Set color for the close symbol */
-  z-index: 2; /* Ensure the close button is above other content */
+  font-size: 24px;
+  /* Adjust font size for the close symbol */
+  color: white;
+  /* Set color for the close symbol */
+  z-index: 2;
+  /* Ensure the close button is above other content */
 }
 
 
@@ -205,7 +210,8 @@ meter {
 .buttons-wrapper {
   display: flex;
   justify-content: space-between;
-  margin-top: 40px; /* Adjust margin as needed */
+  margin-top: 40px;
+  /* Adjust margin as needed */
 }
 
 /* Default button styles */
@@ -220,35 +226,46 @@ meter {
   transition-duration: 0.4s;
   cursor: pointer;
   border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.488); /* Default background color */
+  background-color: rgba(0, 0, 0, 0.488);
+  /* Default background color */
 }
 
 /* Hover styles */
 .difficulty-button:hover {
-  background-color: rgba(0, 0, 0, 0.8); /* Darken background on hover */
+  background-color: rgba(0, 0, 0, 0.8);
+  /* Darken background on hover */
 }
 
 /* Active styles */
 .difficulty-button:active {
-  background-color: #004080; /* Dark blue background when clicked */
-  color: #fff; /* White text color when clicked */
+  background-color: #004080;
+  /* Dark blue background when clicked */
+  color: #fff;
+  /* White text color when clicked */
 }
 
 /* Input field style */
 .input-field {
   width: 100%;
   padding: 10px;
-  margin-top: 20px; /* Adjust margin as needed */
-  border: 2px solid #ccc; /* Add border */
-  border-radius: 4px; /* Add border radius */
-  box-sizing: border-box; /* Ensure padding and border are included in the width */
-  font-size: 16px; /* Adjust font size */
+  margin-top: 20px;
+  /* Adjust margin as needed */
+  border: 2px solid #ccc;
+  /* Add border */
+  border-radius: 4px;
+  /* Add border radius */
+  box-sizing: border-box;
+  /* Ensure padding and border are included in the width */
+  font-size: 16px;
+  /* Adjust font size */
 }
 
 /* Focus styles for the input field */
 .input-field:focus {
-  border-color: #FFA400; /* Green border color when focused */
-  outline: none; /* Remove default focus outline */
+  border-color: #FFA400;
+  /* Green border color when focused */
+  outline: none;
+  /* Remove default focus outline */
 }
 
 /* Styles for the dropdown container */
@@ -443,4 +460,26 @@ canvas {
 /* Style the button on hover */
 #logoutBtn:hover {
   background-color: #45a049;
+}
+
+.friend-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.friend-item {
+  margin: 5px 0;
+}
+
+.friend-link {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  font-size: 20px;
+  padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.friend-link:hover {
+  background-color: rgb(63, 63, 63);
 }
