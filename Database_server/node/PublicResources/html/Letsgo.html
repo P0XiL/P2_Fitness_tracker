@@ -219,10 +219,10 @@
 
             <div id="userInfo" class="profile_layout">
                 <h2 style="text-align: center;">User info</h2>
-                <form>
-                    <p>Height: <input type="number" id="Height" value="${userInfo.health.height}" required> cm</p>
-                    <p>Weight: <input type="number" id="Weight" value="${userInfo.health.weight}" required> kg</p>
-                    <button type="submit" onclick="postUserInfo('${username}')">Save User Info</button>
+                <form id="userInfoForm">
+                    <p>Height: <input type="text" id="Height" value="${userInfo.health.height}" required > cm</p>
+                    <p>Weight: <input type="text" id="Weight" value="${userInfo.health.weight}" required > kg</p>
+                    <button type="submit">Save User Info</button>
                 </form>
                 <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
                 <canvas id="bmiGraph" width="30" height="20"></canvas>

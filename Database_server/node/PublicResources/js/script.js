@@ -765,14 +765,21 @@ function capitalizeFirstLetter(string) {
 function displayUserInfo(username, userInfo) {
     const userInfoDiv = document.getElementById('userInfo');
     let userInfoHTML = `
-        <h2 style="text-align: center;">User info</h2>
-        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" > cm</p>
-        <p>Weight: <input type="text" id="weight" value="${userInfo.health.weight}" > kg</p>
-        <button onclick="postUserInfo('${username}')">Save User Info</button>
-        <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
-        <canvas id="bmiGraph" width="600" height="400"></canvas>
+    <h2 style="text-align: center;">User info</h2>
+    <form id="userInfoForm">
+        <p>Height: <input type="number" id="height" value="${userInfo.health.height}" required> cm</p>
+        <p>Weight: <input type="number" id="weight" value="${userInfo.health.weight}" required> kg</p>
+        <button type="submit">Save User Info</button>
+    </form>
+    <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
+    <canvas id="bmiGraph" width="600" height="400"></canvas>
     `;
     userInfoDiv.innerHTML = userInfoHTML;
+
+    document.getElementById('userInfoForm').addEventListener('submit', async function (e) {
+        e.preventDefault(); // Prevent default form submission
+        await postUserInfo(username);
+    });
 
     // Calculate and display initial BMI if height and weight are present
     const height = parseFloat(userInfo.health.height);
@@ -822,6 +829,48 @@ function calculateBMI(height, weight) {
     // Calculate BMI
     const bmi = weight / (heightMeters * heightMeters);
     return bmi.toFixed(1); // Round to 1 decimal place
+}
+
+async function postUserInfo(username) {
+    validateIntegerInput(parseInt(document.getElementById('height').value))
+    const height = parseInt(document.getElementById('height').value);
+
+
+    validateIntegerInput(parseInt(document.getElementById('weight').value))
+    const weight = parseInt(document.getElementById('weight').value);
+
+
+    try {
+        const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
+
+        if (userData && userData.username === username) {
+            const existingUserInfo = userData;
+
+            // Create a new user info object with the updated health information
+            const newUserInfo = {
+                username: username,
+                health: {
+                    height: height,
+                    weight: weight
+                },
+                mastery: existingUserInfo.mastery,
+                hiddenRank: existingUserInfo.hiddenRank,
+                tier: existingUserInfo.tier,
+                preset: existingUserInfo.preset
+            };
+
+            // Update the user info on the server
+            update_users_info(newUserInfo);
+
+            // Calculate and display BMI
+            const bmi = calculateBMI(height, weight);
+            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
+        } else {
+            console.error('User info not found for username:', username);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
 }
 
 // Function to draw the graph
@@ -1071,48 +1120,6 @@ function displayCreateErrorMessage(message) {
     const errorMessage = document.getElementById('createErrorMessage');
     errorMessage.textContent = message;
     errorMessage.style.color = 'red';
-}
-
-async function postUserInfo(username) {
-    validateIntegerInput(parseInt(document.getElementById('height').value))
-    const height = parseInt(document.getElementById('height').value);
-
-
-    validateIntegerInput(parseInt(document.getElementById('weight').value))
-    const weight = parseInt(document.getElementById('weight').value);
-
-
-    try {
-        const userData = await fetchUserData(username); // Assuming fetchUserData is a function to fetch user data
-
-        if (userData && userData.username === username) {
-            const existingUserInfo = userData;
-
-            // Create a new user info object with the updated health information
-            const newUserInfo = {
-                username: username,
-                health: {
-                    height: height,
-                    weight: weight
-                },
-                mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
-                tier: existingUserInfo.tier,
-                preset: existingUserInfo.preset
-            };
-
-            // Update the user info on the server
-            update_users_info(newUserInfo);
-
-            // Calculate and display BMI
-            const bmi = calculateBMI(height, weight);
-            document.getElementById('bmiText').textContent = `BMI: ${bmi}`;
-        } else {
-            console.error('User info not found for username:', username);
-        }
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-    }
 }
 
 function validateIntegerInput(value) {
