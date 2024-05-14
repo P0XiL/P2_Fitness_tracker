@@ -68,5 +68,28 @@
         "exercise": "walk"
       }
     }
+  },
+  "Champ": {
+    "daily": {
+      "14/5/2024": {
+        "type": "cardio",
+        "difficulty": "-3",
+        "target": 5,
+        "amount": 0,
+        "text": "Go for a walk for 5 minutes",
+        "state": "incomplete",
+        "exercise": "walk"
+      }
+    },
+    "weekly": {
+      "14/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "14/5/2024": {
+        "type": "upperbody"
+      }
+    }
   }
 }
