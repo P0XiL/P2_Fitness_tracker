@@ -1,3 +1,10 @@
 {
-  "obj_users": {}
+  "obj_users": {
+    "1": {
+      "password": "1"
+    },
+    "poggo": {
+      "password": "1"
+    }
+  }
 }

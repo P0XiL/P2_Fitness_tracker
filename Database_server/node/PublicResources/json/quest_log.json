@@ -1,7 +1,41 @@
 {
+  "1": {
+    "daily": {
+      "13/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "lowerbody"
+      }
+    }
+  },
   "pog": {
     "daily": {},
     "weekly": {},
     "monthly": {}
+  },
+  "poggo": {
+    "daily": {
+      "13/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "core"
+      }
+    }
   }
 }
