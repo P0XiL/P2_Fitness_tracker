@@ -1,6 +1,6 @@
 // LOCALHOST: http://127.0.0.1:3360/
-// SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node9/
-const serverPath = 'http://127.0.0.1:3360/';
+// SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/
+const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/';
 
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
@@ -910,8 +910,13 @@ async function postUserInfo(username) {
             const newUserInfo = {
                 username: username,
                 health: {
+                    name: existingUserInfo.health.name,
+                    age: existingUserInfo.health.age,
                     height: height,
-                    weight: weight
+                    weight: weight,
+                    gender: existingUserInfo.health.gender,
+                    fitnessGoal: existingUserInfo.health.fitnessGoal,
+                    activityLevel: existingUserInfo.health.activityLevel
                 },
                 mastery: existingUserInfo.mastery,
                 hiddenRank: existingUserInfo.hiddenRank,

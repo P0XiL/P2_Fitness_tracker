@@ -68,5 +68,39 @@
         "exercise": "walk"
       }
     }
+  },
+  "Lenny": {
+    "daily": {
+      "14/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "14/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "14/5/2024": {
+        "type": "lowerbody"
+      }
+    }
+  },
+  "Lenny2": {
+    "daily": {
+      "14/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "14/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "14/5/2024": {
+        "type": "core"
+      }
+    }
   }
 }
