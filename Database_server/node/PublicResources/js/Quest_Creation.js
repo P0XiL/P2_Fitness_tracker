@@ -121,8 +121,8 @@ async function display_quest(quest, user) {
                             location.reload();
                         }
                     } catch (error) {
-                        //If there exit a prevous quest console the error
-                        if (Object.keys(quest_log[user][questTimespan]) > 0){
+                        //If the object is empty ignore the error
+                        if (!is_empty_object(quest_log[user][questTimespan])){
                             console.error(error);
                         }
                         
