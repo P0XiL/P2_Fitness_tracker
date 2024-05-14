@@ -81,16 +81,43 @@
     "daily": {
       "13/5/2024": {
         "type": "lowerbody"
+      },
+      "14/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "0",
+        "target": 3,
+        "amount": 10,
+        "text": "Do 3 lunges",
+        "state": "complete",
+        "exercise": "lunges"
       }
     },
     "weekly": {
       "13/5/2024": {
         "type": "cardio"
+      },
+      "14/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 5,
+        "amount": 11,
+        "text": "Go for a walk for 5 minutes",
+        "state": "complete",
+        "exercise": "walk"
       }
     },
     "monthly": {
       "13/5/2024": {
         "type": "lowerbody"
+      },
+      "15/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 5,
+        "amount": 11,
+        "text": "Go for a walk for 5 minutes",
+        "state": "complete",
+        "exercise": "walk"
       }
     }
   }

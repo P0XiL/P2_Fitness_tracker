@@ -316,6 +316,10 @@ function buttonClicked(friend) {
     localStorage.setItem("friend", friend);
 
     friendtext("Friendheader", "friendheader2");
+
+    const container = document.getElementById("statsTextFriend")
+    container.innerHTML = "";
+    individual_type(friend, "statsTextFriend" );
 }
 
 // Function to handle storing login state
