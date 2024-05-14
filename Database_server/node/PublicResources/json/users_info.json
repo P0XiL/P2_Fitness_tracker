@@ -213,7 +213,7 @@
         },
         "walk": {
           "rank": 1,
-          "elo": 0
+          "elo": 50
         },
         "cycling": {
           "rank": 1,
@@ -225,11 +225,11 @@
         },
         "lunges": {
           "rank": 1,
-          "elo": 0
+          "elo": 50
         },
         "wallsit": {
           "rank": 1,
-          "elo": 0
+          "elo": 100
         },
         "plank": {
           "rank": 1,
@@ -272,14 +272,14 @@
       "tier": {
         "daily": {
           "rank": 1,
-          "elo": 0
+          "elo": 50
         },
         "weekly": {
-          "rank": 1,
-          "elo": 0
+          "rank": 4,
+          "elo": 10
         },
         "monthly": {
-          "rank": 1,
+          "rank": 16,
           "elo": 0
         }
       },

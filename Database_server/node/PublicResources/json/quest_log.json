@@ -70,19 +70,20 @@
     }
   },
   "Lenny": {
-    "daily": {
-      "14/5/2024": {
-        "type": "upperbody"
-      }
-    },
-    "weekly": {
-      "14/5/2024": {
-        "type": "upperbody"
-      }
+    "daily": {}
     },
     "monthly": {
       "14/5/2024": {
         "type": "lowerbody"
+      },
+      "15/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 5,
+        "amount": 11,
+        "text": "Go for a walk for 5 minutes",
+        "state": "complete",
+        "exercise": "walk"
       }
     }
   },
