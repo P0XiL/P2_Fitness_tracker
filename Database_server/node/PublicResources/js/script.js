@@ -280,22 +280,23 @@ document.getElementById('friendSubmitBtn').addEventListener('click', function() 
 function friendList() {
     fetchJSON("json/users_info.json")
     .then(data => {
-        let username = localStorage.getItem("username");
-        var container = document.getElementById("friendslist")
+        const username = localStorage.getItem("username");
+        const container = document.getElementById("friendslist")
         container.innerHTML = "";
 
-        var friends = data.users_info[username].friends;
+        const friends = data.users_info[username].friends;
 
-        var list = document.createElement("ul");
+        const list = document.createElement("ul");
         list.classList.add("friend-list");
 
         friends.forEach(function(friend) {
-            var listItem = document.createElement("li");
+            const listItem = document.createElement("li");
             listItem.classList.add("friend-item");
 
-            var link = document.createElement("a");
+            const link = document.createElement("a");
             link.href = "#";
-            link.textContent = friend;
+            link.textContent = "- " + friend.charAt(0).toUpperCase() + friend.slice(1);
+            link.className = "friend-link";
 
             link.addEventListener("click", function(event) {
                 event.preventDefault();
@@ -324,6 +325,9 @@ function buttonClicked(friend) {
     localStorage.setItem("friend", friend);
 
     friendtext("Friendheader", "friendheader2");
+    const container = document.getElementById("statsTextFriend")
+    container.innerHTML = "";
+    individual_type(friend, "statsTextFriend");
 }
 
 // Function to handle storing login state
