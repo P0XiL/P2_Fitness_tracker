@@ -6,8 +6,14 @@
     "pog": {
       "password": "1"
     },
-    "Champ": {
-      "password": "1"
+    "Lenny": {
+      "password": "123"
+    },
+    "Lenny2": {
+      "password": "123"
+    },
+    "Tobi": {
+      "password": "123"
     }
   }
 }
