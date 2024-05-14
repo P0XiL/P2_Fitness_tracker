@@ -94,13 +94,17 @@
 
         <button id="toggleAddFriendsPage">Add friends</button>
 
+        <div id="friendslist">
+
+        </div>
+
     </div>
 
     <div id="addFriends" class="page center">
         <h2>Add friends</h2>
 
         <input type="text" name="friend_username" placeholder="Name">
-        <button type="submit" id="friendSubmitBtn" onclick="Make_href('friends', name)">Add Friend</button>
+        <button type="submit" id="friendSubmitBtn">Add Friend</button>
         <br>
         <span id="friendErrorMessage"></span>
 
@@ -236,7 +240,7 @@
     </div>
 
     <div id="userfriend" class="page center">
-        <h2>Users friends name goes here + stats</h2>
+        <h2 id="Friendheader"></h2>
         <p id="statsTextFriend"></p>
 
 
@@ -263,7 +267,7 @@
         </div>
 
         <div>
-            <h1>Comparing graph with !friends name goes here! </h1>
+            <h1 id="friendheader2"></h1>
             <p id="textfriend"> </p>
             <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
         </div>
