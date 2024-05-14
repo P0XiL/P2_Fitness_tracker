@@ -4,7 +4,6 @@ try {
     // Close the dropdowns if the user clicks outside of it
 
   individual_type(user, "statsTextUser");
-  individual_type("sad", "statsTextFriend" );
 
   } else {
     console.error("Failed getting user")
@@ -132,6 +131,7 @@ function plot(type) {
 function plot_with_friends(type) {
   // Get the canvas element
   let user = localStorage.getItem("username");
+  let friend = localStorage.getItem("friend");
   let ctx = document.getElementById("myChart2").getContext("2d");
 
   Promise.all([user_data_x(user, type), user_data_x(friend, type), user_data_y(user, type), user_data_y(friend, type)])
@@ -148,7 +148,7 @@ function plot_with_friends(type) {
         data: [],
       };
       const dataset_user2 = {
-        label: user2,
+        label: friend,
         fill: false,
         lineTension: 0,
         backgroundColor: "rgba(255,255,255,1)",
@@ -210,7 +210,6 @@ function user_data_y(user, exercise) {
           }
         }
       }
-      console.log(amounts);
       return amounts;
     })
     .catch(error => {
@@ -242,7 +241,6 @@ function user_data_x(user, exercise) {
           }
         }
       }
-      console.log(dates);
       return dates;
     })
     .catch(error => {
@@ -287,6 +285,7 @@ function recommended(type){
   }
 }
 
+
 /**
  * Opens the dropdown
  * @param {String} ID - Opens a dropdown for a given ID
@@ -328,4 +327,13 @@ function change_text(type, elemetID) {
   const element = document.getElementById(elemetID);
   // Change the text content
   element.innerHTML = "This Graph is based on type:  " + type;
+}
+
+function friendtext(elementID1, elementID2){
+  friend = localStorage.getItem("friend");
+  const element1 = document.getElementById(elementID1);
+  const element2 = document.getElementById(elementID2);
+
+  element1.innerHTML = " " + friend + " Stats";
+  element2.innerHTML = "Comparing graph with " + friend;
 }

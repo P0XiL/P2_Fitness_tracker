@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Add 'active' class to tab which has been clicked
             document.getElementById(targetId).classList.add('active');
 
+            if(targetId === 'friends'){
+                friendList();
+            }
+
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
                 setupProfilePage(localStorage.getItem('username'));
@@ -196,11 +200,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
 
-        const createAccountPage = document.getElementById('userfriend');
-        const loginPage = document.getElementById('friends');
+        const userfriendpage = document.getElementById('userfriend');
+        const friendPage = document.getElementById('friends');
 
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
+        friendPage.classList.remove('active');
+        userfriendpage.classList.add('active');
     });
 
     document.getElementById('toggleAddFriendsPage').addEventListener('click', function (e) {
@@ -269,6 +273,62 @@ function clearFriendErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
+document.getElementById('friendSubmitBtn').addEventListener('click', function() {
+    friendList();
+});
+
+function friendList() {
+    fetchJSON("json/users_info.json")
+    .then(data => {
+        const username = localStorage.getItem("username");
+        const container = document.getElementById("friendslist")
+        container.innerHTML = "";
+
+        const friends = data.users_info[username].friends;
+
+        const list = document.createElement("ul");
+        list.classList.add("friend-list");
+
+        friends.forEach(function(friend) {
+            const listItem = document.createElement("li");
+            listItem.classList.add("friend-item");
+
+            const link = document.createElement("a");
+            link.href = "#";
+            link.textContent = "- " + friend.charAt(0).toUpperCase() + friend.slice(1);
+            link.className = "friend-link";
+
+            link.addEventListener("click", function(event) {
+                event.preventDefault();
+                buttonClicked(friend);
+            });
+
+            listItem.appendChild(link);
+
+            list.appendChild(listItem);
+        });
+
+        container.appendChild(list);
+    });
+}
+
+function buttonClicked(friend) {
+    const addFriendsPage = document.getElementById('userfriend');
+    const friendsPage = document.getElementById('friends');
+
+    friendsPage.classList.remove('active');
+    addFriendsPage.classList.add('active');
+
+    if(localStorage.getItem("friend") !== null){
+        localStorage.removeItem("friend")
+    }
+    localStorage.setItem("friend", friend);
+
+    friendtext("Friendheader", "friendheader2");
+    const container = document.getElementById("statsTextFriend")
+    container.innerHTML = "";
+    individual_type(friend, "statsTextFriend");
+}
 
 // Function to handle storing login state
 function storeLoginState(username) {
