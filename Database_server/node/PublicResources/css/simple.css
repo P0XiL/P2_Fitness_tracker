@@ -444,3 +444,29 @@ canvas {
 #logoutBtn:hover {
   background-color: #45a049;
 }
+
+.friend-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.friend-item {
+  margin-bottom: 5px;
+  max-width: 50px; /* Adjust the value as needed */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.friend-item a {
+  display: block;
+  padding: 5px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #333;
+}
+
+.friend-item a:hover {
+  background-color: #ddd;
+}

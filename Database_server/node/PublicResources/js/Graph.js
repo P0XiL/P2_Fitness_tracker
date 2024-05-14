@@ -4,7 +4,7 @@ try {
     // Close the dropdowns if the user clicks outside of it
 
   individual_type(user, "statsTextUser");
-  individual_type("user", "statsTextFriend" );
+  individual_type("sad", "statsTextFriend" );
 
   } else {
     console.error("Failed getting user")
@@ -31,7 +31,7 @@ function individual_type(user, elementID) {
           amount = data[user][period][key].amount;
           if (!processedTypes[exercise]) { // Check if type has already been processed
             processedTypes[exercise] = true;
-            if (amount !== 0 && !isNaN(amount)) {
+            if (!isNaN(amount)) {
               const element = document.getElementById(elementID);
               try {
                 element.innerHTML += `<pre id=${exercise} sum=${amount}>Amount of ${exercise} = ${amount} \n\n</pre>`;
@@ -40,10 +40,10 @@ function individual_type(user, elementID) {
               }
             }
           } else {
-            if (amount !== 0 && !isNaN(amount)) {
+            if(!isNaN(amount)){
               const path = document.getElementById(exercise);
               const newsum = parseInt(path.getAttribute("sum")) + amount;
-              path.setAttribute("sum", newsum);
+              path.setAttribute("sum", newsum);              
               path.textContent = `Amount of ${exercise} = ${newsum} \n\n`;
             }
           }
@@ -60,51 +60,58 @@ let pretype = "run";
 /**
  * Updates the graph
  * @param {string} type
- * @param {string} period - Quest timespan
  */
-function update_graph(type, period) {
-  const user = localStorage.getItem("username");
-  if (type === null && period !== null) {
-    plot(user, pretype, period);
-    change_text(pretype, period, "text");
-    prePeriod = period;
-  }
-  else if (type !== null && period === null) {
-    plot(user, type, prePeriod);
-    change_text(type, prePeriod, "text");
-    pretype = type;
-  } else {
-    plot(user, pretype, prePeriod);
-    change_text(pretype, preperiod, "text");
-  }
+function update_graph(type, id) {
+    let user = localStorage.getItem("username");
+    plot(type);
+    change_text(type, id);
 }
 
+function update_graph_friend(type, id){
+  plot_with_friends(type);
+  change_text(type, id);
+}
 /**
  * Plots the graph for user
  * @param {string} user - User ID 
  * @param {string} type
- * @param {string} period - Quest timespan 
  */
-function plot(user, type, period) {
+function plot(type) {
   const ctx = document.getElementById("myChart");
+  const user = localStorage.getItem("username");
 
-  Promise.all([user_data_x(user, type, period), user_data_y(user, type, period)])
+  Promise.all([user_data_x(user, type), user_data_y(user, type)])
     .then(([labels, data]) => {
-      const maxVal = data.length > 0 ? Math.max(...data) + 1 : 10;
-      const myChart = new Chart(ctx, {
-        type: "bar",
+      let maxVal = data.length > 0 ? Math.max(...data) + 1 : 10;
+
+      // Calculate the average of the data
+      let average = recommended(type);
+      maxVal = Math.max(maxVal, average + 1);
+
+      let myChart = new Chart(ctx, {
+        type: "line",
         data: {
           labels: labels,
           datasets: [{
             fill: false,
+            label: user,
             lineTension: 0,
             backgroundColor: "rgba(255,164,0,255)",
-            borderColor: "rgba(0,0,255,0.5)",
+            borderColor: "rgba(255,164,0,255)",
             data: data,
+          },
+          {
+            type: 'line',
+            label: 'Recommended',
+            borderColor: 'rgba(255, 99, 132, 0.5)',
+            borderWidth: 2,
+            data: Array(data.length).fill(average), // Array of average values
+            fill: false,
+            borderDash: [5, 5] // Add dashed border for distinction
           }]
         },
         options: {
-          legend: { display: false },
+          legend: { display: true },
           scales: {
             yAxes: [{ ticks: { min: 0, max: maxVal } }],
           }
@@ -116,47 +123,19 @@ function plot(user, type, period) {
     });
 }
 
-
-
-
-// TODO when friends json is done
-let prePeriodFriend = "daily";
-let pretypeFriend = "run";
-/**
- * Updates the friend graph
- * @param {string} user - ID for the user 
- * @param {string} friend - ID for friend 
- * @param {string} [type] - Type of exercise 
- * @param {string} [period] - Quest timespan 
- */
-function update_graph_friend(user, friend, type, period) {
-  if (type === null && period !== null) {
-    plot_with_friends(user, friend, pretypeFriend, period);
-    change_text(pretypeFriend, period, "textfriend");
-    prePeriodFriend = period;
-  }
-  else if (type !== null && period === null) {
-    plot_with_friends(user, friend, type, prePeriodFriend);
-    change_text(type, prePeriodFriend, "textfriend");
-    pretypeFriend = type;
-  } else {
-    plot_with_friends(user, friend, pretypeFriend, prePeriodFriend);
-    change_text(type, period, "textfriend");
-  }
-}
-
 /**
  * Plot the graph with friends
  * @param {string} user - User ID 
  * @param {string} friend - Friend ID
  * @param {string} type - Type of quest
- * @param {string} period - The timespan
  */
-function plot_with_friends(user, friend, type, period) {
-  //Get the canvas element
-  const ctx = document.getElementById("myChart2").getContext("2d");
+function plot_with_friends(type) {
+  // Get the canvas element
+  let user = localStorage.getItem("username");
+  let friend = localStorage.getItem("friend");
+  let ctx = document.getElementById("myChart2").getContext("2d");
 
-  Promise.all([user_data_x(user, type, period), user_data_x(friend, type, period), user_data_y(user, type, period), user_data_y(friend, type, period)])
+  Promise.all([user_data_x(user, type), user_data_x(friend, type), user_data_y(user, type), user_data_y(friend, type)])
     .then(([labels_user1, labels_user2, data_user1, data_user2]) => {
       //Sort the two x data
       const all_labels = [...new Set([...labels_user1, ...labels_user2])].sort();
@@ -170,7 +149,7 @@ function plot_with_friends(user, friend, type, period) {
         data: [],
       };
       const dataset_user2 = {
-        label: user2,
+        label: friend,
         fill: false,
         lineTension: 0,
         backgroundColor: "rgba(255,255,255,1)",
@@ -216,19 +195,27 @@ function plot_with_friends(user, friend, type, period) {
  * @param {string} period - Quest timespan
  * @returns {array} An array, with data for y-axis
  */
-function user_data_y(user, exercise, period) {
+function user_data_y(user, exercise) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
-      const y = [];
-      for (let date in data[user][period]) {
-        if (data[user][period][date].exercise === exercise) {
-          y.push(data[user][period][date].amount);
+      let amounts = [0];
+      for (let period in data[user]) {
+        for (let date in data[user][period]) {
+          if (data[user][period][date].exercise === exercise) {
+            // Check if any other exercise type exists for this date
+            let otherTypes = Object.values(data[user][period][date])
+              .filter(item => typeof item === 'object' && item.exercise !== exercise);
+            if (otherTypes.length === 0) {
+              amounts.push(data[user][period][date].amount);
+            }
+          }
         }
       }
-      return y;
+      return amounts;
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
+      return []; // Return an empty array in case of an error
     });
 }
 
@@ -239,21 +226,66 @@ function user_data_y(user, exercise, period) {
  * @param {string} period - Quest timespan
  * @returns {array}  An array, with data for y-axis
  */
-function user_data_x(user, exercise, period) {
+function user_data_x(user, exercise) {
   return fetchJSON("json/quest_log.json")
     .then(data => {
-      const x = [];
-      for (let key in data[user][period]) {
-        if (data[user][period][key].exercise === exercise) {
-          x.push(key);
+      let dates = ["1/1/2024"];
+      for (let period in data[user]) {
+        for (let date in data[user][period]) {
+          if (data[user][period][date].exercise === exercise && !dates.includes(date)) {
+            // Check if any other exercise type exists for this date
+            let otherTypes = Object.values(data[user][period][date])
+              .filter(item => typeof item === 'object' && item.exercise !== exercise);
+            if (otherTypes.length === 0) {
+              dates.push(date);
+            }
+          }
         }
       }
-      return x;
+      return dates;
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
+      return []; // Return an empty array in case of an error
     });
 }
+
+
+function recommended(type){
+  switch(type) {
+    case 'run':
+      return 15
+    case 'walk':
+      return 10
+    case 'cycling':
+      return 30
+    case 'plank':
+      return 1
+    case 'situp':
+      return 10
+    case 'backextentions':
+      return 10
+    case 'burpees':
+      return 15
+    case 'crunches':
+      return 15
+    case 'squats':
+      return 15
+    case 'lunges':
+      return 10
+    case 'wallsit':
+      return 15
+    case 'pushup':
+      return 15
+    case 'dips':
+      return 10
+    case 'armcircles':
+      return 10
+    default:
+      console.log("type not vailded");
+  }
+}
+
 
 /**
  * Opens the dropdown
@@ -291,9 +323,18 @@ function dropdown_window_click() {
  * @param {string} period - Quest timespan
  * @param {string} elemetID - ID to element
  */
-function change_text(type, period, elemetID) {
+function change_text(type, elemetID) {
   // Get the element with the id "text"
   const element = document.getElementById(elemetID);
   // Change the text content
-  element.innerHTML = "This Graph is based on type:  " + type + " in period: " + period;
+  element.innerHTML = "This Graph is based on type:  " + type;
+}
+
+function friendtext(elementID1, elementID2){
+  friend = localStorage.getItem("friend");
+  const element1 = document.getElementById(elementID1);
+  const element2 = document.getElementById(elementID2);
+
+  element1.innerHTML = " " + friend + " Stats";
+  element2.innerHTML = "Comparing graph with " + friend;
 }

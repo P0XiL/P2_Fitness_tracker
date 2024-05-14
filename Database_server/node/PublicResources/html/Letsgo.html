@@ -16,7 +16,6 @@
                 <li><a href="#main" class="active"><img src="image/quest_marker.png" class="nav-img">Quests</a></li><br>
                 <li><a href="#friends"><img src="image/friends.png" class="nav-img">Friends</a></li><br>
                 <li><a href="#stats"><img src="image/stats.png" class="nav-img">Stats</a></li>
-                <li><a href="#profilepage" id="profile-link">Profile</a></li>
             </ul>
     </nav>
 
@@ -44,7 +43,8 @@
         <div class="modal-content">
             <h2 id="InputHeader"></h2>
             <h3 id="InputPopupText">Enter a number below to change the amount done:</h3>
-            <input type="text" class="input-field" id="InputInputfield" name="InputInputfield" placeholder="Enter amount here" value="">
+            <input type="text" class="input-field" id="InputInputfield" name="InputInputfield"
+                placeholder="Enter amount here" value="">
             <button id="close_input" class="close-button">&#x2715;</button>
             <div class="buttons-wrapper">
                 <button id="subtract" class="difficulty-button">Subtract</button>
@@ -82,7 +82,7 @@
             </div>
         </div>
     </div>
-    
+
 
 
 
@@ -93,6 +93,10 @@
         <a href="#" id="toggleFriendPageLink" class="dropbtn">Show friends</a>
 
         <button id="toggleAddFriendsPage">Add friends</button>
+
+        <div id="friendslist">
+
+        </div>
 
     </div>
 
@@ -107,43 +111,6 @@
 
     </div>
 
-
-    <div id="FriendsPlot" class="page center">
-
-        <h2>Friends</h2>
-
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="dropdown_close2()" class="dropbtn">Change type</button>
-                <div id="myDropdown2" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
-                    <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
-                    <a href="#" onclick="update_graph_friend(null, null,'lowerbody', null)">Lowerbody</a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="dropdown_close3()" class="dropbtn">Change period</button>
-                <div id="myDropdown3" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
-                    <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
-                    <a href="#" onclick="update_graph_friend(null, 'monthly')">Monthly</a>
-                </div>
-            </div>
-        </div>
-
-
-        <p id="textfriend"> </p>
-
-        <div>
-            <h1>Graph with friends </h1>
-            <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
-        </div>
-    </div>
-
     <div id="stats" class="page center">
         <h2>Stats</h2>
         <p id="statsTextUser"></p>
@@ -152,32 +119,20 @@
             <div class="dropdown">
                 <button onclick="dropdown_toggle('myDropdown')" class="dropbtn">Change type</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" onclick="update_graph('run', null)">Run</a>
-                    <a href="#" onclick="update_graph('walk', null)">Walk</a>
-                    <a href="#" onclick="update_graph('cycling', null)">Cycling</a>
-                    <a href="#" onclick="update_graph('plank', null)">Plank</a>
-                    <a href="#" onclick="update_graph('situp', null)">Situp</a>
-                    <a href="#" onclick="update_graph('backextentions', null)">Backextentions</a>
-                    <a href="#" onclick="update_graph('burpees', null)">Burpees</a>
-                    <a href="#" onclick="update_graph('crunches', null)">Crunches</a>
-                    <a href="#" onclick="update_graph('squats', null)">Squats</a>
-                    <a href="#" onclick="update_graph('lunges', null)">Lunges</a>
-                    <a href="#" onclick="update_graph('wallsit', null)">Wallsit</a>
-                    <a href="#" onclick="update_graph('pushups', null)">Pushups</a>
-                    <a href="#" onclick="update_graph('dips', null)">Dips</a>
-                    <a href="#" onclick="update_graph('armcircles', null)">Armcircles</a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="dropdown_toggle('myDropdown1')" class="dropbtn">Change period</button>
-                <div id="myDropdown1" class="dropdown-content">
-                    <a href="#" onclick="update_graph(null, 'daily')">Daily</a>
-                    <a href="#" onclick="update_graph(null, 'weekly')">Weekly</a>
-                    <a href="#" onclick="update_graph(null, 'monthly')">Monthly</a>
+                    <a href="#" onclick="update_graph('run','text')">Run</a>
+                    <a href="#" onclick="update_graph('walk','text')">Walk</a>
+                    <a href="#" onclick="update_graph('cycling','text')">Cycling</a>
+                    <a href="#" onclick="update_graph('plank','text')">Plank</a>
+                    <a href="#" onclick="update_graph('situp','text')">Situp</a>
+                    <a href="#" onclick="update_graph('backextentions','text')">Backextentions</a>
+                    <a href="#" onclick="update_graph('burpees','text')">Burpees</a>
+                    <a href="#" onclick="update_graph('crunches','text')">Crunches</a>
+                    <a href="#" onclick="update_graph('squats','text')">Squats</a>
+                    <a href="#" onclick="update_graph('lunges','text')">Lunges</a>
+                    <a href="#" onclick="update_graph('wallsit','text')">Wallsit</a>
+                    <a href="#" onclick="update_graph('pushups','text')">Pushups</a>
+                    <a href="#" onclick="update_graph('dips','text')">Dips</a>
+                    <a href="#" onclick="update_graph('armcircles','text')">Armcircles</a>
                 </div>
             </div>
         </div>
@@ -192,34 +147,39 @@
 
     <div id="createAccount" class="page">
         <h2>Create account</h2>
-        <p>Username</p>
-        <input type="text" name="create_username" required> <!-- Add name attribute for username field -->
-        <p>Password</p>
-        <input type="password" name="create_password" required> <!-- Add name attribute for password field -->
-        <p>Confirm password</p>
-        <input type="password" name="create_confirm_password" required>
-        <br>
-        <span id="createErrorMessage"></span> <!-- Error message placeholder -->
-        <br>
-        <a href="#" id="toggleCreatePageLink">Already have an account? Login here</a>
-        <br><br>
-        <button id="submitBtn" type="submit">Create user</button> <!-- Add submit button -->
+        <form>
+            <label for="create_username">Username</label>
+            <input type="text" name="create_username" required> <br><br>
+            <label for="create_password">Password</label>
+            <input type="password" name="create_password" required> <br><br>
+            <label for="create_confirm_password">Confirm password</label>
+            <input type="password" name="create_confirm_password" required>
+            <br>
+            <span id="createErrorMessage"></span> <!-- Error message placeholder -->
+            <br>
+            <a href="#" id="toggleCreatePageLink">Already have an account? Login here</a>
+            <br><br>
+            <button id="submitBtn" type="submit">Create user</button> <!-- Add submit button -->
+        </form>
     </div>
 
     <!-- Login Form -->
     <div id="loginPage" class="page">
         <h2>Login</h2>
-        <label for="login_username">Username</label>
-        <input type="text" name="login_username" required><br><br>
-        <label for="login_password">Password</label>
-        <input type="password" name="login_password" required>
-        <br>
-        <span id="loginErrorMessage"></span>
-        <br>
-        <a href="#" id="toggleLoginPageLink">Don't have an account? Create one here</a>
-        <br><br>
-        <button id="loginBtn" type="submit">Login</button>
+        <form id="loginForm">
+            <label for="login_username">Username</label>
+            <input type="text" name="login_username" required><br><br>
+            <label for="login_password">Password</label>
+            <input type="password" name="login_password" required>
+            <br>
+            <span id="loginErrorMessage"></span>
+            <br>
+            <a href="#" id="toggleLoginPageLink">Don't have an account? Create one here</a>
+            <br><br>
+            <button id="loginBtn" type="submit">Login</button>
+        </form>
     </div>
+
 
     <div id="profilepage" class="page">
         <div class="profileHeader-container" id="profile_Username">
@@ -263,9 +223,11 @@
 
             <div id="userInfo" class="profile_layout">
                 <h2 style="text-align: center;">User info</h2>
-                <p>Height: <input type="text" id="Height" value="${userInfo.health.height}"> cm</p>
-                <p>Weight: <input type="text" id="Weight" value="${userInfo.health.weight}"> kg</p>
-                <button onclick="postUserInfo('${username}')">Save User Info</button>
+                <form>
+                    <p>Height: <input type="number" id="Height" value="${userInfo.health.height}" required> cm</p>
+                    <p>Weight: <input type="number" id="Weight" value="${userInfo.health.weight}" required> kg</p>
+                    <button type="submit" onclick="postUserInfo('${username}')">Save User Info</button>
+                </form>
                 <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
                 <canvas id="bmiGraph" width="30" height="20"></canvas>
             </div>
@@ -278,7 +240,7 @@
     </div>
 
     <div id="userfriend" class="page center">
-        <h2>Users friends name goes here + stats</h2>
+        <h2 id="Friendheader"></h2>
         <p id="statsTextFriend"></p>
 
 
@@ -286,87 +248,86 @@
             <div class="dropdown">
                 <button onclick="dropdown_toggle('myDropdown2')" class="dropbtn">Change type</button>
                 <div id="myDropdown2" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend(null, null, 'cardio', null)">Cardio</a>
-                    <a href="#" onclick="update_graph_friend(null, null,'core', null)">Core</a>
-                    <a href="#" onclick="update_graph_friend(null, null,'lowerbody', null)">Lowerbody</a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="dropdown_toggle('myDropdown3')" class="dropbtn">Change period</button>
-                <div id="myDropdown3" class="dropdown-content">
-                    <a href="#" onclick="update_graph_friend(null, 'daily')">Daily</a>
-                    <a href="#" onclick="update_graph_friend(null, 'weekly')">Weekly</a>
-                    <a href="#" onclick="update_graph_friend(null, 'monthly')">Monthly</a>
+                    <a href="#" onclick="update_graph_friend('run','textfriend')">Run</a>
+                    <a href="#" onclick="update_graph_friend('walk','textfriend')">Walk</a>
+                    <a href="#" onclick="update_graph_friend('cycling','textfriend')">Cycling</a>
+                    <a href="#" onclick="update_graph_friend('plank','textfriend')">Plank</a>
+                    <a href="#" onclick="update_graph_friend('situp','textfriend')">Situp</a>
+                    <a href="#" onclick="update_graph_friend('backextentions','textfriend')">Backextentions</a>
+                    <a href="#" onclick="update_graph_friend('burpees','textfriend')">Burpees</a>
+                    <a href="#" onclick="update_graph_friend('crunches','textfriend')">Crunches</a>
+                    <a href="#" onclick="update_graph_friend('squats','textfriend')">Squats</a>
+                    <a href="#" onclick="update_graph_friend('lunges','textfriend')">Lunges</a>
+                    <a href="#" onclick="update_graph_friend('wallsit','textfriend')">Wallsit</a>
+                    <a href="#" onclick="update_graph_friend('pushups','textfriend')">Pushups</a>
+                    <a href="#" onclick="update_graph_friend('dips','textfriend')">Dips</a>
+                    <a href="#" onclick="update_graph_friend('armcircles','textfriend')">Armcircles</a>
                 </div>
             </div>
         </div>
 
         <div>
-            <h1>Comparing graph with !friends name goes here! </h1>
+            <h1 id="friendheader2"></h1>
             <p id="textfriend"> </p>
             <canvas id="myChart2" style="width:100%;max-width:1000px"></canvas>
         </div>
 
     </div>
 
-        <div id="surveyContainer">
-         <form id="surveyForm" class="page">   
+    <div id="surveyContainer">
+        <form id="surveyForm" class="page">
             <h1>Welcome to LetsGo! </h1>
             <h2>Personal Information:</h2>
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required><br><br>
-    
+
             <label for="age">Age:</label>
             <input type="number" id="age" name="age" required><br><br>
-    
+
             <label for="gender">Gender:</label>
             <select id="gender" name="gender" required>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="Other">Other</option>
             </select><br><br>
-    
+
             <label for="height">Height (in cm):</label>
             <input type="number" id="height" name="height" required><br><br>
-    
+
             <label for="weight">Weight (in kg):</label>
             <input type="number" id="weight" name="weight" required><br><br>
-    
+
             <h2>Fitness Goals:</h2>
             <input type="checkbox" id="weightLoss" name="fitnessGoal" value="weightLoss">
             <label for="weightLoss">Weight loss</label><br>
-    
+
             <input type="checkbox" id="muscleGain" name="fitnessGoal" value="muscleGain">
             <label for="muscleGain">Muscle gain</label><br>
-    
+
             <input type="checkbox" id="endurance" name="fitnessGoal" value="endurance">
             <label for="endurance">Improve endurance</label><br>
-    
+
             <h2>Activity Level:</h2>
             <input type="radio" id="sedentary" name="activityLevel" value="sedentary">
             <label for="sedentary">Sedentary</label><br>
-    
+
             <input type="radio" id="lightlyActive" name="activityLevel" value="lightlyActive">
             <label for="lightlyActive">Lightly active</label><br>
-    
+
             <input type="radio" id="moderatelyActive" name="activityLevel" value="moderatelyActive">
             <label for="moderatelyActive">Moderately active</label><br>
-    
+
             <input type="radio" id="veryActive" name="activityLevel" value="veryActive">
             <label for="veryActive">Very active</label><br>
-    
+
             <input type="radio" id="extremelyActive" name="activityLevel" value="extremelyActive">
             <label for="extremelyActive">Extremely active</label><br><br>
-    
+
             <button type="submit">Submit</button>
         </form>
     </div>
 
-    
+
 
     <!-- JavaScript to handle navigation -->
     <script src="js/script.js"></script>

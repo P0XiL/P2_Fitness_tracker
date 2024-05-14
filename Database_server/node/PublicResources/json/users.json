@@ -1,10 +1,13 @@
 {
   "obj_users": {
-    "1": {
-      "password": "1"
+    "Tobias": {
+      "password": "123"
     },
-    "poggo": {
-      "password": "1"
+    "Tobi": {
+      "password": "123"
+    },
+    "sad": {
+      "password": "123"
     }
   }
 }

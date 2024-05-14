@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Add 'active' class to tab which has been clicked
             document.getElementById(targetId).classList.add('active');
 
+            if(targetId === 'friends'){
+                friendList();
+            }
+
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
                 setupProfilePage(localStorage.getItem('username'));
@@ -69,8 +73,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleSurveyFormSubmit() {
         const form = document.getElementById('surveyForm');
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var NameInput = document.getElementById('name');
+
+            if (/\d/.test(NameInput.value)) {
+                alert('Username cannot contain numbers.');
+                return;
+            }
 
             // Extracting specific parameters from form data
             const formData = new FormData(form);
@@ -92,7 +103,8 @@ document.addEventListener('DOMContentLoaded', function () {
             sendSurveyData(surveyData);
 
             // Set a flag in local storage indicating that the user has completed the survey
-            localStorage.setItem('surveyCompleted', 'true');
+            const userSurveyKey = `surveyCompleted_${userId}`;
+            localStorage.setItem(userSurveyKey, 'true');
 
             location.reload();
 
@@ -161,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.getElementById('loginBtn').addEventListener('click', function (e) {
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
 
         // Get username and password values
@@ -188,11 +200,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent default link behavior
 
-        const createAccountPage = document.getElementById('userfriend');
-        const loginPage = document.getElementById('friends');
+        const userfriendpage = document.getElementById('userfriend');
+        const friendPage = document.getElementById('friends');
 
-        loginPage.classList.remove('active');
-        createAccountPage.classList.add('active');
+        friendPage.classList.remove('active');
+        userfriendpage.classList.add('active');
     });
 
     document.getElementById('toggleAddFriendsPage').addEventListener('click', function (e) {
@@ -261,6 +273,58 @@ function clearFriendErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
+document.getElementById('friendSubmitBtn').addEventListener('click', function() {
+    friendList();
+});
+
+function friendList() {
+    fetchJSON("json/users_info.json")
+    .then(data => {
+        let username = localStorage.getItem("username");
+        var container = document.getElementById("friendslist")
+        container.innerHTML = "";
+
+        var friends = data.users_info[username].friends;
+
+        var list = document.createElement("ul");
+        list.classList.add("friend-list");
+
+        friends.forEach(function(friend) {
+            var listItem = document.createElement("li");
+            listItem.classList.add("friend-item");
+
+            var link = document.createElement("a");
+            link.href = "#";
+            link.textContent = friend;
+
+            link.addEventListener("click", function(event) {
+                event.preventDefault();
+                buttonClicked(friend);
+            });
+
+            listItem.appendChild(link);
+
+            list.appendChild(listItem);
+        });
+
+        container.appendChild(list);
+    });
+}
+
+function buttonClicked(friend) {
+    const addFriendsPage = document.getElementById('userfriend');
+    const friendsPage = document.getElementById('friends');
+
+    friendsPage.classList.remove('active');
+    addFriendsPage.classList.add('active');
+
+    if(localStorage.getItem("friend") !== null){
+        localStorage.removeItem("friend")
+    }
+    localStorage.setItem("friend", friend);
+
+    friendtext("Friendheader", "friendheader2");
+}
 
 // Function to handle storing login state
 function storeLoginState(username) {
@@ -279,9 +343,6 @@ function checkLoginState() {
     const sidenavigation = document.getElementById('side-nav');
     const topnavigation = document.getElementById('top-nav');
 
-    // Retrieve survey completion status from local storage
-    const surveyCompleted = localStorage.getItem('surveyCompleted');
-
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
         if (parsedLoginState.expiration > new Date().getTime()) {
@@ -296,6 +357,10 @@ function checkLoginState() {
             sidenavigation.style.display = 'block';
             topnavigation.style.display = 'block';
             document.getElementById('main').classList.add('active');
+
+            // Retrieve survey completion status from local storage
+            const userSurveyKey = `surveyCompleted_${username}`;
+            const surveyCompleted = localStorage.getItem(userSurveyKey);
 
             // Check if survey is completed, and update UI accordingly
             if (surveyCompleted === 'true') {
@@ -475,38 +540,38 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
     function createTierGridItem(container, title, imageSrc, elo, period) {
         const gridItem = document.createElement('div');
         gridItem.classList.add('tier-grid-item');
-    
+
         // Create and append tier title
         const tierTitle = document.createElement('h3');
         tierTitle.textContent = `${period}: ${title}`;
         gridItem.appendChild(tierTitle);
-    
+
         // Create and append tier image
         const tierImage = document.createElement('img');
         tierImage.src = imageSrc;
         tierImage.alt = `${title} Tier Image`;
         gridItem.appendChild(tierImage);
-    
+
         // Create and append progress bar
         const progressBar = document.createElement('div');
         progressBar.classList.add('progress-bar');
-    
+
         const maxElo = getMaxElo(period); // Get the maximum Elo for the period
-    
+
         const eloProgress = document.createElement('div');
         eloProgress.classList.add('elo-progress');
-    
+
         // Calculate percentage based on maximum Elo for the period
         const eloPercentage = (elo / maxElo) * 100;
         eloProgress.style.width = `${eloPercentage}%`; // Set width based on elo
-    
+
         progressBar.appendChild(eloProgress);
         gridItem.appendChild(progressBar);
-    
+
         // Append grid item to container
         container.appendChild(gridItem);
     }
-    
+
     // Function to get maximum Elo based on period
     function getMaxElo(period) {
         switch (period) {
@@ -520,7 +585,7 @@ function displayUserTiers(userInfo, DailyID, WeeklyID, MonthlyID) {
                 return 100; // Default to daily if period is unknown
         }
     }
-    
+
 }
 
 // Function to get the tier range
@@ -734,7 +799,7 @@ function createMasteryItem(masteryKey, mastery) {
 
     const eloProgress = document.createElement('div');
     eloProgress.classList.add('elo-progress');
-    
+
     // Scale Elo progress to fit out of 500
     const eloOutOf500 = Math.min(500, mastery.elo); // Ensure elo is capped at 500
     const eloPercentage = (eloOutOf500 / 500) * 100; // Calculate Elo percentage out of 500
