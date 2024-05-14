@@ -4,7 +4,6 @@ try {
     // Close the dropdowns if the user clicks outside of it
 
   individual_type(user, "statsTextUser");
-  individual_type("sad", "statsTextFriend" );
 
   } else {
     console.error("Failed getting user")
