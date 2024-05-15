@@ -72,37 +72,6 @@
       }
     }
   },
-  "Lenny": {
-    "daily": {
-      "14/5/2024": {
-        "type": "cardio"
-      }
-    },
-    "weekly": {
-      "14/5/2024": {
-        "type": "core"
-      }
-    },
-    "monthly": {
-      "14/5/2024": {
-        "type": "lowerbody"
-      }
-    }
-  },
-  "monthly": {
-    "14/5/2024": {
-      "type": "lowerbody"
-    },
-    "15/5/2024": {
-      "type": "cardio",
-      "difficulty": "0",
-      "target": 5,
-      "amount": 11,
-      "text": "Go for a walk for 5 minutes",
-      "state": "complete",
-      "exercise": "walk"
-    }
-  },
   "Lenny2": {
     "daily": {
       "14/5/2024": {
@@ -140,24 +109,81 @@
   "we": {
     "daily": {
       "15/5/2024": {
-        "type": "core",
-        "difficulty": "-3",
-        "target": 3,
-        "amount": 3,
-        "text": "Do 3 crunches",
-        "state": "complete",
-        "exercise": "crunches"
+        "type": "lowerbody"
       }
     },
     "weekly": {
       "15/5/2024": {
-        "type": "lowerbody",
-        "difficulty": "0",
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "15/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "test": {
+    "daily": {
+      "14/5/2024": {
+        "type": "core",
+        "difficulty": "3",
         "target": 3,
-        "amount": 32,
-        "text": "Do 3 squats",
-        "state": "complete",
-        "exercise": "squats"
+        "amount": 0,
+        "text": "Do 3 burpees",
+        "state": "incomplete",
+        "exercise": "burpees"
+      }
+    },
+    "weekly": {
+      "14/5/2024": {
+        "type": "upperbody",
+        "difficulty": "3",
+        "target": 12,
+        "amount": 0,
+        "text": "Do 12 pushups",
+        "state": "incomplete",
+        "exercise": "pushups"
+      }
+    },
+    "monthly": {
+      "14/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "3",
+        "target": 39,
+        "amount": 0,
+        "text": "Do 39 lunges",
+        "state": "incomplete",
+        "exercise": "lunges"
+      }
+    }
+  },
+  "Lenny3": {
+    "daily": {
+      "15/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "15/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "15/5/2024": {
+        "type": "lowerbody"
+      }
+    }
+  },
+  "Lenny4": {
+    "daily": {
+      "15/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "15/5/2024": {
+        "type": "cardio"
       }
     },
     "monthly": {

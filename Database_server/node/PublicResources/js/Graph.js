@@ -1,18 +1,3 @@
-try {
-  const user = localStorage.getItem("username");
-  if (typeof(user)!== "undefined") {
-    // Close the dropdowns if the user clicks outside of it
-
-  individual_type(user, "statsTextUser");
-
-  } else {
-    console.error("Failed getting user")
-  }
-
-} catch (error) {
-  console.error("Error in Graph script", error)
-}
-
 /**
  * Makes rows of text, with the stats of a given user
  * @param {string} user - ID on the user you want stats on

@@ -3,13 +3,11 @@
     "sad": {
       "username": "sad",
       "health": {
-        "name": "Pog",
-        "age": "23",
-        "height": "23",
-        "weight": "23",
-        "gender": "male",
-        "fitnessGoal": "weightLoss",
-        "activityLevel": "sedentary"
+        "name": "sad",
+        "age": "1",
+        "height": "1",
+        "weight": "1",
+        "gender": "male"
       },
       "mastery": {
         "run": {
@@ -97,7 +95,9 @@
           "upperbody": 2
         }
       },
-      "friends": []
+      "friends": [
+        "pog"
+      ]
     },
     "pog": {
       "username": "pog",
@@ -199,6 +199,104 @@
       "friends": [
         "sad"
       ]
+    },
+    "Lenny": {
+      "username": "Lenny",
+      "health": {
+        "name": "Lenny",
+        "age": "19",
+        "height": "200",
+        "weight": "100",
+        "gender": "male",
+        "fitnessGoal": "muscleGain",
+        "activityLevel": "moderatelyActive"
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 1,
+          "elo": 0
+        },
+        "squats": {
+          "rank": 1,
+          "elo": 0
+        },
+        "lunges": {
+          "rank": 1,
+          "elo": 0
+        },
+        "wallsit": {
+          "rank": 1,
+          "elo": 0
+        },
+        "plank": {
+          "rank": 1,
+          "elo": 0
+        },
+        "situps": {
+          "rank": 1,
+          "elo": 0
+        },
+        "backextentions": {
+          "rank": 1,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        },
+        "dips": {
+          "rank": 1,
+          "elo": 0
+        },
+        "armcircles": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 1,
+          "elo": 0
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {
+        "name": "balance",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      }
     },
     "Tobi": {
       "username": "Tobi",
@@ -309,15 +407,121 @@
         "fitnessGoal": "muscleGain",
         "activityLevel": "moderatelyActive"
       },
-      "friends": []
+      "preset": {
+        "name": "custom",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      }
     },
-    "Lenny": {
-      "username": "Lenny",
+    "John": {
+      "username": "John",
+      "health": {
+        "name": "John",
+        "age": "100",
+        "height": 200,
+        "weight": 90,
+        "gender": "male",
+        "fitnessGoal": "muscleGain",
+        "activityLevel": "lightlyActive"
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 1,
+          "elo": 0
+        },
+        "squats": {
+          "rank": 1,
+          "elo": 0
+        },
+        "lunges": {
+          "rank": 1,
+          "elo": 0
+        },
+        "wallsit": {
+          "rank": 1,
+          "elo": 50
+        },
+        "plank": {
+          "rank": 1,
+          "elo": 0
+        },
+        "situps": {
+          "rank": 1,
+          "elo": 50
+        },
+        "backextentions": {
+          "rank": 1,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 50
+        },
+        "dips": {
+          "rank": 1,
+          "elo": 0
+        },
+        "armcircles": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 50
+        },
+        "weekly": {
+          "rank": 4,
+          "elo": 10
+        },
+        "monthly": {
+          "rank": 7,
+          "elo": 10
+        }
+      },
+      "preset": {
+        "name": "lose weight",
+        "conf": {
+          "cardio": 7,
+          "lowerbody": 1,
+          "core": 1,
+          "upperbody": 1
+        }
+      }
+    },
+    "Lenny3": {
+      "username": "Lenny3",
       "health": {
         "name": "Lenny",
         "age": "19",
-        "height": 200,
-        "weight": 100,
+        "height": "200",
+        "weight": "100",
         "gender": "male",
         "fitnessGoal": "muscleGain",
         "activityLevel": "moderatelyActive"
@@ -407,16 +611,19 @@
           "core": 2,
           "upperbody": 2
         }
-      }
+      },
+      "friends": []
     },
-    "we": {
-      "username": "we",
+    "Lenny4": {
+      "username": "Lenny4",
       "health": {
-        "name": "we arethe firese ses",
-        "age": "23",
-        "height": "2",
-        "weight": "3",
-        "gender": "male"
+        "name": "Lenny",
+        "age": "19",
+        "height": "200",
+        "weight": "100",
+        "gender": "male",
+        "fitnessGoal": "muscleGain",
+        "activityLevel": "moderatelyActive"
       },
       "mastery": {
         "run": {
@@ -433,7 +640,7 @@
         },
         "squats": {
           "rank": 1,
-          "elo": 50
+          "elo": 0
         },
         "lunges": {
           "rank": 1,
@@ -461,7 +668,7 @@
         },
         "crunches": {
           "rank": 1,
-          "elo": 25
+          "elo": 0
         },
         "pushups": {
           "rank": 1,
@@ -484,11 +691,11 @@
       "tier": {
         "daily": {
           "rank": 1,
-          "elo": 25
+          "elo": 0
         },
         "weekly": {
-          "rank": 4,
-          "elo": 10
+          "rank": 1,
+          "elo": 0
         },
         "monthly": {
           "rank": 1,
