@@ -108,30 +108,87 @@
   },
   "Lenny": {
     "daily": {
-      "14/5/2024": {
+      "15/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "15/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "15/5/2024": {
         "type": "cardio"
+      }
+    }
+  },
+  "test": {
+    "daily": {
+      "14/5/2024": {
+        "type": "core",
+        "difficulty": "3",
+        "target": 3,
+        "amount": 0,
+        "text": "Do 3 burpees",
+        "state": "incomplete",
+        "exercise": "burpees"
       }
     },
     "weekly": {
       "14/5/2024": {
         "type": "upperbody",
-        "difficulty": "0",
-        "target": 3,
-        "amount": 5,
-        "text": "Do 3 pushups",
-        "state": "complete",
+        "difficulty": "3",
+        "target": 12,
+        "amount": 0,
+        "text": "Do 12 pushups",
+        "state": "incomplete",
         "exercise": "pushups"
       }
     },
     "monthly": {
       "14/5/2024": {
-        "type": "core",
-        "difficulty": "0",
-        "target": 9,
-        "amount": 10,
-        "text": "Do 9 situps",
-        "state": "complete",
-        "exercise": "situps"
+        "type": "lowerbody",
+        "difficulty": "3",
+        "target": 39,
+        "amount": 0,
+        "text": "Do 39 lunges",
+        "state": "incomplete",
+        "exercise": "lunges"
+      }
+    }
+  },
+  "Lenny3": {
+    "daily": {
+      "15/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "15/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "15/5/2024": {
+        "type": "lowerbody"
+      }
+    }
+  },
+  "Lenny4": {
+    "daily": {
+      "15/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "15/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "15/5/2024": {
+        "type": "cardio"
       }
     }
   }

@@ -1,21 +1,12 @@
 {
   "obj_users": {
-    "sad": {
-      "password": "1"
-    },
-    "pog": {
-      "password": "1"
-    },
     "Lenny": {
       "password": "123"
     },
-    "Lenny2": {
+    "Lenny3": {
       "password": "123"
     },
-    "Tobi": {
-      "password": "123"
-    },
-    "Lenny": {
+    "Lenny4": {
       "password": "123"
     }
   }
