@@ -9,6 +9,9 @@
         "text": "Do the plank for 10 seconds",
         "state": "complete",
         "exercise": "plank"
+      },
+      "15/5/2024": {
+        "type": "upperbody"
       }
     },
     "weekly": {
