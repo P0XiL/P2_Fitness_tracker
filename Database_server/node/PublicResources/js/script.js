@@ -31,6 +31,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 friendList();
             }
 
+            if(targetId === 'stats'){
+                const container = document.getElementById("statsTextUser")
+                container.innerHTML = "";
+                individual_type(localStorage.getItem('username'), "statsTextUser")
+            }
+
             // Fetch and display user information on the profile page
             if (targetId === 'profilepage') {
                 setupProfilePage(localStorage.getItem('username'));
