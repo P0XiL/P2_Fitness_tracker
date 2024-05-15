@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if(targetId === 'stats'){
+                const container = document.getElementById("statsTextUser")
+                container.innerHTML = "";
                 individual_type(localStorage.getItem('username'), "statsTextUser")
             }
 
