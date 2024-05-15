@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3360;
+const port = 3369;
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -41,10 +41,10 @@ function processReq(req, res) {
         case "POST":
             switch (queryPath) {
                 case "/createUser":
-                    createUser(req, res);
+                    write_create_user(req, res);
                     break;
                 case "/login":
-                    loginUser(req, res);
+                    write_login_user(req, res);
                     break;
                 case "/write_quest_json":
                     write_quest_json(req, res);
@@ -200,7 +200,7 @@ function processReq(req, res) {
     
 
 // Function to handle user login
-function loginUser(req, res) {
+function write_login_user(req, res) {
     let body = '';
     req.on('data', (chunk) => {
         body += chunk.toString();
@@ -236,7 +236,7 @@ function loginUser(req, res) {
 }
 
 // Function to handle writing user data to a JSON file
-function createUser(req, res) {
+function write_create_user(req, res) {
     let body = '';
     req.on('data', (chunk) => {
         body += chunk.toString();
