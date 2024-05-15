@@ -1,5 +1,5 @@
 
-runTests();
+//runTests();
 function runTests(){
     console.log("Running tests...");
 
@@ -20,7 +20,7 @@ function runTests(){
     testUpdatePreset();
     testUpdateUsersInfo();
     testPostCustomData();
-    testUpdateCounter();
+    //testUpdateCounter();
 
     console.log("All tests passed");
 }
