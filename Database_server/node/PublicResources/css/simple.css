@@ -1,9 +1,9 @@
 body {
   display: grid;
   grid-template-areas:
-      "h h"
-      "n m"
-      "f f";
+    "h h"
+    "n m"
+    "f f";
   grid-template-rows: 70px 1fr 60px;
   grid-template-columns: 230px 1fr;
   grid-row-gap: 0px;
@@ -22,16 +22,19 @@ header {
   background-color: #009FFD;
   font-size: 5em;
 }
-footer {grid-area: f;}
+
+footer {
+  grid-area: f;
+}
 
 #main {
   grid-area: m;
   margin: 10px;
   border: 10px;
   padding: 10px;
-  }
+}
 
-#main.page.page.active{
+#main.page.page.active {
   align-content: center;
 }
 
@@ -42,17 +45,24 @@ footer {grid-area: f;}
 
 .questpage {
   display: grid;
-  grid-template-rows: repeat(2, 1fr); /* Two rows */
-  grid-template-columns: repeat(3, 1fr); /* Three columns */
-  gap: 10px; /* Gap between grid items */
+  grid-template-rows: repeat(2, 1fr);
+  /* Two rows */
+  grid-template-columns: repeat(3, 1fr);
+  /* Three columns */
+  gap: 10px;
+  /* Gap between grid items */
 }
 
 .quest {
-  grid-row: 2 / 3; /* Quests are in the second row */
+  grid-row: 2 / 3;
+  /* Quests are in the second row */
   height: 300px;
-  width: calc(30%-20px); /* Adjust width and gap as needed */
-  background-color: #FFA400; /* Just for visualization */
-  padding: 20px; /* Adjust padding as needed */
+  width: calc(30%-20px);
+  /* Adjust width and gap as needed */
+  background-color: #FFA400;
+  /* Just for visualization */
+  padding: 20px;
+  /* Adjust padding as needed */
   border-radius: 10px;
 }
 
@@ -84,18 +94,24 @@ footer {grid-area: f;}
   grid-area: n;
   background-color: #2A2A72;
   align-content: center;
-  padding: 0 20px; /* Adjust the padding as needed */
+  padding: 0 20px;
+  /* Adjust the padding as needed */
 }
+
 .nav-img {
   max-height: 35px;
   max-width: 30px;
   margin-right: 10px;
 }
 
+
+
 #side-nav ul {
   list-style: none;
-  padding: 0; /* Remove default padding from the <ul> element */
-  margin: 0; /* Remove default margin from the <ul> element */
+  padding: 0;
+  /* Remove default padding from the <ul> element */
+  margin: 0;
+  /* Remove default margin from the <ul> element */
 }
 
 #side-nav a {
@@ -106,13 +122,24 @@ footer {grid-area: f;}
   align-items: center;
   font-size: 3em;
 }
+
 #side-nav a.active {
   color: #009FFD;
 }
 
+
+.center-heading {
+  text-align: center;
+}
+
+.right-aligned {
+  margin-left: auto;
+}
+
 /* Styles for the modal */
 .modal {
-  display: none; /* Hide the modal by default */
+  display: none;
+  /* Hide the modal by default */
   position: fixed;
   z-index: 1;
   left: 0;
@@ -120,89 +147,189 @@ footer {grid-area: f;}
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4); /* Overlay background */
+  background-color: rgba(0, 0, 0, 0.488);
+  /* Overlay background */
 }
 
 .modal-content {
-  background-color: #1f6bb2;
+  background-color: rgb(29, 37, 134);
   margin: 15% auto;
   padding: 20px;
-  border: 1px solid #888;
-  width: calc(30% - 10px);;
+  border: 1px solid #888888;
+  width: calc(30% - 10px);
+  position: relative;
 }
 
 
 meter {
   display: none;
-  width: 100%; /* Set desired width */
-  height: 12%; /* Set desired height */
-  font-size: 18px; /* Set desired font size */
+  width: 100%;
+  /* Set desired width */
+  height: 12%;
+  /* Set desired height */
+  font-size: 18px;
+  /* Set desired font size */
   /* Add any other styling properties as needed */
 }
 
-/* Style for the buttons */
+.asphalt-button {
+  background-image: url('../image/asphalt2.jpg');
+  background-size: cover;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.close-button {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 10px;
+  /* Adjust top position */
+  right: 10px;
+  /* Adjust right position */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  /* Adjust font size for the close symbol */
+  color: white;
+  /* Set color for the close symbol */
+  z-index: 2;
+  /* Ensure the close button is above other content */
+}
+
+
+/* Button style */
+.buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  /* Adjust margin as needed */
+}
+
+/* Default button styles */
 .difficulty-button {
-  margin: 5%;
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.488);
+  /* Default background color */
 }
 
-/* Styles for the drop-down button */
-.dropbtn {
-  background-color: rgb(69, 70, 70);/* Background color */
-  color: white; /* Text color */
-  padding: 2px; /* Padding around text */
-  font-size: 16px; /* Font size */
-  border: none; /* No border */
-  cursor: pointer; /* Cursor style */
-  margin-right: 20px;
+/* Hover styles */
+.difficulty-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  /* Darken background on hover */
 }
 
-/* Styles for when the drop-down button is hovered or focused */
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #2980B9; /* Background color change on hover/focus */
+/* Active styles */
+.difficulty-button:active {
+  background-color: #004080;
+  /* Dark blue background when clicked */
+  color: #fff;
+  /* White text color when clicked */
+}
+
+/* Input field style */
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  /* Adjust margin as needed */
+  border: 2px solid #ccc;
+  /* Add border */
+  border-radius: 4px;
+  /* Add border radius */
+  box-sizing: border-box;
+  /* Ensure padding and border are included in the width */
+  font-size: 16px;
+  /* Adjust font size */
+}
+
+/* Focus styles for the input field */
+.input-field:focus {
+  border-color: #FFA400;
+  /* Green border color when focused */
+  outline: none;
+  /* Remove default focus outline */
 }
 
 /* Styles for the dropdown container */
 .dropdown {
-  position: relative; /* Positioning */
-  display: inline-block; /* Display as inline block */
+  position: relative;
+  /* Positioning */
+  display: inline-block;
+  /* Display as inline block */
   float: right;
 }
 
 /* Styles for the dropdown content */
 .dropdown-content {
-  display: none; /* Hide dropdown content by default */
-  position: absolute; /* Positioning */
-  background-color: #f1f1f1; /* Background color */
-  min-width: 90px; /* Minimum width of dropdown content */
-  overflow: auto; /* Allow content to overflow */
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Box shadow for dropdown */
-  z-index: 1; /* Z-index for stacking order */
+  display: none;
+  /* Hide dropdown content by default */
+  position: absolute;
+  /* Positioning */
+  background-color: #f1f1f1;
+  /* Background color */
+  min-width: 90px;
+  /* Minimum width of dropdown content */
+  overflow: auto;
+  /* Allow content to overflow */
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  /* Box shadow for dropdown */
+  z-index: 1;
+  /* Z-index for stacking order */
 }
 
 /* Styles for the links within the dropdown content */
 .dropdown-content a {
-  color: black; /* Text color */
-  padding: 12px 16px; /* Padding around text */
-  text-decoration: none; /* No underline */
-  display: block; /* Display as block element */
+  color: black;
+  /* Text color */
+  padding: 12px 16px;
+  /* Padding around text */
+  text-decoration: none;
+  /* No underline */
+  display: block;
+  /* Display as block element */
 }
 
 /* Styles for when a link within the dropdown content is hovered */
 .dropdown a:hover {
-  background-color: #ddd; /* Background color change on hover */
+  background-color: #ddd;
+  /* Background color change on hover */
 }
 
 /* Style for showing the dropdown content */
 .show {
-  display: block; /* Display block */
+  display: block;
+  /* Display block */
 }
 
 
 
 
 /* Ensures only the selected page is shown */
-.page {display: none;}
-.page.active {display: block;}
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
 
 .button {
   font: bold 20px Arial;
@@ -218,17 +345,21 @@ meter {
 
 .center {
   width: auto;
-  margin: 15px 15px; 
+  margin: 15px 15px;
 }
 
 .profile_layout .tiers {
-  display: flex; /* Use Flexbox for tiers */
-  justify-content: space-between; /* Distribute items evenly */
+  display: flex;
+  /* Use Flexbox for tiers */
+  justify-content: space-between;
+  /* Distribute items evenly */
 }
 
 .tier {
-  flex: 1; /* Take up equal space */
-  margin: 0 5px; /* Adjust margin between elements */
+  flex: 1;
+  /* Take up equal space */
+  margin: 0 5px;
+  /* Adjust margin between elements */
 }
 
 .tier-grid-item {
@@ -262,28 +393,57 @@ meter {
 
 .elo-progress {
   height: 100%;
-  background-color: #4caf50; /* Green color for progress */
+  background-color: #4caf50;
+  /* Green color for progress */
 }
 
 /* Position the buttons */
-#userMasteries + button {
-  display: inline-block; /* Initially visible */
+#userMasteries+button {
+  display: inline-block;
+  /* Initially visible */
   margin-top: 10px;
+}
+
+canvas {
+  border: 1px solid #ccc;
+  display: block;
+  margin: 0 auto;
+  /* Center the canvas */
+}
+
+#userContainer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  /* Adjust column widths as needed */
+  grid-column-gap: 20px;
+  /* Adjust gap between columns as needed */
+  align-items: center;
+  /* Center items vertically */
+}
+
+#bmiGraphContainer {
+  grid-column: 2;
 }
 
 .profileHeader-container {
   display: flex;
-  align-items: center; /* Align items vertically in the center */
-  justify-content: space-between; /* Spreads child elements horizontally */
-  margin-bottom: 20px; /* Add some margin to separate from the content below */
+  align-items: center;
+  /* Align items vertically in the center */
+  justify-content: space-between;
+  /* Spreads child elements horizontally */
+  margin-bottom: 20px;
+  /* Add some margin to separate from the content below */
   margin-top: 5px;
 }
+
 .profileHeader-container h2 {
-  margin: 0 auto; /* Center the header horizontally */
-  padding-left: 100px; /* Add padding to the right side */
+  margin: 0 auto;
+  /* Center the header horizontally */
+  padding-left: 100px;
+  /* Add padding to the right side */
 }
 
-#logout{
+#logout {
   margin-right: 10px;
 }
 
@@ -302,4 +462,24 @@ meter {
   background-color: #45a049;
 }
 
+.friend-list {
+  list-style-type: none;
+  padding: 0;
+}
 
+.friend-item {
+  margin: 5px 0;
+}
+
+.friend-link {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  font-size: 20px;
+  padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.friend-link:hover {
+  background-color: rgb(63, 63, 63);
+}
