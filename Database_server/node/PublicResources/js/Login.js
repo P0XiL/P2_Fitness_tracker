@@ -93,14 +93,9 @@ function createUser(userData) {
             if (response.ok) {
                 console.log('Data successfully sent to server');
 
-                clearCreateErrorMessage();
-
-                highlightNavLink('main');
-
                 storeLoginState(userData.username);
 
-                document.getElementById('surveyForm').classList.add('active');
-                document.getElementById('createAccount').classList.remove('active');
+                location.reload();
 
             } else {
                 response.text().then(errorMessage => {

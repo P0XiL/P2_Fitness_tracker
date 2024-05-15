@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var NameInput = document.getElementById('name');
 
             if (/\d/.test(NameInput.value)) {
-                alert('Username cannot contain numbers.');
+                alert('Name cannot contain numbers.');
                 return;
             }
 
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Add event listener to the submit button
-    document.getElementById('submitBtn').addEventListener('click', function (e) {
+    document.getElementById('createAccountForm').addEventListener('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
 
         // Get username and password values
@@ -140,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Send the data to the server-side script for file writing
-            //console.log(username);
             createUser(userData);
         }
     });
