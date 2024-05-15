@@ -69,24 +69,6 @@
       }
     }
   },
-  "Lenny": {
-    "daily": {}
-    },
-    "monthly": {
-      "14/5/2024": {
-        "type": "lowerbody"
-      },
-      "15/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 5,
-        "amount": 11,
-        "text": "Go for a walk for 5 minutes",
-        "state": "complete",
-        "exercise": "walk"
-      }
-    }
-  },
   "Lenny2": {
     "daily": {
       "14/5/2024": {
@@ -101,6 +83,52 @@
     "monthly": {
       "14/5/2024": {
         "type": "core"
+      }
+    }
+  },
+  "Tobi": {
+    "daily": {
+      "13/5/2024": {
+        "type": "core"
+      }
+    },
+    "weekly": {
+      "13/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "13/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "Lenny": {
+    "daily": {
+      "14/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "14/5/2024": {
+        "type": "upperbody",
+        "difficulty": "0",
+        "target": 3,
+        "amount": 5,
+        "text": "Do 3 pushups",
+        "state": "complete",
+        "exercise": "pushups"
+      }
+    },
+    "monthly": {
+      "14/5/2024": {
+        "type": "core",
+        "difficulty": "0",
+        "target": 9,
+        "amount": 10,
+        "text": "Do 9 situps",
+        "state": "complete",
+        "exercise": "situps"
       }
     }
   }
