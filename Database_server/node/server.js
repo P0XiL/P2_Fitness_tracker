@@ -690,7 +690,6 @@ function award_elo(req, res) {
                 pathMatery["elo"] -= 500;
             }
             award = (Math.log10(parseInt(pathMatery["rank"])) + 1) * award;
-            console.log(pathMatery["rank"] + "=" + award, Math.log10(parseInt(pathMatery["rank"])));
             const pathTier = obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan];
             pathTier["elo"] += award;
 

@@ -159,7 +159,6 @@ async function display_quest(quest, user) {
                         obj_award.difficulty = pathQuest.difficulty;
                         obj_award.type = pathQuest.exercise;
                         award_elo(obj_award);
-                        location.reload();
                     }
 
                     // Visual part
@@ -678,17 +677,13 @@ function update_meter(ID, obj_quest) {
  * @returns {string} A type
  */
 function get_type(obj_conf) {
-    //Array for weightedKeys
     let weightedKeys = [];
-
-    //Loop though each key
     for (let key in obj_conf) {
         for (let i = 0; i < obj_conf[key]; i++) {
             weightedKeys.push(key);
         }
     }
     return weightedKeys[generate_random_number(weightedKeys.length)];
-
 }
 
 /**

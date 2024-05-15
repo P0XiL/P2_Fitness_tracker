@@ -9,6 +9,9 @@
         "text": "Do the plank for 10 seconds",
         "state": "complete",
         "exercise": "plank"
+      },
+      "15/5/2024": {
+        "type": "upperbody"
       }
     },
     "weekly": {
@@ -70,21 +73,34 @@
     }
   },
   "Lenny": {
-    "daily": {}
+    "daily": {
+      "14/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "14/5/2024": {
+        "type": "core"
+      }
     },
     "monthly": {
       "14/5/2024": {
         "type": "lowerbody"
-      },
-      "15/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 5,
-        "amount": 11,
-        "text": "Go for a walk for 5 minutes",
-        "state": "complete",
-        "exercise": "walk"
       }
+    }
+  },
+  "monthly": {
+    "14/5/2024": {
+      "type": "lowerbody"
+    },
+    "15/5/2024": {
+      "type": "cardio",
+      "difficulty": "0",
+      "target": 5,
+      "amount": 11,
+      "text": "Go for a walk for 5 minutes",
+      "state": "complete",
+      "exercise": "walk"
     }
   },
   "Lenny2": {
@@ -121,20 +137,32 @@
       }
     }
   },
-  "Lenny": {
+  "we": {
     "daily": {
-      "14/5/2024": {
-        "type": "cardio"
+      "15/5/2024": {
+        "type": "core",
+        "difficulty": "-3",
+        "target": 3,
+        "amount": 3,
+        "text": "Do 3 crunches",
+        "state": "complete",
+        "exercise": "crunches"
       }
     },
     "weekly": {
-      "14/5/2024": {
-        "type": "core"
+      "15/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "0",
+        "target": 3,
+        "amount": 32,
+        "text": "Do 3 squats",
+        "state": "complete",
+        "exercise": "squats"
       }
     },
     "monthly": {
-      "14/5/2024": {
-        "type": "lowerbody"
+      "15/5/2024": {
+        "type": "cardio"
       }
     }
   }
