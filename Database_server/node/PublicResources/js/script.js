@@ -253,6 +253,7 @@ document.getElementById('friendSubmitBtn').addEventListener('click', function() 
     friendList();
 });
 
+
 function friendList() {
     fetchJSON("json/users_info.json")
     .then(data => {
@@ -279,7 +280,17 @@ function friendList() {
                 buttonClicked(friend);
             });
 
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.className = "delete-button";
+
+            deleteButton.addEventListener("click", function(event) {
+                event.stopPropagation(); // Prevent click event on the link
+                deleteFriend(friend, listItem); // Pass the listItem to deleteFriend function
+            });
+
             listItem.appendChild(link);
+            listItem.appendChild(deleteButton);
 
             list.appendChild(listItem);
         });
@@ -287,6 +298,36 @@ function friendList() {
         container.appendChild(list);
     });
 }
+
+function deleteFriend(friend, listItem) {
+    const username = localStorage.getItem('username');
+    const requestData = {
+        username: username,
+        friend: friend
+    };
+
+    fetch('deleteFriend', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to delete friend.');
+        }
+        console.log("Friend deleted successfully.");
+        // Remove the listItem from the DOM
+        listItem.remove();
+        // Optional: Reload or update UI to reflect changes
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+
 
 function buttonClicked(friend) {
     const addFriendsPage = document.getElementById('userfriend');
