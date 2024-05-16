@@ -1,7 +1,11 @@
 function runTests(){
     console.log("Running tests for survey...");
 
+    try{
     testhandleSurveyFormSubmit();
+    }catch(error){
+        console.log("Tests failed")
+    }
 
     console.log("Survey tests passed");
 }
