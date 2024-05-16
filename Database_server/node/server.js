@@ -41,10 +41,10 @@ function processReq(req, res) {
         case "POST":
             switch (queryPath) {
                 case "/createUser":
-                    createUser(req, res);
+                    write_create_user(req, res);
                     break;
                 case "/login":
-                    loginUser(req, res);
+                    write_login_user(req, res);
                     break;
                 case "/write_quest_json":
                     write_quest_json(req, res);
@@ -67,6 +67,9 @@ function processReq(req, res) {
                 case "/remove_elo":
                     remove_elo(req, res);
                     break;
+                case "/deleteFriend":
+                    deleteFriend(req, res);
+                    break;
                 default:
                     errorResponse(res, 404, "not found");
                     break;
@@ -79,17 +82,79 @@ function processReq(req, res) {
             break;
     }
 }
+    function addFriend(req, res) {
+        let body = '';
+        req.on('data', (chunk) => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            const friendData = JSON.parse(body);
+            const friendUsername = friendData.friends;
 
-function addFriend(req, res) {
+            const username = friendData.username;
+
+            // Read existing data from the file
+            fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                    return;
+                }
+
+                let usersInfo = JSON.parse(data);
+
+                const currentUser = username; // Assuming you have a user session
+
+                // Check if the friend username exists in users_info and handle other conditions
+                if (!usersInfo.users_info.hasOwnProperty(friendUsername)) {
+                    errorResponse(res, 400, "User not found");
+                    return;
+                } else if (usersInfo.users_info[currentUser].friends.includes(friendUsername)) {
+                    errorResponse(res, 400, "User is already your friend");
+                    return;
+                } else if (currentUser === friendUsername) {
+                    errorResponse(res, 400, "Thou may not add oneself as oneselves friend");
+                    return;
+                } else {
+                    // Append friend to user's friend list
+                    if (!usersInfo.users_info[currentUser].friends) {
+                        // Initialize friends array if it doesn't exist
+                        usersInfo.users_info[currentUser].friends = [];
+                    }
+                    usersInfo.users_info[currentUser].friends.push(friendUsername);
+
+                    // Write updated data back to the file
+                    fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(usersInfo, null, 2), (err) => {
+                        if (err) {
+                            console.error(err);
+                            errorResponse(res, 500, String(err));
+                        } else {
+                            console.log('Friend added successfully');
+                            // Send a JSON response confirming the success of the operation
+                            const jsonResponse = {
+                                success: true,
+                                message: 'Friend added successfully'
+                            };
+                            res.statusCode = 200;
+                            res.setHeader('Content-Type', 'application/json');
+                            res.end(JSON.stringify(jsonResponse));
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    function deleteFriend(req, res) {
     let body = '';
     req.on('data', (chunk) => {
         body += chunk.toString();
     });
     req.on('end', () => {
         const friendData = JSON.parse(body);
-        const friendUsername = friendData.friends;
+        const friendUsername = friendData.friend; // Assuming the client sends the friend's username
 
-        const username = friendData.username;
+        const username = friendData.username; // Assuming the client sends the current user's username
 
         // Read existing data from the file
         fs.readFile('PublicResources/json/users_info.json', (err, data) => {
@@ -101,51 +166,41 @@ function addFriend(req, res) {
 
             let usersInfo = JSON.parse(data);
 
-            const currentUser = username; // Assuming you have a user session
+            // Check if the user exists and if the friend is in the user's friend list
+            if (usersInfo.users_info.hasOwnProperty(username) && usersInfo.users_info[username].friends.includes(friendUsername)) {
+                // Remove the friend from the user's friend list
+                const friendIndex = usersInfo.users_info[username].friends.indexOf(friendUsername);
+                usersInfo.users_info[username].friends.splice(friendIndex, 1);
 
-            // Check if the friend username exists in users_info and handle other conditions
-            if (!usersInfo.users_info.hasOwnProperty(friendUsername)) {
-                errorResponse(res, 400, "User not found");
-                return;
-            } else if (usersInfo.users_info[currentUser].friends.includes(friendUsername)) {
-                errorResponse(res, 400, "User is already your friend");
-                return;
-            } else if (currentUser === friendUsername) {
-                errorResponse(res, 400, "Thou may not add oneself as oneselves friend");
-                return;
-            } else {
-                // Append friend to user's friend list
-                if (!usersInfo.users_info[currentUser].friends) {
-                    // Initialize friends array if it doesn't exist
-                    usersInfo.users_info[currentUser].friends = [];
-                }
-                usersInfo.users_info[currentUser].friends.push(friendUsername);
-
-                // Write updated data back to the file
+                // Write the updated data back to the file
                 fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(usersInfo, null, 2), (err) => {
                     if (err) {
                         console.error(err);
                         errorResponse(res, 500, String(err));
-                    } else {
-                        console.log('Friend added successfully');
-                        // Send a JSON response confirming the success of the operation
-                        const jsonResponse = {
-                            success: true,
-                            message: 'Friend added successfully'
-                        };
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.end(JSON.stringify(jsonResponse));
+                        return;
                     }
+
+                    console.log('Friend deleted successfully');
+                    // Send a response indicating success
+                    const jsonResponse = {
+                        success: true,
+                        message: 'Friend deleted successfully'
+                    };
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(jsonResponse));
                 });
+            } else {
+                errorResponse(res, 400, "Friend not found in user's friend list");
             }
         });
     });
 }
-
+    
+    
 
 // Function to handle user login
-function loginUser(req, res) {
+function write_login_user(req, res) {
     let body = '';
     req.on('data', (chunk) => {
         body += chunk.toString();
@@ -181,7 +236,7 @@ function loginUser(req, res) {
 }
 
 // Function to handle writing user data to a JSON file
-function createUser(req, res) {
+function write_create_user(req, res) {
     let body = '';
     req.on('data', (chunk) => {
         body += chunk.toString();
