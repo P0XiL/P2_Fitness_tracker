@@ -1,6 +1,6 @@
 // LOCALHOST: http://127.0.0.1:3360/
 // SERVER: https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node0/
-const serverPath = 'http://127.0.0.1:3360/';
+const serverPath = 'https://cs-24-sw-2-06.p2datsw.cs.aau.dk/node1/';
 
 const tierImages = {
     '1-15': 'image/bronzeTier.png',
