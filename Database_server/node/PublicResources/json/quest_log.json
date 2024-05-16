@@ -1,122 +1,11 @@
 {
-  "sad": {
-    "daily": {
-      "14/5/2024": {
-        "type": "core",
-        "difficulty": "0",
-        "target": 10,
-        "amount": 23,
-        "text": "Do the plank for 10 seconds",
-        "state": "complete",
-        "exercise": "plank"
-      },
-      "15/5/2024": {
-        "type": "upperbody"
-      }
-    },
-    "weekly": {
-      "14/5/2024": {
-        "type": "upperbody",
-        "difficulty": "0",
-        "target": 3,
-        "amount": 123,
-        "text": "Do 3 pushups",
-        "state": "complete",
-        "exercise": "pushups"
-      }
-    },
-    "monthly": {
-      "14/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 16,
-        "amount": 1233,
-        "text": "Go for a walk for 16 minutes",
-        "state": "complete",
-        "exercise": "walk"
-      }
-    }
-  },
-  "pog": {
-    "daily": {
-      "14/5/2024": {
-        "type": "cardio",
-        "difficulty": "-3",
-        "target": 5,
-        "amount": 46,
-        "text": "Go for a walk for 5 minutes",
-        "state": "complete",
-        "exercise": "walk"
-      }
-    },
-    "weekly": {
-      "14/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 5,
-        "amount": 12,
-        "text": "Go for a run for 5 minutes",
-        "state": "complete",
-        "exercise": "run"
-      }
-    },
-    "monthly": {
-      "14/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 16,
-        "amount": 128,
-        "text": "Go for a walk for 16 minutes",
-        "state": "complete",
-        "exercise": "walk"
-      }
-    }
-  },
-  "Lenny2": {
-    "daily": {
-      "14/5/2024": {
-        "type": "upperbody"
-      }
-    },
-    "weekly": {
-      "14/5/2024": {
-        "type": "core"
-      }
-    },
-    "monthly": {
-      "14/5/2024": {
-        "type": "core"
-      }
-    }
-  },
-  "Tobi": {
-    "daily": {
-      "13/5/2024": {
-        "type": "core"
-      }
-    },
-    "weekly": {
-      "13/5/2024": {
-        "type": "lowerbody"
-      }
-    },
-    "monthly": {
-      "13/5/2024": {
-        "type": "cardio"
-      }
-    }
-  },
   "Lenny": {
     "daily": {
       "15/5/2024": {
         "type": "lowerbody"
       },
       "16/5/2024": {
-<<<<<<< HEAD
-        "type": "cardio"
-=======
         "type": "upperbody"
->>>>>>> 47084b07b18c062ced66ff1562ad2a7368cfdddc
       }
     },
     "weekly": {
@@ -127,41 +16,6 @@
     "monthly": {
       "15/5/2024": {
         "type": "cardio"
-      }
-    }
-  },
-  "test": {
-    "daily": {
-      "14/5/2024": {
-        "type": "core",
-        "difficulty": "3",
-        "target": 3,
-        "amount": 0,
-        "text": "Do 3 burpees",
-        "state": "incomplete",
-        "exercise": "burpees"
-      }
-    },
-    "weekly": {
-      "14/5/2024": {
-        "type": "upperbody",
-        "difficulty": "3",
-        "target": 12,
-        "amount": 0,
-        "text": "Do 12 pushups",
-        "state": "incomplete",
-        "exercise": "pushups"
-      }
-    },
-    "monthly": {
-      "14/5/2024": {
-        "type": "lowerbody",
-        "difficulty": "3",
-        "target": 39,
-        "amount": 0,
-        "text": "Do 39 lunges",
-        "state": "incomplete",
-        "exercise": "lunges"
       }
     }
   },
@@ -196,6 +50,41 @@
     "monthly": {
       "15/5/2024": {
         "type": "cardio"
+      }
+    }
+  },
+  "test": {
+    "daily": {
+      "16/5/2024": {
+        "type": "upperbody",
+        "difficulty": "-3",
+        "target": 10,
+        "amount": 10,
+        "text": "Do arm circles for 10 seconds",
+        "state": "complete",
+        "exercise": "armcircles"
+      }
+    },
+    "weekly": {
+      "16/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 5,
+        "amount": 10,
+        "text": "Cycle 5 minutes",
+        "state": "complete",
+        "exercise": "cycling"
+      }
+    },
+    "monthly": {
+      "16/5/2024": {
+        "type": "core",
+        "difficulty": "-3",
+        "target": 3,
+        "amount": 20,
+        "text": "Do 3 crunches",
+        "state": "complete",
+        "exercise": "crunches"
       }
     }
   }

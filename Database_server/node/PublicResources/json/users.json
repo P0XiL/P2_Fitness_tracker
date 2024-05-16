@@ -8,6 +8,9 @@
     },
     "Lenny4": {
       "password": "123"
+    },
+    "test": {
+      "password": "123"
     }
   }
 }
