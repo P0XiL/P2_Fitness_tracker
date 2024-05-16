@@ -112,7 +112,11 @@
         "type": "lowerbody"
       },
       "16/5/2024": {
+<<<<<<< HEAD
         "type": "cardio"
+=======
+        "type": "upperbody"
+>>>>>>> 47084b07b18c062ced66ff1562ad2a7368cfdddc
       }
     },
     "weekly": {
