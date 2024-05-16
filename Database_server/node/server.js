@@ -337,8 +337,14 @@ function addUserToUsers_info(username) {
             let newUser = {
                 username: username,
                 health: {
+                    name: "notAvailable",
+                    age: 0, 
                     height: 0,
-                    weight: 0
+                    weight: 0,
+                    gender: "notAvailable",
+                    fitnessGoal: "notAvailable",
+                    activityLevel: "notAvailable"
+
                 },
                 mastery: {
                     run: {

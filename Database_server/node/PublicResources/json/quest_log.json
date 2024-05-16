@@ -194,5 +194,39 @@
         "type": "cardio"
       }
     }
+  },
+  "Lenny5": {
+    "daily": {
+      "16/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "16/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "16/5/2024": {
+        "type": "cardio"
+      }
+    }
+  },
+  "dd": {
+    "daily": {
+      "16/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "16/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "monthly": {
+      "16/5/2024": {
+        "type": "lowerbody"
+      }
+    }
   }
 }
