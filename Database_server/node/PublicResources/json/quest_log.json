@@ -107,6 +107,9 @@
     "daily": {
       "15/5/2024": {
         "type": "lowerbody"
+      },
+      "16/5/2024": {
+        "type": "upperbody"
       }
     },
     "weekly": {

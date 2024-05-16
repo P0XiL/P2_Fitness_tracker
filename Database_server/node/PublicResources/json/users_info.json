@@ -289,7 +289,7 @@
         }
       },
       "preset": {
-        "name": "balance",
+        "name": "custom",
         "conf": {
           "cardio": 2,
           "lowerbody": 2,
