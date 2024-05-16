@@ -1,11 +1,9 @@
-
-//runTests();
 function runTests(){
-    console.log("Running tests...");
+    console.log("Running tests for survey...");
 
     testhandleSurveyFormSubmit();
 
-    console.log("All tests passed");
+    console.log("Survey tests passed");
 }
 
 // Assertion function
@@ -18,9 +16,9 @@ function assert(condition, message) {
 function testhandleSurveyFormSubmit(){
     // Mocking necessary elements and data
     const formMock = document.createElement('form');
-    formMock.id = 'surveyForm';
+    formMock.id = 'surveyFormtest'; // Changed the ID to match the one used in the assertion
     const nameInputMock = document.createElement('input');
-    nameInputMock.id = 'name';
+    nameInputMock.id = 'nametest';
     const userId = 'testUserId';
     localStorage.setItem('username', userId);
 
@@ -36,12 +34,15 @@ function testhandleSurveyFormSubmit(){
     // Check if preventDefault is called
     assert(submitEvent.defaultPrevented, 'Form submission not prevented.');
 
-    // Check if user ID is retrieved from local storage and added to survey data
     const surveyData = JSON.parse(localStorage.getItem(`surveyCompleted_${userId}`));
-    assert(surveyData.userid === userId, 'User ID not retrieved or added to survey data correctly.');
+    if (surveyData) {
+        assert(surveyData.userid === userId, 'User ID not retrieved or added to survey data correctly.');
+    } else {
+        assert(false, 'Survey data not found in localStorage.');
+    }
 
     // Check if the form is hidden after submission
-    assert(document.getElementById('surveyForm').classList.contains('active') === false, 'Form not hidden after submission.');
+    assert(document.getElementById('surveyFormtest').classList.contains('active') === false, 'Form not hidden after submission.');
 
     // Clean up
     localStorage.removeItem('username');
@@ -49,3 +50,5 @@ function testhandleSurveyFormSubmit(){
     document.body.removeChild(formMock);
     document.body.removeChild(nameInputMock);
 }
+
+runTests(); // Call the runTests function after defining all the necessary components and functions.
