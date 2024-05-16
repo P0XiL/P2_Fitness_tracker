@@ -204,9 +204,9 @@
       "username": "Lenny",
       "health": {
         "name": "Lenny",
-        "age": "19",
-        "height": "200",
-        "weight": "100",
+        "age": "24",
+        "height": "180",
+        "weight": "70",
         "gender": "male",
         "fitnessGoal": "muscleGain",
         "activityLevel": "moderatelyActive"
