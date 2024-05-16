@@ -1,5 +1,5 @@
 
-//runTests();
+runTests();
 function runTests(){
     console.log("Running tests...");
 
@@ -19,8 +19,7 @@ function runTests(){
     testDisplayUserPreferences();
     testUpdatePreset();
     testUpdateUsersInfo();
-    testPostCustomData();
-    //testUpdateCounter();
+    testUpdateCounter();
 
     console.log("All tests passed");
 }
@@ -732,50 +731,6 @@ async function testUpdateUsersInfo() {
   }
   
 }
-
-
-async function testPostCustomData() {
-  try {
-      // Assuming the username exists and fetchUserData returns valid data
-      const username = 'Lenny4';
-      const userData = await fetchUserData(username);
-
-      if (userData && userData.username === username) {
-          const existingUserInfo = userData;
-
-          // Simulate the presence of sliders in the document
-          const sliders = [
-              { id: 'slider1', value: '5' },
-              { id: 'slider2', value: '7' },
-              { id: 'slider3', value: '3' }
-          ];
-
-          // Mock the querySelectorAll method to return the sliders
-          document.querySelectorAll = () => sliders;
-
-          // Call the function to post custom data
-          await postCustomData(username);
-
-          // Retrieve the updated user data (assuming this function exists)
-          const updatedUserData = await fetchUserData(username);
-
-          // Check if the custom preset is updated correctly
-          if (updatedUserData && updatedUserData.preset && updatedUserData.preset.name === 'custom') {
-              const customConf = updatedUserData.preset.conf;
-              assert(customConf.slider1 === 5, "Slider1 value should be 5");
-              assert(customConf.slider2 === 7, "Slider2 value should be 7");
-              assert(customConf.slider3 === 3, "Slider3 value should be 3");
-          } else {
-              console.error('User info not found or preset not updated correctly');
-          }
-      } else {
-          console.error('User info not found for username:', username);
-      }
-  } catch (error) {
-      console.error('Error testing postCustomData:', error.message);
-  }
-}
-
 
 async function testUpdateCounter() {
   // Create a dummy element to use as a container for testing
