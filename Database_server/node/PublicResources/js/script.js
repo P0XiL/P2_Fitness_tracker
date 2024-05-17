@@ -32,9 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if(targetId === 'stats'){
-                const container = document.getElementById("statsTextUser")
-                container.innerHTML = "";
-                individual_type(localStorage.getItem('username'), "statsTextUser")
+                individual_type(localStorage.getItem('username'), "statsTextUser");
             }
 
             // Fetch and display user information on the profile page
@@ -172,16 +170,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.removeItem('loginState'); // Remove the login state from localStorage
 
         location.reload(); // Reload the page to reflect the logout
-    });
-
-    document.getElementById('toggleFriendPageLink').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default link behavior
-
-        const userfriendpage = document.getElementById('userfriend');
-        const friendPage = document.getElementById('friends');
-
-        friendPage.classList.remove('active');
-        userfriendpage.classList.add('active');
     });
 
     document.getElementById('toggleAddFriendsPage').addEventListener('click', function (e) {

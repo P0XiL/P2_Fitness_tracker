@@ -1,4 +1,16 @@
 {
   "obj_users": {
+    "Lenny": {
+      "password": "123"
+    },
+    "Lenny3": {
+      "password": "123"
+    },
+    "Lenny4": {
+      "password": "123"
+    },
+    "test": {
+      "password": "123"
+    }
   }
 }
