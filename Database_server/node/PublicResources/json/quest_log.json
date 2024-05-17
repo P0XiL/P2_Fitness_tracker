@@ -99,6 +99,9 @@
         "text": "Do 3 situps",
         "state": "complete",
         "exercise": "situps"
+      },
+      "17/5/2024": {
+        "type": "core"
       }
     },
     "weekly": {
