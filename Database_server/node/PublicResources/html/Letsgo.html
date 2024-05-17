@@ -147,7 +147,7 @@
 
     <div id="createAccount" class="page">
         <h2>Create account</h2>
-        <form>
+        <form id="createAccountForm">
             <label for="create_username">Username</label>
             <input type="text" name="create_username" required> <br><br>
             <label for="create_password">Password</label>
@@ -159,7 +159,7 @@
             <br>
             <a href="#" id="toggleCreatePageLink">Already have an account? Login here</a>
             <br><br>
-            <button id="submitBtn" type="submit">Create user</button> <!-- Add submit button -->
+            <button type="submit">Create user</button> <!-- Add submit button -->
         </form>
     </div>
 
@@ -176,7 +176,7 @@
             <br>
             <a href="#" id="toggleLoginPageLink">Don't have an account? Create one here</a>
             <br><br>
-            <button id="loginBtn" type="submit">Login</button>
+            <button type="submit">Login</button>
         </form>
     </div>
 
@@ -335,7 +335,9 @@
     <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/Graph.js"></script>
+    <script src="js/Login.js"></script>
     <script src="tests/profile.test.js"></script>
+    <script src="tests/survey.test.js"></script>
 
 </body>
 
