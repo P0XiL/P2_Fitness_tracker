@@ -296,29 +296,29 @@
             <input type="number" id="weight" name="weight" required><br><br>
 
             <h2>Fitness Goals:</h2>
-            <input type="checkbox" id="weightLoss" name="fitnessGoal" value="weightLoss">
+            <input type="radio" id="weightLoss" name="fitnessGoal" value="weightLoss" required>
             <label for="weightLoss">Weight loss</label><br>
 
-            <input type="checkbox" id="muscleGain" name="fitnessGoal" value="muscleGain">
+            <input type="radio" id="muscleGain" name="fitnessGoal" value="muscleGain" required>
             <label for="muscleGain">Muscle gain</label><br>
 
-            <input type="checkbox" id="endurance" name="fitnessGoal" value="endurance">
+            <input type="radio" id="endurance" name="fitnessGoal" value="endurance" required>
             <label for="endurance">Improve endurance</label><br>
 
             <h2>Activity Level:</h2>
-            <input type="radio" id="sedentary" name="activityLevel" value="sedentary">
+            <input type="radio" id="sedentary" name="activityLevel" value="sedentary" required>
             <label for="sedentary">Sedentary</label><br>
 
-            <input type="radio" id="lightlyActive" name="activityLevel" value="lightlyActive">
+            <input type="radio" id="lightlyActive" name="activityLevel" value="lightlyActive" required>
             <label for="lightlyActive">Lightly active</label><br>
 
-            <input type="radio" id="moderatelyActive" name="activityLevel" value="moderatelyActive">
+            <input type="radio" id="moderatelyActive" name="activityLevel" value="moderatelyActive" required>
             <label for="moderatelyActive">Moderately active</label><br>
 
-            <input type="radio" id="veryActive" name="activityLevel" value="veryActive">
+            <input type="radio" id="veryActive" name="activityLevel" value="veryActive" required>
             <label for="veryActive">Very active</label><br>
 
-            <input type="radio" id="extremelyActive" name="activityLevel" value="extremelyActive">
+            <input type="radio" id="extremelyActive" name="activityLevel" value="extremelyActive" required>
             <label for="extremelyActive">Extremely active</label><br><br>
 
             <button type="submit">Submit</button>
@@ -333,10 +333,10 @@
     <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/Graph.js"></script>
-    <script src="js/Login.js"></script>
     <script src="tests/profile.test.js"></script>
     <script src="tests/Graph.test.js"></script>
-
+    <script src="tests/survey.test.js"></script>
+    <script src="tests/friend.test.js"></script>
 </body>
 
 </html>

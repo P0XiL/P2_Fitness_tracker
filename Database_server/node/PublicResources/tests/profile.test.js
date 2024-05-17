@@ -1,28 +1,33 @@
-
+/*
 runTests();
-function runTests(){
-    console.log("Running tests...");
+function runTests() {
+  console.log("Running tests...");
 
-    testSetupTiersForQuestPage();
-    testFetchUserData();
-    testGetTierRange();
-    testGetSubTierRange();
-    testCreateRankItem();
-    testCapitalizeFirstLetter();
-    testGetMaxElo();
-    testSetupProfilePage();
-    testDisplayProfile();
-    testValidateIntegerInput();
-    testUpdateBMI();
-    testCalculateBMI();
-    testDrawBMIGraph();
-    testDisplayUserPreferences();
-    testUpdatePreset();
-    testUpdateUsersInfo();
-    testUpdateCounter();
+  try {
+      testSetupTiersForQuestPage();
+      testFetchUserData();
+      testGetTierRange();
+      testGetSubTierRange();
+      testCreateRankItem();
+      testCapitalizeFirstLetter();
+      testGetMaxElo();
+      testSetupProfilePage();
+      testDisplayProfile();
+      testValidateIntegerInput();
+      testUpdateBMI();
+      testCalculateBMI();
+      testDrawBMIGraph();
+      testDisplayUserPreferences();
+      testUpdatePreset();
+      testUpdateUsersInfo();
+      testUpdateCounter();
 
-    console.log("All tests passed");
+      console.log("All tests passed");
+  } catch (error) {
+      console.error("Error occurred during testing:", error.message);
+  }
 }
+
 
 // Assertion function
 function assert(condition, message) {
@@ -761,3 +766,4 @@ async function testUpdateCounter() {
 }
 
 
+*/

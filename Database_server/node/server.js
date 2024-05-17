@@ -82,70 +82,70 @@ function processReq(req, res) {
             break;
     }
 }
-    function addFriend(req, res) {
-        let body = '';
-        req.on('data', (chunk) => {
-            body += chunk.toString();
-        });
-        req.on('end', () => {
-            const friendData = JSON.parse(body);
-            const friendUsername = friendData.friends;
+function addFriend(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const friendData = JSON.parse(body);
+        const friendUsername = friendData.friends;
 
-            const username = friendData.username;
+        const username = friendData.username;
 
-            // Read existing data from the file
-            fs.readFile('PublicResources/json/users_info.json', (err, data) => {
-                if (err) {
-                    console.error(err);
-                    errorResponse(res, 500, String(err));
-                    return;
+        // Read existing data from the file
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error(err);
+                errorResponse(res, 500, String(err));
+                return;
+            }
+
+            let usersInfo = JSON.parse(data);
+
+            const currentUser = username; // Assuming you have a user session
+
+            // Check if the friend username exists in users_info and handle other conditions
+            if (!usersInfo.users_info.hasOwnProperty(friendUsername)) {
+                errorResponse(res, 400, "User not found");
+                return;
+            } else if (usersInfo.users_info[currentUser].friends.includes(friendUsername)) {
+                errorResponse(res, 400, "User is already your friend");
+                return;
+            } else if (currentUser === friendUsername) {
+                errorResponse(res, 400, "Thou may not add oneself as oneselves friend");
+                return;
+            } else {
+                // Append friend to user's friend list
+                if (!usersInfo.users_info[currentUser].friends) {
+                    // Initialize friends array if it doesn't exist
+                    usersInfo.users_info[currentUser].friends = [];
                 }
+                usersInfo.users_info[currentUser].friends.push(friendUsername);
 
-                let usersInfo = JSON.parse(data);
-
-                const currentUser = username; // Assuming you have a user session
-
-                // Check if the friend username exists in users_info and handle other conditions
-                if (!usersInfo.users_info.hasOwnProperty(friendUsername)) {
-                    errorResponse(res, 400, "User not found");
-                    return;
-                } else if (usersInfo.users_info[currentUser].friends.includes(friendUsername)) {
-                    errorResponse(res, 400, "User is already your friend");
-                    return;
-                } else if (currentUser === friendUsername) {
-                    errorResponse(res, 400, "Thou may not add oneself as oneselves friend");
-                    return;
-                } else {
-                    // Append friend to user's friend list
-                    if (!usersInfo.users_info[currentUser].friends) {
-                        // Initialize friends array if it doesn't exist
-                        usersInfo.users_info[currentUser].friends = [];
+                // Write updated data back to the file
+                fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(usersInfo, null, 2), (err) => {
+                    if (err) {
+                        console.error(err);
+                        errorResponse(res, 500, String(err));
+                    } else {
+                        console.log('Friend added successfully');
+                        // Send a JSON response confirming the success of the operation
+                        const jsonResponse = {
+                            success: true,
+                            message: 'Friend added successfully'
+                        };
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.end(JSON.stringify(jsonResponse));
                     }
-                    usersInfo.users_info[currentUser].friends.push(friendUsername);
-
-                    // Write updated data back to the file
-                    fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(usersInfo, null, 2), (err) => {
-                        if (err) {
-                            console.error(err);
-                            errorResponse(res, 500, String(err));
-                        } else {
-                            console.log('Friend added successfully');
-                            // Send a JSON response confirming the success of the operation
-                            const jsonResponse = {
-                                success: true,
-                                message: 'Friend added successfully'
-                            };
-                            res.statusCode = 200;
-                            res.setHeader('Content-Type', 'application/json');
-                            res.end(JSON.stringify(jsonResponse));
-                        }
-                    });
-                }
-            });
+                });
+            }
         });
-    }
+    });
+}
 
-    function deleteFriend(req, res) {
+function deleteFriend(req, res) {
     let body = '';
     req.on('data', (chunk) => {
         body += chunk.toString();
@@ -196,8 +196,8 @@ function processReq(req, res) {
         });
     });
 }
-    
-    
+
+
 
 // Function to handle user login
 function write_login_user(req, res) {
@@ -337,8 +337,14 @@ function addUserToUsers_info(username) {
             let newUser = {
                 username: username,
                 health: {
+                    name: "notAvailable",
+                    age: 0,
                     height: 0,
-                    weight: 0
+                    weight: 0,
+                    gender: "notAvailable",
+                    fitnessGoal: "notAvailable",
+                    activityLevel: "notAvailable"
+
                 },
                 mastery: {
                     run: {
@@ -427,7 +433,6 @@ function addUserToUsers_info(username) {
                     }
                 },
                 friends: []
-
             };
 
             // Add the new user to the users_info object
