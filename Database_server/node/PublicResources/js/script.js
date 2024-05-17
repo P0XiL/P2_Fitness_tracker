@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Call checkLoginState() on page load
     checkLoginState();
+    console.log(localStorage.getItem('username'))
 
     setupTiersForQuestPage(localStorage.getItem('username'));
 

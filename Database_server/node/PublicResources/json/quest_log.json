@@ -110,6 +110,9 @@
       },
       "16/5/2024": {
         "type": "upperbody"
+      },
+      "17/5/2024": {
+        "type": "core"
       }
     },
     "weekly": {
@@ -125,36 +128,18 @@
   },
   "test": {
     "daily": {
-      "14/5/2024": {
-        "type": "core",
-        "difficulty": "3",
-        "target": 3,
-        "amount": 0,
-        "text": "Do 3 burpees",
-        "state": "incomplete",
-        "exercise": "burpees"
+      "17/5/2024": {
+        "type": "lowerbody"
       }
     },
     "weekly": {
-      "14/5/2024": {
-        "type": "upperbody",
-        "difficulty": "3",
-        "target": 12,
-        "amount": 0,
-        "text": "Do 12 pushups",
-        "state": "incomplete",
-        "exercise": "pushups"
+      "17/5/2024": {
+        "type": "core"
       }
     },
     "monthly": {
-      "14/5/2024": {
-        "type": "lowerbody",
-        "difficulty": "3",
-        "target": 39,
-        "amount": 0,
-        "text": "Do 39 lunges",
-        "state": "incomplete",
-        "exercise": "lunges"
+      "17/5/2024": {
+        "type": "core"
       }
     }
   },
@@ -189,6 +174,40 @@
     "monthly": {
       "15/5/2024": {
         "type": "cardio"
+      }
+    }
+  },
+  "Jacob69Toe": {
+    "daily": {
+      "17/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "17/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "17/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "jacobstoe": {
+    "daily": {
+      "17/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "weekly": {
+      "17/5/2024": {
+        "type": "upperbody"
+      }
+    },
+    "monthly": {
+      "17/5/2024": {
+        "type": "upperbody"
       }
     }
   }
