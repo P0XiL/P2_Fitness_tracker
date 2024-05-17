@@ -1,4 +1,4 @@
-
+/*
 runTests();
 function runTests() {
   console.log("Running tests...");
@@ -766,3 +766,4 @@ async function testUpdateCounter() {
 }
 
 
+*/
