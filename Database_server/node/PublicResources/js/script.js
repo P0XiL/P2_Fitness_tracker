@@ -566,6 +566,10 @@ function highlightNavLink(pageId) {
         link.classList.remove('active');
     });
     // Add 'active' class to the corresponding navigation link
-    const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
-    activeLink.classList.add('active');
+    if (pageId==='profilepage'){
+        return;
+    } else {
+        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        activeLink.classList.add('active');
+    }
 }
