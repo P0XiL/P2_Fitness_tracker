@@ -45,7 +45,8 @@ async function display_quest(quest, user) {
         //Based on ID figure out the timespan
         const timespans = ["daily", "weekly", "monthly"];
         const questTimespan = timespans[quest[5] - 1];
-
+        fetchJSON('json/users_info.json').then(data => set_streak(data, user, quest, questTimespan));
+        
         /**
          * Makes a new quest
          * @param {the type of the current quest} type 
@@ -118,6 +119,14 @@ async function display_quest(quest, user) {
                                 date: lastestQuestDate
                             };
                             remove_elo(obj_para);
+
+                            const obj_streak = {
+                                user: user,
+                                mode: "reset",
+                                timespan: questTimespan,
+                                questid: quest
+                            }
+                            update_streak(obj_streak);
                             location.reload();
                         }
                     } catch (error) {
@@ -159,6 +168,14 @@ async function display_quest(quest, user) {
                         obj_award.difficulty = pathQuest.difficulty;
                         obj_award.type = pathQuest.exercise;
                         award_elo(obj_award);
+
+                        const obj_streak = {
+                            user: user,
+                            mode: "increase",
+                            timespan: questTimespan,
+                            questid: quest
+                        }
+                        update_streak(obj_streak);
                         location.reload();
                     }
 
@@ -293,7 +310,6 @@ function open_modal_for_quest(questTimespan, type, user) {
                     fetchJSON('json/users_info.json')
                         .then(userInfo => {
                             //Modify the quest
-                            console.log(obj_Quest.quest);
                             obj_Quest.quest = modify_quest(obj_Quest.quest, userInfo.users_info[user].tier[questTimespan].rank, difficulty, userInfo.users_info[user].mastery[obj_Quest.exercise].rank, questTimespan);
                             let obj_newQuest = new Object;
                             const date = get_current_date_format();
@@ -582,6 +598,44 @@ function award_elo(obj_para) {
         });
 }
 
+/**
+ * Updates the users streak
+ * @param {object} obj_para
+ * @param {string} obj_para.user - The userID 
+ * @param {string} obj_para.mode - Determinds whether the streak should increase or reset 
+ * @param {string} obj_para.timespan - The timespan of the quest
+ * @param {string} obj_para.questid - The id for the quest container
+ */
+async function update_streak(obj_para) {
+    fetch(serverPath + 'update_streak', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj_para)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No response fetch POST update streak');
+            }
+            fetchJSON("json/users_info.json")
+                .then(data => {
+                    set_streak(data, obj_para.user, obj_para.questid, obj_para.timespan);
+
+                });
+
+        })
+        .catch(error => {
+            console.error('Error fetch Post (update_streak):', error);
+        });
+}
+
+function set_streak(users_info, user, questid, timespan) {
+    const path = users_info.users_info[user].tier;
+    const streakNumber = document.getElementById(questid + "_streak");
+    streakNumber.innerText = path[timespan].streak;
+
+}
 
 /**
  * Makes the edit button

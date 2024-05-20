@@ -6,6 +6,9 @@
       },
       "17/5/2024": {
         "type": "core"
+      },
+      "20/5/2024": {
+        "type": "lowerbody"
       }
     },
     "weekly": {
@@ -221,7 +224,7 @@
         "type": "upperbody",
         "difficulty": "0",
         "target": 10,
-        "amount": 280,
+        "amount": 400,
         "text": "Do arm circles for 10 seconds",
         "state": "incomplete",
         "exercise": "armcircles"
@@ -239,5 +242,40 @@
       }
     },
     "monthly": {}
+  },
+  "sad2": {
+    "daily": {
+      "20/5/2024": {
+        "type": "core",
+        "difficulty": "0",
+        "target": 5,
+        "amount": 7,
+        "text": "Do 5 crunches",
+        "state": "complete",
+        "exercise": "crunches"
+      }
+    },
+    "weekly": {
+      "20/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 110,
+        "amount": 120,
+        "text": "Cycle 110 minutes",
+        "state": "complete",
+        "exercise": "cycling"
+      }
+    },
+    "monthly": {
+      "20/5/2024": {
+        "type": "core",
+        "difficulty": "-3",
+        "target": 3,
+        "amount": 3,
+        "text": "Do 3 situps",
+        "state": "complete",
+        "exercise": "situps"
+      }
+    }
   }
 }

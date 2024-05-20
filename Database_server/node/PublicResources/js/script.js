@@ -374,67 +374,6 @@ function sendSurveyData(surveyData) {
         });
 }
 
-let lastActiveDates = {};
-
-function updateStreak() {
-    const currentDate = new Date().toDateString();
-    let userId = localStorage.getItem("username");
-
-    if (!lastActiveDates[userId]) {
-        lastActiveDates[userId] = null;
-    }
-
-    if (currentDate === lastActiveDates[userId]) {
-        return; // Already active today
-    }
-
-    const lastDate = new Date();
-    lastDate.setDate(lastDate.getDate() - 1);
-
-    const lastDateString = lastDate.toDateString();
-
-    if (currentDate === lastDateString) {
-        if (lastActiveDates[userId] !== currentDate) {
-            lastActiveDates[userId] = currentDate;
-        }
-    } else {
-        lastActiveDates[userId] = currentDate;
-    }
-}
-
-function getStreakCount() {
-    let userId = localStorage.getItem("username");
-    let streakCount = 0;
-    let currentDate = new Date().toDateString();
-    let lastDate = null;
-
-    if (lastActiveDates[userId]) {
-        lastDate = new Date(lastActiveDates[userId]);
-    }
-
-    if (lastDate) {
-        while (currentDate === lastDate.toDateString()) {
-            streakCount++;
-            lastDate.setDate(lastDate.getDate() - 1);
-            currentDate = lastDate.toDateString();
-        }
-    }
-
-    streakCount = getStreakCount(userId);
-    console.log("Current streak for user", userId + ":", streakCount);
-
-    return streakCount;
-}
-
-updateStreak(); // Call this function whenever user is active
-
-// Display PNG image if streak is active
-if (getStreakCount > 0) {
-    const img = document.createElement("img");
-    img.src = "Database_server\node\PublicResources\image\Streak.png";
-    document.body.appendChild(img);
-}
-
 //Function which highlights the link of the currently selected tab
 function highlightNavLink(pageId) {
     // Remove 'active' class from all navigation links

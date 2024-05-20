@@ -15,8 +15,11 @@
     "as": {
       "password": "1"
     },
-    "questTest" : {
+    "questTest": {
       "password": "password"
+    },
+    "sad2": {
+      "password": "2"
     }
   }
 }
