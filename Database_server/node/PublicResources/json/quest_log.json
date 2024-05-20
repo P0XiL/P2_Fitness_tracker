@@ -1,39 +1,27 @@
 {
   "sad": {
     "daily": {
-      "14/5/2024": {
-        "type": "core",
-        "difficulty": "0",
-        "target": 10,
-        "amount": 23,
-        "text": "Do the plank for 10 seconds",
-        "state": "complete",
-        "exercise": "plank"
+      "16/5/2024": {
+        "type": "cardio"
       },
-      "15/5/2024": {
-        "type": "upperbody"
+      "17/5/2024": {
+        "type": "core"
       }
     },
     "weekly": {
-      "14/5/2024": {
-        "type": "upperbody",
+      "16/5/2024": {
+        "type": "lowerbody",
         "difficulty": "0",
-        "target": 3,
-        "amount": 123,
-        "text": "Do 3 pushups",
-        "state": "complete",
-        "exercise": "pushups"
+        "target": 70,
+        "amount": 0,
+        "text": "Do the wallsit for 70 seconds",
+        "state": "incomplete",
+        "exercise": "wallsit"
       }
     },
     "monthly": {
-      "14/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 16,
-        "amount": 1233,
-        "text": "Go for a walk for 16 minutes",
-        "state": "complete",
-        "exercise": "walk"
+      "16/5/2024": {
+        "type": "core"
       }
     }
   },
@@ -191,5 +179,65 @@
         "type": "cardio"
       }
     }
+  },
+  "as": {
+    "daily": {
+      "16/5/2024": {
+        "type": "upperbody",
+        "difficulty": "0",
+        "target": 10,
+        "amount": 4,
+        "text": "Do arm circles for 10 seconds",
+        "state": "incomplete",
+        "exercise": "armcircles"
+      }
+    },
+    "weekly": {
+      "16/5/2024": {
+        "type": "cardio",
+        "difficulty": "3",
+        "target": 20,
+        "amount": 456,
+        "text": "Cycle 20 minutes",
+        "state": "complete",
+        "exercise": "cycling"
+      }
+    },
+    "monthly": {
+      "16/5/2024": {
+        "type": "upperbody",
+        "difficulty": "0",
+        "target": 32,
+        "amount": 0,
+        "text": "Do arm circles for 32 seconds",
+        "state": "incomplete",
+        "exercise": "armcircles"
+      }
+    }
+  },
+  "questTest": {
+    "daily": {
+      "17/5/2024": {
+        "type": "upperbody",
+        "difficulty": "0",
+        "target": 10,
+        "amount": 280,
+        "text": "Do arm circles for 10 seconds",
+        "state": "incomplete",
+        "exercise": "armcircles"
+      }
+    },
+    "weekly": {
+      "16/5/2024": {
+        "type": "cardio",
+        "difficulty": "3",
+        "target": 20,
+        "amount": 1023070,
+        "text": "Cycle 20 minutes",
+        "state": "complete",
+        "exercise": "cycling"
+      }
+    },
+    "monthly": {}
   }
 }

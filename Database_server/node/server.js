@@ -555,7 +555,6 @@ function change_amount(req, res) {
     });
     req.on('end', () => {
         let obj_amountInfo = JSON.parse(body);
-
         // Read existing data from the file
         fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
             let obj_questLog = {}; // Initialize quest_log object
@@ -570,7 +569,6 @@ function change_amount(req, res) {
                 // Handle file not found or empty
                 console.error("Error reading existing quest_log:", err);
             }
-
             const quest = obj_questLog[obj_amountInfo.user][obj_amountInfo.timespan][obj_amountInfo.date];
             if (obj_amountInfo["mode"] === "add") {
                 quest.amount += obj_amountInfo.amount;

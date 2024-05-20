@@ -107,10 +107,10 @@ async function display_quest(quest, user) {
                 //If there is no quest
                 if (obj_stateQuest["state"] == "None") {
                     //Check if they completed last quest
-                    try {   
-                        const lastestQuestDate = Object.keys(quest_log[user][questTimespan])[Object.keys(quest_log[user][questTimespan]).length-1];
+                    try {
+                        const lastestQuestDate = Object.keys(quest_log[user][questTimespan])[Object.keys(quest_log[user][questTimespan]).length - 1];
                         const stateOfLastQuest = quest_log[user][questTimespan][lastestQuestDate].state;
-                        if (stateOfLastQuest === "incomplete"){
+                        if (stateOfLastQuest === "incomplete") {
                             const obj_para = {
                                 user: user,
                                 type: quest_log[user][questTimespan][lastestQuestDate].exercise,
@@ -122,10 +122,10 @@ async function display_quest(quest, user) {
                         }
                     } catch (error) {
                         //If the object is empty ignore the error
-                        if (!is_empty_object(quest_log[user][questTimespan])){
+                        if (!is_empty_object(quest_log[user][questTimespan])) {
                             console.error(error);
                         }
-                        
+
                     }
                     //Chooses a type for userInfo
                     fetchJSON('json/users_info.json')
@@ -159,6 +159,7 @@ async function display_quest(quest, user) {
                         obj_award.difficulty = pathQuest.difficulty;
                         obj_award.type = pathQuest.exercise;
                         award_elo(obj_award);
+                        location.reload();
                     }
 
                     // Visual part
@@ -186,12 +187,12 @@ async function display_quest(quest, user) {
                     } else {
                         color = lerpColor("#00FF00", "#8B0000", (procentComplete - min) / (max - min));
                     }
-                    procentElement.innerHTML = procentComplete + "%";                    
+                    procentElement.innerHTML = procentComplete + "%";
 
                     procentElement.style.fontSize = 50 + "px";
                     procentElement.style.color = color;
 
-                    document.getElementById(quest).append(procentElement);5
+                    document.getElementById(quest).append(procentElement); 5
                     // Function for color interpolation
                     function lerpColor(a, b, t) {
                         const min = 100;
@@ -292,6 +293,7 @@ function open_modal_for_quest(questTimespan, type, user) {
                     fetchJSON('json/users_info.json')
                         .then(userInfo => {
                             //Modify the quest
+                            console.log(obj_Quest.quest);
                             obj_Quest.quest = modify_quest(obj_Quest.quest, userInfo.users_info[user].tier[questTimespan].rank, difficulty, userInfo.users_info[user].mastery[obj_Quest.exercise].rank, questTimespan);
                             let obj_newQuest = new Object;
                             const date = get_current_date_format();
@@ -507,6 +509,7 @@ function add_quest_json(quest) {
  * @param {string} obj_para.date - The date of the quest
  * @param {string} obj_para.user - The user id
  * @param {string} obj_para.mode - Either add or sub
+ * @param {int} obj_para.amount
  */
 function change_amount(obj_para) {
     fetch(serverPath + 'change_amount', {
@@ -534,7 +537,7 @@ function change_amount(obj_para) {
  * @param {string} obj_para.timesapan - The timespan of quest
  * @param {string} obj_para.date - The date of failed quest 
  */
-function remove_elo(obj_para){
+function remove_elo(obj_para) {
     fetch(serverPath + 'remove_elo', {
         method: 'POST',
         headers: {
