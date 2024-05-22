@@ -1016,11 +1016,14 @@
     "sad2": {
       "username": "sad2",
       "health": {
-        "name": "sad",
+        "name": "da",
         "age": "23",
-        "height": "23",
-        "weight": "2",
-        "gender": "male"
+        "height": "123",
+        "weight": "213",
+        "gender": "male",
+        "fitnessGoal": "weightLoss",
+        "activityLevel": "sedentary",
+        "surveyCompleted": true
       },
       "mastery": {
         "run": {
