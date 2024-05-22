@@ -25,22 +25,22 @@ const quest_log_QuestTest = {
     "monthly": {}
 };
 runTestsQuest();
-async function runTestsQuest() {
-    console.log("Running tests for quest_creation...");
-
-    test_fetchJSON();
-    test_check_currrent();
-    test_modify_quest();
-    //await test_change_amount_add();
-    //await test_change_amount_sub();
-    test_get_type();
-    test_validate_input();
-    test_generate_random_number();
-    test_is_empty_object();
-    test_get_current_date_format();
-    console.log("All tests for quest_creation passed");
+function runTestsQuest() {
+    try {
+        console.log("Running tests for quest_creation...");
+        test_fetchJSON();
+        test_check_currrent();
+        test_modify_quest();
+        test_get_type();
+        test_validate_input();
+        test_generate_random_number();
+        test_is_empty_object();
+        test_get_current_date_format();
+        console.log("All tests for quest_creation passed");  
+    } catch (error) {
+        console.error("Error occurred during testing:", error);  
+    }
 }
-
 
 // Assertion function
 function assert(condition, message) {
@@ -48,7 +48,6 @@ function assert(condition, message) {
         console.error("Assertion failed:", message);
     }
 }
-
 
 function test_fetchJSON() {
     const questTemplates = {
@@ -227,7 +226,6 @@ function test_fetchJSON() {
     fetchJSON('json/users.json').then(data => { assert(JSON.stringify(users_questTest) === JSON.stringify(data["obj_users"]["questTest"])), "Failed to fetched users" });
 }
 
-
 function test_check_currrent() {
     //We aspect daily quest still to be ongoing, therefor no state should be returned
     assert(check_current("daily", quest_log_QuestTest).state === undefined, "Failed check current daily");
@@ -236,7 +234,6 @@ function test_check_currrent() {
     //We aspect monthly to not have been made and therefor state to be "None"
     assert(check_current("monthly", quest_log_QuestTest).state === "None", "Failed check current monthly");
 }
-
 
 function test_modify_quest() {
     //modify_quest(quest, rank, difficulty, mastery, timespan);
@@ -295,7 +292,6 @@ function test_modify_quest() {
     assert(modify_quest(quest, rank, difficulty, mastery, timespan)["base_target"] === target, "Modify 7");
 }
 
-
 function change_amount_async(obj_para) {
     return new Promise((resolve, reject) => {
         change_amount(obj_para);
@@ -303,8 +299,7 @@ function change_amount_async(obj_para) {
     });
 }
 
-
-async function test_change_amount_add() {    
+/*async function test_change_amount_add() {    
     const obj_para = {
         questID: "quest1",
         timespan: "daily",
@@ -326,10 +321,9 @@ async function test_change_amount_add() {
     
     
     assert(expectedAmount === actualAmount, "add value incorrect");    
-}
+}*/
 
-
-async function test_change_amount_sub() {
+/*async function test_change_amount_sub() {
     const obj_para = {
         questID: "quest1",
         timespan: "weekly",
@@ -353,21 +347,11 @@ async function test_change_amount_sub() {
     
     assert(expectedAmount === actualAmount, "sub value incorrect");    
 
-}
-
-
-
-
-
-/*
-remove_elo(obj_para);
-award_elo(obj_para);
-*/
+}*/
 
 function test_award_elo(){
     award_elo(obj_para);
 }
-
 
 function test_get_type() {
     const obj_conf = {
@@ -400,7 +384,6 @@ function test_get_type() {
     }
 }
 
-
 function test_validate_input() {
     const originalAleret = window.alert;
     window.alert = function () { };
@@ -423,7 +406,6 @@ function test_validate_input() {
     window.alert = originalAleret;
 }
 
-
 function test_get_current_date_format() {
     dateFormat = get_current_date_format();
     dateArr = dateFormat.split("/");
@@ -432,7 +414,6 @@ function test_get_current_date_format() {
     assert(parseInt(dateArr[1]) <= 12 && parseInt(dateArr[1]) > 0, "Week number out of scope");
     assert(parseInt(dateArr[2]) <= 3000 && parseInt(dateArr[2]) > 0, "Month number out of scope");
 }
-
 
 function test_generate_random_number() {
     let max = 10
@@ -452,7 +433,6 @@ function test_generate_random_number() {
     }
 
 }
-
 
 function test_is_empty_object() {
 
