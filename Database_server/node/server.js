@@ -73,6 +73,9 @@ function processReq(req, res) {
                 case "/deleteFriend":
                     deleteFriend(req, res);
                     break;
+                case "/update_streak":
+                    update_streak(req, res);
+                    break;
                 default:
                     errorResponse(res, 404, "not found");
                     break;
@@ -431,15 +434,18 @@ function addUserToUsers_info(username) {
                 tier: {
                     daily: {
                         rank: 1,
-                        elo: 0
+                        elo: 0,
+                        streak: 0
                     },
                     weekly: {
                         rank: 1,
-                        elo: 0
+                        elo: 0,
+                        streak: 0
                     },
                     monthly: {
                         rank: 1,
-                        elo: 0
+                        elo: 0,
+                        streak: 0
                     }
                 },
                 preset: {
@@ -579,7 +585,6 @@ function change_amount(req, res) {
     });
     req.on('end', () => {
         let obj_amountInfo = JSON.parse(body);
-
         // Read existing data from the file
         fs.readFile('PublicResources/json/quest_log.json', (err, data) => {
             let obj_questLog = {}; // Initialize quest_log object
@@ -594,7 +599,6 @@ function change_amount(req, res) {
                 // Handle file not found or empty
                 console.error("Error reading existing quest_log:", err);
             }
-
             const quest = obj_questLog[obj_amountInfo.user][obj_amountInfo.timespan][obj_amountInfo.date];
             if (obj_amountInfo["mode"] === "add") {
                 quest.amount += obj_amountInfo.amount;
@@ -769,7 +773,6 @@ function award_elo(req, res) {
                 pathMatery["elo"] -= 500;
             }
             award = (Math.log10(parseInt(pathMatery["rank"])) + 1) * award;
-            console.log(pathMatery["rank"] + "=" + award, Math.log10(parseInt(pathMatery["rank"])));
             const pathTier = obj_usersInfo["users_info"][obj_award.user]["tier"][obj_award.timespan];
             pathTier["elo"] += award;
 
@@ -815,7 +818,45 @@ function award_elo(req, res) {
 
 
 
+function update_streak(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        let obj_streak = JSON.parse(body);
 
+        fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+            if (err) {
+                console.error(err);
+                errorResponse(res, 500, String(err));
+                return;
+            } 
+            let users_info = JSON.parse(data);
+            
+
+            const path = users_info.users_info[obj_streak.user].tier;
+            if (obj_streak.mode === "increase"){
+                path[obj_streak.timespan].streak += 1;
+            } else if (obj_streak.mode === "reset"){
+                path[obj_streak.timespan].streak = 0;
+            }
+            
+
+            // Write updated data back to the file
+            fs.writeFile('PublicResources/json/users_info.json', JSON.stringify(users_info, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    errorResponse(res, 500, String(err));
+                } else {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('Updated streak');
+                }
+            });
+        });
+    });
+}
 
 
 
