@@ -23,6 +23,9 @@
     },
     "champ": {
       "password": "2"
+    },
+    "test": {
+      "password": "123"
     }
   }
 }

@@ -4,7 +4,7 @@
  * @param {string} elementID - The ID on the element where the text goes 
  */
 function individual_type(user, elementID) {
-  fetchJSON("json/quest_log.json")
+ return fetchJSON("json/quest_log.json")
     .then(data => {
       const processedTypes = {}; 
 
@@ -23,48 +23,47 @@ function individual_type(user, elementID) {
         }
       }
       const element = document.getElementById(elementID);
+      element.innerHTML = "";
       for (let exercise in processedTypes) {
         const totalAmount = processedTypes[exercise].sum;
-        element.innerHTML += `<pre id="${exercise}" sum="${totalAmount}">Amount of ${exercise} = ${totalAmount} \n\n</pre>`;
+        element.innerHTML += `<pre id="${exercise}" sum="${totalAmount}">Amount of ${exercise} = ${totalAmount} \n\n</pre>`
       }
+  return processedTypes;
     })
     .catch(error => {
       console.error("Error fetching JSON:", error);
     });
 }
 
-
-let prePeriod = "daily";
-let pretype = "run";
 /**
  * Updates the graph
  * @param {string} type
  */
-function update_graph(type, id) {
+function update_graph(exercise, id) {
     let user = localStorage.getItem("username");
-    plot(type);
-    change_text(type, id);
+    plot(exercise);
+    change_text(exercise, id);
 }
 
-function update_graph_friend(type, id){
-  plot_with_friends(type);
-  change_text(type, id);
+function update_graph_friend(exercise, id){
+  plot_with_friends(exercise);
+  change_text(exercise, id);
 }
 /**
  * Plots the graph for user
  * @param {string} user - User ID 
  * @param {string} type
  */
-function plot(type) {
+function plot(exercise) {
   const ctx = document.getElementById("myChart");
   const user = localStorage.getItem("username");
 
-  Promise.all([user_data_x(user, type), user_data_y(user, type)])
+  Promise.all([user_data_x(user, exercise), user_data_y(user, exercise)])
     .then(([labels, data]) => {
       let maxVal = data.length > 0 ? Math.max(...data) + 1 : 10;
 
       // Calculate the average of the data
-      let average = recommended(type);
+      let average = recommended(exercise);
       maxVal = Math.max(maxVal, average + 1);
 
       let myChart = new Chart(ctx, {
@@ -106,15 +105,15 @@ function plot(type) {
  * Plot the graph with friends
  * @param {string} user - User ID 
  * @param {string} friend - Friend ID
- * @param {string} type - Type of quest
+ * @param {string} exercise - exercise of quest
  */
-function plot_with_friends(type) {
+function plot_with_friends(exercise) {
   // Get the canvas element
   let user = localStorage.getItem("username");
   let friend = localStorage.getItem("friend");
   let ctx = document.getElementById("myChart2").getContext("2d");
 
-  Promise.all([user_data_x(user, type), user_data_x(friend, type), user_data_y(user, type), user_data_y(friend, type)])
+  Promise.all([user_data_x(user, exercise), user_data_x(friend, exercise), user_data_y(user, exercise), user_data_y(friend, exercise)])
     .then(([labels_user1, labels_user2, data_user1, data_user2]) => {
       //Sort the two x data
       const all_labels = [...new Set([...labels_user1, ...labels_user2])].sort();
@@ -194,8 +193,6 @@ function user_data_y(user, exercise) {
       for (let date in totalAmounts) {
         amounts.push(totalAmounts[date]);
       }
-
-      console.log(amounts);
       return amounts;
     })
     .catch(error => {
