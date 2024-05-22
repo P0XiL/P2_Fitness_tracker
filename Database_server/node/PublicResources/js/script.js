@@ -367,19 +367,30 @@ function checkLoginState() {
             topnavigation.style.display = 'block';
             document.getElementById('main').classList.add('active');
 
-            // Retrieve survey completion status from local storage
-            const userSurveyKey = `surveyCompleted_${username}`;
-            const surveyCompleted = localStorage.getItem(userSurveyKey);
-
-            // Check if survey is completed, and update UI accordingly
-            if (surveyCompleted === 'true') {
-                document.getElementById('surveyForm').classList.remove('active');
-            } else {
-                document.getElementById('main').classList.remove('active');
-                document.getElementById('surveyForm').classList.add('active');
-                sidenavigation.style.display = 'none';
-                topnavigation.style.display = 'none';
-            }
+            // Fetch user data from the server
+            fetch(serverPath + 'users_info.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const userData = data.users_info[username];
+                if (userData && userData.health && userData.health.surveyCompleted === true) {
+                    document.getElementById('surveyForm').classList.remove('active');
+                } else {
+                    document.getElementById('main').classList.remove('active');
+                    document.getElementById('surveyForm').classList.add('active');
+                    sidenavigation.style.display = 'none';
+                    topnavigation.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+                // Handle error appropriately
+            });
+        
         } else {
             // Clear expired login state
             localStorage.removeItem('loginState');
@@ -392,6 +403,7 @@ function checkLoginState() {
         loginPage.classList.add('active');
     }
 }
+
 
 function loginUser(loginData) {
     fetch(serverPath + 'login', {

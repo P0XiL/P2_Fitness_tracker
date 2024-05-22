@@ -33,6 +33,9 @@ function processReq(req, res) {
                 case "/":
                     fileResponse(res, "html/Letsgo.html");
                     break;
+                case "/users_info.json": // Add this case for serving users_info.json
+                    serveUsersInfo(res);
+                    break;
                 default:
                     fileResponse(res, req.url);
                     break;
@@ -82,6 +85,22 @@ function processReq(req, res) {
             break;
     }
 }
+
+// Function to serve the users_info.json file
+function serveUsersInfo(res) {
+    fs.readFile('PublicResources/json/users_info.json', (err, data) => {
+        if (err) {
+            console.error(err);
+            errorResponse(res, 500, String(err));
+            return;
+        }
+
+        res.setHeader('Content-Type', 'application/json');
+        res.statusCode = 200;
+        res.end(data);
+    });
+}
+
 function addFriend(req, res) {
     let body = '';
     req.on('data', (chunk) => {
@@ -343,8 +362,8 @@ function addUserToUsers_info(username) {
                     weight: 0,
                     gender: "notAvailable",
                     fitnessGoal: "notAvailable",
-                    activityLevel: "notAvailable"
-
+                    activityLevel: "notAvailable",
+                    surveyCompleted: false
                 },
                 mastery: {
                     run: {
@@ -870,7 +889,8 @@ function write_survey_data_json(req, res) {
                     weight: surveyData.weight,
                     gender: surveyData.gender,
                     fitnessGoal: surveyData.fitnessGoal,
-                    activityLevel: surveyData.activityLevel
+                    activityLevel: surveyData.activityLevel,
+                    surveyCompleted: true
                 };
             } else {
                 // Handle the case where the username doesn't exist
