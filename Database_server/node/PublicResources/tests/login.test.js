@@ -156,3 +156,243 @@ function testCreateUser() {
 testLoginUser();
 testCreateUser();
 testStoreLoginState();
+
+//const fs = require('fs');
+//const http = require('http');
+
+// Mock the fs.readFile and fs.writeFile functions
+const fsMock = {
+    readFile: (path, callback) => {
+        if (path === 'PublicResources/json/users.json') {
+            callback(null, JSON.stringify({
+                obj_users: {
+                    testUser: { password: 'testPass' }
+                }
+            }));
+        } else if (path === 'PublicResources/json/quest_log.json') {
+            callback(null, JSON.stringify({}));
+        } else {
+            callback(new Error('File not found'));
+        }
+    },
+    writeFile: (path, data, callback) => {
+        callback(null);
+    }
+};
+
+//fs.readFile = fsMock.readFile;
+//fs.writeFile = fsMock.writeFile;
+
+// Helper function to create a mock request
+function createMockRequest(method, url, body) {
+    const req = new http.IncomingMessage();
+    req.method = method;
+    req.url = url;
+    req.headers = {};
+    req.body = body;
+    return req;
+}
+
+// Helper function to create a mock response
+function createMockResponse(callback) {
+    const res = new http.ServerResponse({ method: 'POST' });
+    res.write = (data) => {
+        res._data = (res._data || '') + data;
+    };
+    res.end = () => {
+        callback(res);
+    };
+    return res;
+}
+
+// Server-side functions from server.js
+
+// Function to handle user login
+function write_login_user(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const loginData = JSON.parse(body);
+
+        // Read existing user data from the file
+        fsMock.readFile('PublicResources/json/users.json', (err, data) => {
+            if (err) {
+                console.error("Error reading user data:", err);
+                res.statusCode = 500;
+                res.end(String(err));
+                return;
+            }
+
+            try {
+                const users = JSON.parse(data);
+
+                // Check if the username exists and password matches
+                if (users['obj_users'][loginData.username] && users['obj_users'][loginData.username].password === loginData.password) {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ success: true, username: loginData.username }));
+                } else {
+                    res.statusCode = 401;
+                    res.end("Invalid username or password");
+                }
+            } catch (parseError) {
+                console.error("Error parsing user data:", parseError);
+                res.statusCode = 500;
+                res.end(String(parseError));
+            }
+        });
+    });
+}
+
+// Function to handle writing user data to a JSON file
+function write_create_user(req, res) {
+    let body = '';
+    req.on('data', (chunk) => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const userData = JSON.parse(body);
+
+        // Read existing data from the file
+        fsMock.readFile('PublicResources/json/users.json', (err, data) => {
+            let users = {}; // Initialize users object
+
+            if (!err) {
+                try {
+                    users = JSON.parse(data);
+                } catch (parseError) {
+                    console.error("Error parsing existing user data:", parseError);
+                }
+            } else {
+                // Handle file not found or empty
+                console.error("Error reading existing user data:", err);
+            }
+
+            // Create obj_users object if not exists
+            if (!users.hasOwnProperty('obj_users')) {
+                users['obj_users'] = {};
+            }
+
+            // Check if the username already exists
+            if (users['obj_users'].hasOwnProperty(userData.username)) {
+                res.statusCode = 400;
+                res.end("Username already exists");
+                return;
+            }
+
+            // Append new user data
+            users['obj_users'][userData.username] = {
+                password: userData.password
+            };
+
+            // Write updated data back to the file
+            fsMock.writeFile('PublicResources/json/users.json', JSON.stringify(users, null, 2), (err) => {
+                if (err) {
+                    console.error(err);
+                    res.statusCode = 500;
+                    res.end(String(err));
+                } else {
+                    console.log('User data appended to file');
+                    fsMock.readFile('PublicResources/json/quest_log.json', (err, data) => {
+                        let obj_questLog = {}; // Initialize questLog object
+                        if (!err) {
+                            try {
+                                obj_questLog = JSON.parse(data);
+                            } catch (parseError) {
+                                console.error("Error parsing existing quests:", parseError);
+                            }
+                        } else {
+                            // Handle file not found or empty
+                            console.error("Error reading existing quest_log:", err);
+                        }
+                        obj_questLog[userData.username] = {
+                            daily: {},
+                            weekly: {},
+                            monthly: {}
+                        };
+
+                        fsMock.writeFile('PublicResources/json/quest_log.json', JSON.stringify(obj_questLog, null, 2), (err) => {
+                            if (err) {
+                                console.error(err);
+                                res.statusCode = 500;
+                                res.end(String(err));
+                            } else {
+                                console.log('User added to quest_log');
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'text/plain');
+                                res.end('User added to quest_log');
+                            }
+                        });
+
+                    });
+                }
+            });
+
+        });
+    });
+}
+
+// Router function to process requests
+function processReq(req, res) {
+    if (req.url === '/login' && req.method === 'POST') {
+        write_login_user(req, res);
+    } else if (req.url === '/createUser' && req.method === 'POST') {
+        write_create_user(req, res);
+    } else {
+        res.statusCode = 404;
+        res.end("Not Found");
+    }
+}
+
+// Test the write_login_user function
+function testWriteLoginUser() {
+    console.log("Running testWriteLoginUser...");
+
+    const req = createMockRequest('POST', '/login', JSON.stringify({
+        username: 'testUser',
+        password: 'testPass'
+    }));
+    const res = createMockResponse((res) => {
+        // Assert
+        if (res.statusCode !== 200) {
+            console.error(`Expected status code 200, but got ${res.statusCode}`);
+        }
+        const responseData = JSON.parse(res._data);
+        if (responseData.username !== 'testUser') {
+            console.error(`Expected username to be testUser, but got ${responseData.username}`);
+        }
+        console.log("testWriteLoginUser completed.");
+    });
+
+    // Simulate request processing
+    processReq(req, res);
+}
+
+// Test the write_create_user function
+function testWriteCreateUser() {
+    console.log("Running testWriteCreateUser...");
+
+    const req = createMockRequest('POST', '/createUser', JSON.stringify({
+        username: 'newUser',
+        password: 'newPass'
+    }));
+    const res = createMockResponse((res) => {
+        // Assert
+        if (res.statusCode !== 200) {
+            console.error(`Expected status code 200, but got ${res.statusCode}`);
+        }
+        if (res._data !== 'User added to quest_log') {
+            console.error(`Expected response to be 'User added to quest_log', but got ${res._data}`);
+        }
+        console.log("testWriteCreateUser completed.");
+    });
+
+    // Simulate request processing
+    processReq(req, res);
+}
+
+// Run the tests
+testWriteLoginUser();
+testWriteCreateUser();
