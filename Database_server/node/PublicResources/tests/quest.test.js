@@ -316,16 +316,14 @@ async function test_change_amount_add() {
     
     const predata = await fetchJSON("json/quest_log.json");
     const startAmount = predata["questTest"][obj_para.timespan][obj_para.date].amount;
-    console.log(startAmount)
     const expectedAmount = startAmount + obj_para.amount;
-    console.log(expectedAmount)
     await change_amount_async(obj_para);
     // Fetch updated amount after adding
     const data = await fetchJSON("json/quest_log.json");
     actualAmount = data["questTest"][obj_para.timespan][obj_para.date].amount;
-    //console.log(obj_para.amount + actualAmount)
+   
     
-    console.log(actualAmount)
+    
     
     assert(expectedAmount === actualAmount, "add value incorrect");    
 }
@@ -343,15 +341,15 @@ async function test_change_amount_sub() {
     
     const predata = await fetchJSON("json/quest_log.json");
     const startAmount = predata["questTest"][obj_para.timespan][obj_para.date].amount;
-    console.log(startAmount)
+    
     const expectedAmount = startAmount - obj_para.amount;
-    console.log(expectedAmount)
+    
 
     await change_amount_async(obj_para);
     
     const data = await fetchJSON("json/quest_log.json");
     actualAmount = data["questTest"][obj_para.timespan][obj_para.date].amount;
-    console.log(actualAmount)
+    
     
     assert(expectedAmount === actualAmount, "sub value incorrect");    
 
