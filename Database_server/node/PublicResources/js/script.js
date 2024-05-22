@@ -373,7 +373,7 @@ function checkLoginState() {
             })
             .then(data => {
                 const userData = data.users_info[username];
-                if (userData && userData.health && userData.health.surveyCompleted === true) {
+                if (userData.health.surveyCompleted === true) {
                     document.getElementById('surveyForm').classList.remove('active');
                 } else {
                     document.getElementById('main').classList.remove('active');
