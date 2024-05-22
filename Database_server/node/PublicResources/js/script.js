@@ -78,10 +78,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Survey data:', surveyData);
             sendSurveyData(surveyData);
 
-            // Set a flag in local storage indicating that the user has completed the survey
-            const userSurveyKey = `surveyCompleted_${userId}`;
-            localStorage.setItem(userSurveyKey, 'true');
-
             location.reload();
 
             document.getElementById('main').classList.add('active');
