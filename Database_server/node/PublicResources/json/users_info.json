@@ -907,10 +907,10 @@
     "sad2": {
       "username": "sad2",
       "health": {
-        "name": "sda",
+        "name": "sad",
         "age": "23",
         "height": "23",
-        "weight": "23",
+        "weight": "2",
         "gender": "male"
       },
       "mastery": {
@@ -980,7 +980,7 @@
         "daily": {
           "rank": 7,
           "elo": 75,
-          "streak": 5
+          "streak": 6
         },
         "weekly": {
           "rank": 22,
@@ -991,6 +991,106 @@
           "rank": 4,
           "elo": 5,
           "streak": 1
+        }
+      },
+      "preset": {
+        "name": "balance",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      },
+      "friends": []
+    },
+    "champ": {
+      "username": "champ",
+      "health": {
+        "name": "as",
+        "age": "32",
+        "height": "123",
+        "weight": "42",
+        "gender": "male"
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 50
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 1,
+          "elo": 0
+        },
+        "squats": {
+          "rank": 1,
+          "elo": 50
+        },
+        "lunges": {
+          "rank": 1,
+          "elo": 0
+        },
+        "wallsit": {
+          "rank": 1,
+          "elo": 0
+        },
+        "plank": {
+          "rank": 1,
+          "elo": 50
+        },
+        "situps": {
+          "rank": 1,
+          "elo": 0
+        },
+        "backextentions": {
+          "rank": 1,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        },
+        "dips": {
+          "rank": 1,
+          "elo": 0
+        },
+        "armcircles": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 50,
+          "streak": 1
+        },
+        "weekly": {
+          "rank": 4,
+          "elo": 10,
+          "streak": 1
+        },
+        "monthly": {
+          "rank": 7,
+          "elo": 10,
+          "streak": 0
         }
       },
       "preset": {

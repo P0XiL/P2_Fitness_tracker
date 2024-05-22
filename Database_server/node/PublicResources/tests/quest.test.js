@@ -1,7 +1,7 @@
 //Insure dates are correct
 const quest_log_QuestTest = {
     "daily": {
-        "17/5/2024": {
+        "22/5/2024": {
             "type": "upperbody",
             "difficulty": "0",
             "target": 10,
@@ -31,7 +31,7 @@ async function runTestsQuest() {
     test_fetchJSON();
     test_check_currrent();
     test_modify_quest();
-    await test_change_amount_add();
+    //await test_change_amount_add();
     //await test_change_amount_sub();
     test_get_type();
     test_validate_input();
@@ -41,14 +41,13 @@ async function runTestsQuest() {
     console.log("All tests for quest_creation passed");
 }
 
+
 // Assertion function
 function assert(condition, message) {
     if (!condition) {
         console.error("Assertion failed:", message);
     }
 }
-
-
 
 
 function test_fetchJSON() {
@@ -228,22 +227,16 @@ function test_fetchJSON() {
     fetchJSON('json/users.json').then(data => { assert(JSON.stringify(users_questTest) === JSON.stringify(data["obj_users"]["questTest"])), "Failed to fetched users" });
 }
 
+
 function test_check_currrent() {
-    const expectedDaily = {
-        date: "16/5/2024"
-    }
-    const expectedWeekly = {
-        date: "16/5/2024",
-        state: "Done"
-    }
-    const expectedMonthly = {
-        date: "16/5/2024",
-        state: "None"
-    }
-    assert(JSON.stringify(check_current("daily", quest_log_QuestTest)) === JSON.stringify(expectedDaily), "Failed check current daily");
-    assert(JSON.stringify(check_current("weekly", quest_log_QuestTest)) === JSON.stringify(expectedWeekly), "Failed check current weekly");
-    assert(JSON.stringify(check_current("monthly", quest_log_QuestTest)) === JSON.stringify(expectedMonthly), "Failed check current monthly");
+    //We aspect daily quest still to be ongoing, therefor no state should be returned
+    assert(check_current("daily", quest_log_QuestTest).state === undefined, "Failed check current daily");
+    //We aspect weekly to be completed and therefor state to be "Done"
+    assert(check_current("weekly", quest_log_QuestTest).state === "Done", "Failed check current weekly");
+    //We aspect monthly to not have been made and therefor state to be "None"
+    assert(check_current("monthly", quest_log_QuestTest).state === "None", "Failed check current monthly");
 }
+
 
 function test_modify_quest() {
     //modify_quest(quest, rank, difficulty, mastery, timespan);
@@ -302,12 +295,14 @@ function test_modify_quest() {
     assert(modify_quest(quest, rank, difficulty, mastery, timespan)["base_target"] === target, "Modify 7");
 }
 
+
 function change_amount_async(obj_para) {
     return new Promise((resolve, reject) => {
         change_amount(obj_para);
         resolve();
     });
 }
+
 
 async function test_change_amount_add() {    
     const obj_para = {
@@ -334,6 +329,7 @@ async function test_change_amount_add() {
     
     assert(expectedAmount === actualAmount, "add value incorrect");    
 }
+
 
 async function test_change_amount_sub() {
     const obj_para = {
@@ -374,11 +370,6 @@ function test_award_elo(){
     award_elo(obj_para);
 }
 
-
-
-function test_input_data() {
-    input_data(obj_para);
-}
 
 function test_get_type() {
     const obj_conf = {

@@ -224,7 +224,7 @@
         "type": "upperbody",
         "difficulty": "0",
         "target": 10,
-        "amount": 400,
+        "amount": 640,
         "text": "Do arm circles for 10 seconds",
         "state": "incomplete",
         "exercise": "armcircles"
@@ -253,6 +253,15 @@
         "text": "Do 5 crunches",
         "state": "complete",
         "exercise": "crunches"
+      },
+      "22/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "-3",
+        "target": 3,
+        "amount": 5,
+        "text": "Do 3 lunges",
+        "state": "complete",
+        "exercise": "lunges"
       }
     },
     "weekly": {
@@ -275,6 +284,41 @@
         "text": "Do 3 situps",
         "state": "complete",
         "exercise": "situps"
+      }
+    }
+  },
+  "champ": {
+    "daily": {
+      "22/5/2024": {
+        "type": "core",
+        "difficulty": "0",
+        "target": 10,
+        "amount": 32,
+        "text": "Do the plank for 10 seconds",
+        "state": "complete",
+        "exercise": "plank"
+      }
+    },
+    "weekly": {
+      "22/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 5,
+        "amount": 32,
+        "text": "Go for a run for 5 minutes",
+        "state": "complete",
+        "exercise": "run"
+      }
+    },
+    "monthly": {
+      "22/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "0",
+        "target": 9,
+        "amount": 321,
+        "text": "Do 9 squats",
+        "state": "complete",
+        "exercise": "squats"
       }
     }
   }
