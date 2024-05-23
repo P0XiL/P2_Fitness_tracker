@@ -1,4 +1,3 @@
-/*
 runTests();
 function runTests() {
   console.log("Running tests...");
@@ -764,6 +763,3 @@ async function testUpdateCounter() {
   // Remove the container from the document body after testing
   document.body.removeChild(container);
 }
-
-
-*/
