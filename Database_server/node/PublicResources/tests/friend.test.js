@@ -1,4 +1,4 @@
-/*
+
 function runTests() {
     console.log("Running tests...");
 
@@ -60,4 +60,5 @@ function testDeleteFriend() {
         return response.json();
     });
 }
-*/
+
+runTests();

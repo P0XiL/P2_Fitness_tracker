@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3369;
+const port = 3360;
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
