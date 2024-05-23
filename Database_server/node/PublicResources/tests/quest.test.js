@@ -299,56 +299,6 @@ function change_amount_async(obj_para) {
     });
 }
 
-/*async function test_change_amount_add() {    
-    const obj_para = {
-        questID: "quest1",
-        timespan: "daily",
-        date: "17/5/2024",
-        user: "questTest",
-        mode: "add",
-        amount: 10
-    };    
-    
-    const predata = await fetchJSON("json/quest_log.json");
-    const startAmount = predata["questTest"][obj_para.timespan][obj_para.date].amount;
-    const expectedAmount = startAmount + obj_para.amount;
-    await change_amount_async(obj_para);
-    // Fetch updated amount after adding
-    const data = await fetchJSON("json/quest_log.json");
-    actualAmount = data["questTest"][obj_para.timespan][obj_para.date].amount;
-   
-    
-    
-    
-    assert(expectedAmount === actualAmount, "add value incorrect");    
-}*/
-
-/*async function test_change_amount_sub() {
-    const obj_para = {
-        questID: "quest1",
-        timespan: "weekly",
-        date: "16/5/2024",
-        user: "questTest",
-        mode: "sub",
-        amount: 10
-    };    
-    
-    const predata = await fetchJSON("json/quest_log.json");
-    const startAmount = predata["questTest"][obj_para.timespan][obj_para.date].amount;
-    
-    const expectedAmount = startAmount - obj_para.amount;
-    
-
-    await change_amount_async(obj_para);
-    
-    const data = await fetchJSON("json/quest_log.json");
-    actualAmount = data["questTest"][obj_para.timespan][obj_para.date].amount;
-    
-    
-    assert(expectedAmount === actualAmount, "sub value incorrect");    
-
-}*/
-
 function test_award_elo(){
     award_elo(obj_para);
 }
