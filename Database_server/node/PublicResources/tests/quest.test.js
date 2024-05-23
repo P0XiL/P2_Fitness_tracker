@@ -1,7 +1,7 @@
 //Insure dates are correct
 const quest_log_QuestTest = {
     "daily": {
-        "22/5/2024": {
+        "23/5/2024": {
             "type": "upperbody",
             "difficulty": "0",
             "target": 10,
@@ -12,7 +12,7 @@ const quest_log_QuestTest = {
         }
     },
     "weekly": {
-        "16/5/2024": {
+        "23/5/2024": {
             "type": "cardio",
             "difficulty": "3",
             "target": 20,

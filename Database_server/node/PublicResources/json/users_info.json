@@ -1018,12 +1018,11 @@
       "health": {
         "name": "da",
         "age": "23",
-        "height": "123",
-        "weight": "213",
+        "height": 220,
+        "weight": 213,
         "gender": "male",
         "fitnessGoal": "weightLoss",
-        "activityLevel": "sedentary",
-        "surveyCompleted": true
+        "activityLevel": "sedentary"
       },
       "mastery": {
         "run": {
@@ -1113,8 +1112,7 @@
           "core": 2,
           "upperbody": 2
         }
-      },
-      "friends": []
+      }
     },
     "champ": {
       "username": "champ",

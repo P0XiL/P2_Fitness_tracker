@@ -233,6 +233,9 @@
         "text": "Do 3 lunges",
         "state": "complete",
         "exercise": "lunges"
+      },
+      "23/5/2024": {
+        "type": "lowerbody"
       }
     },
     "weekly": {

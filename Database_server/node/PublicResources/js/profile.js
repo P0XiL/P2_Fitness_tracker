@@ -504,34 +504,34 @@ function calculateBMI(height, weight) {
 // Function to draw the graph
 function drawBMIGraph(bmiValue) {
     // Define BMI categories and their ranges
-    var categories = [
+    const categories = [
         { label: "Underweight", min: 0, max: 18.5, color: "#3498db" },
         { label: "Normal", min: 18.5, max: 24.9, color: "#2ecc71" },
         { label: "Overweight", min: 25, max: 29.9, color: "#f1c40f" },
         { label: "Obese", min: 30, max: 100, color: "#e74c3c" } // Adjusted max value
     ];
 
-    var canvas = document.getElementById("bmiGraph");
-    var ctx = canvas.getContext("2d");
-    var padding = 10;
-    var scaleFactor = 0.5; // Scale factor for resizing the canvas
+    const canvas = document.getElementById("bmiGraph");
+    const ctx = canvas.getContext("2d");
+    const padding = 10;
+    const scaleFactor = 0.5; // Scale factor for resizing the canvas
 
     // Adjust canvas size
     canvas.width = canvas.width * scaleFactor;
     canvas.height = canvas.height * scaleFactor;
 
-    var barWidth = (canvas.width - 2 * padding) / categories.length;
+    const barWidth = (canvas.width - 2 * padding) / categories.length;
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw bars for each category
     categories.forEach(function (category, index) {
-        var barHeight = (canvas.height - padding * 2);
-        var y = padding;
+        const barHeight = (canvas.height - padding * 2);
+        const y = padding;
 
         // Calculate x position of the bar
-        var x = padding + index * barWidth;
+        const x = padding + index * barWidth;
 
         // Draw filled rectangle for the bar
         ctx.fillStyle = category.color;
@@ -548,8 +548,8 @@ function drawBMIGraph(bmiValue) {
         // Check if the user's BMI value falls within this category
         if (bmiValue >= category.min && bmiValue <= category.max) {
             // Calculate the position of the red dot within this category
-            var progress = (bmiValue - category.min) / (category.max - category.min);
-            var dotX = x + progress * barWidth;
+            const progress = (bmiValue - category.min) / (category.max - category.min);
+            const dotX = x + progress * barWidth;
 
             // Draw red dot indicating the user's BMI value
             ctx.fillStyle = "red";
