@@ -651,7 +651,6 @@ async function testDisplayUserPreferences() {
           assert(button.textContent.toLowerCase().includes('save preset') === (select.value === 'custom'), "Button text should be 'Save Preset' based on preset value");
       });
 
-      // Output results
   }
 
   // Call the setup function to start the tests
