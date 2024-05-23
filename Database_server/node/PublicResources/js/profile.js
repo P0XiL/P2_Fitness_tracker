@@ -167,13 +167,13 @@ function getSubTierRange(rank) {
     }
 }
 
-function createRankItem(container, title, imageSrc, elo, period, isMastery) {
+function createRankItem(container, title, imageSrc, elo, timespan, isMastery) {
     const itemDiv = document.createElement('div');
     itemDiv.classList.add(isMastery ? 'mastery-grid-item' : 'tier-grid-item');
 
     // Create and append title
     const itemTitle = document.createElement('h3');
-    itemTitle.textContent = isMastery ? `${capitalizeFirstLetter(title)}: ` : `${period}: ${title}`;
+    itemTitle.textContent = isMastery ? `${capitalizeFirstLetter(title)}: ` : `${timespan}: ${title}`;
     itemDiv.appendChild(itemTitle);
 
     // Create and append image
@@ -186,7 +186,7 @@ function createRankItem(container, title, imageSrc, elo, period, isMastery) {
     const progressBar = document.createElement('div');
     progressBar.classList.add('progress-bar');
 
-    const maxElo = isMastery ? 500 : getMaxElo(period); // Get the maximum Elo for the period if it's not a mastery
+    const maxElo = isMastery ? 500 : getMaxElo(timespan); // Get the maximum Elo for the timespan if it's not a mastery
 
     const eloProgress = document.createElement('div');
     eloProgress.classList.add('elo-progress');
@@ -208,9 +208,9 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Function to get maximum Elo based on period
-function getMaxElo(period) {
-    switch (period) {
+// Function to get maximum Elo based on timespan
+function getMaxElo(timespan) {
+    switch (timespan) {
         case 'Daily':
             return 100;
         case 'Weekly':
@@ -218,7 +218,7 @@ function getMaxElo(period) {
         case 'Monthly':
             return 20;
         default:
-            return 100; // Default to daily if period is unknown
+            return 100; // Default to daily if timespan is unknown
     }
 }
 
