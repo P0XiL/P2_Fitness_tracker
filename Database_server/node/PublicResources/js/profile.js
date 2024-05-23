@@ -121,7 +121,7 @@ function getTierRange(rank) {
             return '1-15';
         case rank >= 16 && rank <= 30:
             return '16-30';
-        case rank >= 31 && rank <= 45:
+        case rank >= 31:
             return '31-45';
         default:
             // Handle cases outside the defined ranges
@@ -395,7 +395,6 @@ async function postUserInfo(username) {
                     activityLevel: existingUserInfo.health.activityLevel
                 },
                 mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
                 tier: existingUserInfo.tier,
                 preset: existingUserInfo.preset
             };
@@ -659,7 +658,6 @@ async function updatePreset(username, preset) {
                 username: existingUserInfo.username,
                 health: existingUserInfo.health,
                 mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
                 tier: existingUserInfo.tier,
                 preset: {
                     name: preset,
@@ -742,7 +740,6 @@ async function postCustomData(username) {
                 username: username,
                 health: existingUserInfo.health,
                 mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
                 tier: existingUserInfo.tier,
                 preset: {
                     name: 'custom',

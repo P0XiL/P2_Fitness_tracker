@@ -1,378 +1,93 @@
 {
-  "sad": {
+  "Lenny": {
     "daily": {
-      "16/5/2024": {
-        "type": "cardio"
-      },
       "17/5/2024": {
-        "type": "core"
-      },
-      "20/5/2024": {
-        "type": "lowerbody"
-      },
-      "22/5/2024": {
+        "type": "upperbody",
+        "difficulty": "3",
+        "target": 3,
+        "amount": 4,
+        "text": "Do 3 pushups",
+        "state": "complete",
+        "exercise": "pushups"
+      }
+    },
+    "weekly": {
+      "17/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "17/5/2024": {
+        "type": "upperbody",
+        "difficulty": "3",
+        "target": 39,
+        "amount": 0,
+        "text": "Do 39 pushups",
+        "state": "incomplete",
+        "exercise": "pushups"
+      }
+    }
+  },
+  "Tobi": {
+    "daily": {
+      "17/5/2024": {
         "type": "upperbody"
       }
     },
     "weekly": {
-      "16/5/2024": {
-        "type": "lowerbody",
-        "difficulty": "0",
-        "target": 70,
-        "amount": 0,
-        "text": "Do the wallsit for 70 seconds",
-        "state": "incomplete",
-        "exercise": "wallsit"
+      "17/5/2024": {
+        "type": "core"
       }
     },
     "monthly": {
-      "16/5/2024": {
+      "17/5/2024": {
         "type": "core"
       }
     }
   },
-  "pog": {
+  "Hey": {
     "daily": {
-      "14/5/2024": {
+      "17/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "17/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "17/5/2024": {
+        "type": "upperbody"
+      }
+    }
+  },
+  "Lenny3": {
+    "daily": {
+      "17/5/2024": {
         "type": "cardio",
-        "difficulty": "-3",
+        "difficulty": "0",
         "target": 5,
-        "amount": 46,
+        "amount": 100,
         "text": "Go for a walk for 5 minutes",
         "state": "complete",
         "exercise": "walk"
       }
     },
     "weekly": {
-      "14/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 5,
-        "amount": 12,
-        "text": "Go for a run for 5 minutes",
-        "state": "complete",
-        "exercise": "run"
-      }
-    },
-    "monthly": {
-      "14/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 16,
-        "amount": 128,
-        "text": "Go for a walk for 16 minutes",
-        "state": "complete",
-        "exercise": "walk"
-      }
-    }
-  },
-  "Lenny2": {
-    "daily": {
-      "14/5/2024": {
-        "type": "upperbody"
-      }
-    },
-    "weekly": {
-      "14/5/2024": {
-        "type": "core"
-      }
-    },
-    "monthly": {
-      "14/5/2024": {
-        "type": "core"
-      }
-    }
-  },
-  "Tobi": {
-    "daily": {
-      "13/5/2024": {
-        "type": "core"
-      }
-    },
-    "weekly": {
-      "13/5/2024": {
-        "type": "lowerbody"
-      }
-    },
-    "monthly": {
-      "13/5/2024": {
-        "type": "cardio"
-      }
-    }
-  },
-  "we": {
-    "daily": {
-      "15/5/2024": {
-        "type": "lowerbody"
-      },
-      "16/5/2024": {
-        "type": "upperbody"
-      }
-    },
-    "weekly": {
-      "15/5/2024": {
-        "type": "core"
-      }
-    },
-    "monthly": {
-      "15/5/2024": {
-        "type": "cardio"
-      }
-    }
-  },
-  "Lenny3": {
-    "daily": {
-      "15/5/2024": {
-        "type": "cardio"
-      }
-    },
-    "weekly": {
-      "15/5/2024": {
-        "type": "upperbody"
-      }
-    },
-    "monthly": {
-      "15/5/2024": {
-        "type": "lowerbody"
-      }
-    }
-  },
-  "Lenny4": {
-    "daily": {
-      "15/5/2024": {
-        "type": "upperbody"
-      }
-    },
-    "weekly": {
-      "15/5/2024": {
-        "type": "cardio"
-      }
-    },
-    "monthly": {
-      "15/5/2024": {
-        "type": "cardio"
-      }
-    }
-  },
-  "as": {
-    "daily": {
-      "16/5/2024": {
-        "type": "upperbody",
-        "difficulty": "0",
-        "target": 10,
-        "amount": 4,
-        "text": "Do arm circles for 10 seconds",
-        "state": "incomplete",
-        "exercise": "armcircles"
-      }
-    },
-    "weekly": {
-      "16/5/2024": {
-        "type": "cardio",
-        "difficulty": "3",
-        "target": 20,
-        "amount": 456,
-        "text": "Cycle 20 minutes",
-        "state": "complete",
-        "exercise": "cycling"
-      }
-    },
-    "monthly": {
-      "16/5/2024": {
-        "type": "upperbody",
-        "difficulty": "0",
-        "target": 32,
-        "amount": 0,
-        "text": "Do arm circles for 32 seconds",
-        "state": "incomplete",
-        "exercise": "armcircles"
-      }
-    }
-  },
-  "questTest": {
-    "daily": {
       "17/5/2024": {
         "type": "upperbody",
-        "difficulty": "0",
-        "target": 10,
-        "amount": 640,
-        "text": "Do arm circles for 10 seconds",
-        "state": "incomplete",
-        "exercise": "armcircles"
-      }
-    },
-    "weekly": {
-      "16/5/2024": {
-        "type": "cardio",
         "difficulty": "3",
-        "target": 20,
-        "amount": 1023070,
-        "text": "Cycle 20 minutes",
+        "target": 40,
+        "amount": 10000000,
+        "text": "Do arm circles for 40 seconds",
         "state": "complete",
-        "exercise": "cycling"
-      }
-    },
-    "monthly": {}
-  },
-  "sad2": {
-    "daily": {
-      "20/5/2024": {
-        "type": "core",
-        "difficulty": "0",
-        "target": 5,
-        "amount": 7,
-        "text": "Do 5 crunches",
-        "state": "complete",
-        "exercise": "crunches"
-      },
-      "22/5/2024": {
-        "type": "lowerbody",
-        "difficulty": "-3",
-        "target": 3,
-        "amount": 5,
-        "text": "Do 3 lunges",
-        "state": "complete",
-        "exercise": "lunges"
-      }
-    },
-    "weekly": {
-      "20/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 110,
-        "amount": 120,
-        "text": "Cycle 110 minutes",
-        "state": "complete",
-        "exercise": "cycling"
+        "exercise": "armcircles"
       }
     },
     "monthly": {
-      "20/5/2024": {
-        "type": "core",
-        "difficulty": "-3",
-        "target": 3,
-        "amount": 3,
-        "text": "Do 3 situps",
-        "state": "complete",
-        "exercise": "situps"
-      }
-    }
-  },
-  "champ": {
-    "daily": {
-      "22/5/2024": {
-        "type": "core",
-        "difficulty": "0",
-        "target": 10,
-        "amount": 32,
-        "text": "Do the plank for 10 seconds",
-        "state": "complete",
-        "exercise": "plank"
-      }
-    },
-    "weekly": {
-      "22/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 5,
-        "amount": 32,
-        "text": "Go for a run for 5 minutes",
-        "state": "complete",
-        "exercise": "run"
-      }
-    },
-    "monthly": {
-      "22/5/2024": {
-        "type": "lowerbody",
-        "difficulty": "0",
-        "target": 9,
-        "amount": 321,
-        "text": "Do 9 squats",
-        "state": "complete",
-        "exercise": "squats"
-      }
-    }
-  },
-  "test": {
-    "daily": {
-      "10/5/2024": {
-        "type": "upperbody",
-        "difficulty": "-3",
-        "target": 10,
-        "amount": 10,
-        "text": "Do arm circles for 10 seconds",
-        "state": "complete",
-        "exercise": "armcircles"
-      },
-      "11/5/2024": {
-        "type": "lowerbody",
-        "difficulty": "0",
-        "target": 10,
-        "amount": 18,
-        "text": "Do the wallsit for 10 seconds",
-        "state": "complete",
-        "exercise": "wallsit"
-      },
-      "12/5/2024": {
-        "type": "upperbody",
-        "difficulty": "0",
-        "target": 10,
-        "amount": 15,
-        "text": "Do arm circles for 10 seconds",
-        "state": "complete",
-        "exercise": "armcircles"
-      },
-      "13/5/2024": {
-        "type": "lowerbody",
-        "difficulty": "0",
-        "target": 15,
-        "amount": 18,
-        "text": "Do the wallsit for 10 seconds",
-        "state": "complete",
-        "exercise": "wallsit"
-      },
-      "16/5/2024": {
-        "type": "core",
-        "difficulty": "-3",
-        "target": 3,
-        "amount": 26,
-        "text": "Do 3 situps",
-        "state": "complete",
-        "exercise": "situps"
-      },
       "17/5/2024": {
-        "type": "core"
-      }
-    },
-    "weekly": {
-      "9/5/2024": {
-        "type": "cardio",
-        "difficulty": "0",
-        "target": 5,
-        "amount": 10,
-        "text": "Cycle 5 minutes",
-        "state": "complete",
-        "exercise": "cycling"
-      },
-      "16/5/2024": {
-        "type": "cardio",
-        "difficulty": "3",
-        "target": 35,
-        "amount": 40,
-        "text": "Go for a run for 35 minutes",
-        "state": "complete",
-        "exercise": "run"
-      }
-    },
-    "monthly": {
-      "16/5/2024": {
-        "type": "core",
-        "difficulty": "-3",
-        "target": 3,
-        "amount": 20,
-        "text": "Do 3 crunches",
-        "state": "complete",
-        "exercise": "crunches"
+        "type": "cardio"
       }
     }
   }
