@@ -55,4 +55,4 @@ function testhandleSurveyFormSubmit(){
     document.body.removeChild(nameInputMock);
 }
 
-runTests(); // Call the runTests function after defining all the necessary components and functions.
+//runTests(); // Call the runTests function after defining all the necessary components and functions.

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3360;
+const port = 3369;
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -403,11 +403,6 @@ function addUserToUsers_info(username) {
                         rank: 1,
                         elo: 0
                     }
-                },
-                hiddenRank: {
-                    daily: 0,
-                    weekly: 0,
-                    monthly: 0
                 },
                 tier: {
                     daily: {
