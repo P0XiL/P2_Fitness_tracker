@@ -157,10 +157,7 @@ testLoginUser();
 testCreateUser();
 testStoreLoginState();
 
-//const fs = require('fs');
-//const http = require('http');
-
-// Mock the fs.readFile and fs.writeFile functions
+// Mocking the fs module and http module
 const fsMock = {
     readFile: (path, callback) => {
         if (path === 'PublicResources/json/users.json') {
@@ -180,27 +177,40 @@ const fsMock = {
     }
 };
 
-//fs.readFile = fsMock.readFile;
-//fs.writeFile = fsMock.writeFile;
-
 // Helper function to create a mock request
 function createMockRequest(method, url, body) {
-    const req = new http.IncomingMessage();
-    req.method = method;
-    req.url = url;
-    req.headers = {};
-    req.body = body;
-    return req;
+    return {
+        method,
+        url,
+        headers: {},
+        body,
+        on: function(event, callback) {
+            if (event === 'data') {
+                callback(body);
+            }
+            if (event === 'end') {
+                callback();
+            }
+        }
+    };
 }
 
 // Helper function to create a mock response
 function createMockResponse(callback) {
-    const res = new http.ServerResponse({ method: 'POST' });
-    res.write = (data) => {
-        res._data = (res._data || '') + data;
-    };
-    res.end = () => {
-        callback(res);
+    const res = {
+        statusCode: 200,
+        headers: {},
+        _data: '',
+        setHeader: function(header, value) {
+            this.headers[header] = value;
+        },
+        write: function(data) {
+            this._data += data;
+        },
+        end: function(data) {
+            if (data) this._data += data;
+            callback(this);
+        }
     };
     return res;
 }
