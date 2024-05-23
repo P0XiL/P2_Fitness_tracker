@@ -397,6 +397,503 @@
         }
       },
       "friends": []
+    },
+    "test": {
+      "username": "test",
+      "health": {
+        "name": "Tobias",
+        "age": "23",
+        "height": "179",
+        "weight": "80",
+        "gender": "male",
+        "fitnessGoal": "muscleGain",
+        "activityLevel": "veryActive",
+        "surveyCompleted": true
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 100
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 1,
+          "elo": 50
+        },
+        "squats": {
+          "rank": 1,
+          "elo": 0
+        },
+        "lunges": {
+          "rank": 1,
+          "elo": 0
+        },
+        "wallsit": {
+          "rank": 1,
+          "elo": 50
+        },
+        "plank": {
+          "rank": 1,
+          "elo": 0
+        },
+        "situps": {
+          "rank": 1,
+          "elo": 25
+        },
+        "backextentions": {
+          "rank": 1,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 25
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        },
+        "dips": {
+          "rank": 1,
+          "elo": 0
+        },
+        "armcircles": {
+          "rank": 1,
+          "elo": 75
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 4,
+          "elo": 50
+        },
+        "weekly": {
+          "rank": 10,
+          "elo": 30
+        },
+        "monthly": {
+          "rank": 4,
+          "elo": 5
+        }
+      },
+      "preset": {
+        "name": "balance",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      },
+      "friends": [
+        "Lenny"
+      ]
+    },
+    "as": {
+      "username": "as",
+      "health": {
+        "name": "sad",
+        "age": "23",
+        "height": "32",
+        "weight": "2",
+        "gender": "male"
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 1,
+          "elo": 100
+        },
+        "squats": {
+          "rank": 1,
+          "elo": 0
+        },
+        "lunges": {
+          "rank": 1,
+          "elo": 0
+        },
+        "wallsit": {
+          "rank": 1,
+          "elo": 0
+        },
+        "plank": {
+          "rank": 1,
+          "elo": 0
+        },
+        "situps": {
+          "rank": 1,
+          "elo": 0
+        },
+        "backextentions": {
+          "rank": 1,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        },
+        "dips": {
+          "rank": 1,
+          "elo": 0
+        },
+        "armcircles": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 7,
+          "elo": 20
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {
+        "name": "balance",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      },
+      "friends": []
+    },
+    "questTest": {
+      "username": "as",
+      "health": {
+        "name": "sad",
+        "age": "23",
+        "height": "32",
+        "weight": "2",
+        "gender": "male"
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 1,
+          "elo": 100
+        },
+        "squats": {
+          "rank": 1,
+          "elo": 0
+        },
+        "lunges": {
+          "rank": 1,
+          "elo": 0
+        },
+        "wallsit": {
+          "rank": 1,
+          "elo": 0
+        },
+        "plank": {
+          "rank": 1,
+          "elo": 0
+        },
+        "situps": {
+          "rank": 1,
+          "elo": 0
+        },
+        "backextentions": {
+          "rank": 1,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        },
+        "dips": {
+          "rank": 1,
+          "elo": 0
+        },
+        "armcircles": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 0
+        },
+        "weekly": {
+          "rank": 7,
+          "elo": 20
+        },
+        "monthly": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "preset": {
+        "name": "balance",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      },
+      "friends": []
+    },
+    "sad2": {
+      "username": "sad2",
+      "health": {
+        "name": "da",
+        "age": "23",
+        "height": 220,
+        "weight": 213,
+        "gender": "male",
+        "fitnessGoal": "weightLoss",
+        "activityLevel": "sedentary"
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 0
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 1,
+          "elo": 0
+        },
+        "squats": {
+          "rank": 1,
+          "elo": 0
+        },
+        "lunges": {
+          "rank": 1,
+          "elo": 50
+        },
+        "wallsit": {
+          "rank": 1,
+          "elo": 0
+        },
+        "plank": {
+          "rank": 1,
+          "elo": 0
+        },
+        "situps": {
+          "rank": 1,
+          "elo": 25
+        },
+        "backextentions": {
+          "rank": 1,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 1,
+          "elo": 300
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 50
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 125
+        },
+        "dips": {
+          "rank": 1,
+          "elo": 50
+        },
+        "armcircles": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 7,
+          "elo": 75,
+          "streak": 6
+        },
+        "weekly": {
+          "rank": 22,
+          "elo": 20,
+          "streak": 8
+        },
+        "monthly": {
+          "rank": 4,
+          "elo": 5,
+          "streak": 1
+        }
+      },
+      "preset": {
+        "name": "balance",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      }
+    },
+    "champ": {
+      "username": "champ",
+      "health": {
+        "name": "as",
+        "age": "32",
+        "height": "123",
+        "weight": "42",
+        "gender": "male"
+      },
+      "mastery": {
+        "run": {
+          "rank": 1,
+          "elo": 50
+        },
+        "walk": {
+          "rank": 1,
+          "elo": 0
+        },
+        "cycling": {
+          "rank": 1,
+          "elo": 0
+        },
+        "squats": {
+          "rank": 1,
+          "elo": 50
+        },
+        "lunges": {
+          "rank": 1,
+          "elo": 0
+        },
+        "wallsit": {
+          "rank": 1,
+          "elo": 0
+        },
+        "plank": {
+          "rank": 1,
+          "elo": 50
+        },
+        "situps": {
+          "rank": 1,
+          "elo": 0
+        },
+        "backextentions": {
+          "rank": 1,
+          "elo": 0
+        },
+        "burpees": {
+          "rank": 1,
+          "elo": 0
+        },
+        "crunches": {
+          "rank": 1,
+          "elo": 0
+        },
+        "pushups": {
+          "rank": 1,
+          "elo": 0
+        },
+        "dips": {
+          "rank": 1,
+          "elo": 0
+        },
+        "armcircles": {
+          "rank": 1,
+          "elo": 0
+        }
+      },
+      "hiddenRank": {
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0
+      },
+      "tier": {
+        "daily": {
+          "rank": 1,
+          "elo": 50,
+          "streak": 1
+        },
+        "weekly": {
+          "rank": 4,
+          "elo": 10,
+          "streak": 1
+        },
+        "monthly": {
+          "rank": 7,
+          "elo": 10,
+          "streak": 0
+        }
+      },
+      "preset": {
+        "name": "balance",
+        "conf": {
+          "cardio": 2,
+          "lowerbody": 2,
+          "core": 2,
+          "upperbody": 2
+        }
+      },
+      "friends": []
     }
   }
 }

@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            var NameInput = document.getElementById('name');
+            const NameInput = document.getElementById('name');
 
             if (/\d/.test(NameInput.value)) {
                 alert('Name cannot contain numbers.');
