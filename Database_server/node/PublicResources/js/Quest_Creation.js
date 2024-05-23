@@ -45,7 +45,8 @@ async function display_quest(quest, user) {
         //Based on ID figure out the timespan
         const timespans = ["daily", "weekly", "monthly"];
         const questTimespan = timespans[quest[5] - 1];
-
+        fetchJSON('json/users_info.json').then(data => set_streak(data, user, quest, questTimespan));
+        
         /**
          * Makes a new quest
          * @param {the type of the current quest} type 
@@ -107,10 +108,10 @@ async function display_quest(quest, user) {
                 //If there is no quest
                 if (obj_stateQuest["state"] == "None") {
                     //Check if they completed last quest
-                    try {   
-                        const lastestQuestDate = Object.keys(quest_log[user][questTimespan])[Object.keys(quest_log[user][questTimespan]).length-1];
+                    try {
+                        const lastestQuestDate = Object.keys(quest_log[user][questTimespan])[Object.keys(quest_log[user][questTimespan]).length - 1];
                         const stateOfLastQuest = quest_log[user][questTimespan][lastestQuestDate].state;
-                        if (stateOfLastQuest === "incomplete"){
+                        if (stateOfLastQuest === "incomplete") {
                             const obj_para = {
                                 user: user,
                                 type: quest_log[user][questTimespan][lastestQuestDate].exercise,
@@ -118,14 +119,22 @@ async function display_quest(quest, user) {
                                 date: lastestQuestDate
                             };
                             remove_elo(obj_para);
+
+                            const obj_streak = {
+                                user: user,
+                                mode: "reset",
+                                timespan: questTimespan,
+                                questid: quest
+                            }
+                            update_streak(obj_streak);
                             location.reload();
                         }
                     } catch (error) {
-                        //If there exit a prevous quest console the error
-                        if (Object.keys(quest_log[user][questTimespan]) > 0){
+                        //If the object is empty ignore the error
+                        if (!is_empty_object(quest_log[user][questTimespan])) {
                             console.error(error);
                         }
-                        
+
                     }
                     //Chooses a type for userInfo
                     fetchJSON('json/users_info.json')
@@ -159,6 +168,14 @@ async function display_quest(quest, user) {
                         obj_award.difficulty = pathQuest.difficulty;
                         obj_award.type = pathQuest.exercise;
                         award_elo(obj_award);
+
+                        const obj_streak = {
+                            user: user,
+                            mode: "increase",
+                            timespan: questTimespan,
+                            questid: quest
+                        }
+                        update_streak(obj_streak);
                         location.reload();
                     }
 
@@ -187,12 +204,12 @@ async function display_quest(quest, user) {
                     } else {
                         color = lerpColor("#00FF00", "#8B0000", (procentComplete - min) / (max - min));
                     }
-                    procentElement.innerHTML = procentComplete + "%";                    
+                    procentElement.innerHTML = procentComplete + "%";
 
                     procentElement.style.fontSize = 50 + "px";
                     procentElement.style.color = color;
 
-                    document.getElementById(quest).append(procentElement);5
+                    document.getElementById(quest).append(procentElement); 5
                     // Function for color interpolation
                     function lerpColor(a, b, t) {
                         const min = 100;
@@ -208,8 +225,6 @@ async function display_quest(quest, user) {
 
                         return "#" + (((1 << 24) + (rr << 16) + (rg << 8) + rb) | 0).toString(16).slice(1);
                     }
-
-                    
 
                     //Makes obj with parametes for other functions
                     const obj_para = {
@@ -337,7 +352,8 @@ function open_modal_for_quest(questTimespan, type, user) {
 function check_current(timespan, usersQuest) {
     const obj_currentDate = new Date();
     let lastestDate;
-    let obj_state = {}
+    let obj_state = {};
+    let questDateArr = [];
     switch (timespan) {
         case 'daily': {
             const obj_dailies = usersQuest[timespan];
@@ -350,9 +366,9 @@ function check_current(timespan, usersQuest) {
             //Gets the latest entry by taking the last key
             lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
             obj_state.date = lastestDate;
-            const questDate = lastestDate.split("/");
+            questDateArr = lastestDate.split("/");
             //Check if latest quest is the same date as today
-            if (questDate[0] == obj_currentDate.getDate() && questDate[1] == (obj_currentDate.getMonth() + 1) && questDate[2] == obj_currentDate.getFullYear()) {
+            if (questDateArr[0] == obj_currentDate.getDate() && questDateArr[1] == (obj_currentDate.getMonth() + 1) && questDateArr[2] == obj_currentDate.getFullYear()) {
                 //If the current quest is active, check if the quest is done
                 if (obj_dailies[lastestDate]["target"] <= obj_dailies[lastestDate]["amount"]) {
                     obj_state.state = "Done";
@@ -375,11 +391,11 @@ function check_current(timespan, usersQuest) {
             //Gets the latest quest
             lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
             obj_state.date = lastestDate;
-            const questDateStr = lastestDate.split("/");
+            questDateArr = lastestDate.split("/");
             //Check if latest quest is within 7 days of today
-            const questDateObj = new Date(questDateStr[2], questDateStr[1] - 1, questDateStr[0]);
+            const obj_questDate = new Date(questDateArr[2], questDateArr[1] - 1, questDateArr[0]);
             //Difference in milisec
-            let diffInMilisec = obj_currentDate - questDateObj;
+            let diffInMilisec = obj_currentDate - obj_questDate;
             //Convert to day
             let diffInDays = diffInMilisec / (1000 * 60 * 60 * 24)
 
@@ -406,9 +422,9 @@ function check_current(timespan, usersQuest) {
             //Get lastest quest
             lastestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
             obj_state.date = lastestDate;
-            const questDate = lastestDate.split("/");
+            questDateArr = lastestDate.split("/");
             //Check if quest is in the same month as current month
-            if ((obj_currentDate.getMonth() + 1) == questDate[1] && obj_currentDate.getFullYear() == questDate[2]) {
+            if ((obj_currentDate.getMonth() + 1) == questDateArr[1] && obj_currentDate.getFullYear() == questDateArr[2]) {
                 //If the quest is active check if it is done
                 if (obj_monthlies[lastestDate]["target"] <= obj_monthlies[lastestDate]["amount"]) {
                     obj_state.state = "Done";
@@ -509,6 +525,7 @@ function add_quest_json(quest) {
  * @param {string} obj_para.date - The date of the quest
  * @param {string} obj_para.user - The user id
  * @param {string} obj_para.mode - Either add or sub
+ * @param {int} obj_para.amount
  */
 function change_amount(obj_para) {
     fetch(serverPath + 'change_amount', {
@@ -536,7 +553,7 @@ function change_amount(obj_para) {
  * @param {string} obj_para.timesapan - The timespan of quest
  * @param {string} obj_para.date - The date of failed quest 
  */
-function remove_elo(obj_para){
+function remove_elo(obj_para) {
     fetch(serverPath + 'remove_elo', {
         method: 'POST',
         headers: {
@@ -581,6 +598,44 @@ function award_elo(obj_para) {
         });
 }
 
+/**
+ * Updates the users streak
+ * @param {object} obj_para
+ * @param {string} obj_para.user - The userID 
+ * @param {string} obj_para.mode - Determinds whether the streak should increase or reset 
+ * @param {string} obj_para.timespan - The timespan of the quest
+ * @param {string} obj_para.questid - The id for the quest container
+ */
+async function update_streak(obj_para) {
+    fetch(serverPath + 'update_streak', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj_para)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No response fetch POST update streak');
+            }
+            fetchJSON("json/users_info.json")
+                .then(data => {
+                    set_streak(data, obj_para.user, obj_para.questid, obj_para.timespan);
+
+                });
+
+        })
+        .catch(error => {
+            console.error('Error fetch Post (update_streak):', error);
+        });
+}
+
+function set_streak(users_info, user, questid, timespan) {
+    const path = users_info.users_info[user].tier;
+    const streakNumber = document.getElementById(questid + "_streak");
+    streakNumber.innerText = path[timespan].streak;
+
+}
 
 /**
  * Makes the edit button
@@ -679,17 +734,13 @@ function update_meter(ID, obj_quest) {
  * @returns {string} A type
  */
 function get_type(obj_conf) {
-    //Array for weightedKeys
     let weightedKeys = [];
-
-    //Loop though each key
     for (let key in obj_conf) {
         for (let i = 0; i < obj_conf[key]; i++) {
             weightedKeys.push(key);
         }
     }
     return weightedKeys[generate_random_number(weightedKeys.length)];
-
 }
 
 /**
