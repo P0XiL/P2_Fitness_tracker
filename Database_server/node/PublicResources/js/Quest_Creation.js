@@ -351,7 +351,7 @@ function open_modal_for_quest(questTimespan, type, user) {
  */
 function check_current(timespan, usersQuest) {
     const obj_currentDate = new Date();
-    let lastestDate;
+    let latestDate;
     let obj_state = {};
     let questDateArr = [];
     switch (timespan) {
@@ -364,13 +364,13 @@ function check_current(timespan, usersQuest) {
                 return obj_state;
             }
             //Gets the latest entry by taking the last key
-            lastestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
-            obj_state.date = lastestDate;
-            questDateArr = lastestDate.split("/");
+            latestDate = Object.keys(obj_dailies)[Object.keys(obj_dailies).length - 1];
+            obj_state.date = latestDate;
+            questDateArr = latestDate.split("/");
             //Check if latest quest is the same date as today
             if (questDateArr[0] == obj_currentDate.getDate() && questDateArr[1] == (obj_currentDate.getMonth() + 1) && questDateArr[2] == obj_currentDate.getFullYear()) {
                 //If the current quest is active, check if the quest is done
-                if (obj_dailies[lastestDate]["target"] <= obj_dailies[lastestDate]["amount"]) {
+                if (obj_dailies[latestDate]["target"] <= obj_dailies[latestDate]["amount"]) {
                     obj_state.state = "Done";
                     return obj_state;
                 }
@@ -389,9 +389,9 @@ function check_current(timespan, usersQuest) {
                 return obj_state;
             }
             //Gets the latest quest
-            lastestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
-            obj_state.date = lastestDate;
-            questDateArr = lastestDate.split("/");
+            latestDate = Object.keys(obj_weeklies)[Object.keys(obj_weeklies).length - 1];
+            obj_state.date = latestDate;
+            questDateArr = latestDate.split("/");
             //Check if latest quest is within 7 days of today
             const obj_questDate = new Date(questDateArr[2], questDateArr[1] - 1, questDateArr[0]);
             //Difference in milisec
@@ -402,7 +402,7 @@ function check_current(timespan, usersQuest) {
             //If the difference is less then or equel to 7 the quest is still active
             if (Math.abs(diffInDays) <= 7) {
                 //Check if quest is complete
-                if (obj_weeklies[lastestDate]["target"] <= obj_weeklies[lastestDate]["amount"]) {
+                if (obj_weeklies[latestDate]["target"] <= obj_weeklies[latestDate]["amount"]) {
                     obj_state.state = "Done";
                     return obj_state;
                 }
@@ -420,13 +420,13 @@ function check_current(timespan, usersQuest) {
                 return obj_state;
             }
             //Get lastest quest
-            lastestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
-            obj_state.date = lastestDate;
-            questDateArr = lastestDate.split("/");
+            latestDate = Object.keys(obj_monthlies)[Object.keys(obj_monthlies).length - 1];
+            obj_state.date = latestDate;
+            questDateArr = latestDate.split("/");
             //Check if quest is in the same month as current month
             if ((obj_currentDate.getMonth() + 1) == questDateArr[1] && obj_currentDate.getFullYear() == questDateArr[2]) {
                 //If the quest is active check if it is done
-                if (obj_monthlies[lastestDate]["target"] <= obj_monthlies[lastestDate]["amount"]) {
+                if (obj_monthlies[latestDate]["target"] <= obj_monthlies[latestDate]["amount"]) {
                     obj_state.state = "Done";
                     return obj_state;
                 }
