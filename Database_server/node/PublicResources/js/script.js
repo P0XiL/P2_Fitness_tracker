@@ -27,11 +27,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // Add 'active' class to tab which has been clicked
             document.getElementById(targetId).classList.add('active');
 
-            if (targetId === 'friends') {
+            if(targetId === 'friends'){
                 friendList();
             }
 
-            if (targetId === 'stats') {
+            if(targetId === 'stats'){
                 individual_type(localStorage.getItem('username'), "statsTextUser");
             }
 
@@ -233,54 +233,54 @@ function clearFriendErrorMessage() {
     loginErrorMessage.textContent = '';
 }
 
-document.getElementById('friendSubmitBtn').addEventListener('click', function () {
+document.getElementById('friendSubmitBtn').addEventListener('click', function() {
     friendList();
 });
 
 
 function friendList() {
     fetchJSON("json/users_info.json")
-        .then(data => {
-            const username = localStorage.getItem("username");
-            const container = document.getElementById("friendslist")
-            container.innerHTML = "";
+    .then(data => {
+        const username = localStorage.getItem("username");
+        const container = document.getElementById("friendslist")
+        container.innerHTML = "";
 
-            const friends = data.users_info[username].friends;
+        const friends = data.users_info[username].friends;
 
-            const list = document.createElement("ul");
-            list.classList.add("friend-list");
+        const list = document.createElement("ul");
+        list.classList.add("friend-list");
 
-            friends.forEach(function (friend) {
-                const listItem = document.createElement("li");
-                listItem.classList.add("friend-item");
+        friends.forEach(function(friend) {
+            const listItem = document.createElement("li");
+            listItem.classList.add("friend-item");
 
-                const link = document.createElement("a");
-                link.href = "#";
-                link.textContent = "- " + friend.charAt(0).toUpperCase() + friend.slice(1);
-                link.className = "friend-link";
+            const link = document.createElement("a");
+            link.href = "#";
+            link.textContent = "- " + friend.charAt(0).toUpperCase() + friend.slice(1);
+            link.className = "friend-link";
 
-                link.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    buttonClicked(friend);
-                });
-
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Delete";
-                deleteButton.className = "delete-button";
-
-                deleteButton.addEventListener("click", function (event) {
-                    event.stopPropagation(); // Prevent click event on the link
-                    deleteFriend(friend, listItem); // Pass the listItem to deleteFriend function
-                });
-
-                listItem.appendChild(link);
-                listItem.appendChild(deleteButton);
-
-                list.appendChild(listItem);
+            link.addEventListener("click", function(event) {
+                event.preventDefault();
+                buttonClicked(friend);
             });
 
-            container.appendChild(list);
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.className = "delete-button";
+
+            deleteButton.addEventListener("click", function(event) {
+                event.stopPropagation(); // Prevent click event on the link
+                deleteFriend(friend, listItem); // Pass the listItem to deleteFriend function
+            });
+
+            listItem.appendChild(link);
+            listItem.appendChild(deleteButton);
+
+            list.appendChild(listItem);
         });
+
+        container.appendChild(list);
+    });
 }
 
 function deleteFriend(friend, listItem) {
@@ -297,18 +297,18 @@ function deleteFriend(friend, listItem) {
         },
         body: JSON.stringify(requestData)
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete friend.');
-            }
-            console.log("Friend deleted successfully.");
-            // Remove the listItem from the DOM
-            listItem.remove();
-            // Optional: Reload or update UI to reflect changes
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to delete friend.');
+        }
+        console.log("Friend deleted successfully.");
+        // Remove the listItem from the DOM
+        listItem.remove();
+        // Optional: Reload or update UI to reflect changes
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 
@@ -320,7 +320,7 @@ function buttonClicked(friend) {
     friendsPage.classList.remove('active');
     addFriendsPage.classList.add('active');
 
-    if (localStorage.getItem("friend") !== null) {
+    if(localStorage.getItem("friend") !== null){
         localStorage.removeItem("friend")
     }
     localStorage.setItem("friend", friend);
@@ -347,47 +347,46 @@ function checkLoginState() {
     const loginState = localStorage.getItem('loginState');
     const sidenavigation = document.getElementById('side-nav');
     const topnavigation = document.getElementById('top-nav');
-    const mainContent = document.getElementById('main');
-    const surveyForm = document.getElementById('surveyForm');
-    const loginPage = document.getElementById('loginPage');
 
     if (loginState) {
         const parsedLoginState = JSON.parse(loginState);
-        const username = parsedLoginState.username;
-        
         if (parsedLoginState.expiration > new Date().getTime()) {
+            // Log the user in automatically
+            const username = parsedLoginState.username;
+            loginUser({ username: username });
+
+            // Update UI to display logged-in username
+            document.getElementById('usernameDisplay').textContent = "Hello, " + username;
+            document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
+
+            sidenavigation.style.display = 'block';
+            topnavigation.style.display = 'block';
+            document.getElementById('main').classList.add('active');
+
             // Fetch user data from the server
             fetch(serverPath + 'users_info.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user data');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const userData = data.users_info[username];
-                    
-                    if (userData.health.surveyCompleted === true) {
-                        // Log the user in automatically
-                        loginUser({ username: username });
-
-                        // Update UI to display logged-in username
-                        document.getElementById('usernameDisplay').textContent = "Hello, " + username;
-                        document.getElementById('profile_Username').querySelector('.heading').textContent = "" + username;
-
-                        // Show main content
-                        sidenavigation.style.display = 'block';
-                        topnavigation.style.display = 'block';
-                        mainContent.classList.add('active');
-                    } else {
-                        // Show survey form
-                        surveyForm.classList.add('active');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching user data:', error);
-                    // Handle error appropriately
-                });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const userData = data.users_info[username];
+                if (userData.health.surveyCompleted === true) {
+                    document.getElementById('surveyForm').classList.remove('active');
+                } else {
+                    document.getElementById('main').classList.remove('active');
+                    document.getElementById('surveyForm').classList.add('active');
+                    sidenavigation.style.display = 'none';
+                    topnavigation.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+                // Handle error appropriately
+            });
+        
         } else {
             // Clear expired login state
             localStorage.removeItem('loginState');
@@ -395,9 +394,12 @@ function checkLoginState() {
         }
     } else {
         // No login state found, show login page
+        sidenavigation.style.display = 'none';
+        topnavigation.style.display = 'none';
         loginPage.classList.add('active');
     }
 }
+
 
 function loginUser(loginData) {
     fetch(serverPath + 'login', {
@@ -511,7 +513,7 @@ function highlightNavLink(pageId) {
         link.classList.remove('active');
     });
     // Add 'active' class to the corresponding navigation link
-    if (pageId === 'profilepage') {
+    if (pageId==='profilepage'){
         return;
     } else {
         const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
