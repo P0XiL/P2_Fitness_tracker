@@ -37,10 +37,10 @@ function individual_type(user, elementID) {
 
 /**
  * Updates the graph
- * @param {string} type
+ * @param {string} exercise
+ * @param {string} id
  */
 function update_graph(exercise, id) {
-    let user = localStorage.getItem("username");
     plot(exercise);
     change_text(exercise, id);
 }
@@ -51,8 +51,7 @@ function update_graph_friend(exercise, id){
 }
 /**
  * Plots the graph for user
- * @param {string} user - User ID 
- * @param {string} type
+ * @param {string} exercise - exercise 
  */
 function plot(exercise) {
   const ctx = document.getElementById("myChart");
@@ -103,8 +102,6 @@ function plot(exercise) {
 
 /**
  * Plot the graph with friends
- * @param {string} user - User ID 
- * @param {string} friend - Friend ID
  * @param {string} exercise - exercise of quest
  */
 function plot_with_friends(exercise) {
@@ -170,7 +167,6 @@ function plot_with_friends(exercise) {
  * Gets data for the y-axis
  * @param {string} user - User ID
  * @param {string} exercise - Exercise type
- * @param {string} period - Quest timespan
  * @returns {array} An array, with data for y-axis
  */
 function user_data_y(user, exercise) {
@@ -205,7 +201,6 @@ function user_data_y(user, exercise) {
  * Gets data for x-axis
  * @param {string} user - User ID
  * @param {string} exercise - Exercise type
- * @param {string} period - Quest timespan
  * @returns {array}  An array, with data for y-axis
  */
 function user_data_x(user, exercise) {
@@ -297,7 +292,6 @@ function dropdown_window_click() {
 /**
  * Changes text for user graph
  * @param {string} type 
- * @param {string} period - Quest timespan
  * @param {string} elemetID - ID to element
  */
 function change_text(type, elemetID) {
