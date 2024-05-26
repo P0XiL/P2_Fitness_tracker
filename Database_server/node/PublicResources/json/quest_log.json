@@ -102,6 +102,15 @@
       },
       "17/5/2024": {
         "type": "core"
+      },
+      "21/5/2024": {
+        "type": "lowerbody"
+      },
+      "24/5/2024": {
+        "type": "cardio"
+      },
+      "26/5/2024": {
+        "type": "lowerbody"
       }
     },
     "weekly": {
@@ -122,6 +131,9 @@
         "text": "Go for a run for 35 minutes",
         "state": "complete",
         "exercise": "run"
+      },
+      "24/5/2024": {
+        "type": "cardio"
       }
     },
     "monthly": {
