@@ -1,54 +1,109 @@
 {
   "Lenny": {
     "daily": {
-      "15/5/2024": {
-        "type": "lowerbody"
-      },
-      "16/5/2024": {
+      "17/5/2024": {
+        "type": "upperbody",
+        "difficulty": "3",
+        "target": 3,
+        "amount": 4,
+        "text": "Do 3 pushups",
+        "state": "complete",
+        "exercise": "pushups"
+      }
+    },
+    "weekly": {
+      "17/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "monthly": {
+      "17/5/2024": {
+        "type": "upperbody",
+        "difficulty": "3",
+        "target": 39,
+        "amount": 0,
+        "text": "Do 39 pushups",
+        "state": "incomplete",
+        "exercise": "pushups"
+      }
+    }
+  },
+  "Tobi": {
+    "daily": {
+      "17/5/2024": {
         "type": "upperbody"
       }
     },
     "weekly": {
-      "15/5/2024": {
+      "17/5/2024": {
         "type": "core"
       }
     },
     "monthly": {
-      "15/5/2024": {
-        "type": "cardio"
+      "17/5/2024": {
+        "type": "core"
+      }
+    }
+  },
+  "Hey": {
+    "daily": {
+      "17/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "17/5/2024": {
+        "type": "core"
+      }
+    },
+    "monthly": {
+      "17/5/2024": {
+        "type": "upperbody"
       }
     }
   },
   "Lenny3": {
     "daily": {
-      "15/5/2024": {
+      "17/5/2024": {
+        "type": "core"
+      },
+      "21/5/2024": {
+        "type": "lowerbody"
+      },
+      "24/5/2024": {
         "type": "cardio"
-      }
-    },
-    "weekly": {
-      "15/5/2024": {
-        "type": "upperbody"
-      }
-    },
-    "monthly": {
-      "15/5/2024": {
+      },
+      "26/5/2024": {
         "type": "lowerbody"
       }
-    }
-  },
-  "Lenny4": {
-    "daily": {
-      "15/5/2024": {
-        "type": "upperbody"
+    },
+    "weekly": {
+      "9/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 5,
+        "amount": 100,
+        "text": "Go for a walk for 5 minutes",
+        "state": "complete",
+        "exercise": "walk"
       }
     },
     "weekly": {
-      "15/5/2024": {
+      "17/5/2024": {
+        "type": "upperbody",
+        "difficulty": "3",
+        "target": 40,
+        "amount": 10000000,
+        "text": "Do arm circles for 40 seconds",
+        "state": "complete",
+        "exercise": "run"
+      },
+      "24/5/2024": {
         "type": "cardio"
       }
     },
     "monthly": {
-      "15/5/2024": {
+      "17/5/2024": {
         "type": "cardio"
       }
     }

@@ -1,4 +1,4 @@
-/*
+
 function runTests(){
     console.log("Running tests for survey...");
 
@@ -57,4 +57,4 @@ function testhandleSurveyFormSubmit(){
 }
 
 runTests(); // Call the runTests function after defining all the necessary components and functions.
-*/
+

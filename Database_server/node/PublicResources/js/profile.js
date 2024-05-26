@@ -121,7 +121,7 @@ function getTierRange(rank) {
             return '1-15';
         case rank >= 16 && rank <= 30:
             return '16-30';
-        case rank >= 31 && rank <= 45:
+        case rank >= 31:
             return '31-45';
         default:
             // Handle cases outside the defined ranges
@@ -167,13 +167,13 @@ function getSubTierRange(rank) {
     }
 }
 
-function createRankItem(container, title, imageSrc, elo, period, isMastery) {
+function createRankItem(container, title, imageSrc, elo, timespan, isMastery) {
     const itemDiv = document.createElement('div');
     itemDiv.classList.add(isMastery ? 'mastery-grid-item' : 'tier-grid-item');
 
     // Create and append title
     const itemTitle = document.createElement('h3');
-    itemTitle.textContent = isMastery ? `${capitalizeFirstLetter(title)}: ` : `${period}: ${title}`;
+    itemTitle.textContent = isMastery ? `${capitalizeFirstLetter(title)}: ` : `${timespan}: ${title}`;
     itemDiv.appendChild(itemTitle);
 
     // Create and append image
@@ -186,7 +186,7 @@ function createRankItem(container, title, imageSrc, elo, period, isMastery) {
     const progressBar = document.createElement('div');
     progressBar.classList.add('progress-bar');
 
-    const maxElo = isMastery ? 500 : getMaxElo(period); // Get the maximum Elo for the period if it's not a mastery
+    const maxElo = isMastery ? 500 : getMaxElo(timespan); // Get the maximum Elo for the timespan if it's not a mastery
 
     const eloProgress = document.createElement('div');
     eloProgress.classList.add('elo-progress');
@@ -208,9 +208,9 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Function to get maximum Elo based on period
-function getMaxElo(period) {
-    switch (period) {
+// Function to get maximum Elo based on timespan
+function getMaxElo(timespan) {
+    switch (timespan) {
         case 'Daily':
             return 100;
         case 'Weekly':
@@ -218,7 +218,7 @@ function getMaxElo(period) {
         case 'Monthly':
             return 20;
         default:
-            return 100; // Default to daily if period is unknown
+            return 100; // Default to daily if timespan is unknown
     }
 }
 
@@ -395,7 +395,6 @@ async function postUserInfo(username) {
                     activityLevel: existingUserInfo.health.activityLevel
                 },
                 mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
                 tier: existingUserInfo.tier,
                 preset: existingUserInfo.preset
             };
@@ -504,34 +503,34 @@ function calculateBMI(height, weight) {
 // Function to draw the graph
 function drawBMIGraph(bmiValue) {
     // Define BMI categories and their ranges
-    var categories = [
+    const categories = [
         { label: "Underweight", min: 0, max: 18.5, color: "#3498db" },
         { label: "Normal", min: 18.5, max: 24.9, color: "#2ecc71" },
         { label: "Overweight", min: 25, max: 29.9, color: "#f1c40f" },
         { label: "Obese", min: 30, max: 100, color: "#e74c3c" } // Adjusted max value
     ];
 
-    var canvas = document.getElementById("bmiGraph");
-    var ctx = canvas.getContext("2d");
-    var padding = 10;
-    var scaleFactor = 0.5; // Scale factor for resizing the canvas
+    const canvas = document.getElementById("bmiGraph");
+    const ctx = canvas.getContext("2d");
+    const padding = 10;
+    const scaleFactor = 0.5; // Scale factor for resizing the canvas
 
     // Adjust canvas size
     canvas.width = canvas.width * scaleFactor;
     canvas.height = canvas.height * scaleFactor;
 
-    var barWidth = (canvas.width - 2 * padding) / categories.length;
+    const barWidth = (canvas.width - 2 * padding) / categories.length;
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw bars for each category
     categories.forEach(function (category, index) {
-        var barHeight = (canvas.height - padding * 2);
-        var y = padding;
+        const barHeight = (canvas.height - padding * 2);
+        const y = padding;
 
         // Calculate x position of the bar
-        var x = padding + index * barWidth;
+        const x = padding + index * barWidth;
 
         // Draw filled rectangle for the bar
         ctx.fillStyle = category.color;
@@ -548,8 +547,8 @@ function drawBMIGraph(bmiValue) {
         // Check if the user's BMI value falls within this category
         if (bmiValue >= category.min && bmiValue <= category.max) {
             // Calculate the position of the red dot within this category
-            var progress = (bmiValue - category.min) / (category.max - category.min);
-            var dotX = x + progress * barWidth;
+            const progress = (bmiValue - category.min) / (category.max - category.min);
+            const dotX = x + progress * barWidth;
 
             // Draw red dot indicating the user's BMI value
             ctx.fillStyle = "red";
@@ -659,7 +658,6 @@ async function updatePreset(username, preset) {
                 username: existingUserInfo.username,
                 health: existingUserInfo.health,
                 mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
                 tier: existingUserInfo.tier,
                 preset: {
                     name: preset,
@@ -742,7 +740,6 @@ async function postCustomData(username) {
                 username: username,
                 health: existingUserInfo.health,
                 mastery: existingUserInfo.mastery,
-                hiddenRank: existingUserInfo.hiddenRank,
                 tier: existingUserInfo.tier,
                 preset: {
                     name: 'custom',

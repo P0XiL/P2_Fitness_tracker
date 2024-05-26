@@ -136,6 +136,30 @@ footer {
   margin-left: auto;
 }
 
+.upper-right-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.upper-right-text {
+  position: absolute;
+  top: 40%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  margin: 10px;
+  color: #004080;
+}
+
+.upper-right-image {
+  width: 40px;
+  height: auto;
+  margin-top: 0px;
+  margin-right: 0px;
+}
+
+
 /* Styles for the modal */
 .modal {
   display: none;

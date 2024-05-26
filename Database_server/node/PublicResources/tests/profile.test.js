@@ -1,4 +1,3 @@
-/*
 runTests();
 function runTests() {
   console.log("Running tests...");
@@ -652,7 +651,6 @@ async function testDisplayUserPreferences() {
           assert(button.textContent.toLowerCase().includes('save preset') === (select.value === 'custom'), "Button text should be 'Save Preset' based on preset value");
       });
 
-      // Output results
   }
 
   // Call the setup function to start the tests
@@ -764,6 +762,3 @@ async function testUpdateCounter() {
   // Remove the container from the document body after testing
   document.body.removeChild(container);
 }
-
-
-*/

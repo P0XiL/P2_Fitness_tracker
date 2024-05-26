@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            var NameInput = document.getElementById('name');
+            const NameInput = document.getElementById('name');
 
             if (/\d/.test(NameInput.value)) {
                 alert('Name cannot contain numbers.');
@@ -77,10 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log('Survey data:', surveyData);
             sendSurveyData(surveyData);
-
-            // Set a flag in local storage indicating that the user has completed the survey
-            const userSurveyKey = `surveyCompleted_${userId}`;
-            localStorage.setItem(userSurveyKey, 'true');
 
             location.reload();
 
@@ -367,19 +363,30 @@ function checkLoginState() {
             topnavigation.style.display = 'block';
             document.getElementById('main').classList.add('active');
 
-            // Retrieve survey completion status from local storage
-            const userSurveyKey = `surveyCompleted_${username}`;
-            const surveyCompleted = localStorage.getItem(userSurveyKey);
-
-            // Check if survey is completed, and update UI accordingly
-            if (surveyCompleted === 'true') {
-                document.getElementById('surveyForm').classList.remove('active');
-            } else {
-                document.getElementById('main').classList.remove('active');
-                document.getElementById('surveyForm').classList.add('active');
-                sidenavigation.style.display = 'none';
-                topnavigation.style.display = 'none';
-            }
+            // Fetch user data from the server
+            fetch(serverPath + 'users_info.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const userData = data.users_info[username];
+                if (userData.health.surveyCompleted === true) {
+                    document.getElementById('surveyForm').classList.remove('active');
+                } else {
+                    document.getElementById('main').classList.remove('active');
+                    document.getElementById('surveyForm').classList.add('active');
+                    sidenavigation.style.display = 'none';
+                    topnavigation.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+                // Handle error appropriately
+            });
+        
         } else {
             // Clear expired login state
             localStorage.removeItem('loginState');
@@ -392,6 +399,7 @@ function checkLoginState() {
         loginPage.classList.add('active');
     }
 }
+
 
 function loginUser(loginData) {
     fetch(serverPath + 'login', {
@@ -497,67 +505,6 @@ function sendSurveyData(surveyData) {
         });
 }
 
-let lastActiveDates = {};
-
-function updateStreak() {
-    const currentDate = new Date().toDateString();
-    let userId = localStorage.getItem("username");
-
-    if (!lastActiveDates[userId]) {
-        lastActiveDates[userId] = null;
-    }
-
-    if (currentDate === lastActiveDates[userId]) {
-        return; // Already active today
-    }
-
-    const lastDate = new Date();
-    lastDate.setDate(lastDate.getDate() - 1);
-
-    const lastDateString = lastDate.toDateString();
-
-    if (currentDate === lastDateString) {
-        if (lastActiveDates[userId] !== currentDate) {
-            lastActiveDates[userId] = currentDate;
-        }
-    } else {
-        lastActiveDates[userId] = currentDate;
-    }
-}
-
-function getStreakCount() {
-    let userId = localStorage.getItem("username");
-    let streakCount = 0;
-    let currentDate = new Date().toDateString();
-    let lastDate = null;
-
-    if (lastActiveDates[userId]) {
-        lastDate = new Date(lastActiveDates[userId]);
-    }
-
-    if (lastDate) {
-        while (currentDate === lastDate.toDateString()) {
-            streakCount++;
-            lastDate.setDate(lastDate.getDate() - 1);
-            currentDate = lastDate.toDateString();
-        }
-    }
-
-    streakCount = getStreakCount(userId);
-    console.log("Current streak for user", userId + ":", streakCount);
-
-    return streakCount;
-}
-
-updateStreak(); // Call this function whenever user is active
-
-// Display PNG image if streak is active
-if (getStreakCount > 0) {
-    const img = document.createElement("img");
-    img.src = "Database_server\node\PublicResources\image\Streak.png";
-    document.body.appendChild(img);
-}
-
 //Function which highlights the link of the currently selected tab
 function highlightNavLink(pageId) {
     // Remove 'active' class from all navigation links
@@ -566,6 +513,10 @@ function highlightNavLink(pageId) {
         link.classList.remove('active');
     });
     // Add 'active' class to the corresponding navigation link
-    const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
-    activeLink.classList.add('active');
+    if (pageId==='profilepage'){
+        return;
+    } else {
+        const activeLink = document.querySelector('#side-nav a[href="#' + pageId + '"]');
+        activeLink.classList.add('active');
+    }
 }

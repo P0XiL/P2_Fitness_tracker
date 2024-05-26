@@ -65,18 +65,30 @@
 
             <div id="quest1" class="quest">
                 <h2 class="center-heading">Daily</h2>
+                <div class="upper-right-container">
+                    <img src="image/Streak.png" class="upper-right-image"></img>
+                    <h3 id="quest1_streak" class="upper-right-text">0</h3>
+                </div>
                 <meter id="meter1" value="0" min="0" max="1"></meter>
                 <p id="quest1_type"></p>
             </div>
 
             <div id="quest2" class="quest">
                 <h2 class="center-heading">Weekly</h2>
+                <div class="upper-right-container">
+                    <img src="image/Streak.png" class="upper-right-image"></img>
+                    <h3 id="quest2_streak" class="upper-right-text">0</h3>
+                </div>
                 <meter id="meter2" value="0" min="0" max="1"></meter>
                 <p id="quest2_type"></p>
             </div>
 
             <div id="quest3" class="quest">
                 <h2 class="center-heading">Monthly</h2>
+                <div class="upper-right-container">
+                    <img src="image/Streak.png" class="upper-right-image"></img>
+                    <h3 id="quest3_streak" class="upper-right-text">0</h3>
+                </div>
                 <meter id="meter3" value="0" min="0" max="1"></meter>
                 <p id="quest3_type"></p>
             </div>
@@ -222,8 +234,8 @@
             <div id="userInfo" class="profile_layout">
                 <h2 style="text-align: center;">User info</h2>
                 <form id="userInfoForm">
-                    <p>Height: <input type="text" id="Height" value="${userInfo.health.height}" required > cm</p>
-                    <p>Weight: <input type="text" id="Weight" value="${userInfo.health.weight}" required > kg</p>
+                    <p>Height: <input type="text" id="Height" value="${userInfo.health.height}" required> cm</p>
+                    <p>Weight: <input type="text" id="Weight" value="${userInfo.health.weight}" required> kg</p>
                     <button type="submit">Save User Info</button>
                 </form>
                 <p><span id="bmiText" style="font-size: 14px; margin-top: 5px;"></span></p>
@@ -333,10 +345,12 @@
     <script src="js/Quest_Creation.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="js/Graph.js"></script>
-    <script src="tests/profile.test.js"></script>
-    <script src="tests/Graph.test.js"></script>
-    <script src="tests/survey.test.js"></script>
-    <script src="tests/friend.test.js"></script>
+    <!--<script src="tests/profile.test.js"></script>-->
+    <!--<script src="tests/quest.test.js"></script>-->
+    <!--<script src="tests/Graph.test.js"></script>-->
+    <!--<script src="tests/survey.test.js"></script>-->
+    <!--<script src="tests/friend.test.js"></script>-->
+    <!--<script src="tests/login.test.js"></script>-->
 </body>
 
 </html>
