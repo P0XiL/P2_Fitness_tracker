@@ -16,7 +16,9 @@ This repository contains a proposed solution.
     - Quest_Creation.js - Contains all quest-related code
     - Profile.js - Contains all code related to the profile page
     - script.js - Contains code related to the login system, and basic navigation
-    - 
+  - ### Tests
+      Multiple tests are present in the program but commented out. To run the test, remove the <!-- "Script..." -->, For each test to work, it is important that the present data in the JSON files don't get changed. In the case quest needs to be tested, the user needs to change the date in the JSON file quest_log under the user questTest, to the current date, also change the object on the first line to the same date.
+  
 
 - ## Usages
   1. Open command promt
@@ -24,7 +26,5 @@ This repository contains a proposed solution.
   3. Run the command node server.js
 
 
-
-- ## Tests
-    
-  
+- ## Credits
+    The project was made on AAU Computer science, by the group consisting of Mikkel Troelsen, Magnus Nielsen, Jacob Kaage, Tobias Lauritsen, Tobias de Lasson, Mathias Stæhr and Christian Rimmen. The project was supervised by Ramoni Ojekunle Adeogun. 
