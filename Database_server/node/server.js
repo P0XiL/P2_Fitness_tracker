@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const hostname = '127.0.0.1';
-const port = 3369;
+const port = 3360;
 const publicResources = "PublicResources/";
 
 const server = http.createServer((req, res) => {
@@ -47,7 +47,7 @@ function processReq(req, res) {
                     write_create_user(req, res);
                     break;
                 case "/login":
-                    write_login_user(req, res);
+                    write_login_user(req, res); 
                     break;
                 case "/write_quest_json":
                     write_quest_json(req, res);
