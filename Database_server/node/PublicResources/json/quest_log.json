@@ -90,5 +90,192 @@
         "type": "cardio"
       }
     }
+  },
+  "sad2": {
+    "daily": {
+      "23/5/2024": {
+        "type": "upperbody",
+        "difficulty": "-3",
+        "target": 3,
+        "amount": 3,
+        "text": "Do 3 pushups",
+        "state": "complete",
+        "exercise": "pushups"
+      }
+    },
+    "weekly": {
+      "23/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 110,
+        "amount": 110,
+        "text": "Go for a walk for 110 minutes",
+        "state": "complete",
+        "exercise": "walk"
+      }
+    },
+    "monthly": {
+      "23/5/2024": {
+        "type": "upperbody",
+        "difficulty": "3",
+        "target": 227,
+        "amount": 1231,
+        "text": "Do arm circles for 227 seconds",
+        "state": "complete",
+        "exercise": "armcircles"
+      }
+    }
+  },
+  "sad3": {
+    "daily": {
+      "23/5/2024": {
+        "type": "upperbody",
+        "difficulty": "-3",
+        "target": 10,
+        "amount": 21,
+        "text": "Do arm circles for 10 seconds",
+        "state": "complete",
+        "exercise": "armcircles"
+      },
+      "24/5/2024": {
+        "type": "cardio",
+        "difficulty": "-3",
+        "target": 5,
+        "amount": 32,
+        "text": "Go for a walk for 5 minutes",
+        "state": "complete",
+        "exercise": "walk"
+      },
+      "27/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "23/5/2024": {
+        "type": "upperbody",
+        "difficulty": "0",
+        "target": 3,
+        "amount": 4,
+        "text": "Do 3 dips",
+        "state": "complete",
+        "exercise": "dips"
+      }
+    },
+    "monthly": {
+      "23/5/2024": {
+        "type": "cardio",
+        "difficulty": "0",
+        "target": 16,
+        "amount": 23,
+        "text": "Go for a run for 16 minutes",
+        "state": "complete",
+        "exercise": "run"
+      }
+    }
+  },
+  "dad": {
+    "daily": {
+      "23/5/2024": {
+        "type": "cardio"
+      }
+    },
+    "weekly": {
+      "23/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "0",
+        "target": 3,
+        "amount": 3,
+        "text": "Do 3 squats",
+        "state": "complete",
+        "exercise": "squats"
+      }
+    },
+    "monthly": {
+      "23/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "0",
+        "target": 32,
+        "amount": 126,
+        "text": "Do the wallsit for 32 seconds",
+        "state": "complete",
+        "exercise": "wallsit"
+      }
+    }
+  },
+  "dad2": {
+    "daily": {
+      "23/5/2024": {
+        "type": "core",
+        "difficulty": "3",
+        "target": 3,
+        "amount": 3,
+        "text": "Do 3 backextentions",
+        "state": "complete",
+        "exercise": "backextentions"
+      },
+      "24/5/2024": {
+        "type": "cardio"
+      },
+      "27/5/2024": {
+        "type": "lowerbody"
+      }
+    },
+    "weekly": {
+      "23/5/2024": {
+        "type": "core",
+        "difficulty": "0",
+        "target": 3,
+        "amount": 3,
+        "text": "Do 3 backextentions",
+        "state": "complete",
+        "exercise": "backextentions"
+      }
+    },
+    "monthly": {
+      "23/5/2024": {
+        "type": "upperbody",
+        "difficulty": "3",
+        "target": 39,
+        "amount": 41,
+        "text": "Do 39 dips",
+        "state": "complete",
+        "exercise": "dips"
+      }
+    }
+  },
+  "pog": {
+    "daily": {
+      "27/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "0",
+        "target": 3,
+        "amount": 3,
+        "text": "Do 3 lunges",
+        "state": "complete",
+        "exercise": "lunges"
+      }
+    },
+    "weekly": {
+      "27/5/2024": {
+        "type": "cardio",
+        "difficulty": "-3",
+        "target": 5,
+        "amount": 12,
+        "text": "Cycle 5 minutes",
+        "state": "complete",
+        "exercise": "cycling"
+      }
+    },
+    "monthly": {
+      "27/5/2024": {
+        "type": "lowerbody",
+        "difficulty": "3",
+        "target": 39,
+        "amount": 39,
+        "text": "Do 39 squats",
+        "state": "complete",
+        "exercise": "squats"
+      }
+    }
   }
 }
