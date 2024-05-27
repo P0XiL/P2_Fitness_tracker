@@ -17,7 +17,7 @@ This repository contains a proposed solution.
     - Profile.js - Contains all code related to the profile page
     - script.js - Contains code related to the login system, and basic navigation
   - ### Tests
-      Multiple tests are present in the program but commented out. To run the test, remove the <!-- "Script..." -->, For each test to work, it is important that the present data in the JSON files don't get changed. In the case quest needs to be tested, the user needs to change the date in the JSON file quest_log under the user questTest, to the current date, also change the object on the first line to the same date.
+      Multiple tests are present in the program but commented out. For each test to work, the present data in the JSON files mustn't be changed. In the case quest needs to be tested, the user needs to change the date in the JSON file quest_log under the user questTest, to the current date, and also change the object on the first line to the same date.
   
 
 - ## Usages
