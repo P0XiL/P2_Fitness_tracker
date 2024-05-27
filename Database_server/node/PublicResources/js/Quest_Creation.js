@@ -46,7 +46,7 @@ async function display_quest(quest, user) {
         const timespans = ["daily", "weekly", "monthly"];
         const questTimespan = timespans[quest[5] - 1];
         fetchJSON('json/users_info.json').then(data => set_streak(data, user, quest, questTimespan));
-        
+
         /**
          * Makes a new quest
          * @param {the type of the current quest} type 
@@ -118,23 +118,21 @@ async function display_quest(quest, user) {
                                 timespan: questTimespan,
                                 date: lastestQuestDate
                             };
-                            remove_elo(obj_para);
-
-                            const obj_streak = {
-                                user: user,
-                                mode: "reset",
-                                timespan: questTimespan,
-                                questid: quest
-                            }
-                            update_streak(obj_streak);
-                            location.reload();
+                            remove_elo(obj_para).then(() => {
+                                const obj_streak = {
+                                    user: user,
+                                    mode: "reset",
+                                    timespan: questTimespan,
+                                    questid: quest
+                                }
+                                update_streak(obj_streak).then(() => {location.reload();});
+                            });
                         }
                     } catch (error) {
                         //If the object is empty ignore the error
                         if (!is_empty_object(quest_log[user][questTimespan])) {
                             console.error(error);
                         }
-
                     }
                     //Chooses a type for userInfo
                     fetchJSON('json/users_info.json')
@@ -167,16 +165,15 @@ async function display_quest(quest, user) {
                         obj_award.date = obj_stateQuest.date;
                         obj_award.difficulty = pathQuest.difficulty;
                         obj_award.type = pathQuest.exercise;
-                        award_elo(obj_award);
-
-                        const obj_streak = {
-                            user: user,
-                            mode: "increase",
-                            timespan: questTimespan,
-                            questid: quest
-                        }
-                        update_streak(obj_streak);
-                        location.reload();
+                        award_elo(obj_award).then(() => {
+                            const obj_streak = {
+                                user: user,
+                                mode: "increase",
+                                timespan: questTimespan,
+                                questid: quest
+                            }
+                            update_streak(obj_streak).then(() => location.reload());
+                        });
                     }
 
                     // Visual part
@@ -553,22 +550,18 @@ function change_amount(obj_para) {
  * @param {string} obj_para.timesapan - The timespan of quest
  * @param {string} obj_para.date - The date of failed quest 
  */
-function remove_elo(obj_para) {
-    fetch(serverPath + 'remove_elo', {
+async function remove_elo(obj_para) {
+    const response = await fetch(serverPath + 'remove_elo', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(obj_para)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('No response fetch POST remove elo');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetch Post (remove_elo):', error);
-        });
+    });
+
+    if (!response.ok) {
+        throw new Error('No response fetch POST remove elo');
+    }
 }
 
 /**
@@ -580,22 +573,18 @@ function remove_elo(obj_para) {
  * @param {int} obj_para.difficulty - The difficulty of quest esay(-3), medium(0), hard(3) 
  * @param {string} obj_para.type - The type of exercise
  */
-function award_elo(obj_para) {
-    fetch(serverPath + 'award_elo', {
+async function award_elo(obj_para) {
+    const response = await fetch(serverPath + 'award_elo', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(obj_para)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('No response fetch POST award Elo');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetch Post (award_elo):', error);
-        });
+    });
+
+    if (!response.ok) {
+        throw new Error('No response fetch POST award Elo');
+    }
 }
 
 /**
@@ -607,29 +596,29 @@ function award_elo(obj_para) {
  * @param {string} obj_para.questid - The id for the quest container
  */
 async function update_streak(obj_para) {
-    fetch(serverPath + 'update_streak', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(obj_para)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('No response fetch POST update streak');
-            }
-            fetchJSON("json/users_info.json")
-                .then(data => {
-                    set_streak(data, obj_para.user, obj_para.questid, obj_para.timespan);
-
-                });
-
-        })
-        .catch(error => {
-            console.error('Error fetch Post (update_streak):', error);
+    try {
+        const response = await fetch(serverPath + 'update_streak', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(obj_para)
         });
-}
 
+        if (!response.ok) {
+            throw new Error('No response fetch POST update streak');
+        }
+
+        const data = await fetchJSON("json/users_info.json");
+        if (data) {
+            set_streak(data, obj_para.user, obj_para.questid, obj_para.timespan);
+        } else {
+            console.error('Failed to update streak: fetchJSON returned null');
+        }
+    } catch (error) {
+        console.error('Error fetch Post (update_streak):', error);
+    }
+}
 function set_streak(users_info, user, questid, timespan) {
     const path = users_info.users_info[user].tier;
     const streakNumber = document.getElementById(questid + "_streak");
