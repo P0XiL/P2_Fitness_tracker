@@ -11,6 +11,9 @@
     },
     "Lenny3": {
       "password": "123"
+    },
+    "test": {
+      "password": "123"
     }
   }
 }

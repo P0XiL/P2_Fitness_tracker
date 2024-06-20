@@ -54,8 +54,12 @@ function update_graph_friend(exercise, id){
  * @param {string} exercise - exercise 
  */
 function plot(exercise) {
-  const ctx = document.getElementById("myChart");
+  const canvas = document.getElementById("myChart");
+  const ctx = canvas.getContext("2d");
   const user = localStorage.getItem("username");
+
+  // Clear the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   Promise.all([user_data_x(user, exercise), user_data_y(user, exercise)])
     .then(([labels, data]) => {
@@ -65,7 +69,7 @@ function plot(exercise) {
       let average = recommended(exercise);
       maxVal = Math.max(maxVal, average + 1);
 
-      let myChart = new Chart(ctx, {
+      new Chart(ctx, {
         type: "line",
         data: {
           labels: labels,
@@ -99,6 +103,7 @@ function plot(exercise) {
       console.error("Error plotting graph:", error);
     });
 }
+
 
 /**
  * Plot the graph with friends
